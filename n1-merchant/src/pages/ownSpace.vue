@@ -1,0 +1,431 @@
+<template>
+  <div class="personalcenter">
+    <div class="reload">
+      <Button type="primary"  @click="refresh">刷新</Button>
+    </div>
+    <div class="personalInfo">
+      <table cellspacing="0">
+        <tr>
+          <td>
+           <span>商户ID : {{admin.displayId}}</span>
+          </td>
+          <td>
+            <span>管理员账号 : {{admin.uname}}</span>
+          </td>
+          <td>
+            <div>
+              <span>管理员密码 :</span>
+              <span v-if="showPass">{{admin.password}}</span>
+              <span v-else>********</span>
+              <span class="newPassword" @click="showPass=!showPass" v-if="!showPass" style="margin-left: 1.5rem">显示</span>
+              <span class="newPassword" @click="showPass=!showPass" v-else>隐藏</span>
+              <span class="newPassword" @click="newPassword">修改密码</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span>商户简称 : {{ admin.suffix }}</span>
+          </td>
+          <td>
+            <span>商户标识 : {{admin.sn}} </span>
+          </td>
+          <td>
+             <div>
+              <div>商户密匙 :
+              <span v-if="showKey">{{admin.apiKey}}</span>
+              <span v-else>********</span>
+              <span class="newPassword" @click="showKey=!showKey" v-if="!showKey" style="margin-left: 2.5rem">显示</span>
+              <span class="newPassword" @click="showKey=!showKey" v-else>隐藏</span>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span>上次登录IP : {{admin.lastIP}}</span>
+          </td>
+          <td>
+            <span>上次登录时间 : {{dayjs(admin.loginAt).format('YYYY-MM-DD HH:mm:ss')}}</span>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="financial">
+      <h2>财务信息
+        <span style="color:#20a0ff;cursor:pointer;fontSize:1rem" @click="getWaterfallList">(点击查询)</span>
+      </h2>
+      <Table :columns="columns1" :data="showData" size="small">
+        <template slot-scope="{ row, index }" slot="createdAt">
+          <span>{{dayjs(row.createdAt).format("YYYY-MM-DD HH:mm:ss")}}</span>  
+        </template>
+        <template slot-scope="{ row, index }" slot="toUser">
+          <span>{{toUserConfig(row)}}</span>  
+        </template>
+        <template slot-scope="{ row, index }" slot="amountType">
+          <span>{{amountConfig1(row)}}</span>  
+        </template>
+        <template slot-scope="{ row, index }" slot="oldBalance">
+          <span>{{oldBalanceConfig(row)}}</span>  
+        </template>
+        <template slot-scope="{ row, index }" slot="amountCode">
+          <span :style="{color:amountConfig2(row).color}">{{amountConfig2(row).amount}}</span>  
+        </template>
+        <template slot-scope="{ row, index }" slot="balance">
+          <span>{{balanceConfig(row)}}</span>  
+        </template>
+        <template slot-scope="{ row, index }" slot="operator">
+          <span>{{operatorConfig(row)}}</span>  
+        </template>
+        <template slot-scope="{ row, index }" slot="remark">
+          <Tooltip :content="remarkConfig(row).content" v-if="remarkConfig(row).isShow">
+            <Icon type="md-search" color="#20a0ff" />
+          </Tooltip>
+          <span v-else>{{remarkConfig(row).content}}</span>  
+        </template>
+      </Table>
+      <Page :total="total" class="page" show-elevator :page-size='pageSize' show-total @on-change="changepage"></Page>
+    </div>
+    <Modal v-model="modal" title="修改密码" :width='350' @on-ok="ok" @on-cancel='cancel'>
+      <p class="modal_input">
+        <Row>
+          <Col span="6" class="label">新密码</Col>
+          <Col span="14">
+          <Input v-model="password" placeholder="请输入新密码"></Input>
+          </Col>
+        </Row>
+      </p>
+      <p class="modal_input">
+        <Row>
+          <Col span="6" class="label">重复新密码</Col>
+          <Col span="14">
+          <Input v-model="repassword" placeholder="请重复新密码"></Input>
+          </Col>
+        </Row>
+      </p>
+    </Modal>
+    <Spin size="large" fix v-if="spinShow">
+      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+      <div>加载中...</div>
+    </Spin>
+  </div>
+</template>
+<script>
+import dayjs from "dayjs";
+import { getWaterfall, oneMerchants } from "@/service/index";
+import { thousandFormatter } from "@/config/format";
+import { validatePwd } from "@/config/regexp";
+export default {
+  data() {
+    return {
+      spinShow: false,
+      tableColor: '',
+      modal: false,
+      password: "",
+      showPass: false,
+      showKey:false,
+      repassword: "",
+      dayjs: dayjs,
+      pageSize: 50, 
+      admin: {},
+      waterfall: [],
+      showData: [],
+      columns1: [
+        {
+          title: "序号",
+          type: "index",
+          align: 'center',
+          maxWidth: 60
+        },
+        {
+          title: "交易时间",
+          slot: "createdAt",
+          sortable: true,
+          align: 'center',
+        },
+        {
+          title: "交易对象",
+          slot: "toUser",
+          align: 'center',
+          minWidth:50
+        },
+        {
+          title: "交易类型",
+          slot: "amountType",
+          align: 'center',
+          maxWidth: 120,
+          sortable: true
+        },
+         {
+          title: "交易前余额",
+          slot: "oldBalance",
+          align: 'center',
+          sortable: true
+        },
+        {
+          title: "交易点数",
+          slot: "amountCode",
+          align: 'center',
+          maxWidth: 200,
+          sortable: true
+        },
+        {
+          title: "交易后余额",
+          slot: "balance",
+          align: 'center',
+          sortable: true,
+        },
+        {
+          title: "操作人",
+          slot: "operator",
+          align: 'center',
+          sortable: true
+        },
+        {
+          title: "备注",
+          slot: "remark",
+          maxWidth: 60,
+          align: 'center'
+        }
+      ]
+    };
+  },
+  computed: {
+    total() {
+      return this.waterfall.length;
+    },
+  },
+  methods: {
+    //财务信息交易对象
+    toUserConfig(row) {
+      if (row.fromLevel > row.toLevel) {
+        return row.toDisplayName + " 对 " + row.fromDisplayName
+      } else {
+        return row.fromDisplayName + " 对 " + row.toDisplayName
+      }
+    },
+    //财务信息交易类型
+    amountConfig1(row) {
+      if(row.fromDisplayName == row.toDisplayName){
+        if(row.amount<0){
+          return '玩家充值'
+        }else{
+          return '玩家提现'
+        }
+      }else{
+        if (row.fromLevel > row.toLevel) {
+          return "减点"
+        } else {
+          return "加点"
+        }
+      }
+    },
+    //财务信息交易前余额
+    oldBalanceConfig(row) {
+      return thousandFormatter(row.oldBalance)
+    },
+    //财务信息交易点数
+    amountConfig2(row, index) {
+      if (row.amount < 0) {
+          return {amount:thousandFormatter(row.amount), color:"#f30"}
+        } else {
+          return {amount:thousandFormatter(row.amount), color:"#0c0"}
+        }
+    },
+    //财务信息交易后余额
+    balanceConfig(row) {
+      return thousandFormatter(row.balance)
+    },
+    //财务信息操作人
+    operatorConfig(row) {
+      return row.operator.split("_")[1]
+    },
+    //财务信息备注
+    remarkConfig(row) {
+      if (row.remark == "NULL!" || row.remark == null) {
+        return {isShow: false}
+      } else {
+        return {content: row.remark, isShow: true}
+      }
+    },
+
+    handlePage() {
+      // 初始化显示，小于每页显示条数，全显，大于每页显示条数，取前每页条数显示
+      if (this.total < this.pageSize) {
+        this.showData = this.waterfall;
+      } else {
+        this.showData = this.waterfall.slice(0, this.pageSize);
+      }
+    },
+    changepage(index) {
+      let size = this.pageSize;
+      let _start = (index - 1) * size;
+      let _end = index * size;
+      this.showData = this.waterfall.slice(_start, _end);
+      // console.log(this.showData);
+    },
+    newPassword() {
+      this.modal = true;
+    },
+    ok() {
+      if (this.password != this.repassword) {
+        this.$Message.warning({
+          content: "两次密码不一致"
+        });
+        return;
+      }
+      let pwdReg = /^(\w){6,15}$/
+      if (!pwdReg.test(this.password)) {
+        this.$Message.warning({
+          content: "密码中必须包含6-15位由字母、数字、符号组成"
+        })
+        return
+      } 
+      
+      let userId = "";
+      if (localStorage.userInfo) {
+        userId = JSON.parse(localStorage.getItem("userInfo")).userId;
+      }
+      let self = this;
+      this.spinShow = true
+      this.$store
+        .dispatch("changePassword", {
+          userId: userId,
+          password: this.repassword
+        })
+        .then(res => {
+          if (res.code == 0) {
+            self.password = "";
+            self.repassword = "";
+            oneMerchants(userId).then(res => {
+              self.admin = res.payload;
+              self.spinShow = false
+              self.$Message.success("修改成功");
+            });
+          }
+        });
+    },
+    cancel() {
+      this.password = "";
+      this.repassword = "";
+    },
+    passwordLevel(password) {
+      let Modes = 0;
+      let len=password.length;
+      if(len<6||len>16){
+        return 0
+      }
+      for (let i = 0; i < password.length; i++) {
+        Modes |= CharMode(password.charCodeAt(i));
+      }
+      return bitTotal(Modes);
+      //CharMode函数
+      function CharMode(iN) {
+        if (iN >= 48 && iN <= 57)
+          //数字
+          return 1;
+        if (iN >= 65 && iN <= 90)
+          //大写字母
+          return 2;
+        if ((iN >= 97 && iN <= 122) || (iN >= 65 && iN <= 90))
+          //大小写
+          return 4;
+        else return 8; //特殊字符
+      }
+      //bitTotal函数
+      function bitTotal(num) {
+        let modes = 0;
+        for (let i = 0; i < 4; i++) {
+          if (num & 1) modes++;
+          num >>>= 1;
+        }
+        return modes;
+      }
+    },
+    refresh() {
+      this.init();
+    },
+    async getWaterfallList() {
+      let userId = localStorage.loginId ? localStorage.getItem("loginId") : "";
+      let req1 = getWaterfall(userId);
+      this.spinShow = true
+      let waterfall = await this.axios.all([req1])
+      this.spinShow = false
+      this.showData = waterfall[0].payload
+
+    },
+    async init() {
+      this.spinShow = true
+      let userId = localStorage.loginId ? localStorage.getItem("loginId") : "";
+      let req2 = oneMerchants(userId);
+      let [admin] = await this.axios.all([req2]);
+      this.spinShow = false
+      if (admin && admin.code == 0) {
+        this.admin = admin.payload;
+      }
+      this.handlePage();
+    }
+  },
+  filters: {
+    getName(value) {
+      if (!value) return "";
+      value = value.toString();
+      return value.substr(9);
+    }
+  },
+  created() {
+    this.init();
+  }
+};
+</script>
+<style lang="less" scoped>
+.personalcenter {
+  min-height: 89vh;
+  .personalInfo {
+    width: 100%;
+    margin: 10px auto 20px;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      td {
+        border: 1px solid #e9eaec;
+        width: 32%;
+        height: 50px;
+        padding-left: 10px;
+      }
+    }
+    .newPassword {
+      margin-left: 0.5rem;
+      color: #20a0ff;
+      display: inline-block;
+      // font-size: 1rem;
+      font-weight: normal;
+      cursor: pointer;
+    }
+  }
+  .page {
+    text-align: right;
+  }
+  .reload {
+    text-align: right;
+  }
+}
+.modal_input {
+  margin-bottom: 10px;
+}
+.label {
+  line-height: 32px;
+}
+.page {
+  text-align: right;
+  margin-top: 20px;
+}
+.demo-spin-icon-load {
+    animation: ani-demo-spin 1s linear infinite;
+  }
+/deep/ .ivu-table-cell {
+  padding: 0
+}  
+</style>
+
+
