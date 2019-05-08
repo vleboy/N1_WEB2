@@ -8,16 +8,37 @@
         </Select>
         <DatePicker type="datetimerange" :options="options" :editable='false' v-model="defaultTime" placeholder="选择日期时间范围(默认最近一周)" style="width: 300px" @on-ok="search"></DatePicker>
         <Button type="primary" @click="search">搜索</Button>
-        <Button type="ghost" @click="reset">重置</Button>
+        <Button @click="reset">重置</Button>
         </Col>
       </Row>
     </div>
-    <Table :columns="columns" size="small" :data="reportList"></Table>
+    <Table :columns="columns" size="small" :data="reportList">
+      <template slot-scope="{row, index}" slot="winloseAmount">
+        <span :style="{color:winloseAmountConfig(row)}">{{row.winloseAmount}}</span>
+      </template>
+      <template slot-scope="{row, index}" slot="protal">
+        <span>{{row.transferMap["70000"].name}}</span>
+      </template>
+      <template slot-scope="{row, index}" slot="gameCode">
+        <div v-if="gameCodeConfig(row).isShow" style="margin: 8px 0px;border: 1px solid rgb(0, 0, 0);borderRadius:5px;textAlign:center;height:24px">
+          <span>{{gameCodeConfig(row).text}}</span>
+          <div :style="{width:gameCodeConfig(row).width,backgroundColor:gameCodeConfig(row).backgroundColor,marginTop: '-19px',borderRadius: '5px',height: '24px'}"></div>
+        </div>
+        <div v-else></div>
+      </template>
+    </Table>
     <div>
       <p class="sum">所属玩家汇总</p>
-      <Table :columns="columns1" size="small" :data="playerList"></Table>
+      <Table :columns="columns1" size="small" :data="playerList">
+        <template slot-scope="{row, index}" slot="userId">
+          <span style="color:#20a0ff;cursor: pointer" @click="userIdConfig(row)">{{row.userId}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="pyWinloseAmount">
+          <span :style="{color:pyWinloseAmountConfig(row).color}">{{pyWinloseAmountConfig(row).amount}}</span>
+        </template>
+      </Table>
     </div>
-     <Modal v-model="pointModal" title="预警点数" :width='450' @on-ok="changePoint" @on-cancel='cancel'>
+     <!-- <Modal v-model="pointModal" title="预警点数" :width='450' @on-ok="changePoint" @on-cancel='cancel'>
       <p class='gameTitle'>H5电子游戏</p>
       <p class="current">当前值 {{winloseAmount}}/{{topAmount}}</p>
       <Row class="current">
@@ -27,7 +48,7 @@
         <Input v-model="newAmount" :number='true' size="small" placeholder="请输入"></Input>
         </Col>
       </Row>
-    </Modal>
+    </Modal> -->
     <Spin size="large" fix v-if="spin">
       <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
       <div>加载中...</div>
@@ -122,118 +143,24 @@ export default {
         {
           title: "输赢金额",
           align: 'center',
-          key: "winloseAmount",
-          render: (h, params) => {
-            let color = params.row.winloseAmount > 0 ? "#0c0" : "#f30";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              params.row.winloseAmount
-            );
-          }
+          slot: "winloseAmount"
         },
          {
           title: "接入商",
           align: 'center',
-          key: "",
-          render: (h, params) => {
-            let transferMap = params.row.transferMap["70000"];
-            return h("span", transferMap.name);
-          }
+          key: "portal"
         },
         {
           title: "历史游戏点数消耗",
           align: 'center',
-          key: "",
-          render: (h, params) => {
-            if (params.row.transferMap) {
-              let transferMap = params.row.transferMap["70000"];
-              let topAmount = transferMap.topAmount;
-              let winloseAmount = transferMap.winloseAmountMap.winloseAmount.toFixed(
-                2
-              );
-              let text = winloseAmount + "/" + topAmount;
-              let width = 0;
-              let color = "#fff";
-              if (
-                winloseAmount < topAmount &&
-                winloseAmount > 0 &&
-                topAmount > 0
-              ) {
-                width = ((100 * winloseAmount) / topAmount).toFixed(2) + "%";
-                if (winloseAmount / topAmount > 0.8) {
-                  color = "red";
-                } else {
-                  color = "#0c0";
-                }
-              } else if (
-                winloseAmount > 0 &&
-                topAmount > 0 &&
-                winloseAmount > topAmount
-              ) {
-                (width = "100%"), (color = "red");
-              }
-              return h(
-                "div",
-                {
-                  style: {
-                    margin: "8px 0px",
-                    border: "1px solid rgb(0, 0, 0)",
-                    borderRadius: "5px",
-                    textAlign: "center",
-                    height: "24px"
-                  }
-                },
-                [
-                  h("span", text),
-                  h("div", {
-                    style: {
-                      width: width,
-                      backgroundColor: color,
-                      marginTop: "-19px",
-                      borderRadius: "5px",
-                      height: "24px"
-                    }
-                  })
-                ]
-              );
-            } else {
-              return h("span", "");
-            }
-          }
+          slot: "gameCode"
         },
       ],
       columns1: [
         {
           title: "玩家ID",
           align: 'center',
-          key: "userId",
-          render: (h, params) => {
-            return h(
-              "span",
-              {
-                style: {
-                  color: "#20a0ff",
-                  cursor: "pointer"
-                },
-                on: {
-                  click: () => {
-                    this.$router.push({
-                      path: "/transfer/flow",
-                      query: {
-                        userId: params.row.userId
-                      }
-                    });
-                  }
-                }
-              },
-              params.row.userId
-            );
-          }
+          slot: "userId"
         },
         {
           title: "玩家昵称",
@@ -268,19 +195,8 @@ export default {
         {
           title: "输赢金额",
           align: 'center',
-          key: "winloseAmount",
-          render: (h, params) => {
-            let color = params.row.winloseAmount > 0 ? "#0c0" : "#f30";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              params.row.winloseAmount
-            );
-          }
+          slot: "pyWinloseAmount",
+          
         }
       ],
       reportList: [],
@@ -302,7 +218,7 @@ export default {
     this.init();
   },
   methods: {
-      setTop(row) {
+      /* setTop(row) {
       let transferMap = row.transferMap["70000"];
       let topAmount = transferMap.topAmount;
       let winloseAmount = transferMap.winloseAmountMap.winloseAmount.toFixed(2);
@@ -310,6 +226,64 @@ export default {
       this.winloseAmount = winloseAmount;
       this.plat = row.plat;
       this.pointModal = true;
+    }, */
+    //输赢金额
+    winloseAmountConfig(row) {
+      if (row.winloseAmount > 0) {
+        return "#0c0"
+      } else {
+        return "#f30"
+      }    
+    },
+    //历史游戏消耗点数
+    gameCodeConfig(row) {
+      if (row.transferMap) {
+        let transferMap = row.transferMap["70000"];
+        let topAmount = transferMap.topAmount;
+        let winloseAmount = transferMap.winloseAmountMap.winloseAmount.toFixed(2);
+        let text = winloseAmount + "/" + topAmount;
+        let width = 0;
+        let color = "#fff";
+        if (
+          winloseAmount < topAmount &&
+          winloseAmount > 0 &&
+          topAmount > 0
+        ) {
+          width = ((100 * winloseAmount) / topAmount).toFixed(2) + "%";
+          if (winloseAmount / topAmount > 0.8) {
+            color = "red";
+          } else {
+            color = "#0c0";
+          }
+        } else if (
+          winloseAmount > 0 &&
+          topAmount > 0 &&
+          winloseAmount > topAmount
+        ) {
+          (width = "100%"), (color = "red");
+        }
+        return {text: text, width:width,backgroundColor: color}
+      } else {
+        return {isShow: false}
+      }
+          
+    },
+    //玩家ID
+    userIdConfig(row) {
+      this.$router.push({
+        path: "/transfer/flow",
+        query: {
+          userId: row.userId
+        }
+      })
+    },
+    //玩家输赢金额
+    pyWinloseAmountConfig(row) {
+      if (row.winloseAmount > 0) {
+        return {winloseAmount: row.winloseAmount,color:"#0c0"}
+      } else {
+        return {winloseAmount: row.winloseAmount,color:"#f30"}
+      }   
     },
     changePoint() {
       httpRequest("post", "/transferMap", {

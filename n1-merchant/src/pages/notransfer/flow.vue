@@ -4,85 +4,155 @@
       <div class="search">
         <Row class="row">
           <Col span="13">
-          <span class="label">玩家ID</span>
-          <Input v-model="userId" style="width: 100px" placeholder="请输入"></Input>
-          <span class="label">交易号</span>
-          <Input v-model="businessKey" style="width: 150px" placeholder="请输入"></Input>
+            <span class="label">玩家ID</span>
+            <Input v-model="userId" style="width: 100px" placeholder="请输入"></Input>
+            <span class="label" style="margin-left:1rem">交易号</span>
+            <Input v-model="businessKey" style="width: 150px" placeholder="请输入"></Input>
           </Col>
           <Col span="11" style="textAlign:right">
-          <DatePicker type="datetimerange" :options="options" :editable='false' v-model="defaultTime" placeholder="选择日期时间范围(默认最近一周)" style="width: 300px" @on-ok="search"></DatePicker>
-          <Button type="primary" @click="search">搜索</Button>
-          <Button type="ghost" @click="reset">重置</Button>
+            <DatePicker
+              type="datetimerange"
+              :options="options"
+              :editable="false"
+              v-model="defaultTime"
+              placeholder="选择日期时间范围(默认最近一周)"
+              style="width: 300px;margin-right:1rem"
+              @on-ok="search"
+            ></DatePicker>
+            <Button type="primary" @click="search" style="margin-right:.3rem">搜索</Button>
+            <Button @click="reset">重置</Button>
           </Col>
         </Row>
       </div>
     </div>
     <Row class="row selection">
       <Col span="8">
-      <RadioGroup v-model="reportType" type="button" :style="{paddingBottom:'10px'}" @on-change="search">
-        <Radio label="1">流水记录</Radio>
-        <Radio label="2">交易记录</Radio>
-      </RadioGroup>
-       <Select v-model="gameType" style="width:110px" @on-change="search">
-          <Option v-for="item in gameTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        <RadioGroup
+          v-model="reportType"
+          type="button"
+          :style="{paddingBottom:'10px'}"
+          @on-change="search"
+        >
+          <Radio label="1">流水记录</Radio>
+          <Radio label="2">交易记录</Radio>
+        </RadioGroup>
+        <Select v-model="gameType" style="width:110px" @on-change="search">
+          <Option
+            v-for="item in gameTypeList"
+            :value="item.value"
+            :key="item.value"
+          >{{ item.label }}</Option>
         </Select>
-      <Select v-model="status" style="width:90px" v-if="reportType=='1'" @on-change="search">
-        <Option v-for="item in statusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-      </Select>
+        <Select v-model="status" style="width:90px" v-if="reportType=='1'" @on-change="search">
+          <Option v-for="item in statusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        </Select>
       </Col>
-      <!-- <Col span="8">
-       <span>分页数量:</span>
-      <Select v-model="pageSize" style="width:90px" @on-change="search">
-        <Option v-for="item in sizeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-      </Select>
-      </Col> -->
     </Row>
-    <Table :columns="columns" no-data-text='请输入查询条件' size="small" v-if="reportType==1" :data="dataList"></Table>
-    <Table :columns="columns1" no-data-text='请输入查询条件' size="small" v-else :data="dataList"></Table>
+    <Table
+      :columns="columns"
+      no-data-text="请输入查询条件"
+      size="small"
+      v-if="reportType==1"
+      :data="dataList"
+    >
+      <template slot-scope="{row, index}" slot="amount">
+        <span :style="{color:amountConfig(row)}">{{row.amount}}</span>
+      </template>
+      <template slot-scope="{row, index}" slot="type">
+        <span>{{typeConfig(row)}}</span>
+      </template>
+      <template slot-scope="{row, index}" slot="status">
+        <span :style="{color:statusConfig(row).color}">{{status1Config(row).text}}</span>
+      </template>
+      <template slot-scope="{row, index}" slot="createdAt">
+        <span>{{createdAtConfig(row)}}</span>
+      </template>
+    </Table>
+    <Table :columns="columns1" no-data-text="请输入查询条件" size="small" v-else :data="dataList">
+      <template slot-scope="{row, index}" slot="status1">
+        <span :style="{color:status1Config(row).color}">{{status1Config(row).text}}</span>
+      </template>
+      <template slot-scope="{row, index}" slot="winloseAmount1">
+        <span :style="{color:winloseAmount1Config(row)}">{{row.winloseAmount}}</span>
+      </template>
+      <template slot-scope="{row, index}" slot="operation1">
+        <Button type="test" size="small" color="#20a0ff" @click="operation1Config(row)">详情</Button>
+      </template>
+    </Table>
     <Row class="count_row" v-if="reportType=='1'">
       <Col span="4">
-      当页数据总输赢金额: <span class="num">{{flowAmount|format}}</span>
+        当页数据总输赢金额:
+        <span class="num">{{flowAmount|format}}</span>
       </Col>
     </Row>
     <Row class="count_row" v-else>
       <Col span="4">
-      当页数据总下注次数: <span class="num">{{allBetCount|format}}</span>
+        当页数据总下注次数:
+        <span class="num">{{allBetCount|format}}</span>
       </Col>
       <Col span="4">
-      当页数据总下注金额: <span class="num">{{allBetAmount|format}}</span>
+        当页数据总下注金额:
+        <span class="num">{{allBetAmount|format}}</span>
       </Col>
       <Col span="4">
-      当页数据总返还金额: <span class="num">{{allRet|format}}</span>
+        当页数据总返还金额:
+        <span class="num">{{allRet|format}}</span>
       </Col>
       <Col span="4">
-      当页数据总返奖金额: <span class="num">{{allWin|format}}</span>
+        当页数据总返奖金额:
+        <span class="num">{{allWin|format}}</span>
       </Col>
       <Col span="4">
-      当页数据总退款金额: <span class="num">{{allRefund|format}}</span>
+        当页数据总退款金额:
+        <span class="num">{{allRefund|format}}</span>
       </Col>
       <Col span="4">
-      当页数据总输赢金额: <span class="num">{{allWinLose|format}}</span>
+        当页数据总输赢金额:
+        <span class="num">{{allWinLose|format}}</span>
       </Col>
     </Row>
-    <Page :total="total" class="page" show-elevator :page-size='nowSize' :current.sync="currentPage" @on-change="changepage"></Page>
+    <Page
+      :total="total"
+      class="page"
+      show-elevator
+      :page-size="nowSize"
+      :current.sync="currentPage"
+      @on-change="changepage"
+    ></Page>
     <Spin size="large" fix v-if="spin">
-      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+      <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
       <div>加载中...</div>
     </Spin>
     <Modal title="流水详情" v-model="isOpenModalRunning" class="g-text-center" width="800">
       <Row class="g-text-left" style="margin-bottom: 15px">
         <Col span="12">交易号：{{rowDetail.businessKey}}</Col>
-        <Col span="4">下注金额:<span :class="rowDetail.betAmount>0?'green':'red'">{{rowDetail.betAmount}}</span></Col>
+        <Col span="4">
+          下注金额:
+          <span :class="rowDetail.betAmount>0?'green':'red'">{{rowDetail.betAmount}}</span>
+        </Col>
         <Col span="4">返奖金额：{{rowDetail.winAmount}}</Col>
         <Col span="4">退款金额：{{rowDetail.refundAmount}}</Col>
       </Row>
       <Row class="g-text-left" style="margin-bottom: 15px">
         <Col span="4">返还金额：{{rowDetail.retAmount}}</Col>
-        <Col span="4">输赢金额:
-        <span :class="{'green':rowDetail.winloseAmount>0,'red':rowDetail.winloseAmount<0}">{{rowDetail.winloseAmount}}</span>
+        <Col span="4">
+          输赢金额:
+          <span
+            :class="{'green':rowDetail.winloseAmount>0,'red':rowDetail.winloseAmount<0}"
+          >{{rowDetail.winloseAmount}}</span>
         </Col>
       </Row>
-      <Table size="small" :columns="columns2" :data="runningDetail"></Table>
+      <Table size="small" :columns="columns2" :data="runningDetail">
+        <template slot-scope="{row, index}" slot="type2">
+          <span>{{type2Config(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="status2">
+          <span :style="{color:status2Config(row).color}">{{status2Config(row).text}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="createdAt2">
+          <span>{{createdAt2Config(row)}}</span>
+        </template>
+      </Table>
     </Modal>
   </div>
 </template>
@@ -106,31 +176,81 @@ export default {
           {
             text: "本周",
             value() {
-              return [new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().endOf('second').valueOf())]
+              return [
+                new Date(
+                  dayjs()
+                    .startOf("week")
+                    .valueOf() +
+                    24 * 60 * 60 * 1000
+                ),
+                new Date(
+                  dayjs()
+                    .endOf("second")
+                    .valueOf()
+                )
+              ];
             }
           },
           {
             text: "本月",
             value() {
-              return [new Date(dayjs().startOf('month').valueOf()), new Date(dayjs().endOf('second').valueOf())]
+              return [
+                new Date(
+                  dayjs()
+                    .startOf("month")
+                    .valueOf()
+                ),
+                new Date(
+                  dayjs()
+                    .endOf("second")
+                    .valueOf()
+                )
+              ];
             }
           },
           {
             text: "上周",
             value() {
-              return [new Date(dayjs().add(-1, 'week').startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000 - 1)]
+              return [
+                new Date(
+                  dayjs()
+                    .add(-1, "week")
+                    .startOf("week")
+                    .valueOf() +
+                    24 * 60 * 60 * 1000
+                ),
+                new Date(
+                  dayjs()
+                    .startOf("week")
+                    .valueOf() +
+                    24 * 60 * 60 * 1000 -
+                    1
+                )
+              ];
             }
           },
           {
             text: "上月",
             value() {
               //-1 上月
-              return [new Date(dayjs().add(-1, 'month').startOf('month').valueOf()), new Date(dayjs().startOf('month').valueOf() - 1)]
+              return [
+                new Date(
+                  dayjs()
+                    .add(-1, "month")
+                    .startOf("month")
+                    .valueOf()
+                ),
+                new Date(
+                  dayjs()
+                    .startOf("month")
+                    .valueOf() - 1
+                )
+              ];
             }
           }
         ]
       },
-       gameType: "A",
+      gameType: "A",
       gameTypeList: [
         {
           value: "A",
@@ -158,20 +278,6 @@ export default {
       flowStorage: [],
       tradeStorage: [],
       rowDetail: {},
-      //  sizeList: [
-      //   {
-      //     value: 200,
-      //     label: "200"
-      //   },
-      //   {
-      //     value: 100,
-      //     label: "100"
-      //   },
-      //   {
-      //     value: 20,
-      //     label: "20"
-      //   }
-      // ],
       status: "A",
       statusList: [
         {
@@ -212,125 +318,78 @@ export default {
       columns: [
         {
           title: "交易号",
-          align: 'center',
+          align: "center",
           key: "businessKey"
         },
         {
           title: "流水号",
-          align: 'center',
-          key: "sn",
+          align: "center",
+          key: "sn"
         },
         {
           title: "接入方",
-          align: 'center',
+          align: "center",
           key: "plat",
           align: "center"
         },
         {
           title: "玩家ID",
-          align: 'center',
+          align: "center",
           key: "userId",
           align: "center"
         },
         {
           title: "玩家昵称",
-          align: 'center',
+          align: "center",
           key: "userNick",
           align: "center"
         },
         {
           title: "游戏大类",
-          align: 'center',
+          align: "center",
           key: "gameType",
           align: "center"
         },
         {
           title: "游戏ID",
-          align: 'center',
+          align: "center",
           key: "gameId",
           align: "center"
         },
         {
           title: "帐变金额",
-          align: 'center',
-          key: "amount",
           align: "center",
-          render: (h, params) => {
-            let color = params.row.amount > 0 ? "#0c0" : "#f30";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              params.row.amount
-            );
-          }
+          slot: "amount",
+          align: "center"
         },
         {
           title: "余额",
-          align: 'center',
+          align: "center",
           key: "balance",
           align: "center"
         },
         {
           title: "类型",
-          align: 'center',
-          key: "type",
-          render: (h, params) => {
-            return h("span", this.typeList[params.row.type]);
-          }
+          align: "center",
+          slot: "type"
         },
         {
           title: "状态",
-          align: 'center',
-          key: "status",
-          render: (h, params) => {
-            let color, text;
-            switch (params.row.status) {
-              case "Y":
-                color = "#0c0";
-                text = "同步成功";
-                break;
-              case "N":
-                color = "#0c0";
-                text = "下注成功";
-                break;
-              case "E":
-                color = "#f30";
-                text = "下注失败";
-                break;
-            }
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              text
-            );
-          }
+          align: "center",
+          status: "status"
         },
         {
           title: "同步时间",
-          align: 'center',
-          key: "createdAt",
           align: "center",
-          render: (h, params) => {
-            return h(
-              "span",
-              dayjs(params.row.createdAt).format("YYYY-MM-DD HH:mm:ss")
-            );
-          }
+          slot: "createdAt",
+          align: "center"
         }
       ],
       columns1: [
         {
           title: "交易号",
-          align: 'center',
-          key: "businessKey",
+          align: "center",
+          key: "businessKey"
         },
         {
           title: "接入方",
@@ -359,34 +418,8 @@ export default {
         },
         {
           title: "状态",
-          key: "status",
-          align: "center",
-          render: (h, params) => {
-            let color, text;
-            switch (params.row.status) {
-              case "Y":
-                color = "#0c0";
-                text = "成功";
-                break;
-              case "N":
-                color = "#f30";
-                text = "失败";
-                break;
-              case "E":
-                color = "#f30";
-                text = "错误";
-                break;
-            }
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              text
-            );
-          }
+          slot: "status1",
+          align: "center"
         },
         {
           title: "下注金额",
@@ -415,113 +448,45 @@ export default {
         },
         {
           title: "输赢金额",
-          key: "winloseAmount",
-          align: "center",
-          render: (h, params) => {
-            let color = params.row.winloseAmount > 0 ? "#0c0" : "#f30";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              params.row.winloseAmount
-            );
-          }
+          slot: "winloseAmount1",
+          align: "center"
         },
         {
           title: "操作",
-          key: "",
-          align: "center",
-          render: (h, params) => {
-            return h(
-              "Button",
-              {
-                props: {
-                  type: "text",
-                  size: "small"
-                },
-                style: {
-                  color: "#20a0ff"
-                },
-                on: {
-                  click: () => {
-                    this.openModalRunning(params.row.content);
-                    this.rowDetail = params.row;
-                  }
-                }
-              },
-              "详情"
-            );
-          }
+          slot: "operation1",
+          align: "center"
         }
       ],
       columns2: [
         {
           title: "流水号",
-          align: 'center',
+          align: "center",
           key: "sn"
         },
         {
           title: "类型",
-          align: 'center',
-          key: "type",
-          render: (h, params) => {
-            return h("span", this.typeList[params.row.type]);
-          }
+          align: "center",
+          slot: "type2"
         },
         {
           title: "帐变金额",
-          align: 'center',
+          align: "center",
           key: "amount"
         },
         {
           title: "状态",
-          align: 'center',
-          key: "status",
-          render: (h, params) => {
-            let color, text;
-            switch (params.row.status) {
-              case "Y":
-                color = "#0c0";
-                text = "成功";
-                break;
-              case "N":
-                color = "#f30";
-                text = "失败";
-                break;
-              case "E":
-                color = "#f30";
-                text = "错误";
-                break;
-            }
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              text
-            );
-          }
+          align: "center",
+          slot: "status2"
         },
         {
           title: "余额",
-          align: 'center',
+          align: "center",
           key: "balance"
         },
         {
           title: "交易时间",
-          align: 'center',
-          key: "createdAt",
-          render: (h, params) => {
-            return h(
-              "span",
-              dayjs(params.row.createdAt).format("YYYY-MM-DD HH:mm:ss")
-            );
-          }
+          align: "center",
+          slot: "createdAt2"
         }
       ],
       tradeRecord: [],
@@ -591,6 +556,106 @@ export default {
     }
   },
   methods: {
+    /* columns配置 */
+    //帐变金额
+    amountConfig(row) {
+      if (row.amount > 0) {
+        return "#0c0";
+      } else {
+        return "#f30";
+      }
+    },
+    //类型
+    typeConfig(row) {
+      return this.typeList[row.type];
+    },
+    //状态
+    statusConfig(row) {
+      let color, text;
+      switch (row.status) {
+        case "Y":
+          color = "#0c0";
+          text = "同步成功";
+          break;
+        case "N":
+          color = "#0c0";
+          text = "下注成功";
+          break;
+        case "E":
+          color = "#f30";
+          text = "下注失败";
+          break;
+      }
+      return { text, color };
+    },
+    //同步时间
+    createdAtConfig(row) {
+      return dayjs(row.createdAt).format("YYYY-MM-DD HH:mm:ss");
+    },
+
+    /* columns1配置 */
+    //状态
+    status1Config(row) {
+      let color, text;
+      switch (row.status) {
+        case "Y":
+          color = "#0c0";
+          text = "成功";
+          break;
+        case "N":
+          color = "#f30";
+          text = "失败";
+          break;
+        case "E":
+          color = "#f30";
+          text = "错误";
+          break;
+      }
+      return { text, color };
+    },
+    //输赢金额
+    winloseAmount1Config(row) {
+      if (row.winloseAmount > 0) {
+        return "#0c0";
+      } else {
+        return "#f30";
+      }
+    },
+    //操作
+    operation1Config(row) {
+      this.openModalRunning(row.content);
+      this.rowDetail = params.row;
+    },
+
+    /* columns2配置 */
+    //类型
+    type2Config(row) {
+      return this.typeList[row.type];
+    },
+    //状态
+    status2Config(row) {
+      let color, text;
+      switch (row.status) {
+        case "Y":
+          color = "#0c0";
+          text = "成功";
+          break;
+        case "N":
+          color = "#f30";
+          text = "失败";
+          break;
+        case "E":
+          color = "#f30";
+          text = "错误";
+          break;
+      }
+      return { text, color };
+    },
+    //交易时间
+    createdAt2Config(row) {
+      return dayjs(params.row.createdAt).format("YYYY-MM-DD HH:mm:ss");
+    },
+
     getFlowCount(list) {
       this.flowAmount = 0;
       for (let item of list) {
@@ -678,8 +743,9 @@ export default {
         isRound: this.reportType == "1" ? false : true,
         status: this.status,
         pageSize: this.pageSize,
-        gameType:this.gameType,
-        startKey: this.reportType == "1" ? this.flowStartKey : this.tradeStartKey,
+        gameType: this.gameType,
+        startKey:
+          this.reportType == "1" ? this.flowStartKey : this.tradeStartKey,
         businessKey: this.businessKey,
         startTime: this.changedTime[0],
         endTime: this.changedTime[1]
@@ -740,6 +806,6 @@ export default {
   vertical-align: top;
 }
 .demo-spin-icon-load {
-    animation: ani-demo-spin 1s linear infinite;
-  }
+  animation: ani-demo-spin 1s linear infinite;
+}
 </style>

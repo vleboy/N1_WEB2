@@ -1,25 +1,77 @@
 <template>
-  <div class="sbAll">
+  <div class="sbAll" style="width:120%">
     <div class="nowList">
       <div class="top">
         <p class="title">
           当前用户列表
-          <Button type="ghost" @click="exportdata('table_0')">导出数据</Button>
+          <Button @click="exportdata('table_0')">导出数据</Button>
         </p>
         <div class="right">
           <DatePicker type="datetimerange" :options="options" :editable='false' v-model="defaultTime" placeholder="选择日期时间范围(默认最近一周)" style="width: 300px" @on-ok="confirm"></DatePicker>
           <Button type="primary" @click="search">搜索</Button>
-          <Button type="ghost" @click="reset">重置</Button>
+          <Button @click="reset">重置</Button>
         </div>
       </div>
-      <Table :columns="columns1" :data="user" size="small" ref='table_0'></Table>
+      <Table :columns="columns1" :data="user" size="small" ref='table_0'>
+        <template slot-scope="{row, index}" slot="role">
+          <span>{{roleConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="userWinloseAmount">
+          <span
+            :style="{color: winloseAmountConfig(row).color}"
+          >{{winloseAmountConfig(row).amount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="userSubmitAmount">
+          <span>{{submitAmountConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uTrueWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1120000'], row).color}"
+          >{{gameWinloseAmountConfig(['1120000'], row).winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uTrueSubmitAmount">
+          <span>{{gameSubmitAmountConfig(['1120000'], row).submitAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uElWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1080000'], row).color}"
+          >{{gameWinloseAmountConfig(['1080000'], row).winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uElSubmitAmount">
+          <span>{{gameSubmitAmountConfig(['1080000'], row).submitAmount}}</span>
+        </template>
+      </Table>
     </div>
     <div class="playerList" id="playerList">
       <p class="title">
         所属玩家列表
-        <Button type="ghost" @click="exportdata('table_1')">导出数据</Button>
+        <Button @click="exportdata('table_1')">导出数据</Button>
       </p>
-      <Table :columns="columns2" :data="playerList" size="small" ref='table_1'></Table>
+      <Table :columns="columns2" :data="playerList" size="small" ref='table_1'>
+        <template slot-scope="{row, index}" slot="playerName">
+          <Tooltip content="前往玩家详情" placement="right">
+            <span
+              style="cursor:pointer;color:#20a0ff"
+              @click="playerNameConfig(row)"
+            >{{row.userName}}</span>
+          </Tooltip>
+        </template>
+        <template slot-scope="{row, index}" slot="playerWinloseAmount">
+          <span
+            :style="{color: winloseAmountConfig(row).color}"
+          >{{winloseAmountConfig(row).amount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="pTrueWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1120000'], row).color}"
+          >{{gameWinloseAmountConfig(['1120000'], row).winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="pElWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1080000'], row).color}"
+          >{{gameWinloseAmountConfig(['1080000'], row).winloseAmount}}</span>
+        </template>
+      </Table>
     </div>
     <Spin size="large" fix v-if="spinShow">
       <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
@@ -32,6 +84,11 @@ import _ from "lodash";
 import dayjs from "dayjs";
 import { getDefaultTime } from "@/config/getDefaultTime";
 import { thousandFormatter } from "@/config/format";
+import {
+  getWinloseAmount,
+  getsubmitAmount,
+  winloseAmountCount
+} from "@/config/getAmount";
 export default {
   data() {
     return {
@@ -72,237 +129,97 @@ export default {
       columns1: [
         {
           title: "序号",
+          align: 'center',
+          maxWidthL: 60,
           type: "index"
         },
         {
           title: "类型",
-          key: "role",
-          render: (h, params) => {
-            return h("span", this.types(params.row.role));
-          }
+          align: 'center',
+          slot: "role"
         },
         {
           title: "昵称",
+          align: 'center',
           key: "displayName"
         },
         {
           title: "管理员账号",
+          align: 'center',
           key: "username"
         },
         {
           title: "交易次数",
+          align: 'center',
           key: "betCount"
         },
         {
           title: "总游戏输赢金额",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let color = params.row.winloseAmount < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(params.row.winloseAmount)
-            );
-          }
+          align: 'center',
+          slot: "userWinloseAmount"
         },
         {
           title: "总游戏交公司",
-          key: "submitAmount",
-          render: (h, params) => {
-            return h("span", thousandFormatter(params.row.submitAmount));
-          }
+          align: 'center',
+          slot: "userSubmitAmount"
         },
         {
           title: "SB真人游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "1120000") {
-                count += gameList[key].winloseAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count)
-            );
-          }
+          align: 'center',
+          slot: "uTrueWinloseAmount"
         },
         {
           title: "SB真人游戏(商家交公司)",
-          key: "submitAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "1120000") {
-                count += gameList[key].submitAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            return h("span", thousandFormatter(count));
-          }
+          align: 'center',
+          slot: "uTrueSubmitAmount"
         },
         {
           title: "SB电子游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "1080000") {
-                count += gameList[key].winloseAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count)
-            );
-          }
+          align: 'center',
+          slot: "uElWinloseAmount"
         },
         {
           title: "SB电子游戏(商家交公司)",
-          key: "submitAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "1080000") {
-                count += gameList[key].submitAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            return h("span", thousandFormatter(count));
-          }
+          align: 'center',
+          slot: "uElSubmitAmount"
         }
       ],
       columns2: [
         {
           title: "序号",
+          align: 'center',
+          maxWidthL: 60,
           type: "index"
         },
         {
           title: "用户名",
-          key: "userName",
-          render: (h, params) => {
-            let name = params.row.userName;
-            return h(
-              "span",
-              {
-                style: {
-                  color: "#20a0ff",
-                  cursor:'pointer'
-                },
-                on: {
-                  click: () => {
-                    localStorage.setItem("playerName", name);
-                    this.$router.push({
-                      name: "playDetail",
-                      query: {
-                        name:name
-                      }
-                    });
-                  }
-                }
-              },
-              name
-            );
-          }
+          align: 'center',
+          slot: "playerName"
         },
         {
           title: "昵称",
+          align: 'center',
           key: "nickname"
         },
         {
           title: "交易次数",
+          align: 'center',
           key: "betCount"
         },
         {
           title: "总游戏输赢金额",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let color = params.row.winloseAmount < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(params.row.winloseAmount)
-            );
-          }
+          align: 'center',
+          key: "playerWinloseAmount"
         },
         {
           title: "SB真人游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let winloseAmount = 0;
-            if (params.row.gameTypeMap["1120000"] !== undefined) {
-              winloseAmount = params.row.gameTypeMap[
-                "1120000"
-              ].winloseAmount.toFixed(2);
-            }
-            let color = winloseAmount < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(winloseAmount)
-            );
-          }
+          align: 'center',
+          slot: "pTrueWinloseAmount"
         },
         {
           title: "SB电子游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let winloseAmount = 0;
-            if (params.row.gameTypeMap["1080000"] !== undefined) {
-              winloseAmount = params.row.gameTypeMap[
-                "1080000"
-              ].winloseAmount.toFixed(2);
-            }
-            let color = winloseAmount < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(winloseAmount)
-            );
-          }
+          align: 'center',
+          slot: "pElWinloseAmount"
         }
       ]
     };
@@ -321,6 +238,52 @@ export default {
     }
   },
   methods: {
+    /* 用户 */
+    //类型
+    roleConfig(row) {
+      return this.types(row.role) 
+    },
+    //总游戏输赢金额
+    winloseAmountConfig(row) {
+      if (row.winloseAmount < 0) {
+        return { amount: thousandFormatter(row.winloseAmount), color: "#f30" };
+      } else {
+        return { amount: thousandFormatter(row.winloseAmount), color: "#0c0" };
+      }
+    },
+    //总游戏交公司
+    submitAmountConfig(row) {
+      return thousandFormatter(row.submitAmount);
+    },
+
+    //游戏输赢金额
+    gameWinloseAmountConfig(arr, row, name) {
+      let winloseAmount = getWinloseAmount(arr, row);
+      winloseAmount = winloseAmount.toFixed(2);
+      if (winloseAmount < 0) {
+        return { winloseAmount, color: "#f30" };
+      } else {
+        return { winloseAmount, color: "#0c0" };
+      }
+    },
+    //游戏交公司
+    gameSubmitAmountConfig(arr, row, name) {
+      let submitAmount = getsubmitAmount(arr, row);
+      submitAmount = submitAmount.toFixed(2);
+      return { submitAmount };
+    },
+
+    /* 玩家 */
+    //用户名
+    playerNameConfig(row) {
+      localStorage.setItem("playerName", row.userName);
+      this.$router.push({
+        name: "playDetail",
+        query: {
+          name: row.userName
+        }
+      });
+    },
     confirm() {
       this.init();
     },

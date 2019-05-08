@@ -4,25 +4,249 @@
       <div class="top">
         <p class="title">
           当前用户列表
-         <Button type="ghost" @click="exportdata('table_0')">导出数据</Button>
+          <Button @click="exportdata('table_0')">导出数据</Button>
         </p>
         <div class="right">
-          <DatePicker type="datetimerange" :options="options" :editable='false' v-model="defaultTime" placeholder="选择日期时间范围(默认最近一周)" style="width: 300px" @on-ok="confirm"></DatePicker>
-          <Button type="primary" @click="search">搜索</Button>
-          <Button type="ghost" @click="reset">重置</Button>
+          <DatePicker
+            type="datetimerange"
+            :options="options"
+            :editable="false"
+            v-model="defaultTime"
+            placeholder="选择日期时间范围(默认最近一周)"
+            style="width: 300px"
+            @on-ok="confirm"
+          ></DatePicker>
+          <Button type="primary" @click="search" style="margin-left:1rem;margin-right:.3rem">搜索</Button>
+          <Button @click="reset">重置</Button>
         </div>
       </div>
-      <Table :columns="columns11" :data="user" size="small" ref='table_0'></Table>
+      <Table :columns="columns11" :data="user" size="small" ref="table_0">
+        <template slot-scope="{row, index}" slot="userRole">
+          <span>{{userRoleConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="userDisplayName">
+          <Tooltip content="前往日报表" placement="right">
+            <span
+              style="cursor:pointer;color:#20a0ff"
+              @click="userDisplayNameConfig(row)"
+            >{{row.displayName}}</span>
+          </Tooltip>
+        </template>
+        <template slot-scope="{row, index}" slot="userWinloseAmount">
+          <span
+            :style="{color: winloseAmountConfig(row).color}"
+          >{{winloseAmountConfig(row).amount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="userSubmitAmount">
+          <span>{{submitAmountConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uNaWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['70000', '90000'], row, 'NA').color}"
+          >{{gameWinloseAmountConfig(['70000', '90000'], row, 'NA').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uNaSubmitAmount">
+          <span>{{gameSubmitAmountConfig(['70000', '90000'], row, 'NA').submitAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uTtgWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1010000'], row, 'TTG').color}"
+          >{{gameWinloseAmountConfig(['1010000'], row, 'TTG').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uTtgSubmitAmount">
+          <span>{{gameSubmitAmountConfig(['1010000'], row, 'TTG', 10).submitAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uSaWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1060000', '1110000'], row, 'SA').color}"
+          >{{gameWinloseAmountConfig(['1060000', '1110000'], row, 'SA').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uSaSubmitAmount">
+          <span>{{gameSubmitAmountConfig(["1060000", "1110000"], row, 'SA').submitAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uSbWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1120000', '1080000'], row, 'SB').color}"
+          >{{gameWinloseAmountConfig(["1120000", "1080000"], row, 'SB').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uSbSubmitAmount">
+          <span>{{gameSubmitAmountConfig(["1120000", "1080000"], row, 'SB').submitAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uMgWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['10300000'], row, 'MG').color}"
+          >{{gameWinloseAmountConfig(["10300000"], row, 'MG').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uMgSubmitAmount">
+          <span>{{gameSubmitAmountConfig(["10300000"], row, 'MG', 16).submitAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uAgWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1050000'], row, 'AG').color}"
+          >{{gameWinloseAmountConfig(["1050000"], row, 'AG').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uAgSubmitAmount">
+          <span>{{gameSubmitAmountConfig(["1050000"], row, 'AG', 18).submitAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uRtgWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1140000'], row, 'RTG').color}"
+          >{{gameWinloseAmountConfig(["1140000"], row, 'RTG').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uRtgSubmitAmount">
+          <span>{{gameSubmitAmountConfig(["1140000"], row, 'RTG', 20).submitAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uDtWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1150000'], row, 'DT').color}"
+          >{{gameWinloseAmountConfig(["1150000"], row, 'DT').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uDtSubmitAmount">
+          <span>{{gameSubmitAmountConfig(["1150000"], row, 'DT', 22).submitAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uPpWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1160000'], row, 'PP').color}"
+          >{{gameWinloseAmountConfig(["1160000"], row, 'PP').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uPpSubmitAmount">
+          <span>{{gameSubmitAmountConfig(["1160000"], row, 'PP', 24).submitAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uYsbWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1130000'], row, 'YSB').color}"
+          >{{gameWinloseAmountConfig(["1130000"], row, 'YSB').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uYsbSubmitAmount">
+          <span>{{gameSubmitAmountConfig(["1130000"], row, 'YSB', 26).submitAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uPgWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1090000'], row, 'PG').color}"
+          >{{gameWinloseAmountConfig(["1090000"], row, 'PG').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uPgSubmitAmount">
+          <span>{{gameSubmitAmountConfig(["1090000"], row, 'PG', 28).submitAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uHabaWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1040000'], row, 'HABA').color}"
+          >{{gameWinloseAmountConfig(["1040000"], row, 'HABA').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uHabaSubmitAmount">
+          <span>{{gameSubmitAmountConfig(["1040000"], row, 'HABA', 30).submitAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uPngWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1020000'], row, 'PNG').color}"
+          >{{gameWinloseAmountConfig(["1020000"], row, 'PNG').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uPngSubmitAmount">
+          <span>{{gameSubmitAmountConfig(["1020000"], row, 'PNG', 32).submitAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uKyWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1070000'], row, 'KY').color}"
+          >{{gameWinloseAmountConfig(["1070000"], row, 'KY', 33).winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uKySubmitAmount">
+          <span>{{gameSubmitAmountConfig(["1070000"], row, 'KY', 34).submitAmount}}</span>
+        </template>
+      </Table>
     </div>
     <div class="playerList" id="playerList">
       <p class="title">
         所属玩家列表
-        <Button type="ghost" @click="exportdata('table_1')">导出数据</Button>
+        <Button @click="exportdata('table_1')">导出数据</Button>
       </p>
-      <Table :columns="columns22" :data="playerList" size="small" ref='table_1'></Table>
+      <Table :columns="columns22" :data="playerList" size="small" ref="table_1">
+        <template slot-scope="{row, index}" slot="playerName">
+          <Tooltip content="前往玩家详情" placement="right">
+            <span
+              style="cursor:pointer;color:#20a0ff"
+              @click="playerNameConfig(row)"
+            >{{row.userName}}</span>
+          </Tooltip>
+        </template>
+        <template slot-scope="{row, index}" slot="playerWinloseAmount">
+          <span
+            :style="{color: winloseAmountConfig(row).color}"
+          >{{winloseAmountConfig(row).amount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="pNaWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['70000', '90000'], row, 'NA').color}"
+          >{{gameWinloseAmountConfig(['70000', '90000'], row, 'NA').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="pTtgWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1010000'], row, 'TTG').color}"
+          >{{gameWinloseAmountConfig(['1010000'], row, 'TTG').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="pSaWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1060000', '1110000'], row, 'SA').color}"
+          >{{gameWinloseAmountConfig(['1060000', '1110000'], row, 'SA').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="pSbWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1120000', '1080000'], row, 'SB').color}"
+          >{{gameWinloseAmountConfig(["1120000", "1080000"], row, 'SB').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="pMgWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['10300000'], row, 'MG').color}"
+          >{{gameWinloseAmountConfig(["10300000"], row, 'MG').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="pAgWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1050000'], row, 'AG').color}"
+          >{{gameWinloseAmountConfig(["1050000"], row, 'AG').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="pRtgWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1140000'], row, 'RTG').color}"
+          >{{gameWinloseAmountConfig(["1140000"], row, 'RTG').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="pDtWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1150000'], row, 'DT').color}"
+          >{{gameWinloseAmountConfig(["1150000"], row, 'DT').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="pPpWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1160000'], row, 'PP').color}"
+          >{{gameWinloseAmountConfig(["1160000"], row, 'PP').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="pYsbWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1130000'], row, 'YSB').color}"
+          >{{gameWinloseAmountConfig(["1130000"], row, 'YSB').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="pPgWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1090000'], row, 'PG').color}"
+          >{{gameWinloseAmountConfig(["1090000"], row, 'PG').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="pHabaWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1040000'], row, 'HABA').color}"
+          >{{gameWinloseAmountConfig(["1040000"], row, 'HABA').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="pPngWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1020000'], row, 'PNG').color}"
+          >{{gameWinloseAmountConfig(["1020000"], row, 'PNG').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="pKyWinloseAmount">
+          <span
+            :style="{color: gameWinloseAmountConfig(['1070000'], row, 'KY').color}"
+          >{{gameWinloseAmountConfig(["1070000"], row, 'KY', 33).winloseAmount}}</span>
+        </template>
+      </Table>
     </div>
     <Spin size="large" fix v-if="spinShow">
-      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+      <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
       <div>加载中...</div>
     </Spin>
   </div>
@@ -31,1104 +255,396 @@
 import _ from "lodash";
 import dayjs from "dayjs";
 import { getDefaultTime } from "@/config/getDefaultTime";
-import { getWinloseAmount } from "@/config/getWinloseAmount";
+import {
+  getWinloseAmount,
+  getsubmitAmount,
+  winloseAmountCount
+} from "@/config/getAmount";
 import { thousandFormatter } from "@/config/format";
 export default {
   data() {
     return {
-       options: {
+      userRemoveArr: [], //用户需要隐藏的列
+      playerRemoveArr: [], //玩家需要隐藏的列
+      tabCount: 7, //显示的列数
+      options: {
         shortcuts: [
           {
             text: "本周",
             value() {
-              return [new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().endOf('second').valueOf())]
+              return [
+                new Date(
+                  dayjs()
+                    .startOf("week")
+                    .valueOf() +
+                    24 * 60 * 60 * 1000
+                ),
+                new Date(
+                  dayjs()
+                    .endOf("second")
+                    .valueOf()
+                )
+              ];
             }
           },
           {
             text: "本月",
             value() {
-              return [new Date(dayjs().startOf('month').valueOf()), new Date(dayjs().endOf('second').valueOf())]
+              return [
+                new Date(
+                  dayjs()
+                    .startOf("month")
+                    .valueOf()
+                ),
+                new Date(
+                  dayjs()
+                    .endOf("second")
+                    .valueOf()
+                )
+              ];
             }
           },
           {
             text: "上周",
             value() {
-              return [new Date(dayjs().add(-1, 'week').startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000 - 1)]
+              return [
+                new Date(
+                  dayjs()
+                    .add(-1, "week")
+                    .startOf("week")
+                    .valueOf() +
+                    24 * 60 * 60 * 1000
+                ),
+                new Date(
+                  dayjs()
+                    .startOf("week")
+                    .valueOf() +
+                    24 * 60 * 60 * 1000 -
+                    1
+                )
+              ];
             }
           },
           {
             text: "上月",
             value() {
               //-1 上月
-              return [new Date(dayjs().add(-1, 'month').startOf('month').valueOf()), new Date(dayjs().startOf('month').valueOf() - 1)]
+              return [
+                new Date(
+                  dayjs()
+                    .add(-1, "month")
+                    .startOf("month")
+                    .valueOf()
+                ),
+                new Date(
+                  dayjs()
+                    .startOf("month")
+                    .valueOf() - 1
+                )
+              ];
             }
           }
         ]
-      }, 
+      },
       defaultTime: getDefaultTime(),
       spinShow: false, //加载spin
       playerList: [], //玩家列表
       user: [], //当前商户
       gameType: [
-        70000,90000,
-        1010000,1090000,1040000,1020000,1070000,
+        70000,
+        90000,
+        1010000,
+        1090000,
+        1040000,
+        1020000,
+        1070000,
         10300000,
         1050000,
         1060000,
         1100000,
         1110000,
         1130000,
-        1140000,1160000,
-        1150000,1080000,1120000
+        1140000,
+        1160000,
+        1150000,
+        1080000,
+        1120000
       ],
       columns1: [
         {
           title: "序号",
           type: "index",
-          maxWidth: 60
+          align: 'center',
+          maxWidth: 60,
+          
         },
         {
           title: "类型",
-          key: "role",
-          render: (h, params) => {
-            return h("span", this.types(params.row.role));
-          }
+          align: 'center',
+          slot: "userRole"
         },
         {
           title: "昵称",
-          key: "displayName",
-          render: (h, params) => {
-            return h(
-              "span",
-              {
-                style: {
-                  cursor: "pointer",
-                  color: "#20a0ff"
-                },
-                on: {
-                  click: () => {
-                    let time = this.changedTime
-                    this.$router.push({name: "dayMerchant",query:{name:params.row.sn,time:time,type:""}})
-                    localStorage.setItem('dayMerchant','dayMerchant')
-                  }
-                }  
-              }, 
-              params.row.displayName+"(前往日报表)");
-          },
+          align: 'center',
+          slot: "userDisplayName"
         },
         {
           title: "管理员账号",
+          align: 'center',
           key: "uname"
         },
         {
           title: "交易次数",
+          align: 'center',
           key: "betCount"
         },
         {
           title: "总游戏输赢金额",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let color = params.row.winloseAmount < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(params.row.winloseAmount)
-            );
-          }
+          align: 'center',
+          slot: "userWinloseAmount"
         },
         {
           title: "总游戏交公司",
-          key: "submitAmount",
-          render: (h, params) => {
-            return h("span", thousandFormatter(params.row.submitAmount));
-          }
+          align: 'center',
+          slot: "userSubmitAmount"
         },
         {
           title: "NA游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (['70000','90000'].includes(key)) {
-                count += gameList[key].winloseAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count)
-            );
-          }
+          align: 'center',
+          slot: "uNaWinloseAmount"
         },
         {
           title: "NA游戏(商家交公司)",
-          key: "submitAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (['70000','90000'].includes(key)) {
-                count += gameList[key].submitAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            return h("span", thousandFormatter(count));
-          }
+          align: 'center',
+          slot: "uNaSubmitAmount"
         },
         {
           title: "TTG游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "1010000") {
-                count = gameList[key].winloseAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count)
-            );
-          }
+          align: 'center',
+          slot: "uTtgWinloseAmount"
         },
         {
           title: "TTG游戏(商家交公司)",
-          key: "submitAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "1010000") {
-                count = gameList[key].submitAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            return h("span", thousandFormatter(count));
-          }
+          slot: "uTtgSubmitAmount"
         },
         {
           title: "SA游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (["1060000", "1110000"].includes(key)) {
-                count += gameList[key].winloseAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count)
-            );
-          }
+          align: 'center',
+          slot: "uSaWinloseAmount"
         },
         {
           title: "SA游戏(商家交公司)",
-          key: "submitAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (["1060000", "1110000"].includes(key)) {
-                count += gameList[key].submitAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            return h("span", thousandFormatter(count));
-          }
+          align: 'center',
+          slot: "uSaSubmitAmount"
         },
         {
           title: "SB游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (["1120000", "1080000"].includes(key)) {
-                count += gameList[key].winloseAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count)
-            );
-          }
+          align: 'center',
+          slot: "uSbWinloseAmount"
         },
         {
           title: "SB游戏(商家交公司)",
-          key: "submitAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (["1120000", "1080000"].includes(key)) {
-                count += gameList[key].submitAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            return h("span", thousandFormatter(count));
-          }
+          align: 'center',
+          slot: "uSbSubmitAmount"
         },
         {
           title: "MG游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "10300000") {
-                count = gameList[key].winloseAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count)
-            );
-          }
+          align: 'center',
+          slot: "uMgWinloseAmount"
         },
         {
           title: "MG游戏(商家交公司)",
-          key: "submitAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "1010000") {
-                count = gameList[key].submitAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            return h("span", thousandFormatter(count));
-          }
+          align: 'center',
+          slot: "uMgSubmitAmount"
         },
         {
           title: "AG游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "1050000") {
-                count = gameList[key].winloseAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count)
-            );
-          }
+          align: 'center',
+          slot: "uAgWinloseAmount"
         },
         {
           title: "AG游戏(商家交公司)",
-          key: "submitAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "1050000") {
-                count = gameList[key].submitAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            return h("span", thousandFormatter(count));
-          }
+          align: 'center',
+          slot: "uAgSubmitAmount"
         },
         {
           title: "RTG游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "1140000") {
-                count = gameList[key].winloseAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count)
-            );
-          }
+          align: 'center',
+          slot: "uRtgWinloseAmount"
         },
         {
           title: "RTG游戏(商家交公司)",
-          key: "submitAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "1140000") {
-                count = gameList[key].submitAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            return h("span", thousandFormatter(count));
-          }
+          align: 'center',
+          slot: "uRtgSubmitAmount"
         },
         {
           title: "DT游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "1150000") {
-                count = gameList[key].winloseAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count)
-            );
-          }
+          align: 'center',
+          slot: "uDtWinloseAmount"
         },
         {
           title: "DT游戏(商家交公司)",
-          key: "submitAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "1150000") {
-                count = gameList[key].submitAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            return h("span", thousandFormatter(count));
-          }
+          align: 'center',
+          slot: "uDtSubmitAmount"
         },
-         {
+        {
           title: "PP游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "1160000") {
-                count = gameList[key].winloseAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count)
-            );
-          }
+          align: 'center',
+          slot: "uPpWinloseAmount"
         },
         {
           title: "PP游戏(商家交公司)",
-          key: "submitAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "1160000") {
-                count = gameList[key].submitAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            return h("span", thousandFormatter(count));
-          }
+          align: 'center',
+          slot: "uPpSubmitAmount"
         },
         {
           title: "YSB游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "1130000") {
-                count = gameList[key].winloseAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count)
-            );
-          }
+          align: 'center',
+          slot: "uYsbWinloseAmount"
         },
         {
           title: "YSB游戏(商家交公司)",
-          key: "submitAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "1130000") {
-                count = gameList[key].submitAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            return h("span", thousandFormatter(count));
-          }
+          align: 'center',
+          slot: "uYsbSubmitAmount"
         },
         {
           title: "PG游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "1090000") {
-                count = gameList[key].winloseAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count)
-            );
-          }
+          align: 'center',
+          slot: "uPgWinloseAmount"
         },
         {
           title: "PG游戏(商家交公司)",
-          key: "submitAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "1090000") {
-                count = gameList[key].submitAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            return h("span", thousandFormatter(count));
-          }
+          align: 'center',
+          slot: "uPgSubmitAmount"
         },
         {
           title: "HABA游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "1040000") {
-                count = gameList[key].winloseAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count)
-            );
-          }
+          align: 'center',
+          slot: "uHabaWinloseAmount"
         },
         {
           title: "HABA游戏(商家交公司)",
-          key: "submitAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "1040000") {
-                count = gameList[key].submitAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            return h("span", thousandFormatter(count));
-          }
+          align: 'center',
+          slot: "uHabaSubmitAmount"
         },
-          {
+        {
           title: "PNG游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "1020000") {
-                count = gameList[key].winloseAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count)
-            );
-          }
+          align: 'center',
+          slot: "uPngWinloseAmount"
         },
         {
           title: "PNG游戏(商家交公司)",
-          key: "submitAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "1020000") {
-                count = gameList[key].submitAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            return h("span", thousandFormatter(count));
-          }
+          align: 'center',
+          slot: "uPngSubmitAmount"
         },
         {
           title: "KY游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "1070000") {
-                count = gameList[key].winloseAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count)
-            );
-          }
+          align: 'center',
+          slot: "uKyWinloseAmount"
         },
         {
           title: "KY游戏(商家交公司)",
-          key: "submitAmount",
-          render: (h, params) => {
-            let gameList = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in gameList) {
-              if (key == "1070000") {
-                count = gameList[key].submitAmount;
-              }
-            }
-            if (count) {
-              count = count.toFixed(2);
-            }
-            return h("span", thousandFormatter(count));
-          }
-        },
+          align: 'center',
+          slot: "uKySubmitAmount"
+        }
       ],
       columns2: [
         {
           title: "序号",
+          align: 'center',
+          maxWidth: 60,
           type: "index"
         },
         {
           title: "用户名",
-          key: "userName",
-          render: (h, params) => {
-            let name = params.row.userName;
-            return h(
-              "span",
-              {
-                style: {
-                  color: "#20a0ff",
-                  cursor:'pointer'
-                },
-                on: {
-                  click: () => {
-                    localStorage.setItem("playerName", name);
-                    this.$router.push({
-                      name: "playDetail",
-                      query: {
-                        name:name
-                      }
-                    });
-                  }
-                }
-              },
-              name
-            );
-          }
+          align: 'center',
+          slot: "playerName"
         },
         {
           title: "昵称",
+          align: 'center',
           key: "nickname"
         },
         {
           title: "交易次数",
+          align: 'center',
           key: "betCount"
         },
         {
           title: "总游戏输赢金额",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let color = params.row.winloseAmount < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(params.row.winloseAmount)
-            );
-          }
+          align: 'center',
+          slot: "playerWinloseAmount"
         },
         {
           title: "NA游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let obj = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in obj) {
-              if (['70000','90000'].includes(key)) {
-                count += obj[key].winloseAmount;
-              }
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count.toFixed(2))
-            );
-          }
+          align: 'center',
+          slot: "pNaWinloseAmount"
         },
         {
           title: "TTG游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let obj = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in obj) {
-              if (key == "1010000") {
-                count = obj[key].winloseAmount;
-              }
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count.toFixed(2))
-            );
-          }
+          align: 'center',
+          slot: "pTtgWinloseAmount"
         },
         {
           title: "SA游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let obj = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in obj) {
-              if (["1060000", "1110000"].includes(key)) {
-                count += obj[key].winloseAmount;
-              }
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count.toFixed(2))
-            );
-          }
+          align: 'center',
+          slot: "pSaWinloseAmount"
         },
         {
           title: "SB游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let obj = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in obj) {
-              if (["1120000", "1080000"].includes(key)) {
-                count += obj[key].winloseAmount;
-              }
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count.toFixed(2))
-            );
-          }
+          align: 'center',
+          slot: "pSbWinloseAmount"
         },
         {
           title: "MG游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let obj = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in obj) {
-              if (["10300000"].includes(key)) {
-                count += obj[key].winloseAmount;
-              }
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count.toFixed(2))
-            );
-          }
+          align: 'center',
+          slot: "pMgWinloseAmount"
         },
         {
           title: "AG游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let obj = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in obj) {
-              if (["1050000"].includes(key)) {
-                count += obj[key].winloseAmount;
-              }
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count.toFixed(2))
-            );
-          }
+          align: 'center',
+          slot: "pAgWinloseAmount"
         },
         {
           title: "RTG游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let obj = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in obj) {
-              if (key == "1140000") {
-                count += obj[key].winloseAmount;
-              }
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count.toFixed(2))
-            );
-          }
+          align: 'center',
+          slot: "pRtgWinloseAmount"
         },
         {
           title: "DT游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let obj = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in obj) {
-              if (key == "1150000") {
-                count += obj[key].winloseAmount;
-              }
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count.toFixed(2))
-            );
-          }
+          align: 'center',
+          slot: "pDtWinloseAmount"
         },
         {
           title: "PP游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let obj = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in obj) {
-              if (key == "1160000") {
-                count += obj[key].winloseAmount;
-              }
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count.toFixed(2))
-            );
-          }
+          align: 'center',
+          slot: "pPpWinloseAmount"
         },
         {
           title: "YSB游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let obj = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in obj) {
-              if (["1130000"].includes(key)) {
-                count += obj[key].winloseAmount;
-              }
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count.toFixed(2))
-            );
-          }
+          align: 'center',
+          slot: "pYsbWinloseAmount"
         },
         {
           title: "PG游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let obj = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in obj) {
-              if (["1090000"].includes(key)) {
-                count += obj[key].winloseAmount;
-              }
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count.toFixed(2))
-            );
-          }
+          align: 'center',
+          slot: "pPgWinloseAmount"
         },
         {
           title: "HABA游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let obj = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in obj) {
-              if (["1040000"].includes(key)) {
-                count += obj[key].winloseAmount;
-              }
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count.toFixed(2))
-            );
-          }
+          align: 'center',
+          slot: "pHabaWinloseAmount"
         },
-         {
+        {
           title: "PNG游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let obj = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in obj) {
-              if (["1020000"].includes(key)) {
-                count += obj[key].winloseAmount;
-              }
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count.toFixed(2))
-            );
-          }
+          align: 'center',
+          slot: "pPngWinloseAmount"
         },
         {
           title: "KY游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let obj = params.row.gameTypeMap;
-            let count = 0;
-            for (let key in obj) {
-              if (["1070000"].includes(key)) {
-                count += obj[key].winloseAmount;
-              }
-            }
-            let color = count < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(count.toFixed(2))
-            );
-          }
-        },
+          align: 'center',
+          slot: "pKyWinloseAmount"
+        }
       ],
       columns11: [],
       columns22: []
@@ -1148,15 +664,69 @@ export default {
     },
     getTabWidth() {
       if (this.columns11.length <= 9) {
-        return '100%'
+        return "100%";
       } else {
-        return ((this.columns11.length) - 9) * 7 + 100 + '%'
+        return (this.columns11.length - 9) * 7 + 100 + "%";
       }
       //return this.columns11.length
-    },
+    }
   },
   methods: {
-    
+    /* 用户列表配置 */
+    //类型
+    userRoleConfig(row) {
+      return this.types(row.role);
+    },
+    //昵称
+    userDisplayNameConfig(row) {
+      let time = this.changedTime;
+      this.$router.push({
+        name: "dayMerchant",
+        query: { name: row.sn, time: time, type: "" }
+      });
+      localStorage.setItem("dayMerchant", "dayMerchant");
+    },
+    //总游戏输赢金额
+    winloseAmountConfig(row) {
+      if (row.winloseAmount < 0) {
+        return { amount: thousandFormatter(row.winloseAmount), color: "#f30" };
+      } else {
+        return { amount: thousandFormatter(row.winloseAmount), color: "#0c0" };
+      }
+    },
+    //总游戏交公司
+    submitAmountConfig(row) {
+      return thousandFormatter(row.submitAmount);
+    },
+
+    //游戏输赢金额
+    gameWinloseAmountConfig(arr, row, name) {
+      let winloseAmount = getWinloseAmount(arr, row);
+      winloseAmount = winloseAmount.toFixed(2);
+      if (winloseAmount < 0) {
+        return { winloseAmount, color: "#f30" };
+      } else {
+        return { winloseAmount, color: "#0c0" };
+      }
+    },
+    //游戏交公司
+    gameSubmitAmountConfig(arr, row, name) {
+      let submitAmount = getsubmitAmount(arr, row);
+      submitAmount = submitAmount.toFixed(2);
+      return { submitAmount };
+    },
+    /* 玩家列表配置 */
+    //用户名
+    playerNameConfig(row) {
+      localStorage.setItem("playerName", row.userName);
+      this.$router.push({
+        name: "playDetail",
+        query: {
+          name: row.userName
+        }
+      });
+    },
+  
     confirm() {
       this.init();
     },
@@ -1166,7 +736,7 @@ export default {
       } else if (table == "table_1") {
         this.$refs.table_1.exportCsv({ filename: "player" });
       }
-       this.$Notice.config({
+      this.$Notice.config({
         top: 200,
         duration: 10
       });
@@ -1228,96 +798,92 @@ export default {
       this.spinShow = false;
       this.user = [];
 
-      this.columns11 = await _.cloneDeep(this.columns1)
-      this.columns22 = await _.cloneDeep(this.columns2)
+      this.columns11 = await _.cloneDeep(this.columns1);
+      this.columns22 = await _.cloneDeep(this.columns2);
 
-      let arr = perms.payload
-      let removeArr = []
-      let removeArr1 = []
+      let arr = perms.payload;
 
-      if (getWinloseAmount(arr, ["1010000"]) == 0) {
-        removeArr.push(9,10)
+      let removeArr = [];
+      let removeArr1 = [];
+
+      //要删除的列下标
+      if (winloseAmountCount(arr, ["1010000"]) == 0) {
+        removeArr.push(9, 10);
         removeArr1.push(6)
       }
-      if (getWinloseAmount(arr, ["1060000", "1110000"]) == 0) {
-        removeArr.push(11,12)
+      if (winloseAmountCount(arr, ["1060000", "1110000"]) == 0) {
+        removeArr.push(11, 12);
         removeArr1.push(7)
       }
-      if (getWinloseAmount(arr, ["1120000", "1080000"]) == 0) {
-        removeArr.push(13,14)
+      if (winloseAmountCount(arr, ["1120000", "1080000"]) == 0) {
+        removeArr.push(13, 14);
         removeArr1.push(8)
       }
-      if (getWinloseAmount(arr, ["10300000"]) == 0) {
-        removeArr.push(15,16)
+      if (winloseAmountCount(arr, ["10300000"]) == 0) {
+        removeArr.push(15, 16);
         removeArr1.push(9)
-      }  
-      if (getWinloseAmount(arr, ["1050000"]) == 0) {
-        removeArr.push(17,18)
+      }
+      if (winloseAmountCount(arr, ["1050000"]) == 0) {
+        removeArr.push(17, 18);
         removeArr1.push(10)
       }
-      if (getWinloseAmount(arr, ["1140000"]) == 0) {
-        removeArr.push(19,20)
+      if (winloseAmountCount(arr, ["1140000"]) == 0) {
+        removeArr.push(19, 20);
         removeArr1.push(11)
       }
-      if (getWinloseAmount(arr, ["1150000"]) == 0) {
-        removeArr.push(21,22)
+      if (winloseAmountCount(arr, ["1150000"]) == 0) {
+        removeArr.push(21, 22);
         removeArr1.push(12)
       }
-      if (getWinloseAmount(arr, ["1160000"]) == 0) {
-        removeArr.push(23,24)
+      if (winloseAmountCount(arr, ["1160000"]) == 0) {
+        removeArr.push(23, 24);
         removeArr1.push(13)
       }
-      if (getWinloseAmount(arr, ["1090000"]) == 0) {
-        removeArr.push(25,26)
+      if (winloseAmountCount(arr, ["1130000"]) == 0) {
+        removeArr.push(25, 26);
         removeArr1.push(14)
       }
-      if (getWinloseAmount(arr, ["1040000"]) == 0) {
-        removeArr.push(27,28)
+      if (winloseAmountCount(arr, ["1090000"]) == 0) {
+        removeArr.push(27, 28);
         removeArr1.push(15)
       }
-      if (getWinloseAmount(arr, ["1020000"]) == 0) {
-        removeArr.push(29,30)
+      if (winloseAmountCount(arr, ["1040000"]) == 0) {
+        removeArr.push(29, 30);
         removeArr1.push(16)
       }
-      if (getWinloseAmount(arr, ["1130000"]) == 0) {
-        removeArr.push(31,32)
+      if (winloseAmountCount(arr, ["1020000"]) == 0) {
+        removeArr.push(31, 32);
         removeArr1.push(17)
       }
-      if (getWinloseAmount(arr, ["1070000"]) == 0) {
-        removeArr.push(33,34)
+      if (winloseAmountCount(arr, ["1070000"]) == 0) {
+        removeArr.push(33, 34);
         removeArr1.push(18)
       }
 
-
-      let rs = Array.from(new Set(removeArr));
-      let rs1 = Array.from(new Set(removeArr1));
-  
-      let flg = true
+      let flg = true;
       let flg1 = true
-    
-      for (let i = 0; i < rs.length; i++) {
+
+      for (let i = 0; i < removeArr.length; i++) {
         if (flg) {
-          this.columns11.splice(rs[i], 1)
-          flg = !flg
+          this.columns11.splice(removeArr[i], 1);
+          flg = !flg;
         } else {
-          this.columns11.splice(rs[i] - i, 1)   
+          this.columns11.splice(removeArr[i] - i, 1);
         }
-          
       }
 
-      for (let i = 0; i < rs1.length; i++) {
+      for (let i = 0; i < removeArr1.length; i++) {
         if (flg1) {
-          this.columns22.splice(rs1[i], 1)
+          this.columns22.splice(removeArr1[i], 1)
           flg1 = !flg1
         } else {
-          this.columns22.splice(rs1[i] - i, 1)   
+          this.columns22.splice(removeArr1[i] - i, 1)   
         }
           
       }
 
-
-      rs = []
-      rs1 = []
+      removeArr = [];
+      removeArr1 = []
 
       if (acct && acct.code == 0) {
         this.user.push(acct.payload);

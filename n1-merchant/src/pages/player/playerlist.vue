@@ -4,46 +4,80 @@
       <Row class="row -search-row">
         <Col span="2" offset="4">玩家ID</Col>
         <Col span="4">
-        <Input v-model="searchInfo.userId" placeholder="请输入"></Input>
+          <Input v-model="searchInfo.userId" placeholder="请输入"></Input>
         </Col>
         <Col span="2">玩家账号</Col>
         <Col span="4">
-        <Input v-model="searchInfo.userName" placeholder="请输入"></Input>
+          <Input v-model="searchInfo.userName" placeholder="请输入"></Input>
         </Col>
         <Col span="5">
-        <div class="btns">
-          <Button type="primary" @click="getSearch(true)">搜索</Button>
-          <Button @click="getSearch(false)">重置</Button>
-        </div>
+          <div class="btns">
+            <Button type="primary" @click="getSearch(true)">搜索</Button>
+            <Button @click="getSearch(false)">重置</Button>
+          </div>
         </Col>
       </Row>
-      <Row class="row ">
+      <Row class="row">
         <Col span="2" offset="4">玩家昵称</Col>
         <Col span="4">
-        <Input v-model="searchInfo.nickname" placeholder="请输入"></Input>
+          <Input v-model="searchInfo.nickname" placeholder="请输入"></Input>
         </Col>
-        <Col span="2" >游戏状态</Col>
+        <Col span="2">游戏状态</Col>
         <Col span="4">
-        <Select v-model="searchInfo.gameId" clearable placeholder="请选择游戏状态" style="text-align: left">
-          <Option v-for="(item, index) in gameTypeList" :value="item.code" :key="index">{{ item.name }}</Option>
-        </Select>
+          <Select
+            v-model="searchInfo.gameId"
+            clearable
+            placeholder="请选择游戏状态"
+            style="text-align: left"
+          >
+            <Option
+              v-for="(item, index) in gameTypeList"
+              :value="item.code"
+              :key="index"
+            >{{ item.name }}</Option>
+          </Select>
         </Col>
       </Row>
     </div>
     <div class="playerform">
-      <!--<Row class="-list-btn">-->
-      <!--<Col>-->
-      <!--<Button type="primary" @click="allChangeState(0)">批量停用</Button>-->
-      <!--<Button type="primary" @click="allChangeState(1)">批量开启</Button>-->
-      <!--</Col>-->
-      <!--</Row>-->
-      <Table :columns="columns" :data="getItems"></Table>
+
+      <Table :columns="columns" :data="getItems">
+        <template slot-scope="{row, index}" slot="nickname">
+          <span>{{row.nickname === "NULL!" ? "-" : row.nickname}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="state">
+          <Tag type="border" :color="stateConfig(row)">{{playerStatus[row.state]}}</Tag>
+        </template>
+        <template slot-scope="{row, index}" slot="gameStateName">
+          <Tag type="border" :color="gameStateConfig(row)">{{row.gameStateName}}</Tag>
+        </template>
+        <template slot-scope="{row, index}" slot="balance">
+          <span>{{balanceConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="createAt">
+          <span>{{createAtConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="joinTime">
+          <span>{{updateAtConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="action">
+          <Button type="text" size="small" style="color:#20a0ff" @click="playDetail(row)">查看</Button>
+          <Button type="text" size="small" style="color:#20a0ff" @click="changeStatus(row)">{{row.state ? "停用" : "开启"}}</Button>
+        </template>
+      </Table>
+
       <Spin size="large" fix v-if="isFetching">
-        <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+        <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
         <div>加载中...</div>
       </Spin>
       <div style="text-align: right;margin:2rem 0">
-        <Page :total="playerList.length" show-elevator :page-size="20" :current.sync="currentPage" @on-change="getNowpage"></Page>
+        <Page
+          :total="playerList.length"
+          show-elevator
+          :page-size="20"
+          :current.sync="currentPage"
+          @on-change="getNowpage"
+        ></Page>
       </div>
     </div>
   </div>
@@ -51,6 +85,7 @@
 
 <script type="text/ecmascript-6">
 import { httpRequest } from "@/service/index";
+import { getGameType } from "@/config/getGameType";
 import dayjs from "dayjs";
 import {
   formatUserName,
@@ -69,27 +104,6 @@ export default {
       isFetching: false,
       isLastMessage: false, // 主要判断是否是后台返回最后一次信息
       playerList: [],
-      GameListEnum: [
-        {code: "0",name: '离线'},
-        {code: '1', name: '大厅'},
-        { company: "NA", code: "70000", name: "H5电子游戏" },
-        { company: "NA", code: "90000", name: "H5电子游戏-无神秘奖" },
-        { company: "KY", code: "1070000", name: "KY棋牌游戏" },
-        { company: "TTG", code: "1010000", name: "TTG电子游戏" },
-        { company: "PNG", code: "1020000", name: "PNG电子游戏" },
-        { company: "MG", code: "10300000", name: "MG电子游戏" },
-        { company: "HABA", code: "1040000", name: "HABA电子游戏" },
-        { company: "AG", code: "1050000", name: "AG真人游戏" },
-        { company: "SA", code: "1060000", name: "SA真人游戏" },
-        { company: "SA", code: "1110000", name: "SA捕鱼游戏" },
-        { company: "PG", code: "1090000", name: "PG电子游戏" },
-        { company: "YSB", code: "1130000", name: "YSB体育游戏" },
-        { company: "RTG", code: "1140000", name: "RTG电子游戏" },
-        { company: "SB", code: "1080000", name: "SB电子游戏" },
-        { company: "SB", code: "1120000", name: "SB真人游戏" },
-        { company: "DT", code: "1150000", name: "DT电子游戏" },
-        { company: "PP", code: "1160000", name: "PP电子游戏" }
-      ],
       playerListStorage: [],
       playerListStartKey: "",
       playerStatus: ["已停用", "正常"],
@@ -108,161 +122,71 @@ export default {
         {
           title: "玩家ID",
           key: "userId",
-          align: 'center',
+          align: "center",
           maxWidth: 90,
           sortable: true
         },
         {
           title: "玩家账号",
-          align: 'center',
+          align: "center",
           key: "userName",
           sortable: true
         },
         {
           title: "商户ID",
           key: "buId",
-          
-          align: 'center',
+          align: "center",
           sortable: true
         },
         {
           title: "所属商户",
-          align: 'center',
-          minWidth:50,
+          align: "center",
+          minWidth: 50,
           key: "merchantName",
           sortable: true
         },
         {
           title: "玩家昵称",
-          key: "nickname",
+          slot: "nickname",
           sortable: true,
-          align: 'center',
-          render: (h, params) => {
-            return h(
-              "span",
-              params.row.nickname === "NULL!" ? "-" : params.row.nickname
-            );
-          }
+          align: "center"
         },
         {
           title: "状态",
-          key: "state",
+          slot: "state",
           sortable: true,
           maxWidth: 90,
-          align: 'center',
-          render: (h, params) => {
-            return h(
-              "Tag",
-              {
-                props: {
-                  type: "border",
-                  color: params.row.state ? "green" : "red"
-                }
-              },
-              this.playerStatus[params.row.state]
-            );
-          }
+          align: "center"
         },
         {
           title: "游戏状态",
-          align: 'center',
-          key: "gameStateName",
-          sortable: true,
-          render: (h, params) => {
-            return h(
-              "Tag",
-              {
-                props: {
-                  type: "border",
-                  color:
-                    params.row.gameState == 3 || params.row.gameState == 2
-                      ? "green"
-                      : ""
-                }
-              },
-              params.row.gameStateName
-            );
-          }
+          align: "center",
+          slot: "gameStateName",
+          sortable: true
         },
         {
           title: "点数",
-          key: "balance",
+          slot: "balance",
           sortable: true,
-          align: 'center',
-          render: (h, params) => {
-            return h("span", thousandFormatter(params.row.balance));
-          }
+          align: "center"
         },
         {
           title: "注册时间",
-          key: "createAt",
-          align: 'center',
-          sortable: true,
-          render: (h, params) => {
-            return h(
-              "span",
-              dayjs(params.row.createAt).format("YYYY-MM-DD")
-            );
-          }
+          slot: "createdAt",
+          align: "center",
+          sortable: true
         },
         {
           title: "最近登录游戏时间",
-          align: 'center',
-          key: "updateAt",
+          align: "center",
+          slot: "joinTime",
           sortable: true,
-          minWidth:55,
-          render: (h, params) => {
-            return h(
-              "span",
-              dayjs(params.row.updateAt).format("YYYY-MM-DD HH:mm:ss")
-            );
-          }
+          minWidth: 55
         },
         {
           title: "操作",
-          key: "action",
-          align: 'center',
-          align: "center",
-          render: (h, params) => {
-            return h("div", [
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "text",
-                    size: "small"
-                  },
-                  style: {
-                    color: "#20a0ff"
-                  },
-                  on: {
-                    click: () => {
-                      this.playDetail(params.row);
-                    }
-                  }
-                },
-                "查看"
-              ),
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "text",
-                    size: "small"
-                  },
-                  style: {
-                    color: "#20a0ff"
-                  },
-                  on: {
-                    click: () => {
-                      this.changeStatus(params.row);
-                    }
-                  }
-                },
-                params.row.state ? "停用" : "开启"
-              )
-            ]);
-          }
+          slot: "action",
+          align: "center"
         }
       ]
     };
@@ -272,6 +196,7 @@ export default {
     this.getGameTypeList();
   },
   computed: {
+    
     getItems() {
       if (this.nowPage === 1) {
         return this.playerList.slice(0, this.nowSize);
@@ -284,6 +209,35 @@ export default {
     }
   },
   methods: {
+    //状态
+    stateConfig(row) {
+      if (row.state) {
+        return 'green'
+      } else {
+        return 'red'
+      }
+    },
+    //游戏状态
+    gameStateConfig(row) {
+      if (row.gameState == 3 || row.gameState == 2) {
+        return "green"
+      } else {
+        return ""
+      }
+    },
+    //点数
+    balanceConfig(row) {
+      return thousandFormatter(row.balance)
+    },
+    //注册时间
+    createAtConfig(row) {
+      return dayjs(row.createdAt).format("YYYY-MM-DD")
+    },
+    //最近游戏登录时间
+    updateAtConfig(row) {
+      return dayjs(row.joinTime).format("YYYY-MM-DD HH:mm:ss")
+    },
+
     selectionChange(val) {
       this.checkedArray = val;
     },
@@ -299,7 +253,6 @@ export default {
     getPlayList() {
       if (this.isFetching) return;
       this.isFetching = true;
-      // this.$store.commit('startLoading')
       this.searchInfo.startKey = this.playerListStartKey;
       this.searchInfo.pageSize = this.pageSize;
       httpRequest("post", "/player/list", this.searchInfo)
@@ -344,7 +297,6 @@ export default {
       this.checkedArray.forEach(item => {
         this.names.push(item.userName);
       });
-      // this.$store.commit('startLoading')
       invoke({
         url: api.allForzenPlay,
         method: api.post,
@@ -408,32 +360,12 @@ export default {
       this.getPlayList();
     },
     getGameTypeList() {
-      /* httpRequest(
-        "post",
-        "/gameBigType",
-        {
-          companyIden: -1
-        },
-        "game"
-      ).then(result => {
-        for (let item of result.payload) {
-          if (item.code != "10000") {
-            this.gameTypeList.push(item);
-          }
-        }
-        this.gameTypeList.unshift(
-          {
-            code: "0",
-            name: "离线"
-          },
-          {
-            code: "1",
-            name: "大厅"
-          }
-        );
-        // this.$store.commit('closeLoading')
-      }); */
-      this.gameTypeList = this.GameListEnum
+      let GameListEnum = getGameType()
+      GameListEnum.shift()
+      GameListEnum.unshift({ code: "0", name: "离线" })
+      GameListEnum.unshift({ code: "1", name: "大厅" })
+
+      this.gameTypeList = GameListEnum;
     }
   }
 };
@@ -459,8 +391,8 @@ export default {
   .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
   }
-  /deep/ .ivu-table-cell{
-    padding: 0
+  /deep/ .ivu-table-cell {
+    padding: 0;
   }
 }
 </style>

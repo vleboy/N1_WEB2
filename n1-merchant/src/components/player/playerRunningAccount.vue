@@ -41,7 +41,7 @@ $
             <Icon type="arrow-up-b" v-else></Icon>
           </Button>
           <Button type="primary" @click="searchData(true)" style="margin-right:.3rem">搜索</Button>
-          <Button type="ghost" @click="reset(true)" style="margin-right:.3rem">重置</Button>
+          <Button @click="reset(true)" style="margin-right:.3rem">重置</Button>
           <Button type="primary" @click="exportData">导出数据</Button>
         </Col>
       </Row>
@@ -71,7 +71,29 @@ $
 
     <div class="-p-table">
       <div class="-t-form">
-        <Table :columns="columns" :data="dataList"></Table>
+        <Table :columns="columns" :data="dataList">
+          <template slot-scope="{row, index}" slot="dateTime">
+            <span>{{dateTimeConfig(row)}}</span>
+          </template>
+          <template slot-scope="{row, index}" slot="gameId">
+            <span>{{gameIdConfig(row)}}</span>
+          </template>
+          <template slot-scope="{row, index}" slot="msn">
+            <span>{{msnConfig(row)}}</span>
+          </template>
+          <template slot-scope="{row, index}" slot="originalAmount">
+            <span>{{originalAmountConfig(row)}}</span>
+          </template>
+          <template slot-scope="{row, index}" slot="amount">
+            <span :style="{color:amountConfig(row).color}">{{amountConfig(row).amount}}</span>
+          </template>
+          <template slot-scope="{row, index}" slot="afterAmount">
+            <span>{{afterAmountConfig(row)}}</span>
+          </template>
+          <template slot-scope="{row, index}" slot="action" >
+            <Button v-if="actionConfig(row)" type: "text" size: "small" style="color:#20a0ff;marginRight:5px" @click="record(row)"></Button>
+          </template>
+        </Table>
         <Row style="padding: 20px 0">
           <Col span="24" class="text-right">
             <Page
@@ -89,7 +111,6 @@ $
     <Modal title="战绩详细" v-model="isOpenModalBill" class="g-text-center" width="800" cancel-text>
       <SportsModal ref="childMethod" v-if="propChild.gameType =='1130000'" :dataProp="propChild"></SportsModal>
     </Modal>
-
     <Spin size="large" fix v-if="isFetching">
       <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
       <div>加载中...</div>
@@ -271,13 +292,7 @@ export default {
         {
           title: "日期",
           align: 'center',
-          key: "",
-          render: (h, params) => {
-            return h(
-              "span",
-              dayjs(params.row.createdAt).format("YYYY-MM-DD HH:mm:ss")
-            );
-          }
+          slot: "dateTime"
         },
         {
           title: "游戏类型",
@@ -287,88 +302,32 @@ export default {
         {
           title: "游戏ID",
           align: 'center',
-          key: "gameId",
-          render: (h, params) => {
-            return h(
-              "span",
-              this.GameNameEnum[params.row.gameId]
-                ? `${params.row.gameId}(${
-                    this.GameNameEnum[params.row.gameId]
-                  })`
-                : params.row.gameId
-            );
-          }
+          slot: "gameId"
         },
         {
           title: "交易类型",
           align: 'center',
-          key: "msn",
-          render: (h, params) => {
-            return h("span", this.typeList[params.row.type]);
-          }
+          slot: "msn"
         },
         {
           title: "帐变前余额",
           align: 'center',
-          key: "originalAmount",
-          render: (h, params) => {
-            return h("span", thousandFormatter(params.row.originalAmount));
-          }
+          slot: "originalAmount",
         },
         {
           title: "帐变金额",
           align: 'center',
-          key: "",
-          render: (h, params) => {
-            return h(
-              "span",
-              {
-                class: {
-                  "-p-green": params.row.amount >= 0,
-                  "-p-red": params.row.amount < 0
-                }
-              },
-              thousandFormatter(params.row.amount)
-            );
-          }
+          slot: "amount"
         },
         {
           title: "帐变后金额",
           align: 'center',
-          key: "",
-          render: (h, params) => {
-            return h("span", thousandFormatter(params.row.balance));
-          }
+          slot: "afterAmount"
         },
         {
           title: "操作",
-          key: "action",
-          align: "center",
-          render: (h, params) => {
-            if (params.row.type == "3" && params.row.gameType == "1130000") {
-              return h("div", [
-                h(
-                  "Button",
-                  {
-                    props: {
-                      type: "text",
-                      size: "small"
-                    },
-                    style: {
-                      color: "#20a0ff",
-                      marginRight: "5px"
-                    },
-                    on: {
-                      click: () => {
-                        this.openModalBill(params.row);
-                      }
-                    }
-                  },
-                  "查看战绩"
-                )
-              ]);
-            }
-          }
+          slot: "action",
+          align: "center"
         }
       ],
       radioInfo: "全部",
@@ -379,9 +338,7 @@ export default {
     };
   },
   mounted() {
-    this.changeTime();
-    this.companySelectList();
-
+    this.changeTime()
   },
   computed: {
     dataList() {
@@ -404,6 +361,7 @@ export default {
       }
       return thousandFormatter(this.allAmount);
     },
+
     getCompanyList() {
       let arr = JSON.parse(localStorage.getItem("userInfo")).gameList.map(
         item => {
@@ -427,25 +385,9 @@ export default {
             gameList.splice(i, 1)
           }
         }  
-        
-        gameList.unshift('NA')
-
+      gameList.unshift('NA')
       gameList.unshift('全部厂商')
-
       return gameList
-
-      
-
-      /* let arr = Array.from(
-        new Set(
-          JSON.parse(localStorage.getItem("userInfo")).gameList.map(item => {
-            return item.company;
-          })
-        )
-      );
-      arr.unshift("全部厂商");
-
-      return arr; */
     },
     gameTypeList() {
       
@@ -495,6 +437,51 @@ export default {
     }
   },
   methods: {
+    //日期
+    dateTimeConfig(row) {
+      return dayjs(row.createdAt).format("YYYY-MM-DD HH:mm:ss")
+    },
+    //游戏ID
+    gameIdConfig(row) {
+      if (this.GameNameEnum[row.gameId]) {
+        return `${row.gameId}(${this.GameNameEnum[row.gameId]})`
+      } else {
+        return row.gameId
+      }
+    },
+    //交易类型
+    msnConfig(row) {
+      return typeList[row.type]
+    },
+    //帐变前余额
+    originalAmountConfig(row) {
+      return thousandFormatter(row.originalAmount)
+    },
+    //帐变金额
+    amountConfig(row) {
+      if (row.amount >= 0) {
+        return {amount: thousandFormatter(row.amount), color: 'green'}
+      } else {
+         return {amount: thousandFormatter(row.amount), color: 'red'}
+      }
+    },
+    //账变后余额
+    afterAmountConfig(row) {
+      return thousandFormatter(row.balance)
+    },
+    //操作
+    actionConfig(row) {
+      if (row.type == "3" && row.gameType == "1130000") {
+       return true
+      } else {
+        return false
+      }      
+    },
+    record(row) {
+      if (row.type == "3" && row.gameType == "1130000") {
+        this.openModalBill(row)
+      }
+    },
     reset() {
       this.companyInfo = '全部厂商'
       this.sel = '全部厂商'
@@ -583,8 +570,6 @@ export default {
     }, // 最近的时间快捷选择联动
     changeDate() {
       if (this.amountDate) {
-        // this.startDate = new Date(this.amountDate[0].setMonth(this.amountDate[0].getMonth())).setHours(0, 0, 0, 0);
-        // this.endDate = new Date(this.amountDate[1].setMonth(this.amountDate[1].getMonth())).setHours(0, 0, 0, 0) + 24 * 3600 * 1000 - 1;
         this.startDate = new Date(this.amountDate[0]).getTime();
         this.endDate = new Date(this.amountDate[1]).getTime();
       } else {
@@ -652,32 +637,7 @@ export default {
         }&endTime=${this.amountDate ? this.endDate : ""}`
       );
     },
-    companySelectList() {
-      /* httpRequest('post','/companySelect',{
-          parent: localStorage.loginRole == 1 ? '' : localStorage.loginId
-        },'game').then(
-          result => {
-            this.companyList = result.payload || []
-            this.companyList.unshift({
-              company: '全部厂商',
-            })
-            this.changeCompany()
-          }
-        ) */
-    }, //获取运营商列表
     changeCompany(val) {
-      /* httpRequest('post','/gameBigType',{
-          companyIden: this.companyInfo == '全部厂商' ? '-1' : this.companyInfo
-        },'game').then(
-          result => {
-            this.gameTypeList = result.payload
-            this.gameTypeList.unshift({
-              code: '',
-              name: '全部'
-            })
-            this.radioInfo = ''
-          }
-        ) */
       this.sel = val;
     },
     openModalBill(data) {
@@ -769,12 +729,6 @@ export default {
     font-weight: normal;
     padding: 16px 0;
     color: #5a5a5a;
-  }
-  .-p-green {
-    color: #00cc00;
-  }
-  .-p-red {
-    color: #ff3300;
   }
   .text-right {
     text-align: right;

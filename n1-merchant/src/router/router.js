@@ -10,14 +10,9 @@ import newBoard from '@/pages/newBoard/newBoard'
 import allReport from '@/pages/reports/allReport'
 import agtrue from '@/pages/reports/agTrueGame'
 import mgvideo from '@/pages/reports/mgVideoGame'
-import nacard from '@/pages/reports/naCardGame'
-import nastreet from '@/pages/reports/naStreetGame'
-import natrue from '@/pages/reports/naTrueGame'
-import navideo from '@/pages/reports/naVideoGame'
-import nahfive from '@/pages/reports/nahfive'
 import nanomsy from '@/pages/reports/nanomsy'
-import naFishing from '@/pages/reports/naFishing'
 import naAll from '@/pages/reports/naAllReport'
+import nahfive from '@/pages/reports/nahfive'
 import saAll from '@/pages/reports/saAllReport'
 import safishing from '@/pages/reports/saFishingGame'
 import satrue from '@/pages/reports/saTrueGame'
@@ -32,16 +27,12 @@ import ppGame from '@/pages/reports/ppGame'
 import pgVideo from '@/pages/reports/pgVideo'
 import habaVideo from '@/pages/reports/habaVideo'
 import pngVideo from '@/pages/reports/pngVideo'
-import natruehfive from '@/pages/reports/naTrueHfive'
 import kyChess from '@/pages/reports/kyChess'
 
 import prizeList from '@/pages/operation/prize/prizeList'
 
 //day
 import dayMerchant from '@/pages/day/dayMerchant'
-
-
-import opreateLog from '@/pages/log/opreateLog'
 
 import playerlist from '@/pages/player/playerlist'
 
@@ -87,7 +78,7 @@ export const appRouter = [
          },
          {
            path: '/newBoard',
-           title: '看板',
+           title: '数据看板',
            name: 'newBoard',
            component: main,
            children: [{ path: 'newBoard', title: '看板', name: 'newBoard', component: newBoard }]
@@ -140,15 +131,9 @@ export const appRouter = [
            name: 'nagame',
            component: main,
            children: [
-             { path: 'card', title: 'NA棋牌游戏报表', name: 'nacard', component: nacard },
-             { path: 'street', title: 'NA街机游戏报表', name: 'nastreet', component: nastreet },
-             { path: 'true', title: 'NA真人游戏报表', name: 'natrue', component: natrue },
-             { path: 'video', title: 'NA电子游戏报表', name: 'navideo', component: navideo },
              { path: 'hfive', title: 'NA电子H5报表', name: 'nahfive', component: nahfive },
              { path: 'nanomsy', title: 'NA电子H5无神秘奖报表', name: 'nanomsy', component: nanomsy },
              { path: 'all', title: 'NA游戏总报表', name: 'naAll', component: naAll },
-             { path: 'fishing', title: 'NA捕鱼游戏报表', name: 'nafishing', component: naFishing },
-             { path: 'truefive', title: 'NA真人H5报表', name: 'natruehfive', component: natruehfive }
            ]
          },
          {
@@ -221,13 +206,6 @@ export const appRouter = [
            name: 'day',
            component: main,
            children: [{ path: 'dayMerchant', title: '商户日报表', name: 'dayMerchant', component: dayMerchant }]
-         },
-         {
-           path: '/log',
-           title: '日志',
-           name: 'log',
-           component: main,
-           children: [{ path: 'opreate', title: '操作日志', name: 'opreateLog', component: opreateLog }]
          },
          {
            path: '/transfer',

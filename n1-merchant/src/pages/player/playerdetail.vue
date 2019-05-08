@@ -19,7 +19,7 @@
                 <Col span="6"><span class="-span-base">玩家ID：{{detailInfo.userId}}</span></Col>
                 <Col span="6"><span class="-span-base" >游戏状态：{{gameStatus[detailInfo.gameState]}}</span></Col>
                 <Col span="6"><span class="-span-base" >余额：{{detailInfo.balance}}</span></Col>
-                <Col span="6"><span class="-span-base">上次登录游戏时间：{{lastTime}}</span></Col>
+                <Col span="6"><span class="-span-base">最近登录游戏时间：{{lastTime}}</span></Col>
               </Row>
               <Row>
                 <Col span="6" v-for="(item,index) of detailInfo.gameList" :key="index">
@@ -56,13 +56,6 @@ import transactionRecord from '@/components/player/transactionRecord'
 
 export default {
   components:{playerRunningAccount, transactionRecord},
-  beforeCreate () {
-    // this.$store.commit('returnLocalStorage')
-    // this.$store.commit({
-    //   type: 'recordNowindex',
-    //   data: 'playerdetail'
-    // })
-  },
   data () {
     return {
       isFetching: false,
@@ -84,7 +77,7 @@ export default {
       return this.playerDetailInfo
     },
     lastTime () {
-      return dayjs(this.playerDetailInfo.updateAt).format("YYYY-MM-DD HH:mm:ss")
+      return dayjs(this.playerDetailInfo.joinTime).format("YYYY-MM-DD HH:mm:ss")
     },
     userName () {
       return this.playerDetailInfo.userName || localStorage.playerName
@@ -95,14 +88,12 @@ export default {
       if(this.isFetching) return
       this.isFetching = true
       let name = localStorage.playerName
-      // this.$store.commit('startLoading')
       httpRequest('post','/player/info',{
         userName: name
       }).then(
         result => {
           this.playerDetailInfo = result.userInfo
           this.reportType = '1'
-          // this.$store.commit('closeLoading')
         }
       ).finally(()=>{
         this.isFetching = false
