@@ -42,7 +42,7 @@
     <div class="playerform">
 
       <Table :columns="columns" :data="getItems">
-        <template slot-scope="{row, index}" slot="nickname">
+         <template slot-scope="{row, index}" slot="nickname">
           <span>{{row.nickname === "NULL!" ? "-" : row.nickname}}</span>
         </template>
         <template slot-scope="{row, index}" slot="state">
@@ -54,13 +54,13 @@
         <template slot-scope="{row, index}" slot="balance">
           <span>{{balanceConfig(row)}}</span>
         </template>
-        <template slot-scope="{row, index}" slot="createAt">
+        <template slot-scope="{row, index}" slot="createdAt">
           <span>{{createAtConfig(row)}}</span>
         </template>
         <template slot-scope="{row, index}" slot="joinTime">
           <span>{{updateAtConfig(row)}}</span>
         </template>
-        <template slot-scope="{row, index}" slot="action">
+       <template slot-scope="{row, index}" slot="action">
           <Button type="text" size="small" style="color:#20a0ff" @click="playDetail(row)">查看</Button>
           <Button type="text" size="small" style="color:#20a0ff" @click="changeStatus(row)">{{row.state ? "停用" : "开启"}}</Button>
         </template>
@@ -126,7 +126,7 @@ export default {
           maxWidth: 90,
           sortable: true
         },
-        {
+         {
           title: "玩家账号",
           align: "center",
           key: "userName",
@@ -170,7 +170,7 @@ export default {
           sortable: true,
           align: "center"
         },
-        {
+       {
           title: "注册时间",
           slot: "createdAt",
           align: "center",

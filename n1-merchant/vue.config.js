@@ -10,6 +10,14 @@ module.exports = {
     }
   },
 
+  css: {
+    loaderOptions: {
+      less: {
+        javascriptEnabled: true
+      }
+    }
+  },
+
   baseUrl: undefined,
   outputDir: undefined,
   assetsDir: undefined,

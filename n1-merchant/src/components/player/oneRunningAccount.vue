@@ -11,11 +11,25 @@
       <Col span="4">净利润：
         <span :class="{'-p-green':dataProp.profitAmount>0,'-p-red':dataProp.profitAmount<0}">{{formatPoints(dataProp.profitAmount)}}</span>
       </Col>
-      <!--<Col span="6">结算余额：-->
-        <!--<span :class="{'-p-green':dataProp.balance>0,'-p-red':dataProp.balance<0}">{{formatPoints(dataProp.balance)}}</span>-->
-      <!--</Col>-->
+
     </Row>
-    <Table :columns="columns" :data="dataList"></Table>
+    <Table :columns="columns" :data="dataList">
+      <template slot-scope="{row, index}" slot="dateTime">
+        <span>{{dateTimeConfig(row)}}</span>
+      </template>
+      <template slot-scope="{row, index}" slot="type">
+        <span>{{typeConfig(row)}}</span>
+      </template>
+      <template slot-scope="{row, index}" slot="beforeAmount">
+        <span>{{beforeAmountConfig(row)}}</span>
+      </template>
+      <template slot-scope="{row, index}" slot="amount">
+        <span :style="{color: amountConfig(row).color}">{{amountConfig(row).amount}}</span>
+      </template>
+      <template slot-scope="{row, index}" slot="afterAmount">
+        <span>{{afterAmountConfig(row)}}</span>
+      </template>
+    </Table>
   </div>
 </template>
 
@@ -40,47 +54,33 @@
         columns: [
           {
             title: '流水号',
+            align: 'center',
             key: 'sn'
           },
           {
             title: '交易时间',
-            key: '',
-            render: (h, params) => {
-              return h("span", dayjs(params.row.createdAt).format("YYYY-MM-DD HH:mm:ss"));
-            }
+            align: 'center',
+            slot: 'dateTime'
           },
           {
             title: '交易类型',
-            key: 'msn',
-            render: (h, params) => {
-              return h('span', this.typeList[params.row.type])
-            }
+            align: 'center',
+            slot: 'type'
           },
           {
             title: '帐变前余额',
-            key: 'originalAmount',
-            render: (h, params) => {
-              return h('span', thousandFormatter(params.row.originalAmount))
-            }
+            align: 'center',
+            slot: 'beforeAmount'
           },
           {
             title: '帐变金额',
-            key: '',
-            render: (h, params) => {
-              return h('span', {
-                class: {
-                  '-p-green': params.row.amount >= 0,
-                  '-p-red': params.row.amount < 0
-                },
-              }, thousandFormatter(params.row.amount))
-            }
+            align: 'center',
+            slot: 'amount'
           },
           {
             title: '帐变后金额',
-            key: '',
-            render: (h, params) => {
-              return h('span', thousandFormatter(params.row.balance))
-            }
+            align: 'center',
+            slot: 'afterAmount'
           }
         ],
       }
@@ -91,6 +91,31 @@
       }
     },
     methods:{
+      //交易时间
+      dateTimeConfig(row) {
+        return dayjs(row.createdAt).format("YYYY-MM-DD HH:mm:ss")
+      },
+      //交易类型
+      typeConfig(row) {
+        return this.typeList[row.type]
+      },
+      //账变前余额
+      beforeAmountConfig(row) {
+        return thousandFormatter(row.originalAmount)
+      },
+      //账变余额
+      amountConfig(row) {
+        if (row.amount >= 0) {
+          return {amount:row.amount, color: 'green'}
+        } else {
+          return {amount:row.amount, color: 'red'}
+        }      
+      },
+      //账变后余额
+      afterAmountConfig(row) {
+        return thousandFormatter(row.balance)
+      },
+
       formatterTime (row) {
         return row ? dayjs(row).format("YYYY-MM-DD HH:mm:ss") : '-'
       }, // 格式化创建时间

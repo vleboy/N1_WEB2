@@ -81,14 +81,14 @@ export const appRouter = [
            title: '数据看板',
            name: 'newBoard',
            component: main,
-           children: [{ path: 'newBoard', title: '看板', name: 'newBoard', component: newBoard }]
+           children: [{ path: 'newBoard', title: '数据看板', name: 'newBoard', component: newBoard }]
          },
          {
            path: '/allreport',
-           title: '公司输赢总报表',
+           title: '输赢总报表',
            name: 'all',
            component: main,
-           children: [{ path: 'all', title: '公司输赢总报表', name: 'allreport', component: allReport }]
+           children: [{ path: 'all', title: '输赢总报表', name: 'allreport', component: allReport }]
          },
          {
            path: '/aggame',
@@ -201,11 +201,11 @@ export const appRouter = [
            children: [{ path: 'sport', title: 'YSB体育游戏报表', name: 'ysbSport', component: ysbSport }]
          },
          {
-           path: '/day',
+           path: '/dayMerchant',
            title: '日报表',
            name: 'day',
            component: main,
-           children: [{ path: 'dayMerchant', title: '商户日报表', name: 'dayMerchant', component: dayMerchant }]
+           children: [{ path: 'index', title: '日报表', name: 'dayMerchant', component: dayMerchant }]
          },
          {
            path: '/transfer',
@@ -222,15 +222,15 @@ export const appRouter = [
            title: '玩家列表',
            name: 'play',
            component: main,
-           children: [{ path: 'list', title: '玩家列表', name: 'playList', component: playerlist }]
+           children: [{ path: 'index', title: '玩家列表', name: 'playList', component: playerlist }]
          },
          {
-           path: '/operation',
-           title: '运营中心',
-           name: 'operation',
+           path: '/prizeList',
+           title: '神秘大奖记录',
+           name: 'prizeList',
            component: main,
            children: [
-             { path: 'prizeList', title: '神秘大奖记录', name: 'prizeList', component: prizeList }
+             { path: 'index', title: '神秘大奖记录', name: 'prizeList', component: prizeList }
            ]
          }
        ]

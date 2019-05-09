@@ -107,9 +107,7 @@ import { thousandFormatter } from "@/config/format";
 import dayjs from "dayjs";
 import { httpRequest } from "@/service/index";
 
-// import ArcadeModal from '@/components/record/arcadeModal'
 import RealLifeModal from "@/components/record/realLifeModal";
-// import OneArmBanditModal from '@/components/record/oneArmBanditModal'
 import oneRunningAccount from "@/components/player/oneRunningAccount";
 import SportsModal from "@/components/record/sportsModal";
 import HfiveModal from "@/components/player/HfiveModal";

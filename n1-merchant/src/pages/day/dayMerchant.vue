@@ -4,7 +4,6 @@
       <div class="top">
         <Select
           style="width:200px;margin-right:2rem;"
-          placeholder="选择游戏类别"
           ref="resetSelect"
           clearable
           v-model="model1"
@@ -154,7 +153,7 @@ export default {
       },
       defaultTime: [], //getDefaultTime(),
       cacheTime: [],
-      model1: "全部",
+      model1: "全部游戏",
       spinShow: false, //加载spin
       buID: "",
       buSN: "",
@@ -315,18 +314,20 @@ export default {
     },
     async init() {
       this.spinShow = true;
+      //是否是从输赢报表跳转进入日报表
       if (
         this.$route.name == "dayMerchant" &&
         localStorage.dayMerchant == "dayMerchant"
       ) {
         let st = dayjs(this.$route.query.time[0]).format("YYYYMMDD");
         let et = dayjs(this.$route.query.time[1]).format("YYYYMMDD");
+        //自动选择游戏种类
         for (let index = 0; index < getGameType().length; index++) {
           if (this.$route.query.type == getGameType()[index].code) {
             this.model1 = getGameType()[index].name;
             break;
           } else {
-            this.model1 = "全部";
+            this.model1 = "全部游戏";
           }
         }
 
@@ -347,7 +348,7 @@ export default {
       };
       let req2 = this.$store.dispatch("getUserDayStat", params);
 
-      //当这两个请求都完成的时候会触发这个函数，两个参数分别代表返回的结果
+      
       let [perms] = await this.axios.all([req2]);
 
       this.dayStatList = perms.payload;
@@ -355,7 +356,7 @@ export default {
       if (this.dayStatList == "") {
         this.showChat = false;
       }
-
+      //没有数据不显示echarts
       if (this.showChat) {
         this.drawLine();
       }
@@ -383,11 +384,11 @@ export default {
         ];
       }
     },
+
     getGameList() {
       this.gameType = getGameType();
     }
   },
-  props: ["identity"]
 };
 </script>
 <style lang="less" scoped>

@@ -1,12 +1,24 @@
 <template>
-    <div ref="scrollCon" class="tags-outer-scroll-con">
-        <div ref="scrollBody" class="tags-inner-scroll-body">
-            <!--  :style="{left: tagBodyLeft + 'px'}"-->
-            <transition-group name="taglist-moving-animation">
-                <Tag type="dot" v-for="(item, index) in pageTagsList" ref="tagsPageOpened" :key="item.name" :name="item.name" @on-close="closePage" @click.native="linkTo(item)" :closable="true" :color="item.children?(item.children[0].name===currentPageName?'primary':'default'):(item.name===currentPageName?'primary':'default')">{{ item.title }}</Tag>
-            </transition-group>
-        </div>
+  <div ref="scrollCon" class="tags-outer-scroll-con taglist">
+    <div ref="scrollBody" class="tags-inner-scroll-body" >
+      <!--  :style="{left: tagBodyLeft + 'px'}"-->
+      <div>
+        <transition-group name="taglist-moving-animation" class="taglist">
+          <Tag
+            type="dot"
+            v-for="(item, index) in pageTagsList"
+            ref="tagsPageOpened"
+            :key="item.name"
+            :name="item.name"
+            @on-close="closePage"
+            @click.native="linkTo(item)"
+            :closable="true"
+            :color="item.children?(item.children[0].name===currentPageName?'primary':'default'):(item.name===currentPageName?'primary':'default')"
+          >{{ item.title }}</Tag>
+        </transition-group>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -14,7 +26,7 @@ export default {
   name: "tagsPageOpened",
   data() {
     return {
-      currentPageName: this.$route.name,
+      currentPageName: this.$route.name
     };
   },
   props: {
@@ -58,8 +70,8 @@ export default {
       }
     },
     linkTo(item) {
-      console.log('into');
-      
+      //('into');
+
       let routerObj = {};
       routerObj.name = item.name;
       if (item.argu) {
@@ -71,7 +83,7 @@ export default {
       if (this.beforePush(item)) {
         this.$router.push(routerObj);
       }
-    },
+    }
     // moveToView(tag) {
     //   if (tag.offsetLeft < -this.tagBodyLeft) {
     //     // 标签在可视区域左侧
@@ -129,7 +141,8 @@ export default {
   }
 };
 </script>
-<style lang="less">
+<style lang="less" scoped>
+
 .tags-outer-scroll-con {
   position: relative;
   box-sizing: border-box;
@@ -138,11 +151,15 @@ export default {
   height: 100%;
   .tags-inner-scroll-body {
     // position: absolute;
-    padding: 2px 10px;
+    padding: 0 10px;
     overflow: visible;
     white-space: nowrap;
     transition: left 0.3s ease;
   }
+}
+.taglist {
+  display:flex;
+  align-items: center;
 }
 .taglist-moving-animation-move {
   transition: transform 0.3s;

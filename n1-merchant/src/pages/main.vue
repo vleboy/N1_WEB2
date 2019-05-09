@@ -1,21 +1,22 @@
 <template>
   <div class="home">
+    <!-- 左侧菜单列表 -->
     <sidebar :openName='openName'/>
-    <Layout :style="{marginLeft: '256px'}">
+    <!-- 右侧显示内容 -->
+    <Layout :style="{marginLeft:layoutWidth}">
       <Header class="main_header">
         <div class="tags-con">
           <tag-close :pageTagsList="pageTagsList"/>
         </div>
         <div class="user-dropdown-menu-con">
           <Row type="flex" justify="end" align="middle" class="user-dropdown-innercon">
-            <Avatar icon="person" size="small" style="background: #619fe7;margin-right: 10px;"></Avatar>
+            <Avatar icon="md-person" size="small" style="background: #619fe7;margin-right: 10px;"></Avatar>
             <Dropdown transfer trigger="click" @on-click="handleClickUserDropdown">
               <a href="javascript:void(0)">
                 <span class="main-user-name">{{ userName }}</span>
                 <Icon type="arrow-down-b"></Icon>
               </a>
               <DropdownMenu slot="list">
-                <!-- <DropdownItem name="ownSpace">个人中心</DropdownItem> -->
                 <DropdownItem name="loginout" divided>退出登录</DropdownItem>
               </DropdownMenu>
             </Dropdown>
@@ -48,6 +49,9 @@ export default {
   computed: {
     pageTagsList() {
       return this.$store.state.home.pageOpenedList; //打开的页面的页面对象
+    },
+    layoutWidth() {
+      return this.$store.state.home.menuSize
     }
   },
   methods: {
@@ -104,13 +108,13 @@ export default {
 </script>
 <style lang="less" scoped>
 .tags-con {
-  height: 64px;
+  height: 50px;
   z-index: -1;
   overflow: hidden;
   //   background: #f0f0f0;
 }
 .main_header {
-  height: 64px;
+  height: 50px;
   background: #fff;
   box-shadow: 0 2px 1px 1px rgba(100, 100, 100, 0.1);
   position: relative;

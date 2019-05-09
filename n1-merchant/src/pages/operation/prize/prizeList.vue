@@ -178,6 +178,7 @@ export default {
     this.init();
   },
   methods: {
+    //玩家账号
     userNameConfig() {
       localStorage.setItem("playerName", name)
       this.$router.push({
@@ -187,6 +188,7 @@ export default {
         }
       })
     },
+    //日期
     dateTimeConfig(row) {
       return dayjs(row.betTime).format("YYYY-MM-DD HH:mm:ss")
     },

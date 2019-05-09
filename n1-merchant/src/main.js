@@ -7,6 +7,7 @@ import {router} from './router/index';
 import { store } from './store'
 import iView from 'iview';
 import 'iview/dist/styles/iview.css'
+// import '../my-theme/index.less';
 import axios from 'axios'
 import echarts from 'echarts'
 

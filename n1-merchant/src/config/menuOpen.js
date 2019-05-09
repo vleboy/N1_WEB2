@@ -59,7 +59,7 @@ export const menuOpen = function(name) {
   } else if (name == 'dayMerchant') {
     openName = ['dayReport']
   }
-  console.log(openName);
+  //(openName);
   
   return openName
 }
