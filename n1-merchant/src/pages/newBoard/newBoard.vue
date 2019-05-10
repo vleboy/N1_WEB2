@@ -94,10 +94,6 @@
 </template>
 
 <script>
-import "echarts/map/js/china.js"; // 引入中国地图数据
-import chinaJson from "echarts/map/json/china.json"
-import "echarts/map/js/world.js"; // 引入世界地图数据
-import worldJson from "echarts/map/json/world.json"
 import _ from "lodash"
 import dayjs from "dayjs"
 import { hourFormatBarData } from "@/config/format"
@@ -394,7 +390,7 @@ export default {
         return item.x;
       });
 
-      let myChart = this.$echarts.init(this.$refs.report);
+      let myChart = echarts.init(this.$refs.report);
       // 绘制图表
       myChart.setOption(
         {
@@ -462,7 +458,7 @@ export default {
     },
     //玩家注册趋势
     playerCountConfigure() {
-      let myChart = this.$echarts.init(this.$refs.playerCount);
+      let myChart = echarts.init(this.$refs.playerCount);
       myChart.setOption(
         {
           tooltip: {
@@ -523,7 +519,7 @@ export default {
     //玩家排行榜柱状图
     //玩家投注次数
     pyBetCount() {
-      let myChart = this.$echarts.init(this.$refs.playerBetCount);
+      let myChart = echarts.init(this.$refs.playerBetCount);
       let merchant = this.pyBetCountData.map(item => {
         return item.x;
       });
@@ -566,7 +562,7 @@ export default {
     },
     //玩家投注金额
     pyBetAmount() {
-      let myChart = this.$echarts.init(this.$refs.playerBetAmount);
+      let myChart = echarts.init(this.$refs.playerBetAmount);
       let merchant = this.pyBetAmountData.map(item => {
         return item.x;
       });
@@ -609,7 +605,7 @@ export default {
     },
     //玩家返还金额
     pyRetAmount() {
-      let myChart = this.$echarts.init(this.$refs.playerRetAmount);
+      let myChart = echarts.init(this.$refs.playerRetAmount);
       let merchant = this.pyRetAmountData.map(item => {
         return item.x;
       });
@@ -652,7 +648,7 @@ export default {
     },
     //玩家输赢金额
     pyWinloseAmount() {
-      let myChart = this.$echarts.init(this.$refs.playerWinloseAmount);
+      let myChart = echarts.init(this.$refs.playerWinloseAmount);
       let merchant = this.pyWinloseAmountData.map(item => {
         return item.x;
       });

@@ -226,7 +226,7 @@ export default {
     },
     drawLine() {
       // 基于准备好的dom，初始化echarts实例
-      let myChart = this.$echarts.init(document.getElementById("myChart"));
+      let myChart = echarts.init(document.getElementById("myChart"));
       let _this = this;
 
       let betCountArr = _this.dayStatList.map(item => {
