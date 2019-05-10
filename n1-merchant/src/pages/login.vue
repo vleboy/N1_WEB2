@@ -35,10 +35,10 @@
         </FormItem>
         <FormItem label="验证">
           <Row>
-            <Col span="8">
-              <Input v-model="validateCode" style="width: 80px" :maxlength="4"></Input>
-              <span class="getCode" v-if="showCode" @click="getCode">点击显示验证码</span>
-              <img class="validateImg" v-else :src="codeSrc" @click="getCode" alt="oo">
+            <Col span="8" style="background:grey;display:flex;justify-content:space-between;">
+              <Input v-model="validateCode" style="width: 80px;" :maxlength="4"></Input>
+              <span class="getCode" v-if="showCode" @click="getCode" style="margin-right:3rem">点击显示验证码</span>
+              <img class="validateImg" v-else :src="codeSrc" @click="getCode" style="margin-right:3rem">
               <Spin fix v-if="loadImg"></Spin>
             </Col>
           </Row>
@@ -184,6 +184,11 @@ export default {
 
 <style lang='less' scoped>
 .login {
+  /deep/.ivu-form .ivu-form-item-label {
+    color: #fff;
+  }
+  background: rgb(72, 80, 95);
+  color: #fff;
   display: -webkit-flex;
   display: flex;
   -webkit-align-items: center;
@@ -223,4 +228,5 @@ export default {
   vertical-align: middle;
   padding-left: 10px;
 }
+
 </style>
