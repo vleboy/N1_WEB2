@@ -25,7 +25,7 @@
               <Input v-model="formValidate.password" type="password" :maxlength="16"></Input>
             </Col>
           </Row>
-          
+
         </FormItem>
         <FormItem label="标识" prop="sn">
           <Row>
@@ -38,8 +38,8 @@
           <Row>
             <Col span="8" style="background:grey;display:flex;justify-content:space-between;">
               <Input v-model="validateCode" style="width: 80px;" :maxlength="4"></Input>
-              <span class="getCode" v-if="showCode" @click="getCode" style="margin-right:3rem">点击显示验证码</span>
-              <img class="validateImg" v-else :src="codeSrc" @click="getCode" style="margin-right:3rem">
+              <span class="getCode" v-if="showCode" @click="getCode" style="margin-right:1rem;padding-left:0">点击显示验证码</span>
+              <img class="validateImg" v-else :src="codeSrc" @click="getCode" style="margin-right:1rem">
               <Spin fix v-if="loadImg"></Spin>
             </Col>
           </Row>
