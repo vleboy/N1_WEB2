@@ -1,12 +1,15 @@
 module.exports = {
   productionSourceMap: false,
 
-  configureWebpack: {
-    optimization: {
+  configureWebpack: config => {
+    config.optimization = {
       splitChunks: {
         minSize: 10000,
         maxSize: 250000,
       }
+    }
+    if (process.env.NODE_ENV != 'production') {
+      config.devtool = false
     }
   },
 
