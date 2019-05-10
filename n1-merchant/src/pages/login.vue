@@ -25,6 +25,7 @@
               <Input v-model="formValidate.password" type="password" :maxlength="16"></Input>
             </Col>
           </Row>
+          
         </FormItem>
         <FormItem label="标识" prop="sn">
           <Row>
