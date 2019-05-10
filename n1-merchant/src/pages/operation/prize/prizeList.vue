@@ -9,9 +9,10 @@
         placeholder="选择日期时间范围(默认最近一周)"
         style="width: 300px;margin-right:1rem"
         @on-ok="init"
+        size="small"
       ></DatePicker>
-      <Button type="primary" @click="init" style="margin-right:.3rem">搜索</Button>
-      <Button @click="reset">重置</Button>
+      <Button @click="init" style="margin-right:.3rem" size="small">搜索</Button>
+      <Button @click="reset" size="small">重置</Button>
     </div>
     <Table :columns="columns1" :data="prizeList" size="small">
       <template slot-scope="{ row, index }" slot="userName">
@@ -27,7 +28,7 @@
       </template>
     </Table>
     <Spin size="large" fix v-if="spinShow">
-      <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
       <div>加载中...</div>
     </Spin>
   </div>
@@ -230,5 +231,18 @@ export default {
 }
 .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
+  }
+  .ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-input {
+    border-color: #000;
+    background: #fff;
   }
 </style>

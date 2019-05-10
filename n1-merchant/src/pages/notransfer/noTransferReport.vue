@@ -3,12 +3,12 @@
     <div class="search">
       <Row class="row">
         <Col span="24" style="textAlign:right">
-         <Select v-model="gameType" style="width:110px" @on-change="search">
+         <Select v-model="gameType" style="width:110px" @on-change="search" size="small">
           <Option v-for="item in gameTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
-        <DatePicker type="datetimerange" :options="options" :editable='false' v-model="defaultTime" placeholder="选择日期时间范围(默认最近一周)" style="width: 300px" @on-ok="search"></DatePicker>
-        <Button type="primary" @click="search">搜索</Button>
-        <Button @click="reset">重置</Button>
+        <DatePicker size="small" type="datetimerange" :options="options" :editable='false' v-model="defaultTime" placeholder="选择日期时间范围(默认最近一周)" style="width: 300px" @on-ok="search"></DatePicker>
+        <Button @click="search" size="small">搜索</Button>
+        <Button @click="reset" size="small">重置</Button>
         </Col>
       </Row>
     </div>
@@ -50,7 +50,7 @@
       </Row>
     </Modal> -->
     <Spin size="large" fix v-if="spin">
-      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
       <div>加载中...</div>
     </Spin>
   </div>
@@ -358,5 +358,18 @@ export default {
 }
 .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
+  }
+  .ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-input {
+    border-color: #000;
+    background: #fff;
   }
 </style>

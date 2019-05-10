@@ -32,7 +32,7 @@
       </Panel>
     </Collapse>
     <div class="-d-content">
-      <RadioGroup v-model="reportType" type="button" :style="{paddingBottom:'10px'}">
+      <RadioGroup v-model="reportType" type="button" :style="{paddingBottom:'10px'}" size="small">
         <Radio label="1">流水报表</Radio>
         <Radio label="2">交易记录</Radio>
       </RadioGroup>
@@ -42,7 +42,7 @@
       </div>
     </div>
     <Spin size="large" fix v-if="isFetching">
-      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
       <div>加载中...</div>
     </Spin>
   </div>
@@ -154,5 +154,19 @@ export default {
     .demo-spin-icon-load{
       animation: ani-demo-spin 1s linear infinite;
     }
+    /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
+    //border-color: #000;
+    color: #000;
+    border: 1px solid #ccc;
   }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
+    background: #000;
+    color: #fff;
+  }
+  }
+  
 </style>

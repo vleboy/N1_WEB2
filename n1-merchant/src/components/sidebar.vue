@@ -1,6 +1,6 @@
 <template>
     <div class="sider">
-        <Sider :width="menuWidth" collapsible hide-trigger :style="{position:'fixed',height: '100vh', left: 0, overflow: 'auto',backgroundColor:'#1c2327'}" class="showMenu">
+        <Sider :width="menuWidth" collapsible hide-trigger :style="{position:'fixed',height: '100vh', left: 0,backgroundColor:'#1c2327'}" class="showMenu">
             <div id="logo" :class="flodMenu ? 'flodMuenS' : 'class-b' ">
               <p class="logoimg" v-if="unFlodMenu">
                 <img src="../../static/logo.png" alt="">
@@ -13,9 +13,9 @@
               </p>
             </div>
             <transition name="fade">
-              <Menu ref="sideMenu" :active-name="$route.name" :open-names="openName" width="auto" @on-select='selectMenu' :style="{backgroundColor:'#1c2327',color:'#fff'}">
-                  <MenuItem name="newBoard" :class="flodMenu ? 'flodMuenS' : 'class-b' ">
-                    <Icon type="ios-pulse" />
+              <Menu ref="sideMenu" :active-name="$route.name" :open-names="openName" width="auto" @on-select='selectMenu' :style="{backgroundColor:'#1c2327',color:'#fff',marginTop:'.3rem'}">
+                  <MenuItem name="newBoard" :class="flodMenu ? 'flodMuenS' : 'class-b' " style="display:flex;">
+                      <Icon type="ios-pulse" />
                     <span v-if="unFlodMenu" class="ml">数据看板</span>
                   </MenuItem>
                   <MenuItem name="ownspace-index" :class="flodMenu ? 'flodMuenS' : 'class-b' ">
@@ -23,9 +23,10 @@
                     <span v-if="unFlodMenu" class="ml">个人中心</span>
                   </MenuItem>
 
-                  <MenuItem name="report" v-if="gameList.length>0 && flodMenu" :class="flodMenu ? 'flodMuenS' : 'class-b' ">
-                    <Icon type="ios-paper-outline" />
+                  <MenuItem name="allreport" v-if="gameList.length>0 && flodMenu" :class="flodMenu ? 'flodMuenS' : 'class-b' ">
+                    <Icon type="ios-paper-outline" @click="unfold"/>
                   </MenuItem>
+
                   <Submenu name="report" v-if="gameList.length>0 && unFlodMenu">
                       <template slot="title">
                           <Icon type="ios-paper-outline"></Icon>
@@ -109,7 +110,7 @@
 
                   <MenuItem name="prizeList" :class="flodMenu ? 'flodMuenS' : 'class-b' ">
                     <Icon type="md-medal" />
-                    <span v-if="unFlodMenu" class="ml">神秘大奖记录</span>
+                    <span v-if="unFlodMenu" class="ml">神秘奖记录</span>
                   </MenuItem>
 
                   <MenuItem name="noTransfer" v-if="permission && flodMenu" :class="flodMenu ? 'flodMuenS' : 'class-b' ">
@@ -264,5 +265,23 @@ export default {
 }
 .ml{
   margin-left: .3rem;
+}
+/deep/ .ivu-tooltip {
+  z-index: 999;
+}
+/deep/ .ivu-tooltip-popper .ivu-tooltip-dark {
+  z-index: 999;
+}
+/deep/ .ivu-tooltip-content {
+  z-index: 9999;
+}
+/deep/ .ivu-tooltip-inner {
+  background: red;
+   z-index: 999;
+}
+
+/dee/ .ivu-tooltip-rel {
+   z-index: 999;
+
 }
 </style>

@@ -1,55 +1,25 @@
 <template>
   <div class="personalcenter">
-    <div class="reload">
-      <Button type="primary"  @click="refresh">刷新</Button>
-    </div>
     <div class="personalInfo">
-      <table cellspacing="0">
-        <tr>
-          <td>
-           <span>商户ID : {{admin.displayId}}</span>
-          </td>
-          <td>
-            <span>管理员账号 : {{admin.uname}}</span>
-          </td>
-          <td>
-            <div>
-              <span>管理员密码 :</span>
-              <span v-if="showPass">{{admin.password}}</span>
-              <span v-else>********</span>
-              <span class="newPassword" @click="showPass=!showPass" v-if="!showPass" style="margin-left: 1.5rem">显示</span>
-              <span class="newPassword" @click="showPass=!showPass" v-else>隐藏</span>
-              <span class="newPassword" @click="newPassword">修改密码</span>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <span>商户简称 : {{ admin.suffix }}</span>
-          </td>
-          <td>
-            <span>商户标识 : {{admin.sn}} </span>
-          </td>
-          <td>
-             <div>
-              <div>商户密匙 :
-              <span v-if="showKey">{{admin.apiKey}}</span>
-              <span v-else>********</span>
-              <span class="newPassword" @click="showKey=!showKey" v-if="!showKey" style="margin-left: 2.5rem">显示</span>
-              <span class="newPassword" @click="showKey=!showKey" v-else>隐藏</span>
-              </div>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <span>上次登录IP : {{admin.lastIP}}</span>
-          </td>
-          <td>
-            <span>上次登录时间 : {{dayjs(admin.loginAt).format('YYYY-MM-DD HH:mm:ss')}}</span>
-          </td>
-        </tr>
-      </table>
+      <Table :columns="columns2" :data="showData2" size="small">
+        <template slot-scope="{row, index}" slot="password">
+          <span v-if="showPass">{{row.password}}</span>
+          <span v-else>******</span>
+          <span v-if="showPass" @click="showPass = !showPass" style="color:#20a0ff;cursor:pointer;margin:0 .3rem;">隐藏</span>
+          <span v-else @click="showPass = !showPass" style="color:#20a0ff;cursor:pointer;margin:0 .3rem;">显示</span>
+          <span class="newPassword" @click="newPassword">修改密码</span>
+        </template>
+        <template slot-scope="{row, index}" slot="apiKey">
+          <span v-if="showKey">{{row.apiKey}}</span>
+          <span v-else>******</span>
+          <span  @click="showKey=!showKey" v-if="showKey" style="color:#20a0ff;cursor:pointer;margin:0 .3rem;">隐藏</span>
+          <span  @click="showKey=!showKey" v-else style="color:#20a0ff;cursor:pointer;margin:0 .3rem;">显示</span>
+        </template>
+        <template slot-scope="{row, index}" slot="operate">
+          <span @click="refresh" style="color:#20a0ff;cursor:pointer">刷新</span>
+        </template>
+      </Table>
+
     </div>
     <div class="financial">
       <h2>财务信息
@@ -84,7 +54,7 @@
           <span v-else>{{remarkConfig(row).content}}</span>  
         </template>
       </Table>
-      <Page :total="total" class="page" show-elevator :page-size='pageSize' show-total @on-change="changepage"></Page>
+      <Page :total="total" class="page" :page-size='pageSize' show-total @on-change="changepage"></Page>
     </div>
     <Modal v-model="modal" title="修改密码" :width='350' @on-ok="ok" @on-cancel='cancel'>
       <p class="modal_input">
@@ -105,7 +75,7 @@
       </p>
     </Modal>
     <Spin size="large" fix v-if="spinShow">
-      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
       <div>加载中...</div>
     </Spin>
   </div>
@@ -130,6 +100,7 @@ export default {
       admin: {},
       waterfall: [],
       showData: [],
+      showData2: [],
       columns1: [
         {
           title: "序号",
@@ -187,6 +158,45 @@ export default {
           maxWidth: 60,
           align: 'center'
         }
+      ],
+      columns2: [
+        { 
+          title: "商户ID",
+          align: 'center',
+          key: "displayId",
+          maxWidth: 60
+        },
+        {
+          title: "管理员账号",
+          key: "uname",
+          align: "center"
+        },
+        {
+          title: "管理员密码",
+          slot: "password",
+          align: "center"
+        },
+        {
+          title: "商户简称",
+          key: "suffix",
+          align: "center"
+        },
+        {
+          title: "商户标识",
+          key: "sn",
+          align: "center"
+        },
+        {
+          title: "商户密匙",
+          minWidth: 100,
+          slot: "apiKey",
+          align: "center"
+        },
+        {
+          title: "操作",
+          slot: "operate",
+          maxWidth: 60
+        }
       ]
     };
   },
@@ -196,6 +206,10 @@ export default {
     },
   },
   methods: {
+    //管理员密码配置
+    passwordConfig(row) {
+
+    },
     //财务信息交易对象
     toUserConfig(row) {
       if (row.fromLevel > row.toLevel) {
@@ -299,6 +313,8 @@ export default {
             self.repassword = "";
             oneMerchants(userId).then(res => {
               self.admin = res.payload;
+              //console.log(self.admin);
+              
               self.spinShow = false
               self.$Message.success("修改成功");
             });
@@ -352,7 +368,8 @@ export default {
       let waterfall = await this.axios.all([req1])
       this.spinShow = false
       this.showData = waterfall[0].payload
-
+      //console.log(this.showData);
+      
     },
     async init() {
       this.spinShow = true
@@ -362,7 +379,9 @@ export default {
       this.spinShow = false
       if (admin && admin.code == 0) {
         this.admin = admin.payload;
-      }
+      }this.showData2 = []
+      this.showData2.push(this.admin)
+      
       this.handlePage();
     }
   },
@@ -389,7 +408,7 @@ export default {
       border-collapse: collapse;
       td {
         border: 1px solid #e9eaec;
-        width: 32%;
+        width: 60px;
         height: 50px;
         padding-left: 10px;
       }
@@ -425,7 +444,16 @@ export default {
   }
 /deep/ .ivu-table-cell {
   padding: 0
-}  
+}
+.ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
+  }  
 </style>
 
 

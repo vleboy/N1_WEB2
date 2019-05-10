@@ -26,29 +26,30 @@ $
             @on-change="changeDate"
             placeholder="选择日期范围"
             style="width: 300px"
+            size="small"
           ></DatePicker>
         </Col>
         <Col span="12" class="text-right" style="display:flex;justify-content:flex-end">
           <div style="margin-right:1rem;width: 50rem;">
-            <Input v-model="sn" placeholder="请输入流水号"></Input>
+            <Input v-model="sn" placeholder="请输入流水号" size="small"></Input>
           </div>
           <div style="margin-right:1rem;width: 50rem;">
-            <Input v-model="betId" placeholder="请输入交易号"></Input>
+            <Input v-model="betId" placeholder="请输入交易号" size="small"></Input>
           </div>
-          <Button @click="isShowSearch = !isShowSearch" type="text">
+          <Button @click="isShowSearch = !isShowSearch" type="text" size="small">
             高级筛选
             <Icon type="arrow-down-b" v-if="!isShowSearch"></Icon>
             <Icon type="arrow-up-b" v-else></Icon>
           </Button>
-          <Button type="primary" @click="searchData(true)" style="margin-right:.3rem">搜索</Button>
-          <Button @click="reset(true)" style="margin-right:.3rem">重置</Button>
-          <Button type="primary" @click="exportData">导出数据</Button>
+          <Button @click="searchData(true)" style="margin-right:.3rem" size="small">搜索</Button>
+          <Button @click="reset(true)" style="margin-right:.3rem" size="small">重置</Button>
+          <Button @click="exportData" size="small">导出数据</Button>
         </Col>
       </Row>
       <Row v-if="isShowSearch">
         <div class="from-search">
           类型：
-          <RadioGroup v-model="radioType" type="button">
+          <RadioGroup v-model="radioType" type="button" size="small">
             <Radio label>全部</Radio>
             <Radio label="3">下注</Radio>
             <Radio label="11">中心钱包</Radio>
@@ -60,7 +61,7 @@ $
         </div>
         <div class="from-search">
           资金流向：
-          <RadioGroup v-model="radioMoney" type="button">
+          <RadioGroup v-model="radioMoney" type="button" size="small"> 
             <Radio label>全部</Radio>
             <Radio label="1">本次发生金额（入）</Radio>
             <Radio label="-1">本次发生金额（出）</Radio>
@@ -98,7 +99,6 @@ $
           <Col span="24" class="text-right">
             <Page
               :total="playerAccountList.length"
-              show-elevator
               :page-size="20"
               :current.sync="currentPage"
               @on-change="getNowpage"
@@ -669,6 +669,13 @@ export default {
 </script>
 
 <style scpoed type="text/less" lang="less">
+/deep/ .ivu-btn-small {
+    color: red;
+  }
+  /deep/.ivu-btn:hover {
+    background: #000 !important;
+    color: #fff !important;
+  }
 .p-playerAccount {
   .-p-base {
     .-b-form {
@@ -737,4 +744,6 @@ export default {
 .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
   }
+
+  
 </style>

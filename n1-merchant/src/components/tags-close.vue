@@ -13,7 +13,7 @@
             @on-close="closePage"
             @click.native="linkTo(item)"
             :closable="true"
-            :color="item.children?(item.children[0].name===currentPageName?'primary':'default'):(item.name===currentPageName?'primary':'default')"
+            :color="item.children?(item.children[0].name===currentPageName?'#000':'default'):(item.name===currentPageName?'#000':'default')"
           >{{ item.title }}</Tag>
         </transition-group>
       </div>

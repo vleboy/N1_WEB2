@@ -8,20 +8,23 @@
         <div class="tags-con">
           <tag-close :pageTagsList="pageTagsList"/>
         </div>
+
         <div class="user-dropdown-menu-con">
           <Row type="flex" justify="end" align="middle" class="user-dropdown-innercon">
             <Avatar icon="md-person" size="small" style="background: #619fe7;margin-right: 10px;"></Avatar>
-            <Dropdown transfer trigger="click" @on-click="handleClickUserDropdown">
+            <Dropdown transfer trigger="click" @on-click="handleClickUserDropdown" placement="bottom-start">
               <a href="javascript:void(0)">
                 <span class="main-user-name">{{ userName }}</span>
-                <Icon type="arrow-down-b"></Icon>
+                <Icon type="ios-arrow-down"></Icon>
               </a>
               <DropdownMenu slot="list">
-                <DropdownItem name="loginout" divided>退出登录</DropdownItem>
+                <DropdownItem name="loginout" >退出登录</DropdownItem>
               </DropdownMenu>
             </Dropdown>
+            
           </Row>
         </div>
+
       </Header>
       <Content>
         <Card style="overflow:auto">
@@ -107,10 +110,23 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+/deep/ .ivu-layout-header[data-v-73309bbd] {
+  padding: 0;
+  
+}
+/deep/ .user-dropdown-menu-con {
+  display: flex;
+  .ivu-layout-header {
+    line-height: 0;
+  }
+}
+/deep/ .ivu-layout-header {
+  padding: 0;
+}
 .tags-con {
   height: 50px;
   z-index: -1;
-  overflow: hidden;
+  //: hidden;
   //   background: #f0f0f0;
 }
 .main_header {
@@ -119,19 +135,16 @@ export default {
   box-shadow: 0 2px 1px 1px rgba(100, 100, 100, 0.1);
   position: relative;
   z-index: 11;
+  display: flex;
+  justify-content: space-between;
 }
 .user-dropdown-menu-con {
-  position: absolute;
-  right: 0;
-  top: 0;
   box-sizing: border-box;
   text-align: center;
   height: 100%;
   background: white;
   z-index: 10;
-  margin-right: 10px;
+  padding-right: 20px;
 }
-.ivu-layout-header {
-  padding: 0 50px 0 10px;
-}
+
 </style>

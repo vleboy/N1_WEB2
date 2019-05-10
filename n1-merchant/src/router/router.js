@@ -226,11 +226,11 @@ export const appRouter = [
          },
          {
            path: '/prizeList',
-           title: '神秘大奖记录',
+           title: '神秘奖记录',
            name: 'prizeList',
            component: main,
            children: [
-             { path: 'index', title: '神秘大奖记录', name: 'prizeList', component: prizeList }
+             { path: 'index', title: '神秘奖记录', name: 'prizeList', component: prizeList }
            ]
          }
        ]

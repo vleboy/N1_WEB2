@@ -7,6 +7,7 @@
           ref="resetSelect"
           clearable
           v-model="model1"
+          size="small"
         >
           <Option
             v-for="(item, index) in gameType"
@@ -26,9 +27,10 @@
             confirm
             @on-ok="confirms"
             @on-change="handle"
+            size="small"
           ></DatePicker>
-          <Button type="primary" @click="search">搜索</Button>
-          <Button @click="reset">重置</Button>
+          <Button type="primary" @click="search" size="small" style="margin-left:1rem;margin-right:.3rem">搜索</Button>
+          <Button @click="reset" size="small">重置</Button>
         </div>
       </div>
     </div>
@@ -43,7 +45,7 @@
       </Table>
     </div>
     <Spin size="large" fix v-if="spinShow">
-      <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
       <div>加载中...</div>
     </Spin>
   </div>
@@ -411,6 +413,22 @@ export default {
     animation: ani-demo-spin 1s linear infinite;
   }
 }
+.ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-input {
+    border-color: #000;
+    background: #fff;
+  }
+  /deep/.ivu-select-selection {
+    border-color: #000;
+  }
 #myChart {
   width: 100%;
   height: 300px;

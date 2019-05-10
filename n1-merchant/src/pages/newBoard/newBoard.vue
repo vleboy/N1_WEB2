@@ -1,11 +1,11 @@
 <template>
   <div class="newBoard">
     <Spin size="large" fix v-show="spinShow" style="z-index:200;">
-      <Icon type="load-c" size="100" class="demo-spin-icon-load" style></Icon>
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
       <div style>加载中...</div>
     </Spin>
     <div class="top">
-      <Select style="width:200px;" ref="resetSelect" clearable v-model="model1">
+      <Select style="width:200px;" ref="resetSelect" clearable v-model="model1" size="small">
         <Option
           v-for="(item, index) in gameType"
           :value="item.name"
@@ -14,7 +14,7 @@
         >{{item.name}}</Option>
       </Select>
       <div class="right">
-        <RadioGroup v-model="dateType" @on-change="changeDate" type="button">
+        <RadioGroup v-model="dateType" @on-change="changeDate" type="button" size="small">
           <Radio label="0">昨日</Radio>
           <Radio label="4">今日</Radio>
           <Radio label="1">近一周</Radio>
@@ -29,9 +29,10 @@
           placeholder="选择日期时间范围(默认最近一周)"
           style="width: 300px;margin:0 1rem"
           @on-ok="confirm"
+          size="small"
         ></DatePicker>
-        <Button type="primary" @click="search">搜索</Button>
-        <Button @click="reset">重置</Button>
+        <Button @click="search" style="margin-right:.3rem"  class="searchBtn" type="primary" size="small">搜索</Button>
+        <Button @click="reset" size="small">重置</Button>
       </div>
     </div>
 
@@ -761,6 +762,25 @@ export default {
 .newBoard {
   position: relative;
   min-height: 90vh;
+  /deep/.ivu-select-selection {
+    border-color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
+    border: 1px solid #ccc;
+    color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-input {
+    border-color: #000;
+    background: #fff;
+  }
   .title {
     font-size: 1.2rem;
     margin: 0.5rem 0 0.5rem;
@@ -812,23 +832,25 @@ export default {
     // justify-content: space-around;
   }
 
-  /deep/ .ivu-tabs-bar {
-    height: 2.25rem;
+ /deep/ .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab {
+    border-color: #000;
+    color: #000;
+    background: #fff;
   }
-  /deep/ .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-nav-container {
-    height: 2.25rem;
+ 
+  /deep/ .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab-active {
+    background: #000;
+    color: #fff;
   }
-  /deep/ .ivu-tabs-nav {
-    height: 2.25rem;
+  
+  .ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
   }
-  /deep/ .ivu-tabs-nav-scroll {
-    height: 2.25rem;
-  }
-  /deep/ .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab {
-    width: 6rem;
-    height: 2.25rem;
-    font-size: 1rem;
-    text-align: center;
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
   }
 }
 </style>

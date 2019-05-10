@@ -4,23 +4,23 @@
       <Row class="row -search-row">
         <Col span="2" offset="4">玩家ID</Col>
         <Col span="4">
-          <Input v-model="searchInfo.userId" placeholder="请输入"></Input>
+          <Input v-model="searchInfo.userId" placeholder="请输入" size="small"></Input>
         </Col>
         <Col span="2">玩家账号</Col>
         <Col span="4">
-          <Input v-model="searchInfo.userName" placeholder="请输入"></Input>
+          <Input v-model="searchInfo.userName" placeholder="请输入" size="small"></Input>
         </Col>
-        <Col span="5">
+        <Col span="3">
           <div class="btns">
-            <Button type="primary" @click="getSearch(true)">搜索</Button>
-            <Button @click="getSearch(false)">重置</Button>
+            <Button type="primary" @click="getSearch(true)" style="margin-right:.3rem" size="small">搜索</Button>
+            <Button @click="getSearch(false)" size="small">重置</Button>
           </div>
         </Col>
       </Row>
       <Row class="row">
         <Col span="2" offset="4">玩家昵称</Col>
         <Col span="4">
-          <Input v-model="searchInfo.nickname" placeholder="请输入"></Input>
+          <Input v-model="searchInfo.nickname" placeholder="请输入" size="small"></Input>
         </Col>
         <Col span="2">游戏状态</Col>
         <Col span="4">
@@ -29,11 +29,13 @@
             clearable
             placeholder="请选择游戏状态"
             style="text-align: left"
+            size="small"
           >
             <Option
               v-for="(item, index) in gameTypeList"
               :value="item.code"
               :key="index"
+              
             >{{ item.name }}</Option>
           </Select>
         </Col>
@@ -67,13 +69,12 @@
       </Table>
 
       <Spin size="large" fix v-if="isFetching">
-        <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
+       <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
         <div>加载中...</div>
       </Spin>
       <div style="text-align: right;margin:2rem 0">
         <Page
           :total="playerList.length"
-          show-elevator
           :page-size="20"
           :current.sync="currentPage"
           @on-change="getNowpage"
@@ -393,6 +394,25 @@ export default {
   }
   /deep/ .ivu-table-cell {
     padding: 0;
+  }
+  .propList-search {
+    .ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
+  }
+  }
+  
+  /deep/ .ivu-input {
+    border-color: #000;
+    background: #fff;
+  }
+  /deep/.ivu-select-selection {
+    border-color: #000;
   }
 }
 </style>

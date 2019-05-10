@@ -17,7 +17,7 @@
       </Row>
       <Row>
         <Col span="17" style="float: right; text-align: right">
-          <Input v-model="betId" placeholder="请输入交易号" style="width: 30%;"></Input>
+          <Input v-model="betId" placeholder="请输入交易号" style="width: 30%;margin-right:1rem" size="small"></Input>
           <DatePicker
             v-model="amountDate"
             :options="options"
@@ -26,10 +26,11 @@
             style="width: 300px"
             @on-ok="searchAmount"
             placeholder="选择日期时间范围"
+            size="small"
           ></DatePicker>
-          <Button type="primary" @click="searchAmount">搜索</Button>
-          <Button @click="reset">重置</Button>
-          <Button type="primary" @click="exportData">导出数据</Button>
+          <Button type="primary" @click="searchAmount" size="small" style="margin:0 .3rem 0 1rem">搜索</Button>
+          <Button @click="reset" size="small" style="margin-right:.3rem">重置</Button>
+          <Button type="primary" @click="exportData" size="small">导出数据</Button>
         </Col>
       </Row>
     </div>
@@ -72,7 +73,6 @@
         <Col span="12" style="text-align: right;font-size: 12px">
           <Page
             :total="playerDetailList.length"
-            show-elevator
             :page-size="20"
             :current.sync="currentPage"
             @on-change="getNowpage"

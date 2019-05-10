@@ -4,12 +4,12 @@
       <div class="top">
         <p class="title">
           当前用户列表
-          <Button @click="exportdata('table_0')">导出数据</Button>
+          <Button @click="exportdata('table_0')" size="small">导出数据</Button>
         </p>
         <div class="right">
-          <DatePicker type="datetimerange" :options="options"  :editable='false' v-model="defaultTime" placeholder="选择日期时间范围(默认最近一周)" style="width: 300px" @on-ok="confirm"></DatePicker>
-          <Button type="primary" @click="search">搜索</Button>
-          <Button @click="reset">重置</Button>
+          <DatePicker size="small" type="datetimerange" :options="options"  :editable='false' v-model="defaultTime" placeholder="选择日期时间范围(默认最近一周)" style="width: 300px" @on-ok="confirm"></DatePicker>
+          <Button type="primary" @click="search" size="small" style="margin:0 .3rem 0 1rem">搜索</Button>
+          <Button @click="reset" size="small">重置</Button>
         </div>
       </div>
       <Table :columns="columns11" :data="user" size="small" ref='table_0'>
@@ -45,7 +45,7 @@
     <div class="playerList" id="playerList">
       <p class="title">
         所属玩家列表
-        <Button @click="exportdata('table_1')">导出数据</Button>
+        <Button @click="exportdata('table_1')" size="small">导出数据</Button>
       </p>
       <Table :columns="columns22" :data="playerList" size="small" ref='table_1'>
         <template slot-scope="{row, index}" slot="playerName">
@@ -74,7 +74,7 @@
       </Table>
     </div>
     <Spin size="large" fix v-if="spinShow">
-      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
       <div>加载中...</div>
     </Spin>
   </div>
@@ -437,6 +437,19 @@ export default {
   }
   .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
+  }
+  .ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-input {
+    border-color: #000;
+    background: #fff;
   }
 }
 </style>

@@ -5,9 +5,9 @@
         <Row class="row">
           <Col span="13">
             <span class="label">玩家ID</span>
-            <Input v-model="userId" style="width: 100px" placeholder="请输入"></Input>
+            <Input v-model="userId" style="width: 100px" placeholder="请输入" size="small"></Input>
             <span class="label" style="margin-left:1rem">交易号</span>
-            <Input v-model="businessKey" style="width: 150px" placeholder="请输入"></Input>
+            <Input v-model="businessKey" style="width: 150px" placeholder="请输入" size="small"></Input>
           </Col>
           <Col span="11" style="textAlign:right">
             <DatePicker
@@ -18,9 +18,10 @@
               placeholder="选择日期时间范围(默认最近一周)"
               style="width: 300px;margin-right:1rem"
               @on-ok="search"
+              size="small"
             ></DatePicker>
-            <Button type="primary" @click="search" style="margin-right:.3rem">搜索</Button>
-            <Button @click="reset">重置</Button>
+            <Button @click="search" style="margin-right:.3rem" size="small">搜索</Button>
+            <Button @click="reset" size="small">重置</Button>
           </Col>
         </Row>
       </div>
@@ -32,18 +33,19 @@
           type="button"
           :style="{paddingBottom:'10px'}"
           @on-change="search"
+          size="small"
         >
           <Radio label="1">流水记录</Radio>
           <Radio label="2">交易记录</Radio>
         </RadioGroup>
-        <Select v-model="gameType" style="width:110px" @on-change="search">
+        <Select v-model="gameType" style="width:110px" @on-change="search" size="small">
           <Option
             v-for="item in gameTypeList"
             :value="item.value"
             :key="item.value"
           >{{ item.label }}</Option>
         </Select>
-        <Select v-model="status" style="width:90px" v-if="reportType=='1'" @on-change="search">
+        <Select v-model="status" style="width:90px" v-if="reportType=='1'" @on-change="search" size="small">
           <Option v-for="item in statusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </Col>
@@ -120,7 +122,7 @@
       @on-change="changepage"
     ></Page>
     <Spin size="large" fix v-if="spin">
-      <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
       <div>加载中...</div>
     </Spin>
     <Modal title="流水详情" v-model="isOpenModalRunning" class="g-text-center" width="800">
@@ -808,4 +810,17 @@ export default {
 .demo-spin-icon-load {
   animation: ani-demo-spin 1s linear infinite;
 }
+.ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-input {
+    border-color: #000;
+    background: #fff;
+  }
 </style>
