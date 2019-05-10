@@ -1,6 +1,6 @@
 {
-  "name": "我的文明",
-  "short_name": "我的文明",
+  "name": "NA代理",
+  "short_name": "NA代理",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",
@@ -16,5 +16,5 @@
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#FFFFFF",
-  "theme_color": "#4DBA87"
+  "theme_color": "#1C2327"
 }
