@@ -14,7 +14,7 @@
               <v-toolbar-title>代理</v-toolbar-title>
               <v-spacer></v-spacer>
             </v-toolbar>
-            <v-card-text>
+            <v-card-text class="pb-0">
               <v-form>
                 <v-text-field
                   v-model="username"
@@ -35,7 +35,7 @@
                 ></v-text-field>
               </v-form>
             </v-card-text>
-            <v-card-actions>
+            <v-card-actions class="pt-0">
               <v-spacer></v-spacer>
               <v-btn dark @click="login">登录</v-btn>
             </v-card-actions>
