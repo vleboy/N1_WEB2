@@ -22,7 +22,7 @@
         <template v-for="(item,index) in items">
           <v-list-tile :key="item.title" avatar ripple @click="()=>{}">
             <v-list-tile-avatar @click="openEdit(item)">
-              <v-icon :color="item.state ? 'black' : 'grey'" size="36">mood</v-icon>
+              <v-icon :color="item.state ? 'teal' : 'grey'" size="36">mood</v-icon>
             </v-list-tile-avatar>
             <v-list-tile-content @click="openEdit(item)">
               <v-list-tile-title>{{ item.title }}</v-list-tile-title>
@@ -30,7 +30,7 @@
             </v-list-tile-content>
             <v-list-tile-action @click="openURL(item)">
               <v-list-tile-action-text>{{ item.action }}</v-list-tile-action-text>
-              <v-btn dark color="blue-grey" depressed>生成游戏链接</v-btn>
+              <v-btn dark color="teal" depressed>生成游戏链接</v-btn>
             </v-list-tile-action>
           </v-list-tile>
           <v-divider v-if="index + 1 < items.length" :key="index"></v-divider>

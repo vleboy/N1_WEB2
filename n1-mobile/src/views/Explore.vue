@@ -30,7 +30,7 @@
         <template v-for="(item,index) in items">
           <v-list-tile :key="item.title" avatar ripple @click="()=>{}">
             <v-list-tile-avatar>
-              <v-icon :color="item.state ? 'black' : 'grey'" size="36">mood</v-icon>
+              <v-icon :color="item.state ? 'teal' : 'grey'" size="36">mood</v-icon>
             </v-list-tile-avatar>
             <v-list-tile-content>
               <v-list-tile-title>{{ item.title }}</v-list-tile-title>
