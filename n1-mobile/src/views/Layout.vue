@@ -11,13 +11,13 @@
 </template>
 
 <script>
-// import Bottom from "./Bottom";
+import Bottom from "./Bottom";
 // import Home from "./Home";
 // import Center from "./Center.vue";
 // import Explore from "./Explore.vue";
 export default {
   components: {
-    // Bottom,
+    Bottom,
     // Home,
     // Center,
     // Explore
