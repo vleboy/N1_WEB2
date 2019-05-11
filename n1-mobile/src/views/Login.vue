@@ -37,7 +37,7 @@
             </v-card-text>
             <v-card-actions class="pt-0">
               <v-spacer></v-spacer>
-              <v-btn dark @click="login">登录</v-btn>
+              <v-btn large dark @click="login">登录</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
