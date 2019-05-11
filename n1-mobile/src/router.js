@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import Login from './views/Login.vue'
 import Layout from './views/Layout.vue'
 import Home from './views/Home.vue'
-import Agent from './views/Agent.vue'
+import Center from './views/Center.vue'
 import Explore from './views/Explore.vue'
 
 Vue.use(Router)
@@ -26,9 +26,9 @@ export default new Router({
           component: Home
         },
         {
-          path: 'agent',
-          name: 'agent',
-          component: Agent
+          path: 'center',
+          name: 'center',
+          component: Center
         },
         {
           path: 'explore',
@@ -37,13 +37,13 @@ export default new Router({
         }
       ]
     },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
-    }
+    // {
+    //   path: '/about',
+    //   name: 'about',
+    //   // route level code-splitting
+    //   // this generates a separate chunk (about.[hash].js) for this route
+    //   // which is lazy-loaded when the route is visited.
+    //   component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+    // }
   ]
 })

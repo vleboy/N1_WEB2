@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- <Home v-show="showMenu == 0"></Home>
-    <Agent v-show="showMenu == 1"></Agent>
+    <Center v-show="showMenu == 1"></Center>
     <Explore v-show="showMenu == 2"></Explore>-->
     <keep-alive>
       <router-view></router-view>
@@ -11,16 +11,16 @@
 </template>
 
 <script>
-import Bottom from "./Bottom";
-import Home from "./Home";
-import Agent from "./Agent.vue";
-import Explore from "./Explore.vue";
+// import Bottom from "./Bottom";
+// import Home from "./Home";
+// import Center from "./Center.vue";
+// import Explore from "./Explore.vue";
 export default {
   components: {
-    Bottom,
-    Home,
-    Agent,
-    Explore
+    // Bottom,
+    // Home,
+    // Center,
+    // Explore
   },
   data() {
     return {
@@ -78,13 +78,6 @@ export default {
       this.showMenu = param;
     }
   }
-  // computed: {
-  //   binding() {
-  //     const binding = {};
-  //     if (this.$vuetify.breakpoint.mdAndUp) binding.column = true;
-  //     return binding;
-  //   }
-  // }
 };
 </script>
 
