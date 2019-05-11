@@ -5,16 +5,37 @@
         <v-icon size="40" color="blue-grey">person_add</v-icon>
       </v-avatar>
     </v-btn>
+    <v-flex xs12>
+      <v-btn-toggle mandatory style="width:100%" class="pl-2">
+        <v-btn large flat value="left">今日实时洗码量</v-btn>
+        <v-btn large flat value="center">今日实时投注次数</v-btn>
+      </v-btn-toggle>
+    </v-flex>
+    <v-flex xs12>
+      <v-card color="blue-grey darken-1" dark>
+        <v-card-title primary-title class="py-2">
+          <div>
+            <div class="headline">
+              <animate-number
+                ref="num0"
+                from="0"
+                to="2000.55"
+                duration="1000"
+                easing="easeInQuad"
+                :formatter="num => new Intl.NumberFormat().format(num)"
+              ></animate-number>
+            </div>
+          </div>
+        </v-card-title>
+      </v-card>
 
-    <v-flex xs12 class="mt-2">
-      <CardMain/>
+      <!-- <CardMain/> -->
     </v-flex>
 
     <v-flex xs12>
       <v-list subheader two-line>
         <v-subheader>
           活跃玩家列表
-          <v-spacer></v-spacer>
           <v-btn icon>
             <v-icon>search</v-icon>
           </v-btn>
@@ -22,7 +43,7 @@
         <template v-for="(item,index) in items">
           <v-list-tile :key="item.title" avatar ripple @click="()=>{}">
             <v-list-tile-avatar @click="openEdit(item)">
-              <v-icon :color="item.state ? 'teal' : 'grey'" size="36">mood</v-icon>
+              <v-icon :color="item.state ? 'teal' : 'grey'" size="36">face</v-icon>
             </v-list-tile-avatar>
             <v-list-tile-content @click="openEdit(item)">
               <v-list-tile-title>{{ item.title }}</v-list-tile-title>
@@ -120,14 +141,18 @@
 </template>
 
 <script>
-import CardMain from "../components/CardMain";
+// import CardMain from "../components/CardMain";
 import Clipboard from "clipboard";
 
 export default {
   components: {
-    CardMain
+    // CardMain
   },
-  created() {},
+  created() {
+    setInterval(() => {
+      this.$refs["num0"] ? this.$refs["num0"].start() : null;
+    }, 5000);
+  },
   mounted() {
     if (navigator.userAgent.match(/ipad|ipod|iphone/i)) {
       const clipboard = new Clipboard(this.$refs.copyButton);

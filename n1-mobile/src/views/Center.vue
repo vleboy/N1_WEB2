@@ -9,26 +9,15 @@
       <!-- </v-badge> -->
     </v-btn>
     <v-flex xs12>
-      <v-item-group multiple style="width:100%">
-        <v-item>
-          <v-chip label>上月洗码量：1000</v-chip>
-        </v-item>
-        <v-item>
-          <v-chip label>本月洗码量：1000</v-chip>
-        </v-item>
-        <v-item>
-          <v-chip label>上周洗码量：1000</v-chip>
-        </v-item>
-        <v-item>
-          <v-chip label>本周洗码量：1000</v-chip>
-        </v-item>
-      </v-item-group>
+      <v-btn-toggle mandatory style="width:100%" class="pl-2">
+        <v-btn large flat value="left">上周洗码量：1000</v-btn>
+        <v-btn large flat value="center">本周洗码量：1000</v-btn>
+      </v-btn-toggle>
     </v-flex>
     <v-flex xs12>
       <v-list subheader two-line>
         <v-subheader>
           下级代理列表
-          <v-spacer></v-spacer>
           <v-btn icon>
             <v-icon>search</v-icon>
           </v-btn>
@@ -236,7 +225,7 @@ export default {
       dialogURL: false,
       username: "",
       password: "",
-      displayName:"",
+      displayName: "",
       status: 1,
       copyURL: `${window.location.href.split("#")[0]}index.html`
     };
@@ -267,7 +256,11 @@ export default {
       this.dialogEdit = true;
     },
     openURL() {
-      this.copyURL = `${window.location.href.split("#")[0]}index.html?username=${JSON.parse(localStorage.getItem("token")).username}`
+      this.copyURL = `${
+        window.location.href.split("#")[0]
+      }index.html?username=${
+        JSON.parse(localStorage.getItem("token")).username
+      }`;
       this.dialogURL = true;
     },
     randomStr(min, max) {
