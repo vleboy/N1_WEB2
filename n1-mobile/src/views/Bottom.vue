@@ -5,7 +5,7 @@
         <span>玩家管理</span>
         <v-icon>mood</v-icon>
       </v-btn>
-      <v-btn flat color="#1c2327" to="agent" @click="showFatherView(1)">
+      <v-btn flat color="#1c2327" to="center" @click="showFatherView(1)">
         <span>下级代理</span>
         <v-icon>people</v-icon>
       </v-btn>
