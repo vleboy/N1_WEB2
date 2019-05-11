@@ -22,7 +22,7 @@
       </v-btn-toggle>
     </v-flex>
     <v-flex xs12>
-      <v-list subheader three-line>
+      <v-list subheader two-line>
         <v-subheader>
           玩家输赢报表
           <v-spacer></v-spacer>

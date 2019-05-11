@@ -25,7 +25,7 @@
       </v-item-group>
     </v-flex>
     <v-flex xs12>
-      <v-list subheader three-line>
+      <v-list subheader two-line>
         <v-subheader>
           下级代理列表
           <v-spacer></v-spacer>

@@ -11,7 +11,7 @@
     </v-flex>
 
     <v-flex xs12>
-      <v-list subheader three-line>
+      <v-list subheader two-line>
         <v-subheader>
           活跃玩家列表
           <v-spacer></v-spacer>
