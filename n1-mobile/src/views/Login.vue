@@ -38,7 +38,7 @@
             </v-card-text>
             <v-card-actions class="pt-0">
               <v-spacer></v-spacer>
-              <v-btn large dark @click="login" :loading="loading">登录</v-btn>
+              <v-btn large dark @click="login" :loading="openLoading">登录</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
@@ -53,7 +53,7 @@
       </v-layout>
     </v-parallax>
     <!--错误提示-->
-    <v-snackbar v-model="err" top auto-height color="warning">
+    <v-snackbar v-model="err" top auto-height :color="errColor">
       {{errMsg}}
       <v-btn color="gray" flat @click="err = false">关闭</v-btn>
     </v-snackbar>
@@ -63,13 +63,23 @@
 <script>
 import bcrypt from "bcryptjs";
 export default {
+  computed: {
+    openLoading: {
+      get() {
+        return this.$store.state.openLoading;
+      },
+      set(val) {
+        this.$store.commit("openLoading", val);
+      }
+    }
+  },
   data() {
     return {
       username: "",
       password: "",
-      loading: false,
       err: false,
-      errMsg: ""
+      errMsg: "",
+      errColor: "warning"
     };
   },
   created: function() {
@@ -81,15 +91,14 @@ export default {
   methods: {
     async login() {
       if (this.username && this.password) {
-        this.loading = true;
         let res = await this.$store.dispatch("login", {
           username: this.username,
           password: bcrypt.hashSync(this.password),
           role: "1000",
           mobileFlag: true
         });
-        this.loading = false;
         if (res.code != 0) {
+          this.errColor = res.code;
           this.err = res.code;
           this.errMsg = res.msg;
         } else {

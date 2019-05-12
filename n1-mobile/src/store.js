@@ -1,40 +1,50 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 // import axios from 'axios'
-
 const domain = 'http://localhost:3000'
 
 Vue.use(Vuex)
 
-async function get(url) {
-  try {
-    let res = await fetch(`${domain}${url}`)
-    return await res.json()
-  } catch (error) {
-    console.error('网络错误')
-    console.error(error)
+// 封装fetch
+const axios = {
+  async get(url) {
+    try {
+      vuex.commit("openLoading", true);
+      let res = await fetch(`${domain}${url}`)
+      let obj = await res.json()
+      obj.code != 0 ? vuex.commit("openLoading", false) : null
+      return obj
+    } catch (error) {
+      vuex.commit("openLoading", false);
+      console.error(error)
+      return { code: 'error', msg: '网络中断' }
+    }
+  },
+  async post(url, data) {
+    try {
+      vuex.commit("openLoading", true);
+      let res = await fetch(`${domain}${url}`, {
+        body: JSON.stringify(data),
+        headers: { 'content-type': 'application/json' },
+        method: 'POST'
+      })
+      let obj = await res.json()
+      obj.code != 0 ? vuex.commit("openLoading", false) : null
+      return obj
+    } catch (error) {
+      vuex.commit("openLoading", false);
+      console.error(error)
+      return { code: 'error', msg: '网络中断' }
+    }
   }
 }
-
-async function post(url, data) {
-  try {
-    let res = await fetch(`${domain}${url}`, {
-      body: JSON.stringify(data),
-      headers: { 'content-type': 'application/json' },
-      method: 'POST'
-    })
-    return await res.json()
-  } catch (error) {
-    console.error('网络错误')
-    console.error(error)
-  }
-}
-
-export default new Vuex.Store({
+// 全局状态机
+const vuex = new Vuex.Store({
   state: {
     centerScroll: 0,
     homeScroll: 0,
-    exploreScroll: 0
+    exploreScroll: 0,
+    openLoading: false,
   },
   mutations: {
     setHomeScroll(state, params) {
@@ -45,14 +55,15 @@ export default new Vuex.Store({
     },
     setExploreScroll(state, params) {
       state.exploreScroll = params
+    },
+    openLoading(state, params) {
+      state.openLoading = params
     }
   },
   actions: {
     // 登录
-    async login(state, data) {
-      // const res = await axios.post(`${domain}/gserver/auth/login`, data)
-      // return res.data
-      return post('/agentLogin', data)
+    login(state, data) {
+      return axios.post('/agentLogin', data)
     },
     // 注册玩家
     async regPlayer() {
@@ -72,11 +83,6 @@ export default new Vuex.Store({
     },
     // 获取玩家分页
     async getPlayerPage(state, data) {
-      const res = await fetch(`${domain}/webapi/test`)
-      const d = await res.json()
-      console.log(d)
-      return d
-      // return (await fetch(`${domain}/webapi/test`)).json();
     },
     // 获取用户分页
     async getUserPage(state, data) {
@@ -92,3 +98,4 @@ export default new Vuex.Store({
     }
   }
 })
+export default vuex
