@@ -14,17 +14,21 @@
     </keep-alive>
     <!--底部导航-->
     <Bottom/>
+    <!--加载等待-->
+    <Loading message="加载中..."/>
   </div>
 </template>
 
 <script>
 import Bottom from "./Bottom";
+import Loading from "../components/Loading";
 // import Home from "./Home";
 // import Center from "./Center.vue";
 // import Explore from "./Explore.vue";
 export default {
   components: {
-    Bottom
+    Bottom,
+    Loading
     // Home,
     // Center,
     // Explore
