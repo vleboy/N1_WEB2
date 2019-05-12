@@ -4,7 +4,7 @@
     <Center v-show="showMenu == 1"></Center>
     <Explore v-show="showMenu == 2"></Explore>-->
     <!--错误提示-->
-    <v-snackbar v-model="err" top auto-height :color="errColor">
+    <v-snackbar v-model="err" top auto-height :color="errColor" :timeout=3000>
       {{errMsg}}
       <v-btn color="gray" flat @click="()=>{this.$store.commit('setErr',false)}">关闭</v-btn>
     </v-snackbar>
