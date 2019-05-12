@@ -3,13 +3,25 @@ module.exports = {
 
   pwa: {
     name: 'NA代理',
-    msTileColor: '#1C2327'
+    msTileColor: '#1C2327',
+    workboxOptions: {
+      runtimeCaching: [{
+        urlPattern: new RegExp('^http://localhost:3000/webapi/'),
+        handler: 'staleWhileRevalidate',
+        options: {
+          cacheName: 'api-cache',
+          cacheableResponse: {
+            statuses: [0, 200],
+          },
+        },
+      }]
+    }
   },
 
   configureWebpack: {
     optimization: {
       splitChunks: {
-        minSize: 10000,
+        minSize: 200000,
         maxSize: 250000,
       }
     }

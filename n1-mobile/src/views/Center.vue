@@ -319,15 +319,6 @@ export default {
         }
       });
     }
-    // handleScroll() {
-    //   this.statScrollNum =
-    //     window.pageYOffset ||
-    //     document.documentElement.scrollTop ||
-    //     document.body.scrollTop;
-    // }
   }
-  // beforeDestroy() {
-  //   this.$store.commit("setStatScroll", this.statScrollNum);
-  // }
 };
 </script>

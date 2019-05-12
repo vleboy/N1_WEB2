@@ -44,7 +44,7 @@ export default {
           this.$store.commit("setHomeScroll", this.scrollNum);
           break;
         case 1:
-          this.$store.commit("setStatScroll", this.scrollNum);
+          this.$store.commit("setCenterScroll", this.scrollNum);
           break;
         case 2:
           this.$store.commit("setExploreScroll", this.scrollNum);
