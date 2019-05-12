@@ -24,6 +24,7 @@
                   type="text"
                   :messages="['6-10位中英文数字']"
                   maxlength="20"
+                  clearable
                 ></v-text-field>
                 <v-text-field
                   v-model="password"
@@ -33,6 +34,7 @@
                   id="password"
                   type="password"
                   maxlength="20"
+                  clearable
                 ></v-text-field>
               </v-form>
             </v-card-text>

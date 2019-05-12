@@ -71,10 +71,11 @@
                   label="帐号"
                   :messages="['已随机自动生成']"
                   required
+                  clearable
                 ></v-text-field>
               </v-flex>
               <v-flex xs12>
-                <v-text-field v-model="password" prepend-icon="lock" label="密码" required></v-text-field>
+                <v-text-field v-model="password" prepend-icon="lock" label="密码" required clearable></v-text-field>
               </v-flex>
             </v-layout>
           </v-container>
@@ -98,7 +99,7 @@
                 <v-switch v-model="state" :label="state ?'启用':'停用'"></v-switch>
               </v-flex>
               <v-flex xs12>
-                <v-text-field v-model="password" prepend-icon="lock" label="输入新密码(留空不变更)" required></v-text-field>
+                <v-text-field v-model="password" prepend-icon="lock" label="输入新密码(留空不变更)" required clearable></v-text-field>
               </v-flex>
             </v-layout>
           </v-container>

@@ -52,10 +52,11 @@
                   label="帐号"
                   :messages="['已随机自动生成']"
                   required
+                  clearable
                 ></v-text-field>
               </v-flex>
               <v-flex xs12>
-                <v-text-field v-model="password" prepend-icon="lock" label="密码" required></v-text-field>
+                <v-text-field v-model="password" prepend-icon="lock" label="密码" required clearable></v-text-field>
               </v-flex>
               <v-flex xs12>
                 <v-text-field
@@ -63,10 +64,11 @@
                   prepend-icon="person_outline"
                   label="昵称（建议输入中文，例：李哥）"
                   required
+                  clearable
                 ></v-text-field>
               </v-flex>
               <v-flex xs12>
-                <v-select v-model="selectedGameTypes" :items="gameTypes" label="选择游戏" multiple>
+                <v-select v-model="selectedGameTypes" :items="gameTypes" label="选择游戏" multiple clearable>
                   <template v-slot:prepend-item>
                     <v-list-tile ripple @click="toggle">
                       <v-list-tile-content>
