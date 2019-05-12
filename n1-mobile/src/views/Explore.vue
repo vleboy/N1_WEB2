@@ -77,7 +77,11 @@
 
 <script>
 export default {
-  created() {},
+  created() {
+    // 获取输赢报表
+    // let res = await this.$store.dispatch("getReportList");
+    // this.items = res.payload;
+  },
   data() {
     return {
       items: [

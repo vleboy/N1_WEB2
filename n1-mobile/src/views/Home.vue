@@ -89,7 +89,7 @@
     <v-dialog v-model="dialogEdit" persistent>
       <v-card>
         <v-card-title class="pb-0">
-          <span class="headline">玩家设置</span>
+          <span class="headline">玩家设置[{{userName}}]</span>
         </v-card-title>
         <v-card-text class="pa-0">
           <v-container grid-list-md>
@@ -198,6 +198,7 @@ export default {
     },
     openEdit(item) {
       this.state = item.state;
+      this.userName = item.userName;
       this.password = "";
       this.dialogEdit = true;
     },

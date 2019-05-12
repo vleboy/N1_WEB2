@@ -127,7 +127,7 @@ const vuex = new Vuex.Store({
     },
     // 获取报表
     async getReportList() {
-
+      return axios.get('/queryPlayerStat')
     },
     // 获取实时数据
     async getRealtimeData() {
