@@ -51,7 +51,7 @@
             </v-list-tile-content>
             <v-list-tile-action @click="openURL(item)">
               <v-list-tile-action-text>{{ item.action }}</v-list-tile-action-text>
-              <v-btn dark color="teal" depressed>生成游戏链接</v-btn>
+              <v-btn dark color="teal" outline depressed>生成游戏链接</v-btn>
             </v-list-tile-action>
           </v-list-tile>
           <v-divider v-if="index + 1 < items.length" :key="index"></v-divider>
