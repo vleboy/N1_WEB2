@@ -3,9 +3,16 @@
     <!-- <Home v-show="showMenu == 0"></Home>
     <Center v-show="showMenu == 1"></Center>
     <Explore v-show="showMenu == 2"></Explore>-->
+    <!--错误提示-->
+    <v-snackbar v-model="err" top auto-height :color="errColor">
+      {{errMsg}}
+      <v-btn color="gray" flat @click="()=>{this.$store.commit('setErr',false)}">关闭</v-btn>
+    </v-snackbar>
+    <!--路由页面-->
     <keep-alive>
       <router-view></router-view>
     </keep-alive>
+    <!--底部导航-->
     <Bottom/>
   </div>
 </template>
@@ -17,10 +24,44 @@ import Bottom from "./Bottom";
 // import Explore from "./Explore.vue";
 export default {
   components: {
-    Bottom,
+    Bottom
     // Home,
     // Center,
     // Explore
+  },
+  computed: {
+    openLoading: {
+      get() {
+        return this.$store.state.openLoading;
+      },
+      set(val) {
+        this.$store.commit("openLoading", val);
+      }
+    },
+    err: {
+      get() {
+        return this.$store.state.err;
+      },
+      set(val) {
+        this.$store.commit("setErr", val);
+      }
+    },
+    errMsg: {
+      get() {
+        return this.$store.state.errMsg;
+      },
+      set(val) {
+        this.$store.commit("setErrMsg", val);
+      }
+    },
+    errColor: {
+      get() {
+        return this.$store.state.errColor;
+      },
+      set(val) {
+        this.$store.commit("setErrColor", val);
+      }
+    }
   },
   data() {
     return {

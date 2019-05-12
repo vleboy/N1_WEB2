@@ -131,53 +131,14 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <!--错误提示-->
-    <v-snackbar v-model="err" top auto-height :color="errColor">
-      {{errMsg}}
-      <v-btn color="gray" flat @click="()=>{this.$store.commit('setErr',false)}">关闭</v-btn>
-    </v-snackbar>
   </v-layout>
 </template>
 
 <script>
 import Clipboard from "clipboard";
 export default {
-  computed: {
-    openLoading: {
-      get() {
-        return this.$store.state.openLoading;
-      },
-      set(val) {
-        this.$store.commit("openLoading", val);
-      }
-    },
-    err: {
-      get() {
-        return this.$store.state.err;
-      },
-      set(val) {
-        this.$store.commit("setErr", val);
-      }
-    },
-    errMsg: {
-      get() {
-        return this.$store.state.errMsg;
-      },
-      set(val) {
-        this.$store.commit("setErrMsg", val);
-      }
-    },
-    errColor: {
-      get() {
-        return this.$store.state.errColor;
-      },
-      set(val) {
-        this.$store.commit("setErrColor", val);
-      }
-    }
-  },
   async created() {
-    // 获取玩家列表
+    // 获取列表
     let res = await this.$store.dispatch("getPlayerPage");
     this.items = res.list;
     // 更新实时数据

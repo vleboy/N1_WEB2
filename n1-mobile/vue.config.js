@@ -6,7 +6,7 @@ module.exports = {
     msTileColor: '#1C2327',
     workboxOptions: {
       runtimeCaching: [{
-        urlPattern: new RegExp('^http://localhost:3000/webapi/'),
+        urlPattern: new RegExp('^http://localhost:3000/agent/'),
         handler: 'staleWhileRevalidate',
         options: {
           cacheName: 'api-cache',

@@ -123,7 +123,7 @@ const vuex = new Vuex.Store({
     },
     // 获取所有用户
     async getUserPage(state, data) {
-
+      return axios.get('/agentList')
     },
     // 获取报表
     async getReportList() {

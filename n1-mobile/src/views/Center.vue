@@ -1,12 +1,9 @@
 <template>
   <v-layout row wrap>
     <v-btn fab fixed top right @click="regUser">
-      <!-- <v-badge overlap> -->
-      <!-- <span slot="badge">3</span> -->
       <v-avatar>
         <v-icon size="40" color="blue-grey">person_add</v-icon>
       </v-avatar>
-      <!-- </v-badge> -->
     </v-btn>
     <v-flex xs12>
       <v-btn-toggle mandatory style="width:100%" class="pl-2">
@@ -23,16 +20,16 @@
           </v-btn>
         </v-subheader>
         <template v-for="(item,index) in items">
-          <v-list-tile :key="item.title" avatar ripple @click="()=>{}">
+          <v-list-tile :key="item.username" avatar ripple @click="()=>{}">
             <v-list-tile-avatar @click="openEdit(item)">
               <v-icon :color="item.status ? 'black' : 'grey'" size="36">person</v-icon>
             </v-list-tile-avatar>
             <v-list-tile-content @click="openEdit(item)">
-              <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-              <v-list-tile-sub-title>{{ item.subtitle }}</v-list-tile-sub-title>
+              <v-list-tile-title>{{ item.displayName }}</v-list-tile-title>
+              <v-list-tile-sub-title>{{ `余额:${item.balance}` }}</v-list-tile-sub-title>
             </v-list-tile-content>
             <v-list-tile-action @click="openURL(item)">
-              <v-list-tile-action-text>{{ item.action }}</v-list-tile-action-text>
+              <v-list-tile-action-text>{{ `玩家数量:${item.playerCount}` }}</v-list-tile-action-text>
               <v-btn dark color="blue-grey" outline depressed>生成系统链接</v-btn>
             </v-list-tile-action>
           </v-list-tile>
@@ -127,7 +124,7 @@
     </v-dialog>
     <v-dialog v-model="dialogURL" persistent>
       <v-card>
-        <v-card-text style="text-align:center" class="headline lighten-2 py-0">代理001</v-card-text>
+        <v-card-text style="text-align:center" class="headline lighten-2 py-0">{{displayName}}</v-card-text>
         <v-card-text style="text-align:center" class="pa-0">
           <vue-qr :text="copyURL" :size="200"></vue-qr>
         </v-card-text>
@@ -145,24 +142,29 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-snackbar v-model="snackbar" top auto-height>
-      已复制，粘贴发送给下级代理即可
-      <v-btn color="gray" flat @click="snackbar = false">关闭</v-btn>
-    </v-snackbar>
+    <!--错误提示-->
+    <!-- <v-snackbar v-model="err" top auto-height :color="errColor">
+      {{errMsg}}
+      <v-btn color="gray" flat @click="()=>{this.$store.commit('setErr',false)}">关闭</v-btn>
+    </v-snackbar>-->
   </v-layout>
 </template>
 <script>
 import Clipboard from "clipboard";
-
 export default {
-  components: {},
-  created() {},
+  async created() {
+    // 获取列表
+    let res = await this.$store.dispatch("getUserPage");
+    this.items = res.payload;
+  },
   mounted() {
     if (navigator.userAgent.match(/ipad|ipod|iphone/i)) {
       const clipboard = new Clipboard(this.$refs.copyButton);
       clipboard.on("success", e => {
         this.dialogURL = false;
-        this.snackbar = true;
+        this.$store.commit("setErr", true);
+        this.$store.commit("setErrMsg", "已复制，粘贴发送给下级代理即可");
+        this.$store.commit("setErrColor", "gray");
       });
       clipboard.on("error", e => {
         this.dialogURL = false;
@@ -172,61 +174,18 @@ export default {
   },
   data() {
     return {
-      items: [
-        {
-          active: true,
-          title: "代理001",
-          subtitle: "余额1000",
-          action: "玩家数量：10"
-        },
-        {
-          active: true,
-          title: "代理002",
-          subtitle: "余额1000",
-          action: "玩家数量：10",
-          status: 1
-        },
-        {
-          title: "代理003",
-          subtitle: "余额1000",
-          action: "玩家数量：10"
-        },
-        {
-          title: "代理004",
-          subtitle: "余额1000",
-          action: "玩家数量：10"
-        },
-        {
-          title: "代理005",
-          subtitle: "余额1000",
-          action: "玩家数量：10"
-        },
-        {
-          title: "代理006",
-          subtitle: "余额1000",
-          action: "玩家数量：10"
-        },
-        {
-          title: "代理007",
-          subtitle: "余额1000",
-          action: "玩家数量：10"
-        },
-        {
-          title: "代理008",
-          subtitle: "余额1000",
-          action: "玩家数量：10"
-        }
-      ],
-      gameTypes: ["H5电子游戏", "H5电子游戏-无神秘奖"],
-      selectedGameTypes: [],
-      snackbar: false,
+      items: [],
       dialogReg: false,
       dialogEdit: false,
       dialogURL: false,
+      // 输入框
+      gameTypes: ["H5电子游戏", "H5电子游戏-无神秘奖"],
+      selectedGameTypes: [],
       username: "",
       password: "",
       displayName: "",
       status: 1,
+      // 代理链接
       copyURL: `${window.location.href.split("#")[0]}index.html`
     };
   },
@@ -249,18 +208,22 @@ export default {
         document.execCommand("copy");
         document.body.removeChild(el);
         this.dialogURL = false;
-        this.snackbar = true;
+        this.$store.commit("setErr", true);
+        this.$store.commit("setErrMsg", "已复制，粘贴发送给下级代理即可");
+        this.$store.commit("setErrColor", "gray");
       }
     },
-    openEdit() {
+    openEdit(item) {
+      this.displayName = item.displayName;
+      this.status = item.status;
       this.dialogEdit = true;
     },
-    openURL() {
+    openURL(item) {
       this.copyURL = `${
         window.location.href.split("#")[0]
-      }index.html?username=${
-        JSON.parse(localStorage.getItem("token")).username
-      }`;
+      }index.html?username=${item.username}`;
+      this.username = item.username;
+      this.displayName = item.displayName;
       this.dialogURL = true;
     },
     randomStr(min, max) {
@@ -308,6 +271,7 @@ export default {
     regUser() {
       this.username = `${this.randomStr(3, 3)}${this.randomNum(100, 999)}`;
       this.password = "123456";
+      this.displayName = "";
       this.dialogReg = true;
     },
     toggle() {
