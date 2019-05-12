@@ -9,6 +9,7 @@
   "dependencies": {
     "@antv/f2": "^3.3.9",
     "axios": "^0.18.0",
+    "bcryptjs": "^2.4.3",
     "clipboard": "^2.0.4",
     "material-design-icons-iconfont": "^5.0.1",
     "register-service-worker": "^1.6.2",

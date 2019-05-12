@@ -23,7 +23,7 @@
                   label="输入代理帐号"
                   type="text"
                   :messages="['6-10位中英文数字']"
-                  maxlength="5"
+                  maxlength="20"
                 ></v-text-field>
                 <v-text-field
                   v-model="password"
@@ -32,12 +32,13 @@
                   label="输入密码"
                   id="password"
                   type="password"
+                  maxlength="20"
                 ></v-text-field>
               </v-form>
             </v-card-text>
             <v-card-actions class="pt-0">
               <v-spacer></v-spacer>
-              <v-btn large dark @click="login">登录</v-btn>
+              <v-btn large dark @click="login" :loading="loading">登录</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
@@ -60,11 +61,13 @@
 </template>
 
 <script>
+import bcrypt from "bcryptjs";
 export default {
   data() {
     return {
       username: "",
       password: "",
+      loading: false,
       err: false,
       errMsg: ""
     };
@@ -76,18 +79,21 @@ export default {
     }
   },
   methods: {
-    // 登录
     async login() {
       if (this.username && this.password) {
-        // let res = await this.$store.dispatch("login", {
-        //   nickName: this.nickName
-        // });
-        let res = { err: false, res: { username: "NAagent" } };
-        if (res.err) {
-          this.err = res.err;
-          this.errMsg = res.res;
+        this.loading = true;
+        let res = await this.$store.dispatch("login", {
+          username: this.username,
+          password: bcrypt.hashSync(this.password),
+          role: "1000",
+          mobileFlag: true
+        });
+        this.loading = false;
+        if (res.code != 0) {
+          this.err = res.code;
+          this.errMsg = res.msg;
         } else {
-          localStorage.setItem("token", JSON.stringify(res.res));
+          localStorage.setItem("token", JSON.stringify(res.payload));
           this.$router.push({ path: "/layout/home" });
         }
       } else {

@@ -1,10 +1,34 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
+// import axios from 'axios'
 
 const domain = 'http://localhost:3000'
 
 Vue.use(Vuex)
+
+async function get(url) {
+  try {
+    let res = await fetch(`${domain}${url}`)
+    return await res.json()
+  } catch (error) {
+    console.error('网络错误')
+    console.error(error)
+  }
+}
+
+async function post(url, data) {
+  try {
+    let res = await fetch(`${domain}${url}`, {
+      body: JSON.stringify(data),
+      headers: { 'content-type': 'application/json' },
+      method: 'POST'
+    })
+    return await res.json()
+  } catch (error) {
+    console.error('网络错误')
+    console.error(error)
+  }
+}
 
 export default new Vuex.Store({
   state: {
@@ -26,8 +50,9 @@ export default new Vuex.Store({
   actions: {
     // 登录
     async login(state, data) {
-      const res = await axios.post(`${domain}/gserver/auth/login`, data)
-      return res.data
+      // const res = await axios.post(`${domain}/gserver/auth/login`, data)
+      // return res.data
+      return post('/agentLogin', data)
     },
     // 注册玩家
     async regPlayer() {
