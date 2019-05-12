@@ -55,7 +55,7 @@
     <!--错误提示-->
     <v-snackbar v-model="err" top auto-height :color="errColor">
       {{errMsg}}
-      <v-btn color="gray" flat @click="err = false">关闭</v-btn>
+      <v-btn color="gray" flat @click="()=>{this.$store.commit('setErr',false)}">关闭</v-btn>
     </v-snackbar>
   </v-layout>
 </template>
@@ -71,15 +71,36 @@ export default {
       set(val) {
         this.$store.commit("openLoading", val);
       }
+    },
+    err: {
+      get() {
+        return this.$store.state.err;
+      },
+      set(val) {
+        this.$store.commit("err", val);
+      }
+    },
+    errMsg: {
+      get() {
+        return this.$store.state.errMsg;
+      },
+      set(val) {
+        this.$store.commit("errMsg", val);
+      }
+    },
+    errColor: {
+      get() {
+        return this.$store.state.errColor;
+      },
+      set(val) {
+        this.$store.commit("errColor", val);
+      }
     }
   },
   data() {
     return {
       username: "",
-      password: "",
-      err: false,
-      errMsg: "",
-      errColor: "warning"
+      password: ""
     };
   },
   created: function() {
@@ -97,17 +118,14 @@ export default {
           role: "1000",
           mobileFlag: true
         });
-        if (res.code != 0) {
-          this.errColor = res.code;
-          this.err = res.code;
-          this.errMsg = res.msg;
-        } else {
+        if (res.code == 0) {
           localStorage.setItem("token", JSON.stringify(res.payload));
           this.$router.push({ path: "/layout/home" });
         }
       } else {
-        this.err = true;
-        this.errMsg = "请输入帐号密码";
+        this.$store.commit("setErr", true);
+        this.$store.commit("setErrMsg", "请输入帐号密码");
+        this.$store.commit("setErrColor", "warning");
       }
     }
   }

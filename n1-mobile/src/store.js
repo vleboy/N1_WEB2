@@ -12,10 +12,18 @@ const axios = {
       vuex.commit("openLoading", true);
       let res = await fetch(`${domain}${url}`)
       let obj = await res.json()
-      obj.code != 0 ? vuex.commit("openLoading", false) : null
+      if (obj.code != 0) {
+        vuex.commit("openLoading", false)
+        vuex.commit("setErr", true)
+        vuex.commit("setErrMsg", obj.msg)
+        vuex.commit("setErrColor", "warning")
+      }
       return obj
     } catch (error) {
-      vuex.commit("openLoading", false);
+      vuex.commit("openLoading", false)
+      vuex.commit("setErr", true)
+      vuex.commit("setErrMsg", '网络中断')
+      vuex.commit("setErrColor", "error")
       console.error(error)
       return { code: 'error', msg: '网络中断' }
     }
@@ -29,10 +37,18 @@ const axios = {
         method: 'POST'
       })
       let obj = await res.json()
-      obj.code != 0 ? vuex.commit("openLoading", false) : null
+      if (obj.code != 0) {
+        vuex.commit("openLoading", false)
+        vuex.commit("setErr", true)
+        vuex.commit("setErrMsg", obj.msg)
+        vuex.commit("setErrColor", "warning")
+      }
       return obj
     } catch (error) {
-      vuex.commit("openLoading", false);
+      vuex.commit("openLoading", false)
+      vuex.commit("setErr", true)
+      vuex.commit("setErrMsg", '网络中断')
+      vuex.commit("setErrColor", "error")
       console.error(error)
       return { code: 'error', msg: '网络中断' }
     }
@@ -41,12 +57,18 @@ const axios = {
 // 全局状态机
 const vuex = new Vuex.Store({
   state: {
+    // APP滚动位置
     centerScroll: 0,
     homeScroll: 0,
     exploreScroll: 0,
+    // 网络请求状态
     openLoading: false,
+    err: false,
+    errMsg: "",
+    errColor: "warning"
   },
   mutations: {
+    // APP滚动位置
     setHomeScroll(state, params) {
       state.homeScroll = params
     },
@@ -56,8 +78,18 @@ const vuex = new Vuex.Store({
     setExploreScroll(state, params) {
       state.exploreScroll = params
     },
+    // 网络请求状态
     openLoading(state, params) {
       state.openLoading = params
+    },
+    setErr(state, params) {
+      state.err = params
+    },
+    setErrMsg(state, params) {
+      state.errMsg = params
+    },
+    setErrColor(state, params) {
+      state.errColor = params
     }
   },
   actions: {
