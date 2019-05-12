@@ -77,7 +77,7 @@ export default {
         return this.$store.state.err;
       },
       set(val) {
-        this.$store.commit("err", val);
+        this.$store.commit("setErr", val);
       }
     },
     errMsg: {
@@ -85,7 +85,7 @@ export default {
         return this.$store.state.errMsg;
       },
       set(val) {
-        this.$store.commit("errMsg", val);
+        this.$store.commit("setErrMsg", val);
       }
     },
     errColor: {
@@ -93,7 +93,7 @@ export default {
         return this.$store.state.errColor;
       },
       set(val) {
-        this.$store.commit("errColor", val);
+        this.$store.commit("setErrColor", val);
       }
     }
   },
