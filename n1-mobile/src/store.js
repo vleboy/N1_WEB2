@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 // import axios from 'axios'
-const domain = 'http://localhost:3000'
+// const domain = 'http://localhost:3000'
+const domain = 'https://d3prd6rbitzqm3.cloudfront.net'
 
 Vue.use(Vuex)
 
