@@ -28,8 +28,6 @@
           </div>
         </v-card-title>
       </v-card>
-
-      <!-- <CardMain/> -->
     </v-flex>
 
     <v-flex xs12>
@@ -41,16 +39,16 @@
           </v-btn>
         </v-subheader>
         <template v-for="(item,index) in items">
-          <v-list-tile :key="item.title" avatar ripple @click="()=>{}">
+          <v-list-tile :key="item.userName" avatar ripple @click="()=>{}">
             <v-list-tile-avatar @click="openEdit(item)">
               <v-icon :color="item.state ? 'teal' : 'grey'" size="36">face</v-icon>
             </v-list-tile-avatar>
             <v-list-tile-content @click="openEdit(item)">
-              <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-              <v-list-tile-sub-title>{{ item.subtitle }}</v-list-tile-sub-title>
+              <v-list-tile-title>{{ item.userName }}</v-list-tile-title>
+              <v-list-tile-sub-title>{{ `余额:${item.balance}` }}</v-list-tile-sub-title>
             </v-list-tile-content>
             <v-list-tile-action @click="openURL(item)">
-              <v-list-tile-action-text>{{ item.action }}</v-list-tile-action-text>
+              <v-list-tile-action-text>{{ `${item.gameState != 1 ? '在线' : '离线'}` }}</v-list-tile-action-text>
               <v-btn dark color="teal" outline depressed>生成游戏链接</v-btn>
             </v-list-tile-action>
           </v-list-tile>
@@ -114,7 +112,7 @@
     </v-dialog>
     <v-dialog v-model="dialogURL" persistent>
       <v-card>
-        <v-card-text style="text-align:center" class="headline lighten-2 py-0">玩家001</v-card-text>
+        <v-card-text style="text-align:center" class="headline lighten-2 py-0">{{userName}}</v-card-text>
         <v-card-text style="text-align:center" class="pa-0">
           <vue-qr :text="copyURL" :size="200"></vue-qr>
         </v-card-text>
@@ -133,22 +131,56 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-snackbar v-model="snackbar" top auto-height>
-      已复制，粘贴发送给玩家即可
-      <v-btn color="gray" flat @click="snackbar = false">关闭</v-btn>
+    <!--错误提示-->
+    <v-snackbar v-model="err" top auto-height :color="errColor">
+      {{errMsg}}
+      <v-btn color="gray" flat @click="()=>{this.$store.commit('setErr',false)}">关闭</v-btn>
     </v-snackbar>
   </v-layout>
 </template>
 
 <script>
-// import CardMain from "../components/CardMain";
 import Clipboard from "clipboard";
-
 export default {
-  components: {
-    // CardMain
+  computed: {
+    openLoading: {
+      get() {
+        return this.$store.state.openLoading;
+      },
+      set(val) {
+        this.$store.commit("openLoading", val);
+      }
+    },
+    err: {
+      get() {
+        return this.$store.state.err;
+      },
+      set(val) {
+        this.$store.commit("setErr", val);
+      }
+    },
+    errMsg: {
+      get() {
+        return this.$store.state.errMsg;
+      },
+      set(val) {
+        this.$store.commit("setErrMsg", val);
+      }
+    },
+    errColor: {
+      get() {
+        return this.$store.state.errColor;
+      },
+      set(val) {
+        this.$store.commit("setErrColor", val);
+      }
+    }
   },
-  created() {
+  async created() {
+    // 获取玩家列表
+    let res = await this.$store.dispatch("getPlayerPage");
+    this.items = res.list;
+    // 更新实时数据
     setInterval(() => {
       this.$refs["num0"] ? this.$refs["num0"].start() : null;
     }, 5000);
@@ -158,7 +190,9 @@ export default {
       const clipboard = new Clipboard(this.$refs.copyButton);
       clipboard.on("success", e => {
         this.dialogURL = false;
-        this.snackbar = true;
+        this.$store.commit("setErr", true);
+        this.$store.commit("setErrMsg", "已复制，粘贴发送给玩家即可");
+        this.$store.commit("setErrColor", "gray");
       });
       clipboard.on("error", e => {
         this.dialogURL = false;
@@ -168,69 +202,16 @@ export default {
   },
   data() {
     return {
-      items: [
-        {
-          active: true,
-          title: "玩家001",
-          subtitle: "余额1000",
-          action: "当前状态：H5电子游戏"
-        },
-        {
-          active: true,
-          title: "玩家002",
-          subtitle: "余额1000",
-          action: "当前状态：H5电子游戏",
-          state: 1
-        },
-        {
-          title: "玩家003",
-          subtitle: "余额1000",
-          action: "当前状态：离线"
-        },
-        {
-          title: "玩家004",
-          subtitle: "余额1000",
-          action: "当前状态：离线"
-        },
-        {
-          title: "玩家005",
-          subtitle: "余额1000",
-          action: "当前状态：离线"
-        },
-        {
-          title: "玩家006",
-          subtitle: "余额1000",
-          action: "当前状态：离线"
-        },
-        {
-          title: "玩家007",
-          subtitle: "余额1000",
-          action: "当前状态：离线"
-        },
-        {
-          title: "玩家008",
-          subtitle: "余额1000",
-          action: "当前状态：离线"
-        },
-        {
-          title: "玩家009",
-          subtitle: "余额1000",
-          action: "当前状态：离线"
-        },
-        {
-          title: "玩家010",
-          subtitle: "余额1000",
-          action: "当前状态：离线"
-        }
-      ],
-      snackbar: false,
+      items: [],
       dialogReg: false,
       dialogEdit: false,
       dialogURL: false,
+      // 输入框
       userName: "",
       password: "",
       state: 1,
-      copyURL: `${window.location.href.split("#")[0]}wqtip.html?userName=`
+      // 游戏链接
+      copyURL: ""
     };
   },
   methods: {
@@ -244,7 +225,9 @@ export default {
         document.execCommand("copy");
         document.body.removeChild(el);
         this.dialogURL = false;
-        this.snackbar = true;
+        this.$store.commit("setErr", true);
+        this.$store.commit("setErrMsg", "已复制，粘贴发送给玩家即可");
+        this.$store.commit("setErrColor", "gray");
       }
     },
     regPlayer() {
@@ -252,11 +235,16 @@ export default {
       this.password = "123456";
       this.dialogReg = true;
     },
-    openEdit() {
+    openEdit(item) {
+      this.state = item.state;
       this.password = "";
       this.dialogEdit = true;
     },
-    openURL() {
+    openURL(item) {
+      this.copyURL = `${
+        window.location.href.split("#")[0]
+      }wqtip.html?userName=${item.userName}`;
+      this.userName = item.userName;
       this.dialogURL = true;
     },
     randomStr(min, max) {

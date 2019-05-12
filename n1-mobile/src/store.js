@@ -10,10 +10,14 @@ const axios = {
   async get(url) {
     try {
       vuex.commit("openLoading", true);
-      let res = await fetch(`${domain}${url}`)
+      let res = await fetch(`${domain}${url}`, {
+        headers: {
+          'Authorization': JSON.parse(localStorage.getItem('token')).token
+        }
+      })
       let obj = await res.json()
+      vuex.commit("openLoading", false)
       if (obj.code != 0) {
-        vuex.commit("openLoading", false)
         vuex.commit("setErr", true)
         vuex.commit("setErrMsg", obj.msg)
         vuex.commit("setErrColor", "warning")
@@ -37,8 +41,8 @@ const axios = {
         method: 'POST'
       })
       let obj = await res.json()
+      vuex.commit("openLoading", false)
       if (obj.code != 0) {
-        vuex.commit("openLoading", false)
         vuex.commit("setErr", true)
         vuex.commit("setErrMsg", obj.msg)
         vuex.commit("setErrColor", "warning")
@@ -113,10 +117,11 @@ const vuex = new Vuex.Store({
     async updateUser() {
 
     },
-    // 获取玩家分页
+    // 获取所有玩家
     async getPlayerPage(state, data) {
+      return axios.get('/agent/player/list')
     },
-    // 获取用户分页
+    // 获取所有用户
     async getUserPage(state, data) {
 
     },
