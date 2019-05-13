@@ -125,7 +125,7 @@ export default {
       if (username && username != JSON.parse(token).username) {
         localStorage.clear();
       } else {
-        this.$router.push({ path: "/layout/home" });
+        this.$router.push({ name: "home", params: {} });
       }
     }
   },
@@ -140,7 +140,7 @@ export default {
         });
         if (res.code == 0) {
           localStorage.setItem("token", JSON.stringify(res.payload));
-          this.$router.push({ path: "/layout/home" });
+          this.$router.push({ name: "home", params: {} });
         }
       } else {
         this.$store.commit("setErr", true);

@@ -94,7 +94,7 @@ export default {
   methods: {
     logout() {
       localStorage.clear();
-      this.$router.push({ path: "/" });
+      this.$router.push({ name: "login", params: {} });
     },
     openEdit() {
       this.password = "";
