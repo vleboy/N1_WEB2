@@ -177,7 +177,7 @@ export default {
           align: "center"
         },
         {
-          title: "商户简称",
+          title: "商户前缀",
           key: "suffix",
           align: "center"
         },
