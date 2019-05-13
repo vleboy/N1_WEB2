@@ -103,35 +103,35 @@ const vuex = new Vuex.Store({
       return axios.post('/agentLogin', data)
     },
     // 注册玩家
-    async regPlayer() {
-
+    regPlayer(state, data) {
+      return axios.post('/', data)
     },
     // 注册用户
-    async regUser() {
-
+    regUser(state, data) {
+      return axios.post('/', data)
     },
     // 更新玩家
-    async updatePlayer() {
-
+    updatePlayer(state, data) {
+      return axios.post('/', data)
     },
     // 更新用户
-    async updateUser() {
-
+    updateUser(state, data) {
+      return axios.post('/', data)
     },
     // 获取所有玩家
-    async getPlayerPage(state, data) {
+    getPlayerPage(state, data) {
       return axios.get('/agent/player/list')
     },
     // 获取所有用户
-    async getUserPage(state, data) {
+    getUserPage(state, data) {
       return axios.get('/agentList')
     },
     // 获取报表
-    async getReportList(state, data) {
+    getReportList(state, data) {
       return axios.get(`/queryPlayerStat?startTime=${data.startTime}&endTime=${data.endTime}`)
     },
     // 获取实时数据
-    async getRealtimeData() {
+    getRealtimeData() {
 
     }
   }
