@@ -24,7 +24,7 @@
                   </MenuItem>
 
                   <MenuItem name="allreport" v-if="gameList.length>0 && flodMenu" :class="flodMenu ? 'flodMuenS' : 'class-b' ">
-                    <Icon type="md-paper-outline" @click="unfold"/>
+                    <Icon type="ios-paper-outline" @click="unfold"/>
                   </MenuItem>
 
                   <Submenu name="report" v-if="gameList.length>0 && unFlodMenu">
