@@ -44,32 +44,12 @@ export default {
       },
       columns: [
         {
-          title: "商户ID",
-          align: "center",
-          key: "buId"
-        },
-        {
-          title: "所属商户",
-          align: "center",
-          key: "merchantName"
-        },
-        {
-          title: "商户标识",
-          align: "center",
-          key: "sn"
-        },
-        {
-          title: "线路号",
-          align: "center",
-          key:"msn"
-        },
-        {
           title: "玩家ID",
           align: "center",
           key: "userId"
         },
         {
-          title: "商户账号",
+          title: "玩家账号",
           align: "center",
           key: "userName"
         },
@@ -78,6 +58,7 @@ export default {
           align: "center",
           slot: "gameState"
         },
+         
         {
           title: "余额",
           align: "center",
@@ -88,6 +69,22 @@ export default {
           align: "center",
           key: "lastTime"
         },
+        {
+          title: "所属商户ID",
+          align: "center",
+          key: "buId"
+        },
+        {
+          title: "所属商户",
+          align: "center",
+          key: "merchantName"
+        },
+        {
+          title: "所属商户标识",
+          align: "center",
+          key: "sn"
+        },
+        
       ]
     }
   },
