@@ -6,7 +6,7 @@
         <transition-group name="taglist-moving-animation" class="taglist">
           <Tag
             type="dot"
-            v-for="(item, index) in pageTagsList"
+            v-for="(item, index) in arrList"
             ref="tagsPageOpened"
             :key="item.name"
             :name="item.name"
@@ -39,6 +39,15 @@ export default {
     }
   },
   computed: {
+    arrList() {
+      console.log(this.pageTagsList.length);
+      if (this.pageTagsList.length >=9) {
+        this.pageTagsList.shift()
+        console.log("1"+this.pageTagsList.length);
+      } 
+        return this.pageTagsList
+      
+    },
     tagsList() {
       return this.$store.state.home.pageOpenedList;
     }
@@ -124,6 +133,8 @@ export default {
     // //         }
     // //     });
     // // }, 1); // 这里不设定时器就会有偏移bug
+    
+    
   },
   watch: {
     $route(to) {
@@ -146,7 +157,6 @@ export default {
 .tags-outer-scroll-con {
   position: relative;
   box-sizing: border-box;
-  padding-right: 120px;
   width: 100%;
   height: 100%;
   .tags-inner-scroll-body {

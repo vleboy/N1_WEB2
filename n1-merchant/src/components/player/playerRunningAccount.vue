@@ -112,7 +112,7 @@ $
       <SportsModal ref="childMethod" v-if="propChild.gameType =='1130000'" :dataProp="propChild"></SportsModal>
     </Modal>
     <Spin size="large" fix v-if="isFetching">
-      <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
       <div>加载中...</div>
     </Spin>
   </div>
