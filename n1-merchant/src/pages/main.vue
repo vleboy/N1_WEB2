@@ -23,7 +23,6 @@
             
           </Row>
         </div>
-
       </Header>
       <Content>
         <Card style="overflow:auto">
