@@ -14,11 +14,11 @@
       </v-btn>
     </v-speed-dial>
     <v-flex xs12>
-      <v-btn-toggle mandatory style="width:100%" class="pl-2">
-        <v-btn large flat value="left">上月</v-btn>
-        <v-btn large flat value="center">上周</v-btn>
-        <v-btn large flat value="right">本月</v-btn>
-        <v-btn large flat value="justify">本周</v-btn>
+      <v-btn-toggle mandatory style="width:100%" class="pl-2" @change="changeTime">
+        <v-btn large flat value="week">本周</v-btn>
+        <v-btn large flat value="month">本月</v-btn>
+        <v-btn large flat value="lastWeek">上周</v-btn>
+        <v-btn large flat value="lastMonth">上月</v-btn>
       </v-btn-toggle>
     </v-flex>
     <v-flex xs12>
@@ -35,7 +35,7 @@
               <v-icon :color="item.state ? 'teal' : 'grey'" size="36">face</v-icon>
             </v-list-tile-avatar>
             <v-list-tile-content>
-              <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+              <v-list-tile-title>{{ item.userName }}</v-list-tile-title>
               <v-list-tile-sub-title>{{ item.subtitle }}</v-list-tile-sub-title>
             </v-list-tile-content>
             <v-list-tile-action>
@@ -78,72 +78,155 @@
 <script>
 export default {
   created() {
-    // 获取输赢报表
-    // let res = await this.$store.dispatch("getReportList");
-    // this.items = res.payload;
+    this.changeTime();
   },
   data() {
     return {
-      items: [
-        {
-          active: true,
-          title: "玩家001",
-          subtitle: "输赢金额1000",
-          action: "投注次数：10"
-        },
-        {
-          active: true,
-          title: "玩家002",
-          subtitle: "输赢金额1000",
-          action: "投注次数：10",
-          state: 1
-        },
-        {
-          title: "玩家003",
-          subtitle: "输赢金额1000",
-          action: "投注次数：10"
-        },
-        {
-          title: "玩家004",
-          subtitle: "输赢金额1000",
-          action: "投注次数：10"
-        },
-        {
-          title: "玩家005",
-          subtitle: "输赢金额1000",
-          action: "投注次数：10"
-        },
-        {
-          title: "玩家006",
-          subtitle: "输赢金额1000",
-          action: "投注次数：10"
-        },
-        {
-          title: "玩家007",
-          subtitle: "输赢金额1000",
-          action: "投注次数：10"
-        },
-        {
-          title: "玩家008",
-          subtitle: "输赢金额1000",
-          action: "投注次数：10"
-        },
-        {
-          title: "玩家009",
-          subtitle: "输赢金额1000",
-          action: "投注次数：10"
-        }
-      ],
+      items: [],
       dialogEdit: false,
-      username: "代理001",
-      password: ""
+      username: "",
+      password: "",
+      startTime: getWeekStartDate().getTime(),
+      endTime: getWeekEndDate().getTime()
     };
   },
   methods: {
     logout() {
       localStorage.clear();
       this.$router.push({ path: "/" });
+    },
+    async changeTime(e) {
+      switch (e) {
+        case "week":
+          this.startTime = getWeekStartDate().getTime();
+          this.endTime = getWeekEndDate().getTime();
+          break;
+        case "month":
+          this.startTime = getMonthStartDate().getTime();
+          this.endTime = getMonthEndDate().getTime();
+          break;
+        case "lastWeek":
+          this.startTime = getLastWeekStartDate().getTime();
+          this.endTime = getLastWeekEndDate().getTime();
+          break;
+        case "lastMonth":
+          this.startTime = getLastMonthStartDate().getTime();
+          this.endTime = getLastMonthEndDate().getTime();
+          break;
+        default:
+          this.startTime = getWeekStartDate().getTime();
+          this.endTime = getWeekEndDate().getTime();
+          break;
+      }
+      // 获取输赢报表
+      let res = await this.$store.dispatch("getReportList", {
+        startTime: this.startTime,
+        endTime: this.endTime
+      });
+      this.items = res.payload;
     }
   }
 };
+
+/**
+ * 获取上周、本周、上月、本月、上季度、本季度的开始日期、结束日期 start
+ * 获取上月开始结束日期考虑了年份的变化
+ */
+var now = new Date(); //当前日期
+var nowDayOfWeek = now.getDay() - 1; //今天本周的第几天
+var nowDay = now.getDate(); //当前日
+var nowMonth = now.getMonth(); //当前月
+var nowYear = now.getYear(); //当前年
+nowYear += nowYear < 2000 ? 1900 : 0; //
+var lastMonthDate = new Date(); //上月日期
+lastMonthDate.setDate(1);
+lastMonthDate.setMonth(lastMonthDate.getMonth() - 1);
+var lastYear = lastMonthDate.getYear();
+var lastMonth = lastMonthDate.getMonth();
+//获得某月的天数
+function getMonthDays(myMonth) {
+  var monthStartDate = new Date(nowYear, myMonth, 1);
+  var monthEndDate = new Date(nowYear, myMonth + 1, 1);
+  var days = (monthEndDate - monthStartDate) / (1000 * 60 * 60 * 24);
+  return days;
+}
+//获得本季度的开始月份
+function getQuarterStartMonth() {
+  var quarterStartMonth = 0;
+  if (nowMonth < 3) {
+    quarterStartMonth = 0;
+  }
+  if (2 < nowMonth && nowMonth < 6) {
+    quarterStartMonth = 3;
+  }
+  if (5 < nowMonth && nowMonth < 9) {
+    quarterStartMonth = 6;
+  }
+  if (nowMonth > 8) {
+    quarterStartMonth = 9;
+  }
+  return quarterStartMonth;
+}
+//获得本周的开始日期
+function getWeekStartDate() {
+  return new Date(nowYear, nowMonth, nowDay - nowDayOfWeek);
+}
+//获得本周的结束日期
+function getWeekEndDate() {
+  return new Date(nowYear, nowMonth, nowDay + (6 - nowDayOfWeek));
+}
+//获得上周的开始日期
+function getLastWeekStartDate() {
+  return new Date(nowYear, nowMonth, nowDay - nowDayOfWeek - 7);
+}
+//获得上周的结束日期
+function getLastWeekEndDate() {
+  return new Date(nowYear, nowMonth, nowDay - nowDayOfWeek - 1);
+}
+//获得本月的开始日期
+function getMonthStartDate() {
+  return new Date(nowYear, nowMonth, 1);
+}
+//获得本月的结束日期
+function getMonthEndDate() {
+  return new Date(nowYear, nowMonth, getMonthDays(nowMonth));
+}
+//获得上月开始时间
+function getLastMonthStartDate() {
+  if (lastMonth == 11) {
+    var lastMonthStartDate = new Date(nowYear - 1, lastMonth, 1);
+  } else {
+    var lastMonthStartDate = new Date(nowYear, lastMonth, 1);
+  }
+  return lastMonthStartDate;
+}
+//获得上月结束时间
+function getLastMonthEndDate() {
+  if (lastMonth == 11) {
+    var lastMonthEndDate = new Date(
+      nowYear - 1,
+      lastMonth,
+      getMonthDays(lastMonth)
+    );
+  } else {
+    var lastMonthEndDate = new Date(
+      nowYear,
+      lastMonth,
+      getMonthDays(lastMonth)
+    );
+  }
+  return lastMonthEndDate;
+}
+//获得本季度的开始日期
+function getQuarterStartDate() {
+  return new Date(nowYear, getQuarterStartMonth(), 1);
+}
+//或的本季度的结束日期
+function getQuarterEndDate() {
+  var quarterEndMonth = getQuarterStartMonth() + 2;
+  return new Date(nowYear, quarterEndMonth, getMonthDays(quarterEndMonth));
+}
+/**
+ * 获取时间 end
+ */
 </script>
