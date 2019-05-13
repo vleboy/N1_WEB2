@@ -319,6 +319,9 @@ body {
       /deep/.ivu-form .ivu-form-item-label {
         color: #fff;
       }
+      /deep/ .ivu-input {
+        font-size: 1rem;
+      }
       /deep/ .ivu-form .ivu-form-item-label {
         padding: 10px 0;
         font-size: 1rem;
@@ -327,6 +330,7 @@ body {
         padding: .25rem 0;
         display: block;
         width: 100%;
+        font-size: 1rem;
       }
     }
 }
