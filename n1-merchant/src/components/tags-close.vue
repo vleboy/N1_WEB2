@@ -40,10 +40,10 @@ export default {
   },
   computed: {
     arrList() {
-      console.log(this.pageTagsList.length);
+      //console.log(this.pageTagsList.length);
       if (this.pageTagsList.length >=7) {
         this.pageTagsList.shift()
-        console.log("1"+this.pageTagsList.length);
+        //console.log("1"+this.pageTagsList.length);
       } 
         return this.pageTagsList
       
