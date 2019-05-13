@@ -27,6 +27,7 @@ $
             placeholder="选择日期范围"
             style="width: 300px"
             size="small"
+            @on-ok="getDate"
           ></DatePicker>
         </Col>
         <Col span="12" class="text-right" style="display:flex;justify-content:flex-end">
@@ -92,7 +93,8 @@ $
             <span>{{afterAmountConfig(row)}}</span>
           </template>
           <template slot-scope="{row, index}" slot="action" >
-            <Button v-if="actionConfig(row)" type: "text" size: "small" style="color:#20a0ff;marginRight:5px" @click="record(row)"></Button>
+            <Button v-if="actionConfig(row)" type="text" size="small" style="color:#20a0ff;marginRight:5px" @click="record(row)"></Button>
+            <span v-else></span>
           </template>
         </Table>
         <Row style="padding: 20px 0">
@@ -451,7 +453,7 @@ export default {
     },
     //交易类型
     msnConfig(row) {
-      return typeList[row.type]
+      return this.typeList[row.type]
     },
     //帐变前余额
     originalAmountConfig(row) {
@@ -554,17 +556,17 @@ export default {
         case 1:
           start.setTime(start.getTime() - 3600 * 1000 * 24 * 6);
           this.amountDate = [start, end];
-          this.changeDate();
+          this.getDate();
           break;
         case 2:
           start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
           this.amountDate = [start, end];
-          this.changeDate();
+          this.getDate();
           break;
         case 3:
           start.setTime(start.getTime() - 3600 * 1000 * 24 * 365);
           this.amountDate = [start, end];
-          this.changeDate();
+          this.getDate();
           break;
       }
     }, // 最近的时间快捷选择联动
@@ -576,9 +578,12 @@ export default {
         this.radioTime = "";
         this.monthDate = "";
       }
+      /*  */
+    }, //日期改变联动
+    getDate() {
       this.initData();
       this.changeGameType();
-    }, //日期改变联动
+    },
     changeMonth(date) {
       if (date && this.monthDate) {
         const month = new Date(date);

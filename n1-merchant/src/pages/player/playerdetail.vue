@@ -1,8 +1,5 @@
 <template>
   <div class="p-detail">
-    <div class="-d-title">
-      <h2>{{userName}}</h2>
-    </div>
     <Table :columns="columns" :data="dataList" style="margin:1rem 0" size="small">
       <template slot-scope="{row, index}" slot="gameState">
         {{gameStateConfig(row)}}
@@ -70,6 +67,11 @@ export default {
           title: "玩家ID",
           align: "center",
           key: "userId"
+        },
+        {
+          title: "商户账号",
+          align: "center",
+          key: "userName"
         },
         {
           title: "游戏状态",
