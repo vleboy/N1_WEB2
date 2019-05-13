@@ -1,6 +1,6 @@
 <template>
   <v-layout row wrap>
-    <v-btn fab fixed top right @click="regPlayer">
+    <v-btn fab fixed top right @click="openReg">
       <v-avatar>
         <v-icon size="40" color="blue-grey">person_add</v-icon>
       </v-avatar>
@@ -70,12 +70,20 @@
                   prepend-icon="person"
                   label="帐号"
                   :messages="['已随机自动生成']"
+                  maxlength="16"
                   required
                   clearable
                 ></v-text-field>
               </v-flex>
               <v-flex xs12>
-                <v-text-field v-model="password" prepend-icon="lock" label="密码" required clearable></v-text-field>
+                <v-text-field
+                  v-model="userPwd"
+                  prepend-icon="lock"
+                  label="密码"
+                  maxlength="16"
+                  required
+                  clearable
+                ></v-text-field>
               </v-flex>
             </v-layout>
           </v-container>
@@ -83,7 +91,7 @@
         <v-card-actions class="pt-0">
           <v-spacer></v-spacer>
           <v-btn depressed @click="dialogReg = false">取消</v-btn>
-          <v-btn dark depressed @click="dialogReg = false">确认创建</v-btn>
+          <v-btn dark depressed @click="regPlayer">确认创建</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -99,7 +107,13 @@
                 <v-switch v-model="state" :label="state ?'启用':'停用'"></v-switch>
               </v-flex>
               <v-flex xs12>
-                <v-text-field v-model="password" prepend-icon="lock" label="输入新密码(留空不变更)" required clearable></v-text-field>
+                <v-text-field
+                  v-model="userPwd"
+                  prepend-icon="lock"
+                  label="输入新密码(留空不变更)"
+                  required
+                  clearable
+                ></v-text-field>
               </v-flex>
             </v-layout>
           </v-container>
@@ -170,7 +184,7 @@ export default {
       dialogURL: false,
       // 输入框
       userName: "",
-      password: "",
+      userPwd: "",
       state: 1,
       // 游戏链接
       copyURL: ""
@@ -192,15 +206,46 @@ export default {
         this.$store.commit("setErrColor", "gray");
       }
     },
-    regPlayer() {
+    async regPlayer() {
+      if (this.userName && this.userPwd) {
+        if (this.userName.length >= 6 && this.userPwd.length >= 6) {
+          let res = await this.$store.dispatch("regPlayer", {
+            userName: this.userName,
+            userPwd: this.userPwd,
+            parentId: JSON.parse(localStorage.getItem("token")).userId,
+            points: 0,
+            gameList: []
+          });
+          this.dialogReg = false;
+          this.items.unshift({
+            userName: this.userName,
+            state: 1,
+            gameState: 1,
+            balance: 0
+          });
+          this.$store.commit("setErr", true);
+          this.$store.commit("setErrMsg", "创建成功，请进一步为玩家加点");
+          this.$store.commit("setErrColor", "success");
+        } else {
+          this.$store.commit("setErr", true);
+          this.$store.commit("setErrMsg", "帐号密码最少6位");
+          this.$store.commit("setErrColor", "warning");
+        }
+      } else {
+        this.$store.commit("setErr", true);
+        this.$store.commit("setErrMsg", "请输入玩家帐号和密码");
+        this.$store.commit("setErrColor", "warning");
+      }
+    },
+    openReg() {
       this.userName = `${this.randomStr(3, 3)}${this.randomNum(100, 999)}`;
-      this.password = "123456";
+      this.userPwd = "123456";
       this.dialogReg = true;
     },
     openEdit(item) {
       this.state = item.state;
       this.userName = item.userName;
-      this.password = "";
+      this.userPwd = "";
       this.dialogEdit = true;
     },
     openURL(item) {
