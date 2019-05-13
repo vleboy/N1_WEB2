@@ -305,7 +305,7 @@ body {
 .page-wrapper {
     display: flex;
     justify-content: center;
-    padding-top: 20rem;
+    padding-top: 19%;
     .login-left {
       width: 25rem;
       color: #fff;
