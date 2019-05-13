@@ -40,7 +40,7 @@ const axios = {
         body: JSON.stringify(data),
         headers: {
           'content-type': 'application/json',
-          'Authorization': JSON.parse(localStorage.getItem('token')).token
+          'Authorization': localStorage.getItem('token') ? JSON.parse(localStorage.getItem('token')).token : null
         },
         method: 'POST'
       })

@@ -249,9 +249,10 @@ export default {
       this.dialogEdit = true;
     },
     openURL(item) {
-      this.copyURL = `${
-        window.location.href.split("#")[0]
-      }wqtip.html?userName=${item.userName}`;
+      let arr = window.location.href.split("/");
+      this.copyURL = `${arr[0]}//${arr[1]}${arr[2]}/wqtip.html?userName=${
+        item.userName
+      }`;
       this.userName = item.userName;
       this.dialogURL = true;
     },

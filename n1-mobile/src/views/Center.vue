@@ -68,7 +68,13 @@
                 ></v-text-field>
               </v-flex>
               <v-flex xs12>
-                <v-select v-model="selectedGameTypes" :items="gameTypes" label="选择游戏" multiple clearable>
+                <v-select
+                  v-model="selectedGameTypes"
+                  :items="gameTypes"
+                  label="选择游戏"
+                  multiple
+                  clearable
+                >
                   <template v-slot:prepend-item>
                     <v-list-tile ripple @click="toggle">
                       <v-list-tile-content>
@@ -188,7 +194,7 @@ export default {
       displayName: "",
       status: 1,
       // 代理链接
-      copyURL: `${window.location.href.split("#")[0]}index.html`
+      copyURL: ""
     };
   },
   computed: {
@@ -216,15 +222,16 @@ export default {
       }
     },
     openEdit(item) {
-      this.username = item.username
+      this.username = item.username;
       this.displayName = item.displayName;
       this.status = item.status;
       this.dialogEdit = true;
     },
     openURL(item) {
-      this.copyURL = `${
-        window.location.href.split("#")[0]
-      }index.html?username=${item.username}`;
+      let arr = window.location.href.split("/");
+      this.copyURL = `${arr[0]}//${arr[1]}${arr[2]}/index.html?username=${
+        item.username
+      }`;
       this.username = item.username;
       this.displayName = item.displayName;
       this.dialogURL = true;
