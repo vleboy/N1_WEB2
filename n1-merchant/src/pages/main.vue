@@ -8,7 +8,6 @@
         <div class="tags-con">
           <tag-close :pageTagsList="pageTagsList"/>
         </div>
-
         <div class="user-dropdown-menu-con">
           <Row type="flex" justify="end" align="middle" class="user-dropdown-innercon">
             <Avatar icon="md-person" size="small" style="background: #619fe7;margin-right: 10px;"></Avatar>
