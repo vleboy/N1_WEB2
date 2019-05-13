@@ -38,7 +38,10 @@ const axios = {
       vuex.commit("openLoading", true);
       let res = await fetch(`${domain}${url}`, {
         body: JSON.stringify(data),
-        headers: { 'content-type': 'application/json' },
+        headers: {
+          'content-type': 'application/json',
+          'Authorization': JSON.parse(localStorage.getItem('token')).token
+        },
         method: 'POST'
       })
       let obj = await res.json()
@@ -104,7 +107,7 @@ const vuex = new Vuex.Store({
     },
     // 注册玩家
     regPlayer(state, data) {
-      return axios.post('/', data)
+      return axios.post('/agent/player/create', data)
     },
     // 注册用户
     regUser(state, data) {
