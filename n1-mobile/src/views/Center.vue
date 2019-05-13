@@ -126,7 +126,7 @@
         <v-card-actions class="pt-0">
           <v-spacer></v-spacer>
           <v-btn depressed @click="dialogEdit = false">取消</v-btn>
-          <v-btn dark depressed @click="dialogEdit = false">确认修改</v-btn>
+          <v-btn dark depressed @click="updateUser">确认修改</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -283,6 +283,18 @@ export default {
       this.password = "123456";
       this.displayName = "";
       this.dialogReg = true;
+    },
+    async updateUser() {
+      await this.$store.dispatch("updateUser", {
+        role: "1000",
+        userId: JSON.parse(localStorage.getItem("token")).userId,
+        status: this.status ? 1 : 0
+      });
+      this.items.find(o => o.username == this.username).status = this.status;
+      this.dialogEdit = false;
+      this.$store.commit("setErr", true);
+      this.$store.commit("setErrMsg", "修改成功");
+      this.$store.commit("setErrColor", "success");
     },
     toggle() {
       this.$nextTick(() => {

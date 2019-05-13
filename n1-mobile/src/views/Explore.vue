@@ -62,6 +62,7 @@
                   prepend-icon="lock"
                   label="输入新密码"
                   required
+                  maxlength="16"
                   clearable
                 ></v-text-field>
               </v-flex>
@@ -71,7 +72,7 @@
         <v-card-actions class="pt-0">
           <v-spacer></v-spacer>
           <v-btn depressed @click="dialogEdit = false">取消</v-btn>
-          <v-btn dark depressed @click="dialogEdit = false">确认修改</v-btn>
+          <v-btn dark depressed @click="updateUserPassword">确认修改</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -99,6 +100,16 @@ export default {
     openEdit() {
       this.password = "";
       this.dialogEdit = true;
+    },
+    async updateUserPassword() {
+      await this.$store.dispatch("updateUserPassword", {
+        userId: JSON.parse(localStorage.getItem("token")).userId,
+        password: this.password
+      });
+      this.dialogEdit = false;
+      this.$store.commit("setErr", true);
+      this.$store.commit("setErrMsg", "登录密码已修改");
+      this.$store.commit("setErrColor", "success");
     },
     async changeTime(e) {
       switch (e) {
