@@ -790,7 +790,7 @@ export default {
       margin: 0;
     }
     .right {
-      margin-left: 2rem;
+      margin-left: 1rem;
     }
   }
   .worldEcharts {

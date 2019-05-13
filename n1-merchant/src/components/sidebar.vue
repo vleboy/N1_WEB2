@@ -1,6 +1,6 @@
 <template>
     <div class="sider">
-        <Sider :width="menuWidth" collapsible hide-trigger :style="{position:'fixed',height: '100vh', left: 0,backgroundColor:'#1c2327'}" class="showMenu">
+        <Sider :width="menuWidth" collapsible hide-trigger :style="{overflow:'auto',position:'fixed',height: '100vh', left: 0,backgroundColor:'#1c2327'}" class="showMenu">
             <div id="logo" :class="flodMenu ? 'flodMuenS' : 'class-b' ">
               <p class="logoimg" v-if="unFlodMenu">
                 <img src="../../static/logo.png" alt="">
@@ -268,6 +268,7 @@ export default {
 }
 /deep/ .ivu-tooltip {
   z-index: 999;
+ 
 }
 /deep/ .ivu-tooltip-popper .ivu-tooltip-dark {
   z-index: 999;

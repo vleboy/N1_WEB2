@@ -2,20 +2,20 @@
   <div class="p-playerlist">
     <div class="propList-search">
       <Row class="row -search-row">
-        <Col span="1">玩家ID</Col>
-        <Col span="2" style="margin-right:1rem">
+        <Col span="1" style="margin-right:1rem">玩家ID</Col>
+        <Col span="3" style="margin-right:0rem">
           <Input v-model="searchInfo.userId" placeholder="请输入" size="small"></Input>
         </Col>
-        <Col span="1">玩家账号</Col>
-        <Col span="2" style="margin-right:1rem">
+        <Col span="2">玩家账号</Col>
+        <Col span="3" style="margin-right:0rem">
           <Input v-model="searchInfo.userName" placeholder="请输入" size="small"></Input>
         </Col>
-        <Col span="1">玩家昵称</Col>
-        <Col span="2" style="margin-right:1rem">
+        <Col span="2">玩家昵称</Col>
+        <Col span="3" style="margin-right:0rem">
           <Input v-model="searchInfo.nickname" placeholder="请输入" size="small"></Input>
         </Col>
-        <Col span="1">游戏状态</Col>
-        <Col span="2">
+        <Col span="2">游戏状态</Col>
+        <Col span="3" style="margin-right:1rem">
           <Select
             v-model="searchInfo.gameId"
             clearable

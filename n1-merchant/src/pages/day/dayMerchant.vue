@@ -3,7 +3,7 @@
     <div class="nowList">
       <div class="top">
         <Select
-          style="width:200px;margin-right:2rem;"
+          style="width:200px;margin-right:1rem;"
           ref="resetSelect"
           clearable
           v-model="model1"
