@@ -179,6 +179,9 @@
             :style="{color: gameWinloseAmountConfig(['70000', '90000'], row, 'NA').color}"
           >{{gameWinloseAmountConfig(['70000', '90000'], row, 'NA').winloseAmount}}</span>
         </template>
+        <template slot-scope="{row, index}" slot="nickname">
+          {{row.nickname == 'NULL!' ? '-' : row.nickname}}
+        </template>
         <template slot-scope="{row, index}" slot="pTtgWinloseAmount">
           <span
             :style="{color: gameWinloseAmountConfig(['1010000'], row, 'TTG').color}"
@@ -564,7 +567,7 @@ export default {
         {
           title: "昵称",
           align: 'center',
-          key: "nickname"
+          slot: "nickname"
         },
         {
           title: "交易次数",

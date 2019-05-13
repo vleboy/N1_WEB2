@@ -56,6 +56,9 @@
             >{{row.userName}}</span>
           </Tooltip>
         </template>
+        <template slot-scope="{row, index}" slot="nickname">
+          {{row.nickname == 'NULL!' ? '-' : row.nickname}}
+        </template>
         <template slot-scope="{row, index}" slot="playerWinloseAmount">
           <span
             :style="{color: winloseAmountConfig(row).color}"
@@ -199,7 +202,7 @@ export default {
         {
           title: "昵称",
           align: 'center',
-          key: "nickname"
+          slot: "nickname"
         },
         {
           title: "交易次数",

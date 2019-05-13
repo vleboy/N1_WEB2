@@ -21,7 +21,7 @@
             <span
               style="cursor:pointer;color:#20a0ff"
               @click="uDisplayNameConfig(row)"
-            >{{row.uname}}</span>
+            >{{row.uname == 'NULL!' ? '-' : row.uname}}</span>
           </Tooltip>
         </template>
         <template slot-scope="{row, index}" slot="userBetAmount">
@@ -55,6 +55,9 @@
               @click="playerNameConfig(row)"
             >{{row.userName}}</span>
           </Tooltip>
+        </template>
+        <template slot-scope="{row, index}" slot="nickname">
+          {{row.nickname == 'NULL!' ? '-' : row.nickname}}
         </template>
         <template slot-scope="{row, index}" slot="playerBetAmount">
           <span>{{betAmountConfig(row)}}</span>
@@ -178,8 +181,8 @@ export default {
         },
         {
           title: "昵称",
-           align: 'center',
-          key: "nickname"
+          align: 'center',
+          slot: "nickname"
         },
         {
           title: "交易次数",
