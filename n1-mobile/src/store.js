@@ -127,8 +127,8 @@ const vuex = new Vuex.Store({
       return axios.get('/agentList')
     },
     // 获取报表
-    async getReportList() {
-      return axios.get('/queryPlayerStat')
+    async getReportList(state, data) {
+      return axios.get(`/queryPlayerStat?startTime=${data.startTime}&endTime=${data.endTime}`)
     },
     // 获取实时数据
     async getRealtimeData() {
