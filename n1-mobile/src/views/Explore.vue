@@ -6,7 +6,7 @@
           <v-icon size="40" color="blue-grey">settings</v-icon>
         </v-btn>
       </template>
-      <v-btn fab dark small color="blue-grey" @click="dialogEdit = true">
+      <v-btn fab dark small color="blue-grey" @click="openEdit">
         <v-icon size="25">edit</v-icon>
       </v-btn>
       <v-btn fab dark small color="red darken-4" @click="logout">
@@ -36,12 +36,12 @@
             </v-list-tile-avatar>
             <v-list-tile-content>
               <v-list-tile-title>{{ item.userName }}</v-list-tile-title>
-              <v-list-tile-sub-title>{{ item.subtitle }}</v-list-tile-sub-title>
+              <v-list-tile-sub-title>洗码量: {{ item.mixAmount }}</v-list-tile-sub-title>
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-list-tile-action-text>{{ item.action }}</v-list-tile-action-text>
-              <v-list-tile-action-text>{{ item.action }}</v-list-tile-action-text>
-              <v-list-tile-action-text>{{ item.action }}</v-list-tile-action-text>
+              <v-list-tile-action-text>投注次数: {{ item.betCount }}</v-list-tile-action-text>
+              <v-list-tile-action-text>投注金额: {{ item.betAmount }}</v-list-tile-action-text>
+              <v-list-tile-action-text>输赢金额: {{ item.winloseAmount }}</v-list-tile-action-text>
             </v-list-tile-action>
           </v-list-tile>
           <v-divider v-if="index + 1 < items.length" :key="index"></v-divider>
@@ -51,16 +51,19 @@
     <v-dialog v-model="dialogEdit" persistent>
       <v-card>
         <v-card-title class="pb-0">
-          <span class="headline">修改登录密码</span>
+          <span class="headline">修改登录密码 | {{username}}</span>
         </v-card-title>
         <v-card-text class="pa-0">
           <v-container grid-list-md>
             <v-layout wrap>
               <v-flex xs12>
-                <v-text-field v-model="username" prepend-icon="person" label="帐号" readonly required></v-text-field>
-              </v-flex>
-              <v-flex xs12>
-                <v-text-field v-model="password" prepend-icon="lock" label="输入新密码" required></v-text-field>
+                <v-text-field
+                  v-model="password"
+                  prepend-icon="lock"
+                  label="输入新密码"
+                  required
+                  clearable
+                ></v-text-field>
               </v-flex>
             </v-layout>
           </v-container>
@@ -77,14 +80,12 @@
 
 <script>
 export default {
-  created() {
-    this.changeTime();
-  },
+  created() {},
   data() {
     return {
       items: [],
       dialogEdit: false,
-      username: "",
+      username: JSON.parse(localStorage.getItem("token")).username,
       password: "",
       startTime: getWeekStartDate().getTime(),
       endTime: getWeekEndDate().getTime()
@@ -95,15 +96,19 @@ export default {
       localStorage.clear();
       this.$router.push({ path: "/" });
     },
+    openEdit() {
+      this.password = "";
+      this.dialogEdit = true;
+    },
     async changeTime(e) {
       switch (e) {
         case "week":
           this.startTime = getWeekStartDate().getTime();
-          this.endTime = getWeekEndDate().getTime();
+          this.endTime = Date.now();
           break;
         case "month":
           this.startTime = getMonthStartDate().getTime();
-          this.endTime = getMonthEndDate().getTime();
+          this.endTime = Date.now();
           break;
         case "lastWeek":
           this.startTime = getLastWeekStartDate().getTime();
@@ -115,13 +120,13 @@ export default {
           break;
         default:
           this.startTime = getWeekStartDate().getTime();
-          this.endTime = getWeekEndDate().getTime();
+          this.endTime = Date.now();
           break;
       }
       // 获取输赢报表
       let res = await this.$store.dispatch("getReportList", {
-        startTime: this.startTime,
-        endTime: this.endTime
+        startTime: +this.startTime,
+        endTime: +this.endTime
       });
       this.items = res.payload;
     }
