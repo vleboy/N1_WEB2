@@ -519,14 +519,17 @@ export default {
           return;
         }
       });
+     /*  console.log(this.amountDate);
+      console.log(this.startDate); */
+      
       httpRequest("post", "/player/bill/flow", {
         userName: localStorage.playerName,
         type: this.radioType,
         action: this.radioMoney,
         company: this.companyInfo == "全部厂商" ? "-1" : this.companyInfo,
         gameType: code,
-        startTime: this.amountDate ? this.startDate : "",
-        endTime: this.amountDate ? this.endDate : "",
+        startTime: this.amountDate[0].getTime(),
+        endTime: this.amountDate[1].getTime(),
         startKey: this.playerAccountListStartKey,
         pageSize: this.pageSize,
         sn: this.sn,
