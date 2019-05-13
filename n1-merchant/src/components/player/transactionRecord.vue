@@ -16,8 +16,8 @@
         </Col>
       </Row>
       <Row>
-        <Col span="17" style="float: right; text-align: right">
-          <Input v-model="betId" placeholder="请输入交易号" style="width: 30%;margin-right:1rem" size="small"></Input>
+        <Col span="17">
+          <Input v-model="betId" placeholder="请输入交易号" style="width: 12rem;margin-right:1rem" size="small"></Input>
           <DatePicker
             v-model="amountDate"
             :options="options"
@@ -30,7 +30,7 @@
           ></DatePicker>
           <Button type="primary" @click="searchAmount" size="small" style="margin:0 .3rem 0 1rem">搜索</Button>
           <Button @click="reset" size="small" style="margin-right:.3rem">重置</Button>
-          <Button type="primary" @click="exportData" size="small">导出数据</Button>
+          <Button @click="exportData" size="small">导出数据</Button>
         </Col>
       </Row>
     </div>

@@ -16,7 +16,13 @@ $
 
     <div class="-p-base">
       <Row class="-b-form">
-        <Col span="12">
+        <Col class="text-right" style="display:flex;">
+          <div style="margin-right:1rem;width: 12rem;">
+            <Input v-model="sn" placeholder="请输入流水号" size="small"></Input>
+          </div>
+          <div style="margin-right:1rem;width: 12rem;">
+            <Input v-model="betId" placeholder="请输入交易号" size="small"></Input>
+          </div>
           <DatePicker
             :editable="false"
             :transfer="true"
@@ -29,20 +35,12 @@ $
             size="small"
             @on-ok="getDate"
           ></DatePicker>
-        </Col>
-        <Col span="12" class="text-right" style="display:flex;justify-content:flex-end">
-          <div style="margin-right:1rem;width: 50rem;">
-            <Input v-model="sn" placeholder="请输入流水号" size="small"></Input>
-          </div>
-          <div style="margin-right:1rem;width: 50rem;">
-            <Input v-model="betId" placeholder="请输入交易号" size="small"></Input>
-          </div>
           <Button @click="isShowSearch = !isShowSearch" type="text" size="small">
             高级筛选
             <Icon type="arrow-down-b" v-if="!isShowSearch"></Icon>
             <Icon type="arrow-up-b" v-else></Icon>
           </Button>
-          <Button @click="searchData(true)" style="margin-right:.3rem" size="small">搜索</Button>
+          <Button @click="searchData(true)" style="margin-right:.3rem" size="small" type="primary">搜索</Button>
           <Button @click="reset(true)" style="margin-right:.3rem" size="small">重置</Button>
           <Button @click="exportData" size="small">导出数据</Button>
         </Col>
@@ -492,7 +490,7 @@ export default {
       this.sn = ''
       this.radioType = ''
       this.radioMoney = ''
-      this.amountDate = [new Date().getTime() - 3600 * 1000 * 24 * 6, new Date()];
+      this.amountDate = [new Date(new Date().getTime() - 3600 * 1000 * 24 * 6), new Date()];
       this.changeGameType()
     },
     getNowpage(page) {
@@ -519,8 +517,7 @@ export default {
           return;
         }
       });
-     /*  console.log(this.amountDate);
-      console.log(this.startDate); */
+      console.log(this.amountDate);
       
       httpRequest("post", "/player/bill/flow", {
         userName: localStorage.playerName,
