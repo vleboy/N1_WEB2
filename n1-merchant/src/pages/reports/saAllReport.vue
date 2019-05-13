@@ -373,7 +373,7 @@ export default {
   min-height: 90vh;
   .title {
     font-size: 1.2rem;
-    margin: 0.5rem 0 0.5rem;
+    margin-bottom: 1rem;
     font-weight: 600;
     display: inline-block;
   }

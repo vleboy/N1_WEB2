@@ -2,28 +2,20 @@
   <div class="p-playerlist">
     <div class="propList-search">
       <Row class="row -search-row">
-        <Col span="2" offset="4">玩家ID</Col>
-        <Col span="4">
+        <Col span="1">玩家ID</Col>
+        <Col span="2" style="margin-right:1rem">
           <Input v-model="searchInfo.userId" placeholder="请输入" size="small"></Input>
         </Col>
-        <Col span="2">玩家账号</Col>
-        <Col span="4">
+        <Col span="1">玩家账号</Col>
+        <Col span="2" style="margin-right:1rem">
           <Input v-model="searchInfo.userName" placeholder="请输入" size="small"></Input>
         </Col>
-        <Col span="3">
-          <div class="btns">
-            <Button type="primary" @click="getSearch(true)" style="margin-right:.3rem" size="small">搜索</Button>
-            <Button @click="getSearch(false)" size="small">重置</Button>
-          </div>
-        </Col>
-      </Row>
-      <Row class="row">
-        <Col span="2" offset="4">玩家昵称</Col>
-        <Col span="4">
+        <Col span="1">玩家昵称</Col>
+        <Col span="2" style="margin-right:1rem">
           <Input v-model="searchInfo.nickname" placeholder="请输入" size="small"></Input>
         </Col>
-        <Col span="2">游戏状态</Col>
-        <Col span="4">
+        <Col span="1">游戏状态</Col>
+        <Col span="2">
           <Select
             v-model="searchInfo.gameId"
             clearable
@@ -38,6 +30,12 @@
               
             >{{ item.name }}</Option>
           </Select>
+        </Col>
+        <Col span="2">
+          <div class="btns">
+            <Button type="primary" @click="getSearch(true)" style="margin-right:.3rem" size="small">搜索</Button>
+            <Button @click="getSearch(false)" size="small">重置</Button>
+          </div>
         </Col>
       </Row>
     </div>
@@ -385,13 +383,14 @@ export default {
     padding-bottom: 10px;
   }
   .propList-search {
-    line-height: 32px;
+   
     text-align: center;
-    padding-bottom: 16px;
+    
   }
   .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
   }
+
   /deep/ .ivu-table-cell {
     padding: 0;
   }

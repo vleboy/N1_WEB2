@@ -225,7 +225,6 @@ export default {
 .prizeList {
   min-height: 87vh;
   .search {
-    text-align: right;
     margin-bottom: 10px;
   }
 }

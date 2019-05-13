@@ -15,7 +15,7 @@
             <transition name="fade">
               <Menu ref="sideMenu" :active-name="$route.name" :open-names="openName" width="auto" @on-select='selectMenu' :style="{backgroundColor:'#1c2327',color:'#fff',marginTop:'.3rem'}">
                   <MenuItem name="newBoard" :class="flodMenu ? 'flodMuenS' : 'class-b' " style="display:flex;">
-                      <Icon type="ios-pulse" />
+                      <Icon type="md-trending-up" />
                     <span v-if="unFlodMenu" class="ml">数据看板</span>
                   </MenuItem>
                   <MenuItem name="ownspace-index" :class="flodMenu ? 'flodMuenS' : 'class-b' ">
@@ -24,7 +24,7 @@
                   </MenuItem>
 
                   <MenuItem name="allreport" v-if="gameList.length>0 && flodMenu" :class="flodMenu ? 'flodMuenS' : 'class-b' ">
-                    <Icon type="ios-paper-outline" @click="unfold"/>
+                    <Icon type="md-paper-outline" @click="unfold"/>
                   </MenuItem>
 
                   <Submenu name="report" v-if="gameList.length>0 && unFlodMenu">
@@ -103,13 +103,13 @@
                   </MenuItem>
               
                   <MenuItem name="playList" :class="flodMenu ? 'flodMuenS' : 'class-b' ">
-                    <Icon type="ios-game-controller-b" />
+                    <Icon type="md-game-controller-b" />
                     <span v-if="unFlodMenu" class="ml">玩家中心</span>
                   </MenuItem>
                 
 
                   <MenuItem name="prizeList" :class="flodMenu ? 'flodMuenS' : 'class-b' ">
-                    <Icon type="md-medal" />
+                    <Icon type="md-trophy" />
                     <span v-if="unFlodMenu" class="ml">神秘奖记录</span>
                   </MenuItem>
 

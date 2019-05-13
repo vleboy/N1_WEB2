@@ -86,8 +86,8 @@ export default {
   mounted() {
     let sn = this.$route.query.sn;
     let uname = this.$route.query.uname;
-    this.username = uname;
-    this.sn = sn;
+    this.formValidate.username = uname;
+    this.formValidate.sn = sn;
   },
   methods: {
     //获取验证码

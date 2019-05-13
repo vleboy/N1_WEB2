@@ -41,7 +41,7 @@ export default {
   computed: {
     arrList() {
       console.log(this.pageTagsList.length);
-      if (this.pageTagsList.length >=9) {
+      if (this.pageTagsList.length >=7) {
         this.pageTagsList.shift()
         console.log("1"+this.pageTagsList.length);
       } 
