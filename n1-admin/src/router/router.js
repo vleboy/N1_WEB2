@@ -12,7 +12,6 @@ import merchantDetail from '@/pages/businessCenter/merchantDetail'
 import playerDetail from '@/pages/player/playerdetail'
 // appRouter
 import ownSpace from '@/pages/ownSpace'
-import board from '@/pages/board/board'
 import newBoard from '@/pages/newBoard/newBoard'
 import allReport from '@/pages/reports/allReport'
 import playerReport from '@/pages/reports/playerReport'

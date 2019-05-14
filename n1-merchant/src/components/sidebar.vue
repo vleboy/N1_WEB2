@@ -3,7 +3,7 @@
         <Sider :width="menuWidth" collapsible hide-trigger :style="{overflow:'auto',position:'fixed',height: '100vh', left: 0,backgroundColor:'#1c2327'}" class="showMenu">
             <div id="logo" :class="flodMenu ? 'flodMuenS' : 'class-b' ">
               <p class="logoimg" v-if="unFlodMenu">
-                <img src="<%= BASE_URL %>favicon.ico" alt="">
+                <img src="../../public/logo.png" alt="">
               </p>
               <p class="arrow" >
                 <div v-if="foldIcon" @click="fold" class="foldIcon">

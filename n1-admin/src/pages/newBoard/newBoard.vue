@@ -5,7 +5,7 @@
       <div style>加载中...</div>
     </Spin>
     <div class="top">
-      <Select style="width:200px;" ref="resetSelect" clearable v-model="model1">
+      <Select style="width:200px;" ref="resetSelect" clearable v-model="model1" size="small"> 
         <Option
           v-for="(item, index) in gameType"
           :value="item.name"
@@ -14,7 +14,7 @@
         >{{item.name}}</Option>
       </Select>
       <div class="right">
-        <RadioGroup v-model="dateType" @on-change="changeDate" type="button">
+        <RadioGroup v-model="dateType" @on-change="changeDate" type="button" size="small"> 
           <Radio label="0">昨日</Radio>
           <Radio label="4">今日</Radio>
           <Radio label="1">近一周</Radio>
@@ -29,9 +29,10 @@
           placeholder="选择日期时间范围(默认最近一周)"
           style="width: 300px;margin-left:1rem"
           @on-ok="confirm"
+          size="small"
         ></DatePicker>
-        <Button type="primary" @click="search">搜索</Button>
-        <Button type="ghost" @click="reset">重置</Button>
+        <Button @click="search" size="small" style="margin:0 .3rem 0 1rem">搜索</Button>
+        <Button @click="reset" size="small">重置</Button>
       </div>
     </div>
     <Tabs type="card" @on-click="changeBoard">
@@ -2005,11 +2006,44 @@ export default {
   /deep/ .ivu-tabs-nav-scroll {
     height: 2.25rem;
   }
+  
   /deep/ .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab {
-    width: 6rem;
-    height: 2.25rem;
-    font-size: 1rem;
-    text-align: center;
+    border-color: #000;
+    color: #000;
+    background: #fff;
+  }
+ 
+  /deep/ .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab-active {
+    background: #000;
+    color: #fff;
+  }
+  .ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/.ivu-select-selection {
+    border-color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
+    border: 1px solid #ccc;
+    color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-input {
+    border-color: #000;
+    background: #fff;
   }
 }
 </style>
