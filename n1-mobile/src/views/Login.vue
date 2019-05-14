@@ -55,7 +55,7 @@
       </v-layout>
     </v-parallax>
     <!--错误提示-->
-    <v-snackbar v-model="err" top auto-height :color="errColor" :timeout=3000>
+    <v-snackbar v-model="err" top auto-height :color="errColor" :timeout="3000">
       {{errMsg}}
       <v-btn color="gray" flat @click="()=>{this.$store.commit('setErr',false)}">关闭</v-btn>
     </v-snackbar>
@@ -63,6 +63,18 @@
 </template>
 
 <script>
+// 获取URL参数
+function getQueryParam(variable) {
+  var query = window.location.search.substring(1);
+  var vars = query.split("&");
+  for (var i = 0; i < vars.length; i++) {
+    var pair = vars[i].split("=");
+    if (pair[0] == variable) {
+      return pair[1];
+    }
+  }
+  return false;
+}
 import bcrypt from "bcryptjs";
 export default {
   computed: {
@@ -101,14 +113,20 @@ export default {
   },
   data() {
     return {
-      username: "",
+      username: getQueryParam("username") || "",
       password: ""
     };
   },
   created: function() {
+    let token = localStorage.getItem("token");
     // 身份认证有效期内，直接跳转
-    if (localStorage.getItem("token")) {
-      this.$router.push({ path: "/layout/home" });
+    if (token) {
+      let username = getQueryParam("username");
+      if (username && username != JSON.parse(token).username) {
+        localStorage.clear();
+      } else {
+        this.$router.push({ name: "home", params: {} });
+      }
     }
   },
   methods: {
@@ -122,7 +140,7 @@ export default {
         });
         if (res.code == 0) {
           localStorage.setItem("token", JSON.stringify(res.payload));
-          this.$router.push({ path: "/layout/home" });
+          this.$router.push({ name: "home", params: {} });
         }
       } else {
         this.$store.commit("setErr", true);

@@ -40,7 +40,7 @@ const axios = {
         body: JSON.stringify(data),
         headers: {
           'content-type': 'application/json',
-          'Authorization': JSON.parse(localStorage.getItem('token')).token
+          'Authorization': localStorage.getItem('token') ? JSON.parse(localStorage.getItem('token')).token : null
         },
         method: 'POST'
       })
@@ -115,11 +115,23 @@ const vuex = new Vuex.Store({
     },
     // 更新玩家
     updatePlayer(state, data) {
-      return axios.post('/', data)
+      return axios.post('/player/forzen', data)
+    },
+    // 更新玩家密码
+    updatePlayerPassword(state, data) {
+      return axios.post('/agent/player/password', data)
     },
     // 更新用户
     updateUser(state, data) {
-      return axios.post('/', data)
+      return axios.post('/userChangeStatus', data)
+    },
+    // 更新用户游戏
+    // updateUserGame(state, data) {
+    //   return axios.post('/', data)
+    // },
+    // 更新用户密码
+    updateUserPassword(state, data) {
+      return axios.post('/updateAgentPassword', data)
     },
     // 获取所有玩家
     getPlayerPage(state, data) {
@@ -134,8 +146,8 @@ const vuex = new Vuex.Store({
       return axios.get(`/queryPlayerStat?startTime=${data.startTime}&endTime=${data.endTime}`)
     },
     // 获取实时数据
-    getRealtimeData() {
-
+    getRealtimeData(state, data) {
+      return axios.get('/')
     }
   }
 })

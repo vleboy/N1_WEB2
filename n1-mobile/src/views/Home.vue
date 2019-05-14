@@ -111,7 +111,7 @@
                   v-model="userPwd"
                   prepend-icon="lock"
                   label="输入新密码(留空不变更)"
-                  required
+                  maxlength="16"
                   clearable
                 ></v-text-field>
               </v-flex>
@@ -121,7 +121,7 @@
         <v-card-actions class="pt-0">
           <v-spacer></v-spacer>
           <v-btn depressed @click="dialogEdit = false">取消</v-btn>
-          <v-btn dark depressed @click="dialogEdit = false">确认修改</v-btn>
+          <v-btn dark depressed @click="updatePlayer">确认修改</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -237,21 +237,39 @@ export default {
         this.$store.commit("setErrColor", "warning");
       }
     },
+    async updatePlayer() {
+      await this.$store.dispatch("updatePlayer", {
+        userName: this.userName,
+        state: this.state ? 1 : 0
+      });
+      if (this.userPwd) {
+        await this.$store.dispatch("updatePlayerPassword", {
+          userName: this.userName,
+          password: this.userPwd
+        });
+      }
+      this.dialogEdit = false;
+      this.items.find(o => o.userName == this.userName).state = this.state;
+      this.$store.commit("setErr", true);
+      this.$store.commit("setErrMsg", "修改成功");
+      this.$store.commit("setErrColor", "success");
+    },
     openReg() {
       this.userName = `${this.randomStr(3, 3)}${this.randomNum(100, 999)}`;
       this.userPwd = "123456";
       this.dialogReg = true;
     },
     openEdit(item) {
-      this.state = item.state;
       this.userName = item.userName;
+      this.state = item.state;
       this.userPwd = "";
       this.dialogEdit = true;
     },
     openURL(item) {
-      this.copyURL = `${
-        window.location.href.split("#")[0]
-      }wqtip.html?userName=${item.userName}`;
+      let arr = window.location.href.split("/");
+      this.copyURL = `${arr[0]}//${arr[1]}${arr[2]}/wqtip.html?userName=${
+        item.userName
+      }`;
       this.userName = item.userName;
       this.dialogURL = true;
     },
