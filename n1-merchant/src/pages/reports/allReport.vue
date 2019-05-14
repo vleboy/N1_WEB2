@@ -155,7 +155,7 @@
         </template>
       </Table>
     </div>
-    <div class="playerList" id="playerList">
+    <div class="playerList" id="playerList" style="margin-top:1rem">
       <p class="title">
         所属玩家列表
         <Button @click="exportdata('table_1')" size="small">导出数据</Button>

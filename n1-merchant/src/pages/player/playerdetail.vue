@@ -75,7 +75,7 @@ export default {
           key: "buId"
         },
         {
-          title: "所属商户",
+          title: "所属商户昵称",
           align: "center",
           key: "merchantName"
         },

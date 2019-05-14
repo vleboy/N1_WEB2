@@ -625,23 +625,7 @@ export default {
         this.isFetching = false;
       });
     },
-    companySelectList() {
-      /* httpRequest(
-        "post",
-        "/companySelect",
-        {
-          parent: localStorage.loginRole == 1 ? "" : localStorage.loginId
-        },
-        "game"
-      ).then(result => {
-        this.companyList = result.payload || [];
-        this.companyList.unshift({
-          company: "全部厂商"
-        });
-        this.changeCompany();
-        // this.$store.commit('closeLoading')
-      }); */
-    }, //获取运营商列表
+ //获取运营商列表
     changeCompany(val) {
       
       this.sel = val;

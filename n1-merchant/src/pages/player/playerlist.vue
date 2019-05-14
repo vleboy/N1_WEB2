@@ -17,15 +17,16 @@
         <Col span="2">游戏状态</Col>
         <Col span="3" style="margin-right:1rem">
           <Select
-            v-model="searchInfo.gameId"
+            v-model="defaultStatus"
             clearable
             placeholder="请选择游戏状态"
             style="text-align: left"
             size="small"
+            @on-change="changeGameStatus"
           >
             <Option
               v-for="(item, index) in gameTypeList"
-              :value="item.code"
+              :value="item.name"
               :key="index"
               
             >{{ item.name }}</Option>
@@ -40,7 +41,6 @@
       </Row>
     </div>
     <div class="playerform">
-
       <Table :columns="columns" :data="getItems">
          <template slot-scope="{row, index}" slot="nickname">
           <span>{{row.nickname === "NULL!" ? "-" : row.nickname}}</span>
@@ -95,6 +95,7 @@ export default {
   beforeCreate() {},
   data() {
     return {
+      defaultStatus: '全部',
       nowSize: 20,
       nowPage: 1,
       pageSize: 100,
@@ -109,7 +110,7 @@ export default {
       checkedArray: [],
       names: [],
       searchInfo: {
-        gameId: "",
+        gameId: "全部",
         userName: "",
         nickname: "",
         suffix: "",
@@ -249,6 +250,13 @@ export default {
         }
       });
     },
+    changeGameStatus(val) {
+      for (let i = 0; i < this.gameTypeList.length; i++) {
+        if (this.gameTypeList[i].name ==  val) {
+          this.searchInfo.gameId = this.gameTypeList[i].code
+        }  
+      }
+    },
     getPlayList() {
       if (this.isFetching) return;
       this.isFetching = true;
@@ -363,6 +371,7 @@ export default {
       GameListEnum.shift()
       GameListEnum.unshift({ code: "0", name: "离线" })
       GameListEnum.unshift({ code: "1", name: "大厅" })
+      GameListEnum.unshift({ code: "", name: "全部" , value: "全部"})
 
       this.gameTypeList = GameListEnum;
     }

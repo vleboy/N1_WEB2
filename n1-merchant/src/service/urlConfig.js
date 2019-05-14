@@ -3,9 +3,6 @@
 export let URL = type => {
   if (process.env.NODE_ENV == 'production') {
     switch (type) {
-      case 'game':
-        return 'n1game.na12345.com'
-        break
       case 'map':
         return 'visual.na12345.com'
         break
@@ -15,9 +12,6 @@ export let URL = type => {
     }
   } else {
     switch (type) {
-      case 'game':
-        return 'dgjmusja39cm2.cloudfront.net'
-        break
       case 'map':
         return 'test.cncshe.com'
         break

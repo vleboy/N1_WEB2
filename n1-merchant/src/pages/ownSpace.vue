@@ -61,7 +61,7 @@
         <Row>
           <Col span="6" class="label">新密码</Col>
           <Col span="14">
-          <Input v-model="password" placeholder="请输入新密码"></Input>
+          <Input v-model="password" placeholder="6-16位密码,包含英文数字"></Input>
           </Col>
         </Row>
       </p>
@@ -69,7 +69,7 @@
         <Row>
           <Col span="6" class="label">重复新密码</Col>
           <Col span="14">
-          <Input v-model="repassword" placeholder="请重复新密码"></Input>
+          <Input v-model="repassword"></Input>
           </Col>
         </Row>
       </p>
@@ -174,11 +174,6 @@ export default {
         {
           title: "管理员密码",
           slot: "password",
-          align: "center"
-        },
-        {
-          title: "商户前缀",
-          key: "suffix",
           align: "center"
         },
         {
@@ -288,11 +283,12 @@ export default {
         });
         return;
       }
-      let pwdReg = /^(\w){6,15}$/
+      let pwdReg = /^(\w){6,16}$/
       if (!pwdReg.test(this.password)) {
         this.$Message.warning({
-          content: "密码中必须包含6-15位由字母、数字、符号组成"
+          content: "密码中必须包含6-16位"
         })
+        this.spinShow = false
         return
       } 
       
@@ -317,9 +313,12 @@ export default {
               
               self.spinShow = false
               self.$Message.success("修改成功");
+              this.refresh()
             });
           }
-        });
+        }).catch(()=>{
+          self.spinShow = false
+        })
     },
     cancel() {
       this.password = "";
