@@ -111,7 +111,7 @@ const vuex = new Vuex.Store({
     },
     // 注册用户
     regUser(state, data) {
-      return axios.post('/', data)
+      return axios.post('/agentNew', data)
     },
     // 更新玩家
     updatePlayer(state, data) {

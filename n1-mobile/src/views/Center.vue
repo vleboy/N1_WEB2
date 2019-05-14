@@ -1,6 +1,6 @@
 <template>
   <v-layout row wrap>
-    <v-btn fab fixed top right @click="regUser">
+    <v-btn fab fixed top right @click="openReg">
       <v-avatar>
         <v-icon size="40" color="blue-grey">person_add</v-icon>
       </v-avatar>
@@ -47,6 +47,14 @@
             <v-layout wrap>
               <v-flex xs12>
                 <v-text-field
+                  v-model="sn"
+                  prepend-icon="person"
+                  label="标识"
+                  :messages="['已随机自动生成']"
+                  required
+                  clearable
+                ></v-text-field>
+                <v-text-field
                   v-model="username"
                   prepend-icon="person"
                   label="帐号"
@@ -92,7 +100,7 @@
         <v-card-actions class="pt-0">
           <v-spacer></v-spacer>
           <v-btn depressed @click="dialogReg = false">取消</v-btn>
-          <v-btn dark depressed @click="dialogReg = false">确认创建</v-btn>
+          <v-btn dark depressed @click="regUser">确认创建</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -189,6 +197,7 @@ export default {
       // 输入框
       gameTypes: ["H5电子游戏", "H5电子游戏-无神秘奖"],
       selectedGameTypes: [],
+      sn: "",
       username: "",
       password: "",
       displayName: "",
@@ -278,11 +287,35 @@ export default {
     randomNum(min, max) {
       return min + Math.round(Math.random() * (max - min));
     },
-    regUser() {
-      this.username = `${this.randomStr(3, 3)}${this.randomNum(100, 999)}`;
+    openReg() {
+      this.sn = this.randomStr(3, 3);
+      this.username = `${this.sn}${this.randomNum(100, 999)}`;
       this.password = "123456";
       this.displayName = "";
       this.dialogReg = true;
+    },
+    async regUser() {
+      await this.$store.dispatch("regUser", {
+        role: "1000",
+        sn: this.sn,
+        username: this.username,
+        password: this.payload,
+        displayName: this.displayName,
+        gameList: [],
+        rate: 0,
+        points: 0
+      });
+      this.dialogReg = false;
+      this.items.unshift({
+        username: this.username,
+        displayName: this.displayName,
+        playerCount: 0,
+        status: 1,
+        balance: 0
+      });
+      this.$store.commit("setErr", true);
+      this.$store.commit("setErrMsg", "创建成功，请进一步为代理加点");
+      this.$store.commit("setErrColor", "success");
     },
     async updateUser() {
       await this.$store.dispatch("updateUser", {
