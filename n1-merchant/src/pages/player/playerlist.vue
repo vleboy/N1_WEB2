@@ -351,14 +351,17 @@ export default {
       }
     },
     getSearch(bool) {
-      !bool &&
-        (this.searchInfo = {
+      
+      if (!bool) {
+        this.searchInfo = {
           gameId: "",
           userName: "",
           nickname: "",
           suffix: "",
           msn: ""
-        });
+        }
+        this.defaultStatus = '全部'
+      }
       this.playerList = [];
       this.playerListStorage = [];
       this.playerListStartKey = "";
