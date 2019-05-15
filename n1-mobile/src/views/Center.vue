@@ -129,8 +129,28 @@
         <v-card-text class="pa-0">
           <v-container grid-list-md>
             <v-layout wrap>
-              <v-flex xs12>
+              <v-flex xs12 class="py-0">
                 <v-switch v-model="status" :label="status ?'启用':'停用'"></v-switch>
+              </v-flex>
+              <v-flex xs12 class="py-0 text-xs-center">
+                代理余额：{{balance}}{{balance==balanceTemp?null:'='}}{{balance==balanceTemp?null:balanceTemp}}{{balance > balanceTemp ? '+' : null}}{{parseFloat((balance-balanceTemp).toFixed(2)) != 0 ? ((balance-balanceTemp).toFixed(2)) : null}} &nbsp;&nbsp;
+                <v-btn icon @click="balance=balanceTemp">
+                  <v-icon>refresh</v-icon>撤销
+                </v-btn>
+              </v-flex>
+              <v-flex xs12 class="text-xs-center py-0">
+                <v-btn color="error" @click="parseFloat((balance+=100).toFixed(2))">加100点</v-btn>
+                <v-btn
+                  color="success"
+                  @click="balance = parseFloat((balance-100).toFixed(2)) < 0 ? 0 : parseFloat((balance-100).toFixed(2))"
+                >减100点</v-btn>
+              </v-flex>
+              <v-flex xs12 class="text-xs-center py-0">
+                <v-btn color="error" @click="parseFloat((balance+=1000).toFixed(2))">加1000点</v-btn>
+                <v-btn
+                  color="success"
+                  @click="balance = parseFloat((balance-1000).toFixed(2)) < 0 ? 0 : parseFloat((balance-1000).toFixed(2))"
+                >减1000点</v-btn>
               </v-flex>
               <!-- <v-flex xs12>
                 <v-text-field
@@ -219,6 +239,8 @@ export default {
       gameList: [],
       mix: "",
       rate: "",
+      balance: 0,
+      balanceTemp: 0,
       // 代理链接
       copyURL: ""
     };
@@ -335,6 +357,8 @@ export default {
       this.displayName = item.displayName;
       this.userId = item.userId;
       this.status = item.status;
+      this.balance = item.balance;
+      this.balanceTemp = item.balance;
       this.dialogEdit = true;
     },
     async updateUser() {
