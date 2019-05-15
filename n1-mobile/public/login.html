@@ -96,26 +96,53 @@
                 src="data:image/png;base64,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" />
         </div>
         <div class="wrapper-middle">
-            <h2>NA001</h2>
-            <input type="text" style="margin-top:0.5rem" placeholder="请输入密码" />
-            <button class="button button1">登录</button>
+            <h2 id="userName">NA</h2>
+            <input id="password" type="text" style="margin-top:0.5rem" placeholder="请输入密码" />
+            <button class="button" onclick="login()">登录</button>
         </div>
         <div class="wrapper-bottom">2018-2019 &copy; New Asia</div>
     </div>
 </body>
 
 <script>
-function getQueryParam(variable) {
-  var query = window.location.search.substring(1);
-  var vars = query.split("&");
-  for (var i = 0; i < vars.length; i++) {
-    var pair = vars[i].split("=");
-    if (pair[0] == variable) {
-      return pair[1];
+    function getQueryParam(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] == variable) {
+                return pair[1];
+            }
+        }
+        return false;
     }
-  }
-  return false;
-}
+    function login() {
+        var xhr = new XMLHttpRequest();
+        // var apiurl = window.location.hostname == 'webpage.risheng3d.com' ? 'n1game.na12345.com' : 'dgjmusja39cm2.cloudfront.net'
+        var apiurl = 'xbbw2jfb58.execute-api.ap-southeast-1.amazonaws.com'
+        xhr.open('post', 'https://' + apiurl + '/dev/game/login', true)
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send(JSON.stringify({
+            userId: '0',
+            userName: getQueryParam('userName'),
+            userPwd: document.getElementById('password').value
+        }));
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                var res = JSON.parse(xhr.responseText);
+                if (res.code == 0) {
+                    window.location.href = "https://testgame.anasym.com:45555/enterLobby?plat=NA&userId=" + res.data.userId + "&token=" + res.data.token
+                } else {
+                    alert(res.msg)
+                }
+                xhr = null;
+                delete xhr;
+            }
+        };
+    }
+    window.onload = function () {
+        document.getElementById('userName').innerHTML = getQueryParam('userName')
+    };
 </script>
 
 </html>
