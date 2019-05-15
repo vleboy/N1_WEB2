@@ -256,30 +256,6 @@ export default {
       this.displayName = item.displayName;
       this.dialogURL = true;
     },
-    async openEdit(item) {
-      // let res = await this.$store.dispatch(
-      //   "getUser",
-      //   JSON.parse(localStorage.getItem("token"))
-      // );
-      // this.parent = res.payload;
-      // this.username = item.username;
-      this.displayName = item.displayName;
-      this.userId = item.userId;
-      this.status = item.status;
-      this.dialogEdit = true;
-    },
-    async updateUser() {
-      await this.$store.dispatch("updateUser", {
-        role: "1000",
-        userId: this.userId,
-        status: this.status ? 1 : 0
-      });
-      this.items.find(o => o.userId == this.userId).status = this.status;
-      this.dialogEdit = false;
-      this.$store.commit("setErr", true);
-      this.$store.commit("setErrMsg", "修改成功");
-      this.$store.commit("setErrColor", "success");
-    },
     async openReg() {
       let res = await this.$store.dispatch(
         "getUser",
@@ -320,9 +296,10 @@ export default {
             mix: this.mix
           }
         ];
-        await this.$store.dispatch("regUser", {
+        let res = await this.$store.dispatch("regUser", {
           role: "1000",
           sn: this.sn,
+          parent: this.parent.userId,
           username: this.username,
           password: this.payload,
           displayName: this.displayName,
@@ -332,6 +309,7 @@ export default {
         });
         this.dialogReg = false;
         this.items.unshift({
+          userId: res.payload.userId,
           username: this.username,
           displayName: this.displayName,
           playerCount: 0,
@@ -346,6 +324,30 @@ export default {
         this.$store.commit("setErrMsg", "请完善必填项");
         this.$store.commit("setErrColor", "warning");
       }
+    },
+    async openEdit(item) {
+      // let res = await this.$store.dispatch(
+      //   "getUser",
+      //   JSON.parse(localStorage.getItem("token"))
+      // );
+      // this.parent = res.payload;
+      // this.username = item.username;
+      this.displayName = item.displayName;
+      this.userId = item.userId;
+      this.status = item.status;
+      this.dialogEdit = true;
+    },
+    async updateUser() {
+      await this.$store.dispatch("updateUser", {
+        role: "1000",
+        userId: this.userId,
+        status: this.status ? 1 : 0
+      });
+      this.items.find(o => o.userId == this.userId).status = this.status;
+      this.dialogEdit = false;
+      this.$store.commit("setErr", true);
+      this.$store.commit("setErrMsg", "修改成功");
+      this.$store.commit("setErrColor", "success");
     },
     randomStr(min, max) {
       let str = "",
