@@ -3,7 +3,7 @@ module.exports = {
 
   pwa: {
     name: 'NA代理',
-    msTileColor: '#1C2327',
+    msTileColor: '#FFFFFF',
     workboxOptions: {
       runtimeCaching: [{
         urlPattern: new RegExp('^https://d3prd6rbitzqm3.cloudfront.net/'),
