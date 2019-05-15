@@ -72,7 +72,6 @@
             loadHtml();
             loadStyleText(cssText);
         } else {
-            // window.location.href = "https://testgame.anasym.com:45555/enterLobby?plat=NA&userId=0&token=0"
             let arr = window.location.href.split("/");
             window.location.href = arr[0] + "//" + arr[1] + arr[2] + "/login.html?userName=" + getQueryParam("userName")
         }
