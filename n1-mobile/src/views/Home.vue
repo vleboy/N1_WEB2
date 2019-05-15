@@ -228,6 +228,11 @@ export default {
         this.$store.commit("setErrColor", "gray");
       }
     },
+    openReg() {
+      this.userName = `${this.randomStr(3, 3)}${this.randomNum(100, 999)}`;
+      this.userPwd = "123456";
+      this.dialogReg = true;
+    },
     async regPlayer() {
       if (this.userName && this.userPwd) {
         if (this.userName.length >= 6 && this.userPwd.length >= 6) {
@@ -259,6 +264,15 @@ export default {
         this.$store.commit("setErrColor", "warning");
       }
     },
+    openEdit(item) {
+      this.userId = item.userId;
+      this.userName = item.userName;
+      this.state = item.state;
+      this.balance = item.balance;
+      this.balanceTemp = item.balance;
+      this.userPwd = "";
+      this.dialogEdit = true;
+    },
     async updatePlayer() {
       await this.$store.dispatch("updatePlayer", {
         userName: this.userName,
@@ -270,25 +284,32 @@ export default {
           password: this.userPwd
         });
       }
+      let amount = parseFloat((this.balance - this.balanceTemp).toFixed(2));
+      // if (amount > 0) {
+      //   await this.$store.dispatch("playerDeposit", {
+      //     amount: Math.abs(amount),
+      //     fromUserId: JSON.parse(localStorage.getItem("token")).userId,
+      //     toRole: "1000",
+      //     toUser: this.userName
+      //   });
+      // }
+      // if (amount < 0) {
+      //   await this.$store.dispatch("playerTake", {
+      //     amount: Math.abs(amount),
+      //     fromUserId: this.userId,
+      //     toRole: "1000",
+      //     toUser: JSON.parse(localStorage.getItem("token")).username
+      //   });
+      // }
+      let player = this.items.find(o => o.userName == this.userName);
       this.dialogEdit = false;
-      this.items.find(o => o.userName == this.userName).state = this.state;
+      this.state = player.state;
+      this.balance = player.balance;
       this.$store.commit("setErr", true);
       this.$store.commit("setErrMsg", "修改成功");
       this.$store.commit("setErrColor", "success");
     },
-    openReg() {
-      this.userName = `${this.randomStr(3, 3)}${this.randomNum(100, 999)}`;
-      this.userPwd = "123456";
-      this.dialogReg = true;
-    },
-    openEdit(item) {
-      this.userName = item.userName;
-      this.state = item.state;
-      this.balance = item.balance;
-      this.balanceTemp = item.balance;
-      this.userPwd = "";
-      this.dialogEdit = true;
-    },
+
     openURL(item) {
       let arr = window.location.href.split("/");
       this.copyURL = `${arr[0]}//${arr[1]}${arr[2]}/wqtip.html?userName=${

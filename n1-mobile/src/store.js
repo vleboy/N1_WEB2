@@ -137,6 +137,18 @@ const vuex = new Vuex.Store({
     updateUserPassword(state, data) {
       return axios.post('/updateAgentPassword', data)
     },
+    // 用户转账加减点
+    billTransfer(state, data) {
+      return axios.post('/billTransfer', data)
+    },
+    // 玩家存点
+    playerDeposit(state, data) {
+      return axios.post('/agent/player/deposit', data)
+    },
+    // 玩家提点
+    playerTake(state, data) {
+      return axios.post('/agent/player/take', data)
+    },
     // 获取所有玩家
     getPlayerPage(state, data) {
       return axios.get('/agent/player/list')

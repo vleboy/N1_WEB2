@@ -356,6 +356,7 @@ export default {
       // this.username = item.username;
       this.displayName = item.displayName;
       this.userId = item.userId;
+      this.username = item.username;
       this.status = item.status;
       this.balance = item.balance;
       this.balanceTemp = item.balance;
@@ -367,7 +368,26 @@ export default {
         userId: this.userId,
         status: this.status ? 1 : 0
       });
-      this.items.find(o => o.userId == this.userId).status = this.status;
+      let amount = parseFloat((this.balance - this.balanceTemp).toFixed(2));
+      if (amount > 0) {
+        await this.$store.dispatch("billTransfer", {
+          amount: Math.abs(amount),
+          fromUserId: JSON.parse(localStorage.getItem("token")).userId,
+          toRole: "1000",
+          toUser: this.username
+        });
+      }
+      if (amount < 0) {
+        await this.$store.dispatch("billTransfer", {
+          amount: Math.abs(amount),
+          fromUserId: this.userId,
+          toRole: "1000",
+          toUser: JSON.parse(localStorage.getItem("token")).username
+        });
+      }
+      let user = this.items.find(o => o.userId == this.userId);
+      user.status = this.status;
+      user.balance = this.balance;
       this.dialogEdit = false;
       this.$store.commit("setErr", true);
       this.$store.commit("setErrMsg", "修改成功");
