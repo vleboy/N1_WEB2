@@ -1,34 +1,28 @@
 <template>
   <div class="business">
     <div class="search">
-      <Row class="row">
-        <Col span="2" offset="4">商户标识</Col>
-        <Col span="4">
+      <Row class="row" type="flex" justify="start">
+        <span style="margin-right:1rem">商户标识</span>  
+        <Col span="3">
         <Input v-model="sn" placeholder="请输入"></Input>
         </Col>
-        <Col span="2">商户ID</Col>
-        <Col span="4">
+        <span style="margin:0 1rem">商户ID</span>
+        <Col span="3">
         <Input v-model="displayId" placeholder="请输入"></Input>
         </Col>
-        <Col span="5">
-        <div class="btns">
-          <Button type="primary" @click="init">搜索</Button>
-          <Button type="ghost" @click="reset">重置</Button>
-        </div>
-        </Col>
-      </Row>
-      <Row class="row">
-     <!--    <Col span="2" offset="4">商户账号</Col>
-        <Col span="4">
-        <Input v-model="username" placeholder="请输入"></Input>
-        </Col> -->
-        <Col span="2" offset="4">商户昵称</Col>
-        <Col span="4">
+        <span style="margin:0 1rem">商户昵称</span>
+        <Col span="3">
         <Input v-model="displayName" placeholder="请输入"></Input>
         </Col>
-        <Col span="2">上级标识</Col>
-        <Col span="4">
+        <span style="margin:0 1rem">上级标识</span>
+        <Col span="3">
         <Input v-model="supSuffix" placeholder="请输入"></Input>
+        </Col>
+        <Col span="2">
+        <div class="btns">
+          <Button type="primary" @click="init" style="margin:0 .3rem 0 1rem">搜索</Button>
+          <Button @click="reset">重置</Button>
+        </div>
         </Col>
       </Row>
     </div>
@@ -45,7 +39,9 @@
       </p>
     </div>
     <div class="table">
-      <Table :columns="columns1" :data="showData" size="small"></Table>
+      <Table :columns="columns1" :data="showData" size="small">
+        
+      </Table>
     </div>
     <Spin size="large" fix v-if="spinShow">
       <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
@@ -97,7 +93,7 @@
 </template>
 <script>
 import dayjs from "dayjs";
-import { userChangeStatus } from "@/service/index";
+import { userChangeStatus, httpRequest } from "@/service/index";
 import { thousandFormatter } from "@/config/format";
 export default {
   beforeRouteEnter(to, from, next) {
@@ -171,8 +167,6 @@ export default {
           sortable: true,
           align: 'center',
           render: (h, params) => {
-            //console.log(params);
-            
             return h(
               "span",
                `${params.row.parentDisplayName}(${params.row.parentSuffix})` 
@@ -529,19 +523,7 @@ export default {
     };
   },
   methods: {
-    // changepage(index) {
-    //   var _start = (index - 1) * 50;
-    //   var _end = index * 50;
-    //   this.showData = this.waterfall.slice(_start, _end);
-    // },
-    // handlePage() {
-    //   // 初始化显示，小于每页显示条数，全显，大于每页显示条数，取前每页条数显示
-    //   if (this.total < 50) {
-    //     this.showData = this.waterfall;
-    //   } else {
-    //     this.showData = this.waterfall.slice(0, 50);
-    //   }
-    // },
+    //
     addMerchant() {
       this.$router.push({ name: "addMerchant" });
     },
@@ -603,8 +585,6 @@ export default {
       this.init();
     },
     init() {
-      console.log(this.supSuffix);
-      
       if (this.$route.name == 'merchantList' && localStorage.merchantList == 'merchantList') {
         localStorage.removeItem('merchantList')
       }

@@ -133,14 +133,6 @@
           </Card>
         </Col>
       </Row>
-      <!-- <Row>
-        <Col span="24">
-          <Card style="position:relative">
-            <h3 slot="title">时刻比例分布(月)</h3>
-            <div :style="{height:'500px',width:'100%'}" ref="monthMomentBar"></div>    
-          </Card>  
-        </Col>  
-      </Row>-->
     </div>
     <div v-else-if="initNum == 2">
       <Row>
@@ -403,17 +395,13 @@ export default {
       }
 
       if (this.initNum == 0) {
-        /* this.$nextTick(function() {
-          }); */
+       
         this.init();
       } else if (this.initNum == 1) {
-        /* this.$nextTick(function() {
-          }); */
+       
         this.distributionInit();
       } else if (this.initNum == 2) {
-        //this.rankInit();
-        /* this.$nextTick(function() {
-          }); */
+       
         this.mcRankInit();
       } else {
         this.pyRankInit();
@@ -770,7 +758,7 @@ export default {
             show: true,
             x: "left",
             y: "bottom",
-            //splitList: this.chinaSplitList,
+           
             pieces: this.chinaSplitList,
             color: this.splitColor
           },
@@ -1134,7 +1122,7 @@ export default {
             bottom: "6%"
           },
           legend: {
-            //orient: 'vertical',
+           
             top: "top",
             data: ["每日注册人数", "累计注册人数"],
             selectedMode: "single",
@@ -1914,10 +1902,7 @@ export default {
         this.weekMomentData = res.data;
         this.weekMomentBarConfigure();
       });
-      /* httpRequest("get", "/visual/graph/months", params, "map").then(res => {
-        this.monthMomentData = res.data;
-        this.monthMomentBarConfigure()
-      }); */
+      
     }
   },
   computed: {
@@ -1933,9 +1918,7 @@ export default {
       return time;
     }
   }
-  /* beforeDestroy() {
-    clearInterval(this.hander);
-  } */
+ 
 };
 </script>
 

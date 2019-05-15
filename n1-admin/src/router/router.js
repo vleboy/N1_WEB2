@@ -17,15 +17,10 @@ import allReport from '@/pages/reports/allReport'
 import playerReport from '@/pages/reports/playerReport'
 import agtrue from '@/pages/reports/agTrueGame'
 import mgvideo from '@/pages/reports/mgVideoGame'
-import nacard from '@/pages/reports/naCardGame'
-import nastreet from '@/pages/reports/naStreetGame'
 import kyChess from '@/pages/reports/kyChess'
 import nahfive from '@/pages/reports/nahfive'
 import nanomys from '@/pages/reports/nanomys'
-import natrue from '@/pages/reports/naTrueGame'
-import navideo from '@/pages/reports/naVideoGame'
 import naAll from '@/pages/reports/naAllReport'
-import naFishing from '@/pages/reports/naFishing'
 import saAll from '@/pages/reports/saAllReport'
 import safishing from '@/pages/reports/saFishingGame'
 import satrue from '@/pages/reports/saTrueGame'
@@ -40,7 +35,7 @@ import ppGame from '@/pages/reports/ppGame'
 import pgVideo from '@/pages/reports/pgVideo'
 import habaVideo from '@/pages/reports/habaVideo'
 import pngVideo from '@/pages/reports/pngVideo'
-import natruehfive from '@/pages/reports/naTrueHfive'
+
 
 
 import dayCompany from '@/pages/day/dayCompany'
@@ -54,7 +49,7 @@ import managerList from '@/pages/businessCenter/managerList'
 import warnList from '@/pages/businessCenter/warnList'
 import adminList from '@/pages/adminCenter/adminList'
 import adminRole from '@/pages/adminCenter/adminRole'
-// import lineNumList from '@/pages/adminCenter/lineNumList'
+
 
 import operationLog from '@/pages/log/operationLog'
 import loginLog from '@/pages/log/loginLog'
@@ -126,13 +121,6 @@ export const appRouter = [
            component: main,
            children: [{ path: 'index', title: '个人中心', name: 'ownspace-index', component: ownSpace }]
          },
-         /* {
-           path: '/boards',
-           title: '看板',
-           name: 'boards',
-           component: main,
-           children: [{ path: 'board', title: '看板', name: 'board', component: board }]
-         }, */
          {
            path: '/newBoard',
            title: '看板',
@@ -174,15 +162,9 @@ export const appRouter = [
            name: 'nagame',
            component: main,
            children: [
-             { path: 'card', title: 'NA棋牌游戏报表', name: 'nacard', component: nacard },
-             { path: 'street', title: 'NA街机游戏报表', name: 'nastreet', component: nastreet },
-             { path: 'true', title: 'NA真人游戏报表', name: 'natrue', component: natrue },
-             { path: 'video', title: 'NA电子游戏报表', name: 'navideo', component: navideo },
-             { path: 'fishing', title: 'NA捕鱼游戏报表', name: 'nafishing', component: naFishing },
              { path: 'all', title: 'NA游戏总报表', name: 'naAll', component: naAll },
              { path: 'hfive', title: 'NA电子H5报表', name: 'nahfive', component: nahfive },
              { path: 'nanomys', title: 'NA电子H5无神秘奖报表', name: 'nanomys', component: nanomys },
-             { path: 'truefive', title: 'NA真人H5报表', name: 'natruehfive', component: natruehfive }
            ]
          },
          {
@@ -317,7 +299,6 @@ export const appRouter = [
            children: [
              { path: 'list', title: '管理员列表', name: 'adminList', component: adminList },
              { path: 'role', title: '管理员角色列表', name: 'adminRole', component: adminRole }
-             // {path:'line',title:'线路号列表',name:'lineNumList',component:lineNumList},
            ]
          },
          {
@@ -328,12 +309,6 @@ export const appRouter = [
            children: [
              { path: 'loginLog', title: '登录日志', name: 'loginLog', component: loginLog },
              { path: 'operationLog', title: '操作日志', name: 'operationLog', component: operationLog },
-             /* { path: 'lineLogin', title: '线路商登录日志', name: 'lineLoginLog', component: lineLoginLog },
-             { path: 'merchant', title: '商户登录日志', name: 'merchantLog', component: merchantLog },
-             { path: 'managerOpreate', title: '线路商操作日志', name: 'managerOpreateLog', component: managerOpreateLog },
-             { path: 'merchantOpreate', title: '商户操作日志', name: 'merchantOpreateLog', component: merchantOpreateLog },
-             { path: 'adminOpreate', title: '管理员操作日志', name: 'adminLog', component: adminLog },
-             { path: 'adminlogin', title: '管理员登录日志', name: 'adminLoginLog', component: adminLoginLog }, */
              { path: 'debug', title: 'DEBUG日志', name: 'debugLog', component: debugLog },
              { path: 'dataRepair', title: 'DEBUG修正', name: 'dataRepair', component: dataRepair }
            ]
@@ -361,17 +336,11 @@ export const appRouter = [
            name: 'operation',
            component: main,
            children: [
-             { path: 'gameNoticeList', title: '游戏公告列表', name: 'gameNoticeList', component: gameNoticeList },
-             { path: 'gameMailList', title: '游戏邮件列表', name: 'gameMailList', component: gameMailList },
-             { path: 'horseRaceLampList', title: '跑马灯列表', name: 'horseRaceLampList', component: horseRaceLampList },
-             { path: 'businessRecord', title: '商户运营记录', name: 'businessRecord', component: businessRecordList },
-             { path: 'boothList', title: '展位列表', name: 'boothList', component: boothList },
-             { path: 'propPrice', title: '道具定价', name: 'propPrice', component: propPrizeList },
              { path: 'sysConfig', title: '系统配置', name: 'sysConfig', component: sysConfig },
              { path: 'prizeList', title: '中奖纪录', name: 'prizeList', component: prizeList },
              { path: 'numericalControl', title: '数值调控中心', name: 'numericalControl', component: numericalControl },
              { path: 'gameManager', title: '游戏管理', name: 'gameManager', component: gameManager },
-             { path: 'addGame', title: '创建游戏', name: 'addGame', component: addGame }
+
            ]
          }
        ]

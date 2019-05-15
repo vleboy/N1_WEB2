@@ -1,57 +1,72 @@
 <template>
   <div class="personalcenter">
-    <div class="reload">
-      <Button type="primary" class="searchbtn" @click="reset">刷新</Button>
-    </div>
-    <div class="manangeinfo">
-      <table cellspacing="0">
-        <tr>
-          <td>
-            <span>管理员账号 : {{admin.username | getName}}</span>
-          </td>
-          <td>
-            <Row>
-              <Col span="10">管理员密码 :
-              <span v-if="showPass">{{admin.password}}</span>
-              <span v-else>********</span>
-              </Col>
-              <Col span="12">
-              <span class="newPassword" @click="showPass=!showPass" v-if="!showPass">显示</span>
-              <span class="newPassword" @click="showPass=!showPass" v-else>隐藏</span>
-              <span class="newPassword" @click="newPassword">修改密码</span>
-              </Col>
-            </Row>
-          </td>
-          <td>
-            <span>管理员余额 : {{ thousandFormatter(admin.balance) }}</span>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <span>管理员角色 : {{ admin.subRole }}</span>
-          </td>
-          <td>
-            <span>上次登录时间 : {{dayjs(admin.loginAt).format('YYYY-MM-DD HH:mm:ss')}}</span>
-          </td>
-          <td>
-            <span>上次登录IP : {{admin.lastIP}}</span>
-          </td>
-        </tr>
-      </table>
-    </div>
+    <Table :columns="columns" :data="dataList" size="small">
+      <template slot-scope="{row, index}" slot="username">{{usernameConfig(row)}}</template>
+      <template slot-scope="{row, index}" slot="password">
+        <span v-if="showPass">{{row.password}}</span>
+        <span v-else>******</span>
+        <span
+          v-if="showPass"
+          @click="showPass = !showPass"
+          style="color:#20a0ff;cursor:pointer;margin:0 .3rem;"
+        >隐藏</span>
+        <span
+          v-else
+          @click="showPass = !showPass"
+          style="color:#20a0ff;cursor:pointer;margin:0 .3rem;"
+        >显示</span>
+        <span @click="newPassword" style="color:#20a0ff;cursor:pointer;margin:0 .3rem;">修改密码</span>
+      </template>
+      <template slot-scope="{row, index}" slot="balance">{{balanceConfig(row)}}</template>
+      <template slot-scope="{row, index}" slot="subRole">{{row.subRole}}</template>
+      <template slot-scope="{row, index}" slot="loginAt">{{loginAtConfig(row)}}</template>
+    </Table>
     <div class="manager-copertion">
-      <h2>财务信息
-        <span style="color:#20a0ff;cursor:pointer;fontSize:1rem" @click="getWaterfallList">(点击查询)</span>
+      <h2 style="margin:1rem 0">
+        财务信息
+        <span
+          style="color:#20a0ff;cursor:pointer;fontSize:1rem"
+          @click="getWaterfallList"
+        >(点击查询)</span>
       </h2>
-      <Table :columns="columns1" :data="showData" size="small"></Table>
-      <Page :total="total" class="page" show-elevator :page-size='pageSize' show-total @on-change="changepage"></Page>
+      <Table :columns="columns1" :data="showData" size="small">
+        <template slot-scope="{row, index}" slot="createdAt">{{createdAtConfig(row)}}</template>
+        <template slot-scope="{row, index}" slot="toUser">
+          <span>{{row.fromLevel > row.toLevel ? row.toDisplayName + " 对 " + row.fromDisplayName : row.fromDisplayName + " 对 " + row.toDisplayName}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="amountType">
+          <span>{{row.amount > 0 ? "减点" : "加点"}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="oldBalance">{{oldBalanceConfig(row)}}</template>
+        <template slot-scope="{row, index}" slot="amount">
+          <span :style="{color:amountConfig(row).color}">{{amountConfig(row).amount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="newBalance">{{newBalanceConfig(row)}}</template>
+        <template slot-scope="{row, index}" slot="operator">
+          <span>{{row.operator.split("_")[1]}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="remark">
+          <Tooltip v-if="remarkConfig(row).isShow" :content="remarkConfig(row).remark">
+            <Icon type="ios-search"/>
+          </Tooltip>
+          <span v-else></span>
+        </template>
+      </Table>
+      <Page
+        :total="total"
+        class="page"
+        show-elevator
+        :page-size="pageSize"
+        show-total
+        @on-change="changepage"
+      ></Page>
     </div>
-    <Modal v-model="modal" title="修改密码" :width='350' @on-ok="ok" @on-cancel='cancel'>
+    <Modal v-model="modal" title="修改密码" :width="350" @on-ok="ok" @on-cancel="cancel">
       <p class="modal_input">
         <Row>
           <Col span="6" class="label">新密码</Col>
           <Col span="14">
-          <Input v-model="password" placeholder="请输入新密码"></Input>
+            <Input v-model="password" placeholder="请输入新密码"></Input>
           </Col>
         </Row>
       </p>
@@ -59,13 +74,13 @@
         <Row>
           <Col span="6" class="label">重复新密码</Col>
           <Col span="14">
-          <Input v-model="repassword" placeholder="请重复新密码"></Input>
+            <Input v-model="repassword" placeholder="请重复新密码"></Input>
           </Col>
         </Row>
       </p>
     </Modal>
     <Spin size="large" fix v-if="$store.state.login.loading">
-      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+      <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
       <div>加载中...</div>
     </Spin>
   </div>
@@ -80,139 +95,101 @@ export default {
     return {
       modal: false,
       showPass: false,
-      thousandFormatter:thousandFormatter,
+      thousandFormatter: thousandFormatter,
       password: "",
       repassword: "",
       dayjs: dayjs,
       pageSize: 100,
       admin: {},
+      dataList: [],
       waterfall: [],
       showData: [],
+      columns: [
+        {
+          title: "管理员账号",
+          align: "center",
+          slot: "username"
+        },
+        {
+          title: "管理员密码号",
+          align: "center",
+          slot: "password"
+        },
+        {
+          title: "管理员余额",
+          align: "center",
+          slot: "balance"
+        },
+        {
+          title: "管理员角色",
+          align: "center",
+          slot: "subRole"
+        },
+        {
+          title: "上次登录时间",
+          align: "center",
+          slot: "loginAt"
+        },
+        {
+          title: "上次登录IP",
+          align: "center",
+          key: "lastIP"
+        }
+      ],
       columns1: [
         {
           title: "序号",
           type: "index",
           maxWidth: 60,
-          align: 'center'
+          align: "center"
         },
         {
           title: "交易时间",
-          key: "createdAt",
+          slot: "createdAt",
           sortable: true,
-          align: 'center',
-          render: (h, params) => {
-            return h(
-              "span",
-              this.dayjs(params.row.createdAt).format("YYYY-MM-DD HH:mm:ss")
-            );
-          }
+          align: "center"
         },
         {
           title: "交易对象",
-          key: "toUser",
-          align: 'center',
-          render: (h, params) => {
-            let row = params.row;
-            if (row.fromLevel > row.toLevel) {
-              return h(
-                "span",
-                row.toDisplayName + " 对 " + row.fromDisplayName
-              );
-            } else {
-              return h(
-                "span",
-                row.fromDisplayName + " 对 " + row.toDisplayName
-              );
-            }
-          }
+          slot: "toUser",
+          align: "center"
         },
         {
           title: "交易类型",
-          key: "amount",
-          align: 'center',
+          slot: "amountType",
+          align: "center",
           sortable: true,
-          maxWidth:120,
-          render: (h, params) => {
-            let row = params.row;
-            if (row.amount > 0) {
-              return h("span","减点");
-            } else {
-              return h("span","加点");
-            }
-          }
+          maxWidth: 120
         },
-         {
+        {
           title: "交易前余额",
-          key: "oldBalance",
-          align: 'center',
-          sortable: true,
-          render: (h, params) => {
-            return h("span", thousandFormatter(params.row.oldBalance));
-          }
+          slot: "oldBalance",
+          align: "center",
+          sortable: true
         },
         {
           title: "交易点数",
-          key: "amount",
-          align: 'center',
-          sortable: true,
-          render: (h, params) => {
-            let color = params.row.amount < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(params.row.amount)
-            );
-          }
+          slot: "amount",
+          align: "center",
+          sortable: true
         },
         {
           title: "交易后余额",
-          align: 'center',
-          key: "balance",
-          sortable: true,
-          render: (h, params) => {
-            return h("span", thousandFormatter(params.row.balance));
-          }
+          align: "center",
+          slot: "newBalance",
+          sortable: true
         },
         {
           title: "操作人",
-          key: "operator",
-          align: 'center',
-          sortable: true,
-          render: (h, params) => {
-            return h("span", params.row.operator.split("_")[1]);
-          }
+          slot: "operator",
+          align: "center",
+          sortable: true
         },
         {
           title: "备注",
-          align: 'center',
-          key: "remark",
-          maxWidth: 60,
-          render: (h, params) => {
-            if (params.row.remark == "NULL!" || params.row.remark == null) {
-              return h("span", "");
-            } else {
-              return h(
-                "Tooltip",
-                {
-                  props: {
-                    content: params.row.remark
-                  }
-                },
-                [
-                  h("Icon", {
-                    props: {
-                      type: "search",
-                      color: "#20a0ff"
-                    }
-                  })
-                ]
-              );
-            }
-          }
+          align: "center",
+          slot: "remark",
+          maxWidth: 60
         }
       ]
     };
@@ -223,6 +200,48 @@ export default {
     }
   },
   methods: {
+    //Table
+    //管理员账号
+    usernameConfig(row) {
+      return row.username ? row.username.toString().substr(9) : "";
+    },
+
+    //管理员余额
+    balanceConfig(row) {
+      return thousandFormatter(row.balance);
+    },
+    //上次登录时间
+    loginAtConfig(row) {
+      return dayjs(row.loginAt).format("YYYY-MM-DD HH:mm:ss");
+    },
+
+    //财务信息
+    //交易时间
+    createdAtConfig(row) {
+      return dayjs(row.createdAt).format("YYYY-MM-DD HH:mm:ss");
+    },
+    //交易前余额
+    oldBalanceConfig(row) {
+      return thousandFormatter(row.oldBalance);
+    },
+    //交易点数
+    amountConfig(row) {
+      let color = row.amount < 0 ? "#f30" : "#0c0";
+      return { amount: thousandFormatter(row.amount), color };
+    },
+    //交易后余额
+    newBalanceConfig(row) {
+      return thousandFormatter(row.balance);
+    },
+    //备注
+    remarkConfig(row) {
+      if (row.remark == "NULL!" || row.remark == null) {
+        return {isShow:false, remark: row.remark}
+      } else {
+       return {isShow:true, remark: row.remark}
+      }
+    },
+
     handlePage() {
       // 初始化显示，小于每页显示条数，全显，大于每页显示条数，取前每页条数显示
       if (this.total < this.pageSize) {
@@ -236,7 +255,6 @@ export default {
       let _start = (index - 1) * size;
       let _end = index * size;
       this.showData = this.waterfall.slice(_start, _end);
-      // console.log(this.showData);
     },
     newPassword() {
       this.modal = true;
@@ -270,7 +288,9 @@ export default {
             self.password = "";
             self.repassword = "";
             adminCenter().then(res => {
+              self.dataList = [];
               self.admin = res.payload;
+              self.dataList.push(admin);
               self.$store.commit("updateLoading", { params: false });
               self.$Message.success("修改成功");
             });
@@ -283,9 +303,9 @@ export default {
     },
     passwordLevel(password) {
       let Modes = 0;
-      let len=password.length;
-      if(len<6||len>16){
-        return 0
+      let len = password.length;
+      if (len < 6 || len > 16) {
+        return 0;
       }
       for (let i = 0; i < password.length; i++) {
         Modes |= CharMode(password.charCodeAt(i));
@@ -321,28 +341,24 @@ export default {
       let userId = localStorage.loginId ? localStorage.getItem("loginId") : "";
       let req1 = getWaterfall(userId);
       this.$store.commit("updateLoading", { params: true });
-      let waterfall = await this.axios.all([req1])
+      let waterfall = await this.axios.all([req1]);
       this.$store.commit("updateLoading", { params: false });
-      this.showData = waterfall[0].payload
+      this.showData = waterfall[0].payload;
     },
     async init() {
+      this.dataList = [];
       this.$store.commit("updateLoading", { params: true });
       let req2 = adminCenter();
       let [admin] = await this.axios.all([req2]);
       this.$store.commit("updateLoading", { params: false });
       if (admin && admin.code == 0) {
         this.admin = admin.payload;
+        this.dataList.push(admin.payload);
       }
       this.handlePage();
     }
   },
-  filters: {
-    getName(value) {
-      if (!value) return "";
-      value = value.toString();
-      return value.substr(9);
-    }
-  },
+
   created() {
     this.init();
   }
@@ -391,8 +407,8 @@ export default {
   margin-top: 20px;
 }
 .demo-spin-icon-load {
-    animation: ani-demo-spin 1s linear infinite;
-  }
+  animation: ani-demo-spin 1s linear infinite;
+}
 /deep/ .ivu-table-cell {
   padding: 0;
 }
