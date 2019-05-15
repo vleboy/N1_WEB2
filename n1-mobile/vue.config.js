@@ -6,7 +6,7 @@ module.exports = {
     msTileColor: '#FFFFFF',
     workboxOptions: {
       runtimeCaching: [{
-        urlPattern: new RegExp('^https://d3prd6rbitzqm3.cloudfront.net/'),
+        urlPattern: new RegExp('^https://testagent.cncshe.com/'),
         handler: 'staleWhileRevalidate',
         options: {
           cacheName: 'api-cache',

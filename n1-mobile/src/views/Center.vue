@@ -76,12 +76,32 @@
                 ></v-text-field>
               </v-flex>
               <v-flex xs12>
+                <v-text-field
+                  v-model="rate"
+                  prepend-icon="data_usage"
+                  label="成数（百分比，不能超过上级）"
+                  required
+                  suffix="%"
+                  clearable
+                ></v-text-field>
+              </v-flex>
+              <v-flex xs12>
+                <v-text-field
+                  v-model="mix"
+                  prepend-icon="data_usage"
+                  label="洗码比（百分比，不能超过上级）"
+                  required
+                  suffix="%"
+                  clearable
+                ></v-text-field>
+              </v-flex>
+              <v-flex xs12>
                 <v-select
                   v-model="selectedGameTypes"
                   :items="gameTypes"
                   label="选择游戏"
                   multiple
-                  clearable
+                  readonly
                 >
                   <template v-slot:prepend-item>
                     <v-list-tile ripple @click="toggle">
@@ -115,19 +135,15 @@
               <v-flex xs12>
                 <v-switch v-model="status" :label="status ?'启用':'停用'"></v-switch>
               </v-flex>
-              <v-flex xs12>
-                <v-select v-model="selectedGameTypes" :items="gameTypes" label="选择游戏" multiple>
-                  <template v-slot:prepend-item>
-                    <v-list-tile ripple @click="toggle">
-                      <v-list-tile-content>
-                        <v-list-tile-title>
-                          <a>全部</a>
-                        </v-list-tile-title>
-                      </v-list-tile-content>
-                    </v-list-tile>
-                  </template>
-                </v-select>
-              </v-flex>
+              <!-- <v-flex xs12>
+                <v-text-field
+                  v-model="password"
+                  prepend-icon="lock"
+                  label="输入新密码(留空不变更)"
+                  maxlength="16"
+                  clearable
+                ></v-text-field>
+              </v-flex>-->
             </v-layout>
           </v-container>
         </v-card-text>
@@ -195,13 +211,17 @@ export default {
       dialogEdit: false,
       dialogURL: false,
       // 输入框
-      gameTypes: ["H5电子游戏", "H5电子游戏-无神秘奖"],
-      selectedGameTypes: [],
+      parent: {},
+      gameTypes: ["H5电子游戏"],
+      selectedGameTypes: ["H5电子游戏"],
       sn: "",
       username: "",
       password: "",
       displayName: "",
       status: 1,
+      gameList: [],
+      mix: "",
+      rate: "",
       // 代理链接
       copyURL: ""
     };
@@ -230,9 +250,15 @@ export default {
         this.$store.commit("setErrColor", "gray");
       }
     },
-    openEdit(item) {
-      this.username = item.username;
+    async openEdit(item) {
+      // let res = await this.$store.dispatch(
+      //   "getUser",
+      //   JSON.parse(localStorage.getItem("token"))
+      // );
+      // this.parent = res.payload;
+      // this.username = item.username;
       this.displayName = item.displayName;
+      this.userId = item.userId;
       this.status = item.status;
       this.dialogEdit = true;
     },
@@ -244,6 +270,77 @@ export default {
       this.username = item.username;
       this.displayName = item.displayName;
       this.dialogURL = true;
+    },
+    async openReg() {
+      let res = await this.$store.dispatch(
+        "getUser",
+        JSON.parse(localStorage.getItem("token"))
+      );
+      this.parent = res.payload;
+      this.rate = this.parent.rate;
+      this.mix = this.parent.gameList.find(o => o.code == "70000").mix;
+
+      this.sn = this.randomStr(3, 3);
+      this.username = `${this.sn}${this.randomNum(100, 999)}`;
+      this.password = "123456";
+      this.displayName = "";
+      this.dialogReg = true;
+    },
+    async regUser() {
+      if (
+        this.username &&
+        this.password &&
+        this.displayName &&
+        this.mix &&
+        this.rate
+      ) {
+        this.gameList = [
+          {
+            company: "NA",
+            type: 2,
+            code: "70000",
+            name: "H5电子游戏",
+            mix: this.mix
+          }
+        ];
+        await this.$store.dispatch("regUser", {
+          role: "1000",
+          sn: this.sn,
+          username: this.username,
+          password: this.payload,
+          displayName: this.displayName,
+          gameList: this.gameList,
+          rate: this.rate,
+          points: 0
+        });
+        this.dialogReg = false;
+        this.items.unshift({
+          username: this.username,
+          displayName: this.displayName,
+          playerCount: 0,
+          status: 1,
+          balance: 0
+        });
+        this.$store.commit("setErr", true);
+        this.$store.commit("setErrMsg", "创建成功，请进一步为代理加点");
+        this.$store.commit("setErrColor", "success");
+      } else {
+        this.$store.commit("setErr", true);
+        this.$store.commit("setErrMsg", "请完善必填项");
+        this.$store.commit("setErrColor", "warning");
+      }
+    },
+    async updateUser() {
+      await this.$store.dispatch("updateUser", {
+        role: "1000",
+        userId: this.userId,
+        status: this.status ? 1 : 0
+      });
+      this.items.find(o => o.userId == this.userId).status = this.status;
+      this.dialogEdit = false;
+      this.$store.commit("setErr", true);
+      this.$store.commit("setErrMsg", "修改成功");
+      this.$store.commit("setErrColor", "success");
     },
     randomStr(min, max) {
       let str = "",
@@ -286,48 +383,6 @@ export default {
     },
     randomNum(min, max) {
       return min + Math.round(Math.random() * (max - min));
-    },
-    openReg() {
-      this.sn = this.randomStr(3, 3);
-      this.username = `${this.sn}${this.randomNum(100, 999)}`;
-      this.password = "123456";
-      this.displayName = "";
-      this.dialogReg = true;
-    },
-    async regUser() {
-      await this.$store.dispatch("regUser", {
-        role: "1000",
-        sn: this.sn,
-        username: this.username,
-        password: this.payload,
-        displayName: this.displayName,
-        gameList: [],
-        rate: 0,
-        points: 0
-      });
-      this.dialogReg = false;
-      this.items.unshift({
-        username: this.username,
-        displayName: this.displayName,
-        playerCount: 0,
-        status: 1,
-        balance: 0
-      });
-      this.$store.commit("setErr", true);
-      this.$store.commit("setErrMsg", "创建成功，请进一步为代理加点");
-      this.$store.commit("setErrColor", "success");
-    },
-    async updateUser() {
-      await this.$store.dispatch("updateUser", {
-        role: "1000",
-        userId: JSON.parse(localStorage.getItem("token")).userId,
-        status: this.status ? 1 : 0
-      });
-      this.items.find(o => o.username == this.username).status = this.status;
-      this.dialogEdit = false;
-      this.$store.commit("setErr", true);
-      this.$store.commit("setErrMsg", "修改成功");
-      this.$store.commit("setErrColor", "success");
     },
     toggle() {
       this.$nextTick(() => {
