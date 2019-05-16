@@ -118,8 +118,8 @@
     }
     function login() {
         var xhr = new XMLHttpRequest();
-        // var apiurl = window.location.hostname == 'webpage.risheng3d.com' ? 'n1game.na12345.com' : 'dgjmusja39cm2.cloudfront.net'
-        var apiurl = 'xbbw2jfb58.execute-api.ap-southeast-1.amazonaws.com'
+        var apiurl = window.location.hostname == 'mdl.na12345.com' ? 'api.na12345.com' : 'xbbw2jfb58.execute-api.ap-southeast-1.amazonaws.com'
+        var lobbyurl = window.location.hostname == 'mdl.na12345.com' ? 'game.anasym.com' : 'testgame.anasym.com'
         xhr.open('post', 'https://' + apiurl + '/dev/game/login', true)
         xhr.setRequestHeader('Content-type', 'application/json');
         xhr.send(JSON.stringify({
@@ -131,7 +131,7 @@
             if (xhr.readyState == 4 && xhr.status == 200) {
                 var res = JSON.parse(xhr.responseText);
                 if (res.code == 0) {
-                    window.location.href = "https://testgame.anasym.com:45555/enterLobby?plat=NA&userId=" + res.data.userId + "&token=" + res.data.token
+                    window.location.href = "https://" + lobbyurl + ":45555/enterLobby?plat=NA&userId=" + res.data.userId + "&token=" + res.data.token
                 } else {
                     alert(res.msg)
                 }
