@@ -183,7 +183,7 @@ export default {
         },
         
         {
-          title: "商户API",
+          title: "商户API秘钥",
           minWidth: 100,
           slot: "apiKey",
           align: "center"
