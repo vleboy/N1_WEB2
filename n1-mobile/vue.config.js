@@ -14,6 +14,15 @@ module.exports = {
             statuses: [0, 200],
           },
         },
+      }, {
+        urlPattern: new RegExp('^https://n1agent.na12345.com/'),
+        handler: 'staleWhileRevalidate',
+        options: {
+          cacheName: 'api-cache',
+          cacheableResponse: {
+            statuses: [0, 200],
+          },
+        },
       }]
     }
   },
