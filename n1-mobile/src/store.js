@@ -2,7 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 // import axios from 'axios'
 // const domain = 'http://localhost:3000'
-const domain = 'https://d3prd6rbitzqm3.cloudfront.net'
+const domain = 'https://testagent.cncshe.com'
+// const domain = 'https://n1agent.na12345.com'
 
 Vue.use(Vuex)
 
@@ -109,6 +110,10 @@ const vuex = new Vuex.Store({
     regPlayer(state, data) {
       return axios.post('/agent/player/create', data)
     },
+    // 查询用户
+    getUser(state, data) {
+      return axios.get(`/agentOne/${data.userId}`)
+    },
     // 注册用户
     regUser(state, data) {
       return axios.post('/agentNew', data)
@@ -125,13 +130,25 @@ const vuex = new Vuex.Store({
     updateUser(state, data) {
       return axios.post('/userChangeStatus', data)
     },
-    // 更新用户游戏
-    // updateUserGame(state, data) {
+    // 更新用户密码
+    // updateUserPassword(state, data) {
     //   return axios.post('/', data)
     // },
     // 更新用户密码
     updateUserPassword(state, data) {
       return axios.post('/updateAgentPassword', data)
+    },
+    // 用户转账加减点
+    billTransfer(state, data) {
+      return axios.post('/billTransfer', data)
+    },
+    // 玩家存点
+    playerDeposit(state, data) {
+      return axios.post('/agent/player/deposit', data)
+    },
+    // 玩家提点
+    playerTake(state, data) {
+      return axios.post('/agent/player/take', data)
     },
     // 获取所有玩家
     getPlayerPage(state, data) {

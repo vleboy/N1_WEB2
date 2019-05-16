@@ -7,9 +7,18 @@
     </v-btn>
     <v-flex xs12>
       <v-btn-toggle mandatory style="width:100%" class="pl-2">
-        <v-btn large flat value="left">上周洗码量：1000</v-btn>
-        <v-btn large flat value="center">本周洗码量：1000</v-btn>
+        <v-btn large flat value="left">上周洗码量</v-btn>
+        <v-btn large flat value="center">本周洗码量</v-btn>
       </v-btn-toggle>
+    </v-flex>
+    <v-flex xs12>
+      <v-card color="grey darken-1" dark>
+        <v-card-title primary-title class="py-2">
+          <div>
+            <div class="headline">{{total}}</div>
+          </div>
+        </v-card-title>
+      </v-card>
     </v-flex>
     <v-flex xs12>
       <v-list subheader two-line>
@@ -45,55 +54,72 @@
         <v-card-text class="pa-0">
           <v-container grid-list-md>
             <v-layout wrap>
-              <v-flex xs12>
-                <v-text-field
-                  v-model="sn"
-                  prepend-icon="person"
-                  label="标识"
-                  :messages="['已随机自动生成']"
-                  required
-                  clearable
-                ></v-text-field>
-                <v-text-field
-                  v-model="username"
-                  prepend-icon="person"
-                  label="帐号"
-                  :messages="['已随机自动生成']"
-                  required
-                  clearable
-                ></v-text-field>
-              </v-flex>
-              <v-flex xs12>
-                <v-text-field v-model="password" prepend-icon="lock" label="密码" required clearable></v-text-field>
-              </v-flex>
-              <v-flex xs12>
-                <v-text-field
-                  v-model="displayName"
-                  prepend-icon="person_outline"
-                  label="昵称（建议输入中文，例：李哥）"
-                  required
-                  clearable
-                ></v-text-field>
-              </v-flex>
-              <v-flex xs12>
-                <v-select
-                  v-model="selectedGameTypes"
-                  :items="gameTypes"
-                  label="选择游戏"
-                  multiple
-                  clearable
-                >
-                  <template v-slot:prepend-item>
-                    <v-list-tile ripple @click="toggle">
-                      <v-list-tile-content>
-                        <v-list-tile-title>
-                          <a>全部</a>
-                        </v-list-tile-title>
-                      </v-list-tile-content>
-                    </v-list-tile>
-                  </template>
-                </v-select>
-              </v-flex>
+              <v-text-field
+                v-model="sn"
+                prepend-icon="person"
+                label="标识"
+                :messages="['已随机自动生成']"
+                required
+                clearable
+              ></v-text-field>
+              <v-text-field
+                v-model="username"
+                prepend-icon="person"
+                label="帐号"
+                :messages="['已随机自动生成']"
+                required
+                clearable
+              ></v-text-field>
+              <v-text-field
+                v-model="password"
+                prepend-icon="lock"
+                label="密码"
+                maxlength="16"
+                required
+                clearable
+              ></v-text-field>
+              <v-text-field
+                v-model="displayName"
+                prepend-icon="person_outline"
+                label="昵称（建议输入中文，例：李哥）"
+                required
+                clearable
+              ></v-text-field>
+              <v-text-field
+                v-model="rate"
+                prepend-icon="data_usage"
+                label="成数（百分比，不能超过上级）"
+                required
+                suffix="%"
+                :messages="`上级成数：${rate}%`"
+                clearable
+              ></v-text-field>
+              <v-text-field
+                v-model="mix"
+                prepend-icon="data_usage"
+                label="洗码比（百分比，不能超过上级）"
+                required
+                suffix="%"
+                :messages="`上级洗码比：${mix}%`"
+                clearable
+              ></v-text-field>
+              <v-select
+                v-model="selectedGameTypes"
+                :items="gameTypes"
+                label="选择游戏"
+                multiple
+                readonly
+              >
+                <template v-slot:prepend-item>
+                  <v-list-tile ripple @click="toggle">
+                    <v-list-tile-content>
+                      <v-list-tile-title>
+                        <a>全部</a>
+                      </v-list-tile-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                </template>
+              </v-select>
             </v-layout>
           </v-container>
         </v-card-text>
@@ -112,22 +138,38 @@
         <v-card-text class="pa-0">
           <v-container grid-list-md>
             <v-layout wrap>
-              <v-flex xs12>
+              <v-flex xs12 class="py-0">
                 <v-switch v-model="status" :label="status ?'启用':'停用'"></v-switch>
               </v-flex>
-              <v-flex xs12>
-                <v-select v-model="selectedGameTypes" :items="gameTypes" label="选择游戏" multiple>
-                  <template v-slot:prepend-item>
-                    <v-list-tile ripple @click="toggle">
-                      <v-list-tile-content>
-                        <v-list-tile-title>
-                          <a>全部</a>
-                        </v-list-tile-title>
-                      </v-list-tile-content>
-                    </v-list-tile>
-                  </template>
-                </v-select>
+              <v-flex xs12 class="py-0 text-xs-center">
+                代理余额：{{balance}}{{balance==balanceTemp?null:'='}}{{balance==balanceTemp?null:balanceTemp}}{{balance > balanceTemp ? '+' : null}}{{parseFloat((balance-balanceTemp).toFixed(2)) != 0 ? ((balance-balanceTemp).toFixed(2)) : null}} &nbsp;&nbsp;
+                <v-btn icon @click="balance=balanceTemp">
+                  <v-icon>refresh</v-icon>撤销
+                </v-btn>
               </v-flex>
+              <v-flex xs12 class="text-xs-center py-0">
+                <v-btn color="error" @click="parseFloat((balance+=100).toFixed(2))">加100点</v-btn>
+                <v-btn
+                  color="success"
+                  @click="balance = parseFloat((balance-100).toFixed(2)) < 0 ? 0 : parseFloat((balance-100).toFixed(2))"
+                >减100点</v-btn>
+              </v-flex>
+              <v-flex xs12 class="text-xs-center py-0">
+                <v-btn color="error" @click="parseFloat((balance+=1000).toFixed(2))">加1000点</v-btn>
+                <v-btn
+                  color="success"
+                  @click="balance = parseFloat((balance-1000).toFixed(2)) < 0 ? 0 : parseFloat((balance-1000).toFixed(2))"
+                >减1000点</v-btn>
+              </v-flex>
+              <!-- <v-flex xs12>
+                <v-text-field
+                  v-model="password"
+                  prepend-icon="lock"
+                  label="输入新密码(留空不变更)"
+                  maxlength="16"
+                  clearable
+                ></v-text-field>
+              </v-flex>-->
             </v-layout>
           </v-container>
         </v-card-text>
@@ -194,14 +236,21 @@ export default {
       dialogReg: false,
       dialogEdit: false,
       dialogURL: false,
+      total: 0,
       // 输入框
-      gameTypes: ["H5电子游戏", "H5电子游戏-无神秘奖"],
-      selectedGameTypes: [],
+      parent: {},
+      gameTypes: ["H5电子游戏"],
+      selectedGameTypes: ["H5电子游戏"],
       sn: "",
       username: "",
       password: "",
       displayName: "",
       status: 1,
+      gameList: [],
+      mix: "",
+      rate: "",
+      balance: 0,
+      balanceTemp: 0,
       // 代理链接
       copyURL: ""
     };
@@ -230,12 +279,6 @@ export default {
         this.$store.commit("setErrColor", "gray");
       }
     },
-    openEdit(item) {
-      this.username = item.username;
-      this.displayName = item.displayName;
-      this.status = item.status;
-      this.dialogEdit = true;
-    },
     openURL(item) {
       let arr = window.location.href.split("/");
       this.copyURL = `${arr[0]}//${arr[1]}${arr[2]}/index.html?username=${
@@ -244,6 +287,124 @@ export default {
       this.username = item.username;
       this.displayName = item.displayName;
       this.dialogURL = true;
+    },
+    async openReg() {
+      let res = await this.$store.dispatch(
+        "getUser",
+        JSON.parse(localStorage.getItem("token"))
+      );
+      this.parent = res.payload;
+      this.rate = this.parent.rate;
+      this.mix = this.parent.gameList.find(o => o.code == "70000")
+        ? this.parent.gameList.find(o => o.code == "70000").mix
+        : 5;
+
+      this.sn = this.randomStr(3, 3);
+      this.username = `${this.sn}${this.randomNum(100, 999)}`;
+      this.password = "123456";
+      this.displayName = "";
+      this.dialogReg = true;
+    },
+    async regUser() {
+      if (
+        this.username &&
+        this.password &&
+        this.displayName &&
+        this.mix &&
+        this.rate
+      ) {
+        if (this.mix > this.parent.mix || this.rate > this.parent.rate) {
+          this.$store.commit("setErr", true);
+          this.$store.commit("setErrMsg", "成数和洗码比不能超过上级");
+          this.$store.commit("setErrColor", "warning");
+          return;
+        }
+        this.gameList = [
+          {
+            company: "NA",
+            type: 2,
+            code: "70000",
+            name: "H5电子游戏",
+            mix: this.mix
+          }
+        ];
+        let res = await this.$store.dispatch("regUser", {
+          role: "1000",
+          sn: this.sn,
+          parent: this.parent.userId,
+          username: this.username,
+          password: this.payload,
+          displayName: this.displayName,
+          gameList: this.gameList,
+          rate: this.rate,
+          points: 0
+        });
+        this.dialogReg = false;
+        this.items.unshift({
+          userId: res.payload.userId,
+          username: this.username,
+          displayName: this.displayName,
+          playerCount: 0,
+          status: 1,
+          balance: 0
+        });
+        this.$store.commit("setErr", true);
+        this.$store.commit("setErrMsg", "创建成功，请进一步为代理加点");
+        this.$store.commit("setErrColor", "success");
+      } else {
+        this.$store.commit("setErr", true);
+        this.$store.commit("setErrMsg", "请完善必填项");
+        this.$store.commit("setErrColor", "warning");
+      }
+    },
+    async openEdit(item) {
+      // let res = await this.$store.dispatch(
+      //   "getUser",
+      //   JSON.parse(localStorage.getItem("token"))
+      // );
+      // this.parent = res.payload;
+      this.userId = item.userId;
+      this.username = item.username;
+      this.displayName = item.displayName;
+      this.status = item.status;
+      this.balance = item.balance;
+      this.balanceTemp = item.balance;
+      this.dialogEdit = true;
+    },
+    async updateUser() {
+      let user = this.items.find(o => o.userId == this.userId);
+      // 是否更新状态
+      if (user.status != (this.status ? 1 : 0)) {
+        await this.$store.dispatch("updateUser", {
+          role: "1000",
+          userId: this.userId,
+          status: this.status ? 1 : 0
+        });
+      }
+      // 是否加减点
+      let amount = parseFloat((this.balance - this.balanceTemp).toFixed(2));
+      if (amount > 0) {
+        await this.$store.dispatch("billTransfer", {
+          amount: Math.abs(amount),
+          fromUserId: JSON.parse(localStorage.getItem("token")).userId,
+          toRole: "1000",
+          toUser: this.username
+        });
+      }
+      if (amount < 0) {
+        await this.$store.dispatch("billTransfer", {
+          amount: Math.abs(amount),
+          fromUserId: this.userId,
+          toRole: "1000",
+          toUser: JSON.parse(localStorage.getItem("token")).username
+        });
+      }
+      user.status = this.status ? 1 : 0;
+      user.balance = this.balance;
+      this.dialogEdit = false;
+      this.$store.commit("setErr", true);
+      this.$store.commit("setErrMsg", "修改成功");
+      this.$store.commit("setErrColor", "success");
     },
     randomStr(min, max) {
       let str = "",
@@ -286,48 +447,6 @@ export default {
     },
     randomNum(min, max) {
       return min + Math.round(Math.random() * (max - min));
-    },
-    openReg() {
-      this.sn = this.randomStr(3, 3);
-      this.username = `${this.sn}${this.randomNum(100, 999)}`;
-      this.password = "123456";
-      this.displayName = "";
-      this.dialogReg = true;
-    },
-    async regUser() {
-      await this.$store.dispatch("regUser", {
-        role: "1000",
-        sn: this.sn,
-        username: this.username,
-        password: this.payload,
-        displayName: this.displayName,
-        gameList: [],
-        rate: 0,
-        points: 0
-      });
-      this.dialogReg = false;
-      this.items.unshift({
-        username: this.username,
-        displayName: this.displayName,
-        playerCount: 0,
-        status: 1,
-        balance: 0
-      });
-      this.$store.commit("setErr", true);
-      this.$store.commit("setErrMsg", "创建成功，请进一步为代理加点");
-      this.$store.commit("setErrColor", "success");
-    },
-    async updateUser() {
-      await this.$store.dispatch("updateUser", {
-        role: "1000",
-        userId: JSON.parse(localStorage.getItem("token")).userId,
-        status: this.status ? 1 : 0
-      });
-      this.items.find(o => o.username == this.username).status = this.status;
-      this.dialogEdit = false;
-      this.$store.commit("setErr", true);
-      this.$store.commit("setErrMsg", "修改成功");
-      this.$store.commit("setErrColor", "success");
     },
     toggle() {
       this.$nextTick(() => {

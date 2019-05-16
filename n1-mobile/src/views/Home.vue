@@ -103,10 +103,30 @@
         <v-card-text class="pa-0">
           <v-container grid-list-md>
             <v-layout wrap>
-              <v-flex xs12>
+              <v-flex xs12 class="py-0">
                 <v-switch v-model="state" :label="state ?'启用':'停用'"></v-switch>
               </v-flex>
-              <v-flex xs12>
+              <v-flex xs12 class="text-xs-center">
+                玩家余额：{{balance}}{{balance==balanceTemp?null:'='}}{{balance==balanceTemp?null:balanceTemp}}{{balance > balanceTemp ? '+' : null}}{{parseFloat((balance-balanceTemp).toFixed(2)) != 0 ? ((balance-balanceTemp).toFixed(2)) : null}} &nbsp;&nbsp;
+                <v-btn icon @click="balance=balanceTemp">
+                  <v-icon>refresh</v-icon>撤销
+                </v-btn>
+              </v-flex>
+              <v-flex xs12 class="text-xs-center py-0">
+                <v-btn color="error" @click="parseFloat((balance+=100).toFixed(2))">加100点</v-btn>
+                <v-btn
+                  color="success"
+                  @click="balance = parseFloat((balance-100).toFixed(2)) < 0 ? 0 : parseFloat((balance-100).toFixed(2))"
+                >减100点</v-btn>
+              </v-flex>
+              <v-flex xs12 class="text-xs-center py-0">
+                <v-btn color="error" @click="parseFloat((balance+=1000).toFixed(2))">加1000点</v-btn>
+                <v-btn
+                  color="success"
+                  @click="balance = parseFloat((balance-1000).toFixed(2)) < 0 ? 0 : parseFloat((balance-1000).toFixed(2))"
+                >减1000点</v-btn>
+              </v-flex>
+              <v-flex xs12 class="py-0">
                 <v-text-field
                   v-model="userPwd"
                   prepend-icon="lock"
@@ -186,6 +206,8 @@ export default {
       userName: "",
       userPwd: "",
       state: 1,
+      balance: 0,
+      balanceTemp: 0,
       // 游戏链接
       copyURL: ""
     };
@@ -205,6 +227,11 @@ export default {
         this.$store.commit("setErrMsg", "已复制，粘贴发送给玩家即可");
         this.$store.commit("setErrColor", "gray");
       }
+    },
+    openReg() {
+      this.userName = `${this.randomStr(3, 3)}${this.randomNum(100, 999)}`;
+      this.userPwd = "123456";
+      this.dialogReg = true;
     },
     async regPlayer() {
       if (this.userName && this.userPwd) {
@@ -237,11 +264,38 @@ export default {
         this.$store.commit("setErrColor", "warning");
       }
     },
+    openEdit(item) {
+      this.userName = item.userName;
+      this.state = item.state;
+      this.balance = item.balance;
+      this.balanceTemp = item.balance;
+      this.userPwd = "";
+      this.dialogEdit = true;
+    },
     async updatePlayer() {
-      await this.$store.dispatch("updatePlayer", {
-        userName: this.userName,
-        state: this.state ? 1 : 0
-      });
+      let player = this.items.find(o => o.userName == this.userName);
+      // 是否更新状态
+      if (player.state != (this.state ? 1 : 0)) {
+        await this.$store.dispatch("updatePlayer", {
+          userName: this.userName,
+          state: this.state ? 1 : 0
+        });
+      }
+      // 是否加减点
+      let amount = parseFloat((this.balance - this.balanceTemp).toFixed(2));
+      if (amount > 0) {
+        await this.$store.dispatch("playerDeposit", {
+          amount: Math.abs(amount),
+          toUser: this.userName
+        });
+      }
+      if (amount < 0) {
+        await this.$store.dispatch("playerTake", {
+          amount: Math.abs(amount),
+          toUser: this.userName
+        });
+      }
+      // 是否更新密码
       if (this.userPwd) {
         await this.$store.dispatch("updatePlayerPassword", {
           userName: this.userName,
@@ -249,22 +303,13 @@ export default {
         });
       }
       this.dialogEdit = false;
-      this.items.find(o => o.userName == this.userName).state = this.state;
+      player.state = this.state ? 1 : 0;
+      player.balance = this.balance;
       this.$store.commit("setErr", true);
       this.$store.commit("setErrMsg", "修改成功");
       this.$store.commit("setErrColor", "success");
     },
-    openReg() {
-      this.userName = `${this.randomStr(3, 3)}${this.randomNum(100, 999)}`;
-      this.userPwd = "123456";
-      this.dialogReg = true;
-    },
-    openEdit(item) {
-      this.userName = item.userName;
-      this.state = item.state;
-      this.userPwd = "";
-      this.dialogEdit = true;
-    },
+
     openURL(item) {
       let arr = window.location.href.split("/");
       this.copyURL = `${arr[0]}//${arr[1]}${arr[2]}/wqtip.html?userName=${
