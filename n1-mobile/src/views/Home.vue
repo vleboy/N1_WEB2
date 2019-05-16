@@ -281,13 +281,6 @@ export default {
           state: this.state ? 1 : 0
         });
       }
-      // 是否更新密码
-      if (this.userPwd) {
-        await this.$store.dispatch("updatePlayerPassword", {
-          userName: this.userName,
-          password: this.userPwd
-        });
-      }
       // 是否加减点
       let amount = parseFloat((this.balance - this.balanceTemp).toFixed(2));
       if (amount > 0) {
@@ -300,6 +293,13 @@ export default {
         await this.$store.dispatch("playerTake", {
           amount: Math.abs(amount),
           toUser: this.userName
+        });
+      }
+      // 是否更新密码
+      if (this.userPwd) {
+        await this.$store.dispatch("updatePlayerPassword", {
+          userName: this.userName,
+          password: this.userPwd
         });
       }
       this.dialogEdit = false;

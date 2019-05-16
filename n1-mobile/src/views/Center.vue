@@ -7,9 +7,27 @@
     </v-btn>
     <v-flex xs12>
       <v-btn-toggle mandatory style="width:100%" class="pl-2">
-        <v-btn large flat value="left">上周洗码量：1000</v-btn>
-        <v-btn large flat value="center">本周洗码量：1000</v-btn>
+        <v-btn large flat value="left">上周洗码量</v-btn>
+        <v-btn large flat value="center">本周洗码量</v-btn>
       </v-btn-toggle>
+    </v-flex>
+    <v-flex xs12>
+      <v-card color="grey darken-1" dark>
+        <v-card-title primary-title class="py-2">
+          <div>
+            <div class="headline">
+              <animate-number
+                ref="num0"
+                from="0"
+                to="2000.55"
+                duration="1000"
+                easing="easeInQuad"
+                :formatter="num => new Intl.NumberFormat().format(num)"
+              ></animate-number>
+            </div>
+          </div>
+        </v-card-title>
+      </v-card>
     </v-flex>
     <v-flex xs12>
       <v-list subheader two-line>
