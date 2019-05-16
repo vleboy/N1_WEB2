@@ -353,21 +353,25 @@ export default {
       //   JSON.parse(localStorage.getItem("token"))
       // );
       // this.parent = res.payload;
-      // this.username = item.username;
-      this.displayName = item.displayName;
       this.userId = item.userId;
       this.username = item.username;
+      this.displayName = item.displayName;
       this.status = item.status;
       this.balance = item.balance;
       this.balanceTemp = item.balance;
       this.dialogEdit = true;
     },
     async updateUser() {
-      await this.$store.dispatch("updateUser", {
-        role: "1000",
-        userId: this.userId,
-        status: this.status ? 1 : 0
-      });
+      let user = this.items.find(o => o.userId == this.userId);
+      // 是否更新状态
+      if (user.status != (this.status ? 1 : 0)) {
+        await this.$store.dispatch("updateUser", {
+          role: "1000",
+          userId: this.userId,
+          status: this.status ? 1 : 0
+        });
+      }
+      // 是否加减点
       let amount = parseFloat((this.balance - this.balanceTemp).toFixed(2));
       if (amount > 0) {
         await this.$store.dispatch("billTransfer", {
@@ -385,8 +389,7 @@ export default {
           toUser: JSON.parse(localStorage.getItem("token")).username
         });
       }
-      let user = this.items.find(o => o.userId == this.userId);
-      user.status = this.status;
+      user.status = this.status ? 1 : 0;
       user.balance = this.balance;
       this.dialogEdit = false;
       this.$store.commit("setErr", true);

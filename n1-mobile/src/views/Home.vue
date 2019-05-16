@@ -265,7 +265,6 @@ export default {
       }
     },
     openEdit(item) {
-      this.userId = item.userId;
       this.userName = item.userName;
       this.state = item.state;
       this.balance = item.balance;
@@ -274,37 +273,38 @@ export default {
       this.dialogEdit = true;
     },
     async updatePlayer() {
-      await this.$store.dispatch("updatePlayer", {
-        userName: this.userName,
-        state: this.state ? 1 : 0
-      });
+      let player = this.items.find(o => o.userName == this.userName);
+      // 是否更新状态
+      if (player.state != (this.state ? 1 : 0)) {
+        await this.$store.dispatch("updatePlayer", {
+          userName: this.userName,
+          state: this.state ? 1 : 0
+        });
+      }
+      // 是否更新密码
       if (this.userPwd) {
         await this.$store.dispatch("updatePlayerPassword", {
           userName: this.userName,
           password: this.userPwd
         });
       }
+      // 是否加减点
       let amount = parseFloat((this.balance - this.balanceTemp).toFixed(2));
-      // if (amount > 0) {
-      //   await this.$store.dispatch("playerDeposit", {
-      //     amount: Math.abs(amount),
-      //     fromUserId: JSON.parse(localStorage.getItem("token")).userId,
-      //     toRole: "1000",
-      //     toUser: this.userName
-      //   });
-      // }
-      // if (amount < 0) {
-      //   await this.$store.dispatch("playerTake", {
-      //     amount: Math.abs(amount),
-      //     fromUserId: this.userId,
-      //     toRole: "1000",
-      //     toUser: JSON.parse(localStorage.getItem("token")).username
-      //   });
-      // }
-      let player = this.items.find(o => o.userName == this.userName);
+      if (amount > 0) {
+        await this.$store.dispatch("playerDeposit", {
+          amount: Math.abs(amount),
+          toUser: this.userName
+        });
+      }
+      if (amount < 0) {
+        await this.$store.dispatch("playerTake", {
+          amount: Math.abs(amount),
+          toUser: this.userName
+        });
+      }
       this.dialogEdit = false;
-      this.state = player.state;
-      this.balance = player.balance;
+      player.state = this.state ? 1 : 0;
+      player.balance = this.balance;
       this.$store.commit("setErr", true);
       this.$store.commit("setErrMsg", "修改成功");
       this.$store.commit("setErrColor", "success");
