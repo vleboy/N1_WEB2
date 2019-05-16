@@ -18,7 +18,7 @@ export let URL = type => {
       case 'map':
         return 'https://test.cncshe.com'
       default:
-        return 'https://d3rqtlfdd4m9wd.cloudfront.net'
+        return 'https://test.cncshe.com'
     }
   }
 }

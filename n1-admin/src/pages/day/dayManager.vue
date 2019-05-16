@@ -3,35 +3,35 @@
     <div class="nowList">
       <div class="top" >
         <Row style="margin-bottom:1rem" class="title1" type="flex" align="middle">
-          <p style="width:11rem;">
-            <RadioGroup v-model="source" class="radioGroup" type="button" @on-change="changeSource" style="">
+          <p style="margin-right:1rem;">
+            <RadioGroup v-model="source" class="radioGroup" type="button" @on-change="changeSource" size="small" >
             <Radio label="0" v-if="permission.includes('正式数据')">正式</Radio>
             <Radio label="1">测试</Radio>
             <Radio label="2" v-if="permission.includes('正式数据')">全部</Radio>
           </RadioGroup>
           </p>
-          <p style="width:10rem;">
-            <RadioGroup v-model="isAll" class="radioGroup" type="button" @on-change="changeShow">
+          <p style="margin-right:1rem;">
+            <RadioGroup v-model="isAll" class="radioGroup" type="button" @on-change="changeShow" size="small">
               <Radio label="全部"></Radio>
               <Radio label="仅包含直属"></Radio>
             </RadioGroup>
           </p> 
-          <Select style="width:8rem;" placeholder="选择游戏类别" ref="resetSelect" clearable v-model="model1">
+          <Select style="width:8rem;" placeholder="选择游戏类别" ref="resetSelect" clearable v-model="model1" size="small">
               <Option v-for="(item, index) in gameType" :value="item.name" :key="item.name" @click.native="selGame(item.code)">{{item.name}}</Option>
           </Select> 
           <Col style="font-size:0.95rem;width:5.5rem;margin-left:1rem">线路商标识</Col>
           <p style="">
-            <Input  v-model="managerName" placeholder="请输入"></Input>
+            <Input  v-model="managerName" placeholder="请输入" size="small"></Input>
           </p>
             <p style="margin-left:1rem">
-              <DatePicker type="daterange" :options="options" :editable='false' :value="defaultTime" placeholder="选择日期时间范围(默认最近一个月)" confirm @on-ok="confirms" @on-change="handle"></DatePicker>
+              <DatePicker size="small" type="daterange" :options="options" :editable='false' :value="defaultTime" placeholder="选择日期时间范围(默认最近一个月)" confirm @on-ok="confirms" @on-change="handle"></DatePicker>
             </p>
           <div class="title2">
           <p style="margin-left:1rem;margin-right:.5rem">
-            <Button type="primary" @click="search">搜索</Button>
+            <Button type="primary" @click="search" size="small">搜索</Button>
           </p> 
           <p>
-          <Button type="ghost" @click="reset">重置</Button>
+          <Button @click="reset" size="small">重置</Button>
           </p>
         </div> 
         </Row>
@@ -42,9 +42,16 @@
       <div id="myChart"></div>
     </div>
     
+
     <div class="playerList" id="playerList">
-      <Table :columns="columns1" :data="dayStatList" size="small" ref="table_2"></Table>
+      <Table :columns="columns1" :data="dayStatList" size="small" ref="table_2">
+        <template slot-scope="{row, index}" slot="winloseAmount">
+          <span :style="{color:winloseAmountConfig(row).color}">{{winloseAmountConfig(row).winloseAmount}}</span>
+        </template>
+      </Table>
     </div>
+
+
     <Spin size="large" fix v-if="spinShow">
       <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
       <div>加载中...</div>
@@ -56,6 +63,7 @@ import { httpRequest } from "@/service/index";
 import _ from "lodash";
 import dayjs from 'dayjs'
 import { thousandFormatter } from "@/config/format";
+import { getGameType } from "@/config/getGameType";
 export default {
    beforeRouteEnter(to, from, next) {
     /* console.log(this, 'beforeRouteEnter'); // undefined
@@ -108,7 +116,7 @@ export default {
       managerName:"",
       spinShow: false, //加载spin
       source: "1",
-      model1: "全部",
+      model1: "全部游戏",
       isAll: "全部",
       isBoolean: true,
       dayStatList: [],
@@ -142,48 +150,12 @@ export default {
         {
           title: "输赢金额",
           align: 'center',
-          key: "winloseAmount",
-          render: (h,params) => {
-           let count = params.row.winloseAmount
-           let color = ''
-           if (count < 0) {
-             color = "#f30"
-           } else {
-             color = "#0c0"
-           }
-            
-           return h("span",{style: {color:color} }, count)
-          }
+          slot: "winloseAmount"
         }
       ],
       gameType: [],
       gameCode:"",
-      GameListEnum: [
-        { company: "全部", code: "", name: "全部" },
-        /*  { company: "NA", code: "10000", name: "NA棋牌游戏" },
-        { company: "NA", code: "30000", name: "NA真人视讯" },
-        { company: "NA", code: "40000", name: "NA电子游戏" },
-        { company: "NA", code: "50000", name: "NA街机游戏" },
-        { company: "NA", code: "60000", name: "NA捕鱼游戏" },
-        { company: "NA", code: "80000", name: "H5真人视讯" }, */
-        { company: "NA", code: "70000", name: "H5电子游戏" },
-        { company: "NA", code: "90000", name: "H5电子游戏-无神秘奖" },
-        { company: "TTG", code: "1010000", name: "TTG电子游戏" },
-        { company: "PNG", code: "1020000", name: "PNG电子游戏" },
-        { company: "MG", code: "10300000", name: "MG电子游戏" },
-        { company: "HABA", code: "1040000", name: "HABA电子游戏" },
-        { company: "AG", code: "1050000", name: "AG真人游戏" },
-        { company: "SA", code: "1060000", name: "SA真人游戏" },
-        { company: "SA", code: "1110000", name: "SA捕鱼游戏" },
-        { company: "KY", code: "1070000", name: "KY棋牌游戏" },
-        { company: "PG", code: "1090000", name: "PG电子游戏" },
-        { company: "YSB", code: "1130000", name: "YSB体育游戏" },
-        { company: "RTG", code: "1140000", name: "RTG电子游戏" },
-        { company: "SB", code: "1080000", name: "SB电子游戏" },
-        { company: "SB", code: "1120000", name: "SB真人游戏" },
-        { company: "DT", code: "1150000", name: "DT电子游戏" },
-        { company: "PP", code: "1160000", name: "PP电子游戏" }
-      ],
+     
       /* betAmount: -2.25  投加注金额
       betCount: 14 投注次数
       createdDate: "20190102" 日期
@@ -220,7 +192,11 @@ export default {
     }
   },
   methods: {
-   
+   //输赢金额
+    winloseAmountConfig(row) {
+      let color = row.winloseAmount < 0 ? "#f30" : "#0c0"
+      return {winloseAmount: row.winloseAmount, color}   
+    },
     handle(daterange) {
       this.cacheTime = daterange
      
@@ -336,7 +312,7 @@ export default {
         this.gameType = result.payload
         this.gameType.unshift({type: 4, code: "", name: "全部", company: ""})
       }) */
-      this.gameType = this.GameListEnum
+      this.gameType = getGameType()
     },
     async init() {
       this.spinShow = true;
@@ -349,12 +325,12 @@ export default {
         .then(result => {
           return result.payload
         }) */
-        for (let index = 0; index < this.GameListEnum.length; index++) {
-          if(this.$route.query.type == this.GameListEnum[index].code) {
-            this.model1 = this.GameListEnum[index].name
+        for (let index = 0; index < getGameType().length; index++) {
+          if(this.$route.query.type == getGameType()[index].code) {
+            this.model1 = getGameType()[index].name
             break;
           } else {
-            this.model1 = '全部'
+            this.model1 = '全部游戏'
           }
         }
         this.source = this.$route.query.source
@@ -430,5 +406,25 @@ export default {
   width: 100%;
   height: 300px;
 }
+/deep/.ivu-select-selection {
+    border-color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
+    border: 1px solid #ccc;
+    color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-input {
+    border-color: #000;
+    background: #fff;
+
+  }
 </style>
 

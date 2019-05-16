@@ -13,9 +13,7 @@
         </div>
       </div>
       <Table :columns="columns1" :data="user" size="small" ref='table_0'>
-        <template slot-scope="{row, index}" slot="role">
-          <span>{{roleConfig(row)}}</span>
-        </template>
+        
         <template slot-scope="{row, index}" slot="uDisplayName">
           <Tooltip content="前往日报表" placement="right">
             <span
@@ -121,21 +119,13 @@ export default {
           maxWidth: 60,
           type: "index"
         },
-        {
-          title: "类型",
-           align: 'center',
-          slot: "role"
-        },
+        
         {
           title: "昵称",
            align: 'center',
           slot: "uDisplayName"
         },
-        {
-          title: "管理员账号",
-           align: 'center',
-          key: "uname"
-        },
+        
         {
           title: "交易次数",
            align: 'center',
@@ -175,7 +165,7 @@ export default {
           type: "index"
         },
         {
-          title: "用户名",
+          title: "账号",
            align: 'center',
           slot: "playerName"
         },
@@ -228,10 +218,7 @@ export default {
       this.$router.push({name: "dayMerchant",query:{name:row.sn,time:time,type:this.gameType}})
       localStorage.setItem('dayMerchant','dayMerchant')
     },
-    //类型
-    roleConfig(row) {
-      return this.types(row.role)
-    },
+    
     //投注金额
     betAmountConfig(row) {
       return thousandFormatter(row.betAmount)
@@ -268,7 +255,7 @@ export default {
       }
     },
     /* 玩家 */
-    //用户名
+    //账号
     playerNameConfig(row) {
       let name = row.userName;
       ocalStorage.setItem("playerName", name);

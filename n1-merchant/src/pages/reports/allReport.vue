@@ -22,9 +22,6 @@
         </div>
       </div>
       <Table :columns="columns11" :data="user" size="small" ref="table_0">
-        <template slot-scope="{row, index}" slot="userRole">
-          <span>{{userRoleConfig(row)}}</span>
-        </template>
         <template slot-scope="{row, index}" slot="userDisplayName">
           <Tooltip content="前往日报表" placement="right">
             <span
@@ -383,19 +380,9 @@ export default {
           
         },
         {
-          title: "类型",
-          align: 'center',
-          slot: "userRole"
-        },
-        {
           title: "昵称",
           align: 'center',
           slot: "userDisplayName"
-        },
-        {
-          title: "管理员账号",
-          align: 'center',
-          key: "uname"
         },
         {
           title: "交易次数",
@@ -560,7 +547,7 @@ export default {
           type: "index"
         },
         {
-          title: "用户名",
+          title: "账号",
           align: 'center',
           slot: "playerName"
         },
@@ -677,10 +664,6 @@ export default {
   },
   methods: {
     /* 用户列表配置 */
-    //类型
-    userRoleConfig(row) {
-      return this.types(row.role);
-    },
     //昵称
     userDisplayNameConfig(row) {
       let time = this.changedTime;
@@ -720,7 +703,7 @@ export default {
       return { submitAmount };
     },
     /* 玩家列表配置 */
-    //用户名
+    //账号
     playerNameConfig(row) {
       localStorage.setItem("playerName", row.userName);
       this.$router.push({
@@ -812,55 +795,55 @@ export default {
 
       //要删除的列下标
       if (winloseAmountCount(arr, ["1010000"]) == 0) {
-        removeArr.push(9, 10);
+        removeArr.push(7, 8);
         removeArr1.push(6)
       }
       if (winloseAmountCount(arr, ["1060000", "1110000"]) == 0) {
-        removeArr.push(11, 12);
+        removeArr.push(9, 10);
         removeArr1.push(7)
       }
       if (winloseAmountCount(arr, ["1120000", "1080000"]) == 0) {
-        removeArr.push(13, 14);
+        removeArr.push(11, 12);
         removeArr1.push(8)
       }
       if (winloseAmountCount(arr, ["10300000"]) == 0) {
-        removeArr.push(15, 16);
+        removeArr.push(13, 14);
         removeArr1.push(9)
       }
       if (winloseAmountCount(arr, ["1050000"]) == 0) {
-        removeArr.push(17, 18);
+        removeArr.push(15, 16);
         removeArr1.push(10)
       }
       if (winloseAmountCount(arr, ["1140000"]) == 0) {
-        removeArr.push(19, 20);
+        removeArr.push(17, 18);
         removeArr1.push(11)
       }
       if (winloseAmountCount(arr, ["1150000"]) == 0) {
-        removeArr.push(21, 22);
+        removeArr.push(19, 20);
         removeArr1.push(12)
       }
       if (winloseAmountCount(arr, ["1160000"]) == 0) {
-        removeArr.push(23, 24);
+        removeArr.push(21, 22);
         removeArr1.push(13)
       }
       if (winloseAmountCount(arr, ["1130000"]) == 0) {
-        removeArr.push(25, 26);
+        removeArr.push(23, 24);
         removeArr1.push(14)
       }
       if (winloseAmountCount(arr, ["1090000"]) == 0) {
-        removeArr.push(27, 28);
+        removeArr.push(25, 26);
         removeArr1.push(15)
       }
       if (winloseAmountCount(arr, ["1040000"]) == 0) {
-        removeArr.push(29, 30);
+        removeArr.push(27, 28);
         removeArr1.push(16)
       }
       if (winloseAmountCount(arr, ["1020000"]) == 0) {
-        removeArr.push(31, 32);
+        removeArr.push(29, 30);
         removeArr1.push(17)
       }
       if (winloseAmountCount(arr, ["1070000"]) == 0) {
-        removeArr.push(33, 34);
+        removeArr.push(31, 32);
         removeArr1.push(18)
       }
 

@@ -13,9 +13,6 @@
         </div>
       </div>
       <Table :columns="columns11" :data="user" size="small" ref='table_0'>
-        <template slot-scope="{row, index}" slot="role">
-          <span>{{roleConfig(row)}}</span>
-        </template>
         <template slot-scope="{row, index}" slot="userWinloseAmount">
           <span
             :style="{color: winloseAmountConfig(row).color}"
@@ -137,19 +134,9 @@ export default {
           type: "index"
         },
         {
-          title: "类型",
-          align: 'center',
-          slot: "role"
-        },
-        {
           title: "昵称",
           align: 'center',
           key: "displayName"
-        },
-        {
-          title: "管理员账号",
-          align: 'center',
-          key: "uname"
         },
         {
           title: "交易次数",
@@ -195,7 +182,7 @@ export default {
           type: "index"
         },
         {
-          title: "用户名",
+          title: "账号",
           align: 'center',
           slot: "playerName"
         },
@@ -251,10 +238,6 @@ export default {
   },
   methods: {
     /* 用户 */
-    //类型
-    roleConfig(row) {
-      return this.types(row.role) 
-    },
     //总游戏输赢金额
     winloseAmountConfig(row) {
       if (row.winloseAmount < 0) {
@@ -286,7 +269,7 @@ export default {
     },
 
     /* 玩家 */
-    //用户名
+    //账号
     playerNameConfig(row) {
       localStorage.setItem("playerName", row.userName);
       this.$router.push({
@@ -376,7 +359,7 @@ export default {
       let removeArr1 = []
 
       if (winloseAmountCount(arr, ["90000"]) == 0) {
-        removeArr.push(9,10)
+        removeArr.push(8,9)
         removeArr1.push(6)
       }
 

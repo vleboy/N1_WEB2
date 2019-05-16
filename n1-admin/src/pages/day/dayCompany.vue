@@ -1,16 +1,16 @@
 <template>
   <div class="dayReport">
     <div class="nowList">
-      <div class="top">
+      <div class="top" style="display:flex;align-items:center">
         <p class="title">
           <!--  当前用户列表--- -->
-          <RadioGroup v-model="source" class="radioGroup" type="button" @on-change="changeSource">
+          <RadioGroup v-model="source" class="radioGroup" type="button" @on-change="changeSource" size="small">
             <Radio label="0" v-if="permission.includes('正式数据')">正式</Radio>
             <Radio label="1">测试</Radio>
             <Radio label="2" v-if="permission.includes('正式数据')">全部</Radio>
           </RadioGroup>
         </p>
-        <Select style="width:200px;margin-left:2rem;" ref="resetSelect" clearable v-model="model1">
+        <Select style="width:200px;margin-left:1rem;" ref="resetSelect" clearable v-model="model1" size="small">
           <Option
             v-for="(item, index) in gameType"
             :value="item.name"
@@ -29,18 +29,31 @@
             confirm
             @on-ok="confirms"
             @on-change="handle"
+            size="small"
           ></DatePicker>
-          <Button type="primary" @click="search">搜索</Button>
-          <Button type="ghost" @click="reset">重置</Button>
+          <Button type="primary" @click="search" size="small" style="margin:0 .3rem 0 1rem">搜索</Button>
+          <Button @click="reset" size="small">重置</Button>
         </div>
       </div>
     </div>
     <div v-if="showChat">
       <div id="myChart"></div>
     </div>
+
+
+
+
     <div class="playerList" id="playerList">
-      <Table :columns="columns1" :data="dayStatList" size="small" ref="table_2"></Table>
+      <Table :columns="columns1" :data="dayStatList" size="small" ref="table_2">
+        <template slot-scope="{row, index}" slot="winloseAmount">
+          <span :style="{color:winloseAmountConfig(row).color}">{{winloseAmountConfig(row).winloseAmount}}</span>
+        </template>
+      </Table>
     </div>
+
+
+
+
     <Spin size="large" fix v-if="spinShow">
       <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
       <div>加载中...</div>
@@ -52,6 +65,7 @@ import { httpRequest } from "@/service/index";
 import _ from "lodash";
 import dayjs from "dayjs";
 import { thousandFormatter } from "@/config/format";
+import { getGameType } from "@/config/getGameType";
 export default {
   beforeRouteEnter(to, from, next) {
     /* console.log(this, 'beforeRouteEnter'); // undefined
@@ -64,7 +78,7 @@ export default {
       //console.log(vm);//当前组件的实例
       if (localStorage.dayCompany == "dayCompany") {
         //localStorage.removeItem('dayCompany')
-        //console.log(233);
+        
         vm.spinShow = true;
         vm.init();
       }
@@ -151,37 +165,12 @@ export default {
           }
         ]
       },
-      GameListEnum: [
-        { company: "全部", code: "", name: "全部" },
-        /*  { company: "NA", code: "10000", name: "NA棋牌游戏" },
-        { company: "NA", code: "30000", name: "NA真人视讯" },
-        { company: "NA", code: "40000", name: "NA电子游戏" },
-        { company: "NA", code: "50000", name: "NA街机游戏" },
-        { company: "NA", code: "60000", name: "NA捕鱼游戏" },
-        { company: "NA", code: "80000", name: "H5真人视讯" }, */
-        { company: "NA", code: "70000", name: "H5电子游戏" },
-        { company: "NA", code: "90000", name: "H5电子游戏-无神秘奖" },
-        { company: "TTG", code: "1010000", name: "TTG电子游戏" },
-        { company: "PNG", code: "1020000", name: "PNG电子游戏" },
-        { company: "MG", code: "10300000", name: "MG电子游戏" },
-        { company: "HABA", code: "1040000", name: "HABA电子游戏" },
-        { company: "AG", code: "1050000", name: "AG真人游戏" },
-        { company: "SA", code: "1060000", name: "SA真人游戏" },
-        { company: "SA", code: "1110000", name: "SA捕鱼游戏" },
-        { company: "KY", code: "1070000", name: "KY棋牌游戏" },
-        { company: "PG", code: "1090000", name: "PG电子游戏" },
-        { company: "YSB", code: "1130000", name: "YSB体育游戏" },
-        { company: "RTG", code: "1140000", name: "RTG电子游戏" },
-        { company: "SB", code: "1080000", name: "SB电子游戏" },
-        { company: "SB", code: "1120000", name: "SB真人游戏" },
-        { company: "DT", code: "1150000", name: "DT电子游戏" },
-        { company: "PP", code: "1160000", name: "PP电子游戏" }
-      ],
+    
       defaultTime: [], //getDefaultTime(),
       cacheTime: [],
       spinShow: false, //加载spin
       source: "1",
-      model1: "全部",
+      model1: "全部游戏",
       dayStatList: [],
       showChat: false,
       columns1: [
@@ -212,31 +201,12 @@ export default {
         },
         {
           title: "输赢金额",
-          key: "winloseAmount",
-          align: 'center',
-          render: (h, params) => {
-            let count = params.row.winloseAmount;
-            let color = "";
-            if (count < 0) {
-              color = "#f30";
-            } else {
-              color = "#0c0";
-            }
-
-            return h("span", { style: { color: color } }, count);
-          }
+          slot: "winloseAmount",
+          align: 'center'
         }
       ],
       gameType: [],
-
       gameCode: ""
-      /* betAmount: -2.25  投加注金额
-      betCount: 14 投注次数
-      createdDate: "20190102" 日期
-      refundAmount: 0 退款金额
-      retAmount: 4.699999999999999 返还金额
-      winAmount: 4.699999999999999 返奖金额
-      winloseAmount: 2.45 输赢金额 */
     };
   },
   created() {
@@ -262,6 +232,11 @@ export default {
     }
   }, */
   methods: {
+    //输赢金额
+    winloseAmountConfig(row) {
+      let color = row.winloseAmount < 0 ? "#f30" : "#0c0"
+      return {winloseAmount: row.winloseAmount, color}   
+    },
     handle(daterange) {
       this.cacheTime = daterange;
     },
@@ -367,24 +342,9 @@ export default {
       this.showChat = true;
       this.init();
     },
-    // permission() {
-    //   return JSON.parse(localStorage.getItem("userInfo")).subRolePermission;
-    // },
+    
     getGameList() {
-      /* httpRequest("post", "/gameBigType", { companyIden: -1 }, "game").then(
-        result => {
-          console.log(result.payload);
-          
-          this.gameType = result.payload;
-          this.gameType.unshift({
-            type: 4,
-            code: "",
-            name: "全部",
-            company: ""
-          });
-        }
-      ); */
-      this.gameType = this.GameListEnum
+      this.gameType = getGameType()
     },
 
     async init() {
@@ -393,25 +353,18 @@ export default {
         this.$route.name == "dayCompany" &&
         localStorage.dayCompany == "dayCompany"
       ) {
+        console.log(233);
         let st = dayjs(this.$route.query.time[0]).format("YYYYMMDD");
         let et = dayjs(this.$route.query.time[1]).format("YYYYMMDD");
         this.defaultTime = [];
         this.defaultTime.push(st, et);
-        /* let ps = await httpRequest(
-          "post",
-          "/gameBigType",
-          { companyIden: -1 },
-          "game"
-        ).then(result => {
-          return result.payload;
-        }); */
         this.source = this.$route.query.source;
-        for (let index = 0; index < this.GameListEnum.length; index++) {
-          if(this.$route.query.type == this.GameListEnum[index].code) {
-            this.model1 = this.GameListEnum[index].name
+        for (let index = 0; index < getGameType().length; index++) {
+          if(this.$route.query.type == getGameType()[index].code) {
+            this.model1 = getGameType()[index].name
             break;
           } else {
-            this.model1 = '全部'
+            this.model1 = '全部游戏'
           }
         }
         localStorage.removeItem("dayCompany");
@@ -480,7 +433,7 @@ export default {
       margin: 0;
     }
     .right {
-      margin-left: 2rem;
+      margin-left: 1rem;
     }
   }
   .demo-spin-icon-load {
@@ -493,6 +446,35 @@ export default {
 }
 .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
+  }
+  .ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/.ivu-select-selection {
+    border-color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
+    border: 1px solid #ccc;
+    color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-input {
+    border-color: #000;
+    background: #fff;
+
   }
 </style>
 

@@ -210,9 +210,8 @@ import "echarts/map/js/china.js"; // 引入中国地图数据
 import chinaJson from "echarts/map/json/china.json";
 import "echarts/map/js/world.js"; // 引入世界地图数据
 import worldJson from "echarts/map/json/world.json";
-import { hourFormatBarData } from "@/config/format";
-import { formatBarData } from "@/config/format";
-import { formatMapData } from "@/config/format";
+import { formatBarData, formatMapData, hourFormatBarData } from "@/config/format";
+import { getGameType } from "@/config/getGameType";
 import { httpRequest } from "@/service/index";
 import { getDefaultTime } from "@/config/getDefaultTime";
 import _ from "lodash";
@@ -303,26 +302,7 @@ export default {
           }
         ]
       },
-      GameListEnum: [
-        { company: "全部", code: "", name: "全部游戏" },
-        { company: "NA", code: "70000", name: "H5电子游戏" },
-        { company: "NA", code: "90000", name: "H5电子游戏-无神秘奖" },
-        { company: "KY", code: "1070000", name: "KY棋牌游戏" },
-        { company: "TTG", code: "1010000", name: "TTG电子游戏" },
-        { company: "PNG", code: "1020000", name: "PNG电子游戏" },
-        { company: "MG", code: "10300000", name: "MG电子游戏" },
-        { company: "HABA", code: "1040000", name: "HABA电子游戏" },
-        { company: "AG", code: "1050000", name: "AG真人游戏" },
-        { company: "SA", code: "1060000", name: "SA真人游戏" },
-        { company: "SA", code: "1110000", name: "SA捕鱼游戏" },
-        { company: "PG", code: "1090000", name: "PG电子游戏" },
-        { company: "YSB", code: "1130000", name: "YSB体育游戏" },
-        { company: "RTG", code: "1140000", name: "RTG电子游戏" },
-        { company: "SB", code: "1080000", name: "SB电子游戏" },
-        { company: "SB", code: "1120000", name: "SB真人游戏" },
-        { company: "DT", code: "1150000", name: "DT电子游戏" },
-        { company: "PP", code: "1160000", name: "PP电子游戏" }
-      ],
+     
       //defaultTime: getDefaultTime(),
       defaultTime: "",
       splitColor: [
@@ -408,7 +388,7 @@ export default {
       }
     },
     getGameList() {
-      this.gameType = this.GameListEnum;
+      this.gameType = getGameType();
     },
     selGame(code) {
       this.gameCode = code;

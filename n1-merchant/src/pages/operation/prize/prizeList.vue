@@ -125,15 +125,15 @@ export default {
       spinShow: false,
       columns1: [
         {
-          title: "玩家账号",
-          maxWidth:130,
-          slot: "userName",
-          align: 'center',
-        },
-        {
           title: "玩家ID",
           key: "userId",
           maxWidth:130,
+          align: 'center',
+        },
+        {
+          title: "玩家账号",
+          maxWidth:130,
+          slot: "userName",
           align: 'center',
         },
         {

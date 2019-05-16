@@ -160,6 +160,11 @@ export default {
         }
       ],
       columns2: [
+        {
+          title: "商户标识",
+          key: "sn",
+          align: "center"
+        },
         { 
           title: "商户ID",
           align: 'center',
@@ -176,11 +181,7 @@ export default {
           slot: "password",
           align: "center"
         },
-        {
-          title: "商户标识",
-          key: "sn",
-          align: "center"
-        },
+        
         {
           title: "商户密匙",
           minWidth: 100,

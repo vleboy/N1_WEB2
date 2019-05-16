@@ -55,9 +55,6 @@
               <Col span="8">
                 <FormItem label="上次登录IP">{{merchantDetail.lastIP}}</FormItem>
               </Col>
-              <!-- <Col span="8">
-                <FormItem label="商户线路号">{{merchantDetail.msn}}</FormItem>
-              </Col>-->
               <Col span="8">
                 <FormItem
                   label="上次登录时间"
@@ -114,49 +111,7 @@
                 </FormItem>
               </Col>
             </Row>
-            <!-- <Row>
-              <Col span="8">
-                <FormItem label="商户官网地址" v-if="edit">{{merchantDetail.frontURL}}</FormItem>
-                <FormItem label="商户官网地址" v-else>
-                  <Row>
-                    <Col span="10">
-                      <Input v-model="basic.frontURL"></Input>
-                    </Col>
-                  </Row>
-                </FormItem>
-              </Col>
-              <Col span="8">
-                <FormItem label="商户充值地址" v-if="edit">{{merchantDetail.moneyURL}}</FormItem>
-                <FormItem label="商户充值地址" v-else>
-                  <Row>
-                    <Col span="10">
-                      <Input v-model="basic.moneyURL"></Input>
-                    </Col>
-                  </Row>
-                </FormItem>
-              </Col>
-              <Col span="8">
-                <FormItem label="商户注册地址" v-if="edit">{{merchantDetail.registerURL}}</FormItem>
-                <FormItem label="商户注册地址" v-else>
-                  <Row>
-                    <Col span="10">
-                      <Input v-model="basic.registerURL"></Input>
-                    </Col>
-                  </Row>
-                </FormItem>
-              </Col>
-            </Row>-->
             <Row>
-              <!-- Col span="8">
-                <FormItem label="商户客服地址" v-if="edit">{{merchantDetail.feedbackURL}}</FormItem>
-                <FormItem label="商户客服地址" v-else>
-                  <Row>
-                    <Col span="10">
-                      <Input v-model="basic.feedbackURL"></Input>
-                    </Col>
-                  </Row>
-                </FormItem>
-              </Col>-->
               <Col span="8">
                 <FormItem label="备注" v-if="edit">{{merchantDetail.remark}}</FormItem>
                 <FormItem label="备注" prop="remark" v-else>
@@ -174,63 +129,6 @@
                 </FormItem>
               </Col>
             </Row>
-            <!--  <Row>
-              <Col span="8">
-                <FormItem label="LOGO">
-                  <img :src="merchantDetail.launchImg.logo[0]" alt="oo" class="logo">
-                  <div v-if="!edit">
-                    <Upload
-                      ref="upload"
-                      :show-upload-list="false"
-                      :before-upload="beforeUploadLogo"
-                      :action="actionUrl"
-                      style="display: inline-block;width:58px;"
-                    >
-                      <Button
-                        type="ghost"
-                        icon="ios-cloud-upload-outline"
-                        :loading="loadingStatusLogo"
-                      >请选择需要上传文件</Button>
-                    </Upload>
-                    <p class="img_notice">文件名只能包含英文和数字</p>
-                    <p class="img_notice">且分辨率不超过 680*220</p>
-                  </div>
-                </FormItem>
-              </Col>
-              <Col span="8">
-                <FormItem label="NAME">
-                  <img :src="merchantDetail.launchImg.name[0]" alt="oo" class="logo">
-                  <div v-if="!edit">
-                    <Upload
-                      ref="upload"
-                      :show-upload-list="false"
-                      :before-upload="beforeUploadName"
-                      :action="actionUrl"
-                      style="display: inline-block;width:58px;"
-                    >
-                      <Button
-                        type="ghost"
-                        icon="ios-cloud-upload-outline"
-                        :loading="loadingStatusName"
-                      >请选择需要上传文件</Button>
-                    </Upload>
-                    <p class="img_notice">文件名只能包含英文和数字</p>
-                    <p class="img_notice">且分辨率不超过 825*155</p>
-                  </div>
-                </FormItem>
-              </Col>
-              <Col span="4">
-                <FormItem label="皮肤">
-                  <Select v-model="basic.skin" placeholder="请选择" :disabled="edit">
-                    <Option
-                      v-for="item in skinList"
-                      :value="item.value"
-                      :key="item.value"
-                    >{{item.name}}</Option>
-                  </Select>
-                </FormItem>
-              </Col>
-            </Row>-->
           </Form>
         </div>
       </Panel>
@@ -285,7 +183,12 @@
               </Row>
             </FormItem>
           </Form>
-          <Table :columns="columns1" :data="gameDetail" width="500" class="table" size="small"></Table>
+          <Table :columns="columns1" :data="gameDetail" width="500" class="table" size="small">
+            <template slot-scope="{row, index}" slot="rate">{{row.rate + "%"}}</template>
+            <template slot-scope="{row, index}" slot="operate">
+              <span v-if="this.edit" style="color:$20a0ff;cursor:pointer">删除</span>
+            </template>
+          </Table>
         </div>
       </Panel>
       <Panel name="4">
@@ -312,15 +215,37 @@
           @click="getWaterfallList"
         >(点击查询)</span>
       </h2>
-      <Table :columns="columns" :data="showData" size="small"></Table>
-      <Page
-        :total="total"
-        class="page"
-        show-elevator
-        :page-size="pageSize"
-        show-total
-        @on-change="changepage"
-      ></Page>
+      <Table :columns="columns" :data="showData" size="small">
+        <template slot-scope="{row, index}" slot="createdAt">
+          <span>{{createdAtConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="toUser">
+          <span>{{row.fromLevel > row.toLevel ? row.toDisplayName + " 对 " + row.fromDisplayName : row.fromDisplayName + " 对 " + row.toDisplayName}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="tradeType">
+          <span>{{tradeTypeConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="oldBalance">
+          <span>{{oldBalanceConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="amount">
+          <span :style="{color: amountConfig(row).color}">{{amountConfig(row).amount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="newBalance">
+          <span>{{newBalanceConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="operator">
+          <span>{{row.operator.split("_")[1]}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="remark">
+          <Tooltip v-if="remarkConfig(row).isShow" :content="remarkConfig(row).remark" transfer>
+            <Icon color="#20a0ff" type="ios-search"></Icon>
+          </Tooltip>
+          <span v-else></span>
+        </template>
+      </Table>
+
+      <Page :total="total" class="page" :page-size="pageSize" show-total @on-change="changepage"></Page>
     </div>
     <Spin size="large" fix v-if="spinShow">
       <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
@@ -341,6 +266,7 @@ import {
 import dayjs from "dayjs";
 import _ from "lodash";
 import { thousandFormatter } from "@/config/format";
+import { GameListEnum } from "@/config/getGameType";
 export default {
   beforeRouteEnter(to, from, next) {
     /* console.log(this, 'beforeRouteEnter'); // undefined
@@ -351,10 +277,10 @@ export default {
       //因为当钩子执行前，组件实例还没被创建
       // vm 就是当前组件的实例相当于上面的 this，所以在 next 方法里你就可以把 vm 当 this 来用了。
       //console.log(vm);//当前组件的实例
-        //localStorage.removeItem('dayCompany')
-        //console.log(233);
-        vm.spinShow = true
-        vm.init()
+      //localStorage.removeItem('dayCompany')
+      //console.log(233);
+      vm.spinShow = true;
+      vm.init();
     });
   },
   data() {
@@ -444,155 +370,62 @@ export default {
         },
         {
           title: "商家占成",
-          key: "rate",
-          render: (h, params) => {
-            return h("span", params.row.rate + "%");
-          }
+          slot: "rate"
         },
         {
           title: "操作",
-          key: "opreate",
-          render: (h, params) => {
-            if (!this.edit) {
-              return h(
-                "span",
-                {
-                  style: {
-                    color: "#20a0ff",
-                    cursor: "pointer"
-                  },
-                  on: {
-                    click: () => {
-                      let index = params.row._index;
-                      this.gameDetail.splice(index, 1);
-                    }
-                  }
-                },
-                "删除"
-              );
-            }
-          }
+          key: "opreate"
         }
       ],
       columns: [
         {
           title: "序号",
           type: "index",
-          maxWidth: 80
+          align: "center",
+          maxWidth: 70
         },
         {
           title: "交易时间",
-          key: "createdAt",
-          minWidth: 40,
-          render: (h, params) => {
-            return h(
-              "span",
-              this.dayjs(params.row.createdAt).format("YYYY-MM-DD HH:mm:ss")
-            );
-          }
+          slot: "createdAt",
+          align: "center",
+          minWidth: 40
         },
         {
           title: "交易对象",
-          key: "toUser",
-          minWidth: 140,
-          render: (h, params) => {
-            let row = params.row;
-            if (row.fromLevel > row.toLevel) {
-              return h(
-                "span",
-                row.toDisplayName + " 对 " + row.fromDisplayName
-              );
-            } else {
-              return h(
-                "span",
-                row.fromDisplayName + " 对 " + row.toDisplayName
-              );
-            }
-          }
+          slot: "toUser",
+          align: "center",
+          minWidth: 140
         },
         {
           title: "交易类型",
-          key: "action",
-          render: (h, params) => {
-            let row = params.row;
-            if (row.fromDisplayName == row.toDisplayName) {
-              if (row.amount < 0) {
-                return h("span", "玩家充值");
-              } else {
-                return h("span", "玩家提现");
-              }
-            } else {
-              if (row.fromLevel > row.toLevel) {
-                return h("span", "减点");
-              } else {
-                return h("span", "加点");
-              }
-            }
-          }
+          slot: "tradeType",
+          align: "center"
         },
         {
           title: "交易前余额",
-          key: "oldBalance",
-          render: (h, params) => {
-            return h("span", thousandFormatter(params.row.oldBalance));
-          }
+          align: "center",
+          slot: "oldBalance"
         },
         {
           title: "交易点数",
-          key: "amount",
-          render: (h, params) => {
-            let color = params.row.amount < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(params.row.amount)
-            );
-          }
+          align: "center",
+          slot: "amount"
         },
         {
           title: "交易后余额",
-          key: "balance",
-          render: (h, params) => {
-            return h("span", thousandFormatter(params.row.balance));
-          }
+          align: "center",
+          slot: "newBalance"
         },
         {
           title: "操作人",
-          key: "operator",
-          render: (h, params) => {
-            return h("span", params.row.operator.split("_")[1]);
-          }
+          align: "center",
+          slot: "operator"
         },
         {
           title: "备注",
-          key: "remark",
-          maxWidth: 80,
-          render: (h, params) => {
-            if (params.row.remark == "NULL!" || params.row.remark == null) {
-              return h("span", "");
-            } else {
-              return h(
-                "Tooltip",
-                {
-                  props: {
-                    content: params.row.remark
-                  }
-                },
-                [
-                  h("Icon", {
-                    props: {
-                      type: "search",
-                      color: "#20a0ff"
-                    }
-                  })
-                ]
-              );
-            }
-          }
+          align: "center",
+          slot: "remark",
+          maxWidth: 80
         }
       ],
       waterfall: [],
@@ -603,67 +436,9 @@ export default {
       imgFileName: "",
       uploadActionLogo: "",
       uploadActionName: "",
-      GameListEnum: {
-        NA: [
-          { company: "NA", code: "70000", name: "H5电子游戏" },
-          { company: "NA", code: "90000", name: "H5电子游戏-无神秘奖" }
-        ],
-        KY: [
-          { company: "KY", code: "1070000", name: "KY棋牌游戏" },
-        ],
-        TTG: [
-          { company: "TTG", code: "1010000", name: "TTG电子游戏" }
-        ],
-        PNG: [
-          { company: "PNG", code: "1020000", name: "PNG电子游戏" }
-        ],
-        MG: [
-          { company: "MG", code: "10300000", name: "MG电子游戏" }
-        ],
-        HABA: [
-          { company: "HABA", code: "1040000", name: "HABA电子游戏" }
-        ],
-        AG: [
-          { company: "AG", code: "1050000", name: "AG真人游戏" }
-        ],
-        SA: [
-          { company: "SA", code: "1060000", name: "SA真人游戏" },
-          { company: "SA", code: "1110000", name: "SA捕鱼游戏" }
-        ],
-        PG: [
-          { company: "PG", code: "1090000", name: "PG电子游戏" }
-        ],
-        YSB: [
-          { company: "YSB", code: "1130000", name: "YSB体育游戏" }
-        ],
-        RTG: [
-          { company: "RTG", code: "1140000", name: "RTG电子游戏" }
-        ],
-        SB: [
-          { company: "SB", code: "1080000", name: "SB电子游戏" },
-          { company: "SB", code: "1120000", name: "SB真人游戏" }
-        ],
-        DT: [
-          { company: "DT", code: "1150000", name: "DT电子游戏" }
-        ],
-        PP: [
-          { company: "PP", code: "1160000", name: "PP电子游戏" }
-        ]
-      },
     };
   },
-  /* created() {
-    this.init();
-  }, */
-  /* watch: {
-    $route(to, from) {
-      if (to.name == "merchantDetail") {
-        //console.log('in merchantDetail');
-        this.spinShow = true;
-        this.init();
-      }
-    }
-  }, */
+
   computed: {
     total() {
       return this.waterfall.length;
@@ -673,6 +448,55 @@ export default {
     }
   },
   methods: {
+    /* 游戏信息 */
+    //操作
+    operateConfig(row) {
+      let index = row._index;
+      this.gameDetail.splice(index, 1);
+    },
+    /* 财务信息 */
+    //交易时间
+    createdAtConfig(row) {
+      return dayjs(row.createdAt).format("YYYY-MM-DD HH:mm:ss");
+    },
+    //交易类型
+    tradeTypeConfig(row) {
+      if (row.fromDisplayName == row.toDisplayName) {
+        if (row.amount < 0) {
+          return "玩家充值";
+        } else {
+          return "玩家提现";
+        }
+      } else {
+        if (row.fromLevel > row.toLevel) {
+          return "减点";
+        } else {
+          return "加点";
+        }
+      }
+    },
+    //交易前余额
+    oldBalanceConfig(row) {
+      return thousandFormatter(row.oldBalance);
+    },
+    //交易点数
+    amountConfig(row) {
+      let color = row.amount < 0 ? "#f30" : "#0c0";
+      return { amount: thousandFormatter(row.amount), color };
+    },
+    //交易后余额
+    newBalanceConfig(row) {
+      return thousandFormatter(row.balance);
+    },
+    //备注
+    remarkConfig(row) {
+      if (row.remark == "NULL!" || row.remark == null) {
+        return { isShow: false };
+      } else {
+        return { isShow: true, remark: row.remark };
+      }
+    },
+
     editBtn() {
       this.edit = false;
       this.isedit = false;
@@ -693,7 +517,7 @@ export default {
       this.gameForm.balance = "";
     },
     handlePage() {
-      console.log(1);
+      //console.log(1);
 
       // 初始化显示，小于每页显示条数，全显，大于每页显示条数，取前每页条数显示
       if (this.total < this.pageSize) {
@@ -707,7 +531,6 @@ export default {
       let _start = (index - 1) * size;
       let _end = index * size;
       this.showData = this.waterfall.slice(_start, _end);
-      // console.log(this.showData);
     },
     save() {
       let password = this.basic.password;
@@ -721,13 +544,7 @@ export default {
           });
         }
       }
-      //  else {
-      //   let testReg = /^[a-zA-Z0-9@_#$%^&*!.~-]{6,16}$/;
-      //   if (!testReg.test(password)) {
-      //     this.$Message.warning("密码6~16位,包含字母、数字及符号");
-      //     return;
-      //   }
-      // }
+
       this.edit = true;
       this.isedit = true;
       let userId = this.userId;
@@ -762,19 +579,7 @@ export default {
       });
     },
     selectCompany(value) {
-      /* let userId = this.parent;
-      let params = { companyIden: value, userId };
-      if (userId == "01") {
-        delete params.userId;
-      }
-      gameBigType(params).then(res => {
-        if (res.code == 0) {
-          this.gameList = res.payload;
-        }
-      }); */
-      console.log('fff');
-      
-       this.gameList = this.GameListEnum[value]
+      this.gameList = GameListEnum[value]
     },
     selectGame(o) {
       this.selected = true;
@@ -838,25 +643,7 @@ export default {
       } else {
         this.$Message.warning("占成为0-100数字");
       }
-    }, //生成密码
-    // createPass() {
-    //   let text = [
-    //     "abcdefghijklmnopqrstuvwxyz",
-    //     "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    //     "1234567890",
-    //     "@_#$%^&*!.~-"
-    //   ];//
-    //   let rand = function(min, max) {
-    //     return Math.floor(Math.max(min, Math.random() * (max + 1)));
-    //   };
-    //   let len = rand(6, 16);
-    //   let pw = "";
-    //   for (let i = 0; i < len; ++i) {
-    //     let strpos = rand(0, 3);
-    //     pw += text[strpos].charAt(rand(0, text[strpos].length));
-    //   }
-    //   this.basic.password = pw;
-    // },
+    },
     passwordLevel(password) {
       let Modes = 0;
       let len = password.length;
@@ -913,6 +700,8 @@ export default {
       //console.log(waterfall[0].payload);
 
       this.showData = waterfall[0].payload;
+
+      console.log(this.showData);
     },
     async init() {
       this.showData = [];
@@ -952,7 +741,7 @@ export default {
         { company: "SA", companyName: "SA" },
         { company: "SB", companyName: "SB" },
         { company: "YSB", companyName: "YSB" }
-      ]
+      ];
       oneManagers(parent).then(res => {
         this.parentGameList = res.payload.gameList || [];
       });
@@ -1172,7 +961,16 @@ export default {
   }
 }
 .demo-spin-icon-load {
-    animation: ani-demo-spin 1s linear infinite;
-  }
+  animation: ani-demo-spin 1s linear infinite;
+}
+.ivu-btn {
+  background: #fff;
+  color: #000;
+  border-color: #000;
+}
+.ivu-btn:hover {
+  background: #000;
+  color: #fff;
+}
 </style>
 

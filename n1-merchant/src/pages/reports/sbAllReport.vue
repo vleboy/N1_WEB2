@@ -13,9 +13,7 @@
         </div>
       </div>
       <Table :columns="columns1" :data="user" size="small" ref='table_0'>
-        <template slot-scope="{row, index}" slot="role">
-          <span>{{roleConfig(row)}}</span>
-        </template>
+        
         <template slot-scope="{row, index}" slot="userWinloseAmount">
           <span
             :style="{color: winloseAmountConfig(row).color}"
@@ -136,21 +134,13 @@ export default {
           maxWidthL: 60,
           type: "index"
         },
-        {
-          title: "类型",
-          align: 'center',
-          slot: "role"
-        },
+       
         {
           title: "昵称",
           align: 'center',
           key: "displayName"
         },
-        {
-          title: "管理员账号",
-          align: 'center',
-          key: "username"
-        },
+        
         {
           title: "交易次数",
           align: 'center',
@@ -242,10 +232,7 @@ export default {
   },
   methods: {
     /* 用户 */
-    //类型
-    roleConfig(row) {
-      return this.types(row.role) 
-    },
+   
     //总游戏输赢金额
     winloseAmountConfig(row) {
       if (row.winloseAmount < 0) {

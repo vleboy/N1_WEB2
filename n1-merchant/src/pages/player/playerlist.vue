@@ -124,19 +124,19 @@ export default {
           key: "userId",
           align: "center",
           maxWidth: 90,
-          sortable: true
+          
         },
          {
           title: "玩家账号",
           align: "center",
           key: "userName",
-          sortable: true
+          
         },
         {
           title: "商户ID",
           key: "buId",
           align: "center",
-          sortable: true
+         
         },
         {
           title: "所属商户",
@@ -148,7 +148,7 @@ export default {
         {
           title: "玩家昵称",
           slot: "nickname",
-          sortable: true,
+         
           align: "center"
         },
         {

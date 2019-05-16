@@ -1,29 +1,27 @@
 <template>
   <div class="line">
     <div class="search">
-      <Row class="row">
-        <Col span="2" offset="4">线路商标识</Col>
+      <Row class="row" type="flex">
+        <span style="margin-right:2rem">线路商标识</span>
         <Col span="4">
-        <Input v-model="suffix" placeholder="请输入"></Input>
+        <Input v-model="suffix" placeholder="请输入" size="small"></Input>
         </Col>
         <Col span="2">线路商昵称</Col>
-        <Col span="4">
-        <Input v-model="displayName" placeholder="请输入"></Input>
+        <Col span="4" style="margin-right:2rem">
+        <Input v-model="displayName" placeholder="请输入" size="small"></Input>
         </Col>
-        <Col span="5">
         <div class="btns">
-          <Button type="primary" @click="init">搜索</Button>
-          <Button type="ghost" @click="reset">重置</Button>
+          <Button type="primary" @click="init" style="margin-right:.3rem" size="small">搜索</Button>
+          <Button @click="reset" size="small">重置</Button>
         </div>
-        </Col>
       </Row>
     </div>
     <div class="option">
       <p class="create">
-        <Button type="primary" @click="createLine" v-if="permission.includes('创建线路商')">创建线路商</Button>
-         <span :style="{paddingLeft:'10px'}">H5接线</span>
-        <i-switch v-model="isH5" @on-change="init"></i-switch>
-        <RadioGroup v-model="source" class="radioGroup" type="button" @on-change='init'>
+        <Button type="primary" @click="createLine" v-if="permission.includes('创建线路商')" size="small">创建线路商</Button>
+         <span :style="{paddingLeft:'10px',marginRight:'.3rem'}">H5接线</span>
+        <i-switch v-model="isH5" @on-change="init" size="small"></i-switch>
+        <RadioGroup v-model="source" class="radioGroup" type="button" @on-change='init' size="small">
           <Radio label="0" v-if="permission.includes('正式数据')">正式</Radio>
           <Radio label="1">测试</Radio>
           <Radio label="2" v-if="permission.includes('正式数据')">全部</Radio>
@@ -31,8 +29,54 @@
       </p>
     </div>
     <div class="table">
-      <Table :columns="columns1" :data="showData" size="small"></Table>
-      <!-- <Page :total="total" class="page" show-elevator :page-size='50' show-total @on-change="changepage"></Page> -->
+      
+
+      <Table :columns="columns1" :data="showData" size="small">
+        <template slot-scope="{row, index}" slot="merchantCount">
+          <Tooltip content="前往商户列表" placement="top">
+            <span style="color:#20a0ff;cursor:pointer" @click="merchantCountConfig(row)">{{row.merchantCount}}</span>
+          </Tooltip>
+        </template>
+        <template slot-scope="{row, index}" slot="balance">
+          <span>{{balanceCount(row)}}</span>
+          <p v-if="permission.includes('线路商加减点')">
+            <span
+              style="color:#20a0ff;cursor:pointer;margin-right:.3rem"
+              @click="addBalance(row)"
+            >加点</span>
+            <span style="color:#20a0ff;cursor:pointer;" @click="reduceBalance(row)">减点</span>
+          </p>
+        </template>
+        <template slot-scope="{row, index}" slot="managerGame">
+          <Poptip trigger="hover" placement="bottom" transfer >
+            <span style="color:#20a0ff;cursor:pointer;">{{`${row.gameList.length}款游戏`}}</span>
+            <div slot="content">
+              <Table
+                :columns="managerGameConfig(row).columns"
+                :data="managerGameConfig(row).data"
+                size="small"
+              ></Table>
+            </div>
+          </Poptip>
+        </template>
+        <template slot-scope="{row, index}" slot="createdAt">
+         <span>{{createdAtConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="status">
+          <span :style="{color: statusConfig(row, true)}">{{row.status == 1 ? "已启用" : "未启用"}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="operate">
+          <span
+            style="color:#20a0ff;cursor:pointer;margin-right:.3rem"
+            @click="operateCheck(row)"
+          >查看</span>
+          <span
+            :style="{color:statusConfig(row, false),cursor:'pointer'}"
+            @click="operateStatus(row)"
+          >{{row.status == 1 ? "禁用" : "启用"}}</span>
+          <p style="color:#20a0ff;cursor:pointer;" @click="opertaeGo(row)">前往线路商系统</p>
+        </template>
+      </Table>
     </div>
     <Spin size="large" fix v-if="spinShow">
       <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
@@ -85,7 +129,7 @@
 <script>
 import dayjs from "dayjs";
 import { thousandFormatter } from "@/config/format";
-import { userChangeStatus } from "@/service/index";
+import { userChangeStatus, getManagers } from "@/service/index";
 export default {
   data() {
     return {
@@ -106,6 +150,7 @@ export default {
       goManager:false,
       suffix: "", //前缀
       disabled: true, //加点禁用
+      showData: [],
       tooltip: "起始账户余额为", //tooltip content
       columns1: [
         {
@@ -134,343 +179,219 @@ export default {
         },
         {
           title:'商户数量',
-          key:'merchantCount',
-          align: 'center',
-  
-          render: (h, params) => {
-            console.log(params);
-            
-            return h(
-              'Tooltip',
-              {
-                style: {
-                  color: "#20a0ff",
-                  cursor:'pointer'
-                },
-                props: {
-                  content: "前往商户列表",
-                  placement: "top"
-                },
-              },
-              [
-                h('span',{
-                  on: {
-                  click: () => {
-                     this.$router.push({name: "merchantList",query:{suffix:params.row.suffix}})
-                     localStorage.setItem('merchantList','merchantList')
-                  }
-                }
-                },params.row.merchantCount)
-              ]
-              )
-          }
+          slot:'merchantCount',
+          align: 'center'
         },
         {
           title: "剩余点数",
-          key: "balance",
+          slot: "balance",
           sortable: true,
-          align: 'center',
-          render: (h, params) => {
-            let admininfo = JSON.parse(localStorage.getItem("userInfo"));
-            let admin = admininfo.uname;
-            let adminId = admininfo.userId;
-            let userName = admininfo.username;
-            let permission = this.permission;
-            if (permission.includes("线路商加减点")) {
-              return h("div", [
-                h("p", thousandFormatter(params.row.balance.toFixed(2))),
-                h("p", [
-                  h(
-                    "span",
-                    {
-                      style: {
-                        color: "#20a0ff",
-                        cursor: "pointer"
-                      },
-                      on: {
-                        click: () => {
-                          this.plus = true;
-                          this.modal = true;
-                          this.disabled = true;
-                          this.uname = params.row.uname;
-                          let option = [
-                            {
-                              value: adminId,
-                              label: "【管理员】" + admin
-                            }
-                          ];
-                          if (params.row.parent != "01") {
-                            let another = {
-                              value: params.row.parent,
-                              label: "【线路商】" + params.row.parentDisplayName
-                            };
-                            option.push(another);
-                          }
-                          this.options = option;
-                          this.toRole = "10";
-                          this.toUser = params.row.username;
-                        }
-                      }
-                    },
-                    "加点"
-                  ),
-                  h(
-                    "span",
-                    {
-                      style: {
-                        color: "#20a0ff",
-                        cursor: "pointer",
-                        paddingLeft: "10px"
-                      },
-                      on: {
-                        click: () => {
-                          this.plus = false;
-                          this.modal = true;
-                          this.disabled = true;
-                          this.uname = params.row.uname;
-                          let option = [
-                            {
-                              value: adminId,
-                              label: "【管理员】" + admin,
-                              role: "1",
-                              userName: userName
-                            }
-                          ];
-                          this.$store.commit('updateBill',{params:params.row.balance})
-                          if (params.row.parent != "01") {
-                            let another = {
-                              value: params.row.parent,
-                              label:
-                                "【线路商】" + params.row.parentDisplayName,
-                              role: params.row.parentRole,
-                              userName: params.row.parentName
-                            };
-                            option.push(another);
-                          }
-                          this.options = option;
-                          this.fromUserId = params.row.userId;
-                        }
-                      }
-                    },
-                    "减点"
-                  )
-                ])
-              ]);
-            } else {
-              return h("p", params.row.balance.toFixed(2));
-            }
-          }
+          align: 'center'
         },
         {
           title: "线路商游戏",
-          key: "gameList",
-          align: 'center',
-          render: (h, params) => {
-            let column = [
-              {
-                title: "线路商游戏",
-                key: "name"
-              },
-              {
-                title: "商户占成",
-                key: "rate"
-              }
-            ];
-            let data = [];
-            let gameList = params.row.gameList;
-            let len = gameList.length;
-            for (let item of gameList) {
-              let obj = {};
-              obj.rate = item.rate + "%";
-              obj.name = item.name;
-              data.push(obj);
-            }
-            return h(
-              "Poptip",
-              {
-                props: {
-                  trigger: "hover"
-                }
-              },
-              [
-                h(
-                  "span",
-                  {
-                    style: {
-                      cursor: "pointer",
-                      color: "#20a0ff"
-                    }
-                  },
-                  len + "款游戏"
-                ),
-                h("Table", {
-                  props: {
-                    columns: column,
-                    data: data,
-                    border: true,
-                    size: "small",
-                    width: 250
-                  },
-                  slot: "content"
-                })
-              ]
-            );
-          }
+          slot: "managerGame",
+          align: 'center'
         },
         {
           title: "创建时间",
           key: "createdAt",
           align: 'center',
-          sortable: true,
-          render: (h, params) => {
-            return h(
-              "span",
-              dayjs(params.row.createdAt).format("YYYY-MM-DD")
-            );
-          }
+          sortable: true
         },
         {
           title: "状态",
-          key: "status",
+          slot: "status",
           sortable: true,
-          align: 'center',
-          render: (h, params) => {
-            if (params.row.status == 1) {
-              return h(
-                "span",
-                {
-                  style: {
-                    color: "#20a0ff"
-                  }
-                },
-                "已启用"
-              );
-            } else {
-              return h(
-                "span",
-                {
-                  style: {
-                    color: "#f5141e"
-                  }
-                },
-                "未启用"
-              );
-            }
-          }
+          align: 'center'
         },
         {
           title: "操作",
-          key: "",
-          align: 'center',
-          render: (h, params) => {
-            let text = "";
-            let status = null;
-            let color = "";
-            if (params.row.status == 1) {
-              text = "停用";
-              status = 0;
-              color = "#f5141e";
-            } else {
-              text = "启用";
-              status = 1;
-              color = "#20a0ff";
-            }
-              return h("div", [
-                h(
-                  "Button",
-                  {
-                    props: {
-                      type: "text",
-                      size: "small"
-                    },
-                    style: {
-                      color: "#20a0ff"
-                    },
-                    on: {
-                      click: () => {
-                        let userId = params.row.userId;
-                        let displayName = params.row.displayName;
-                        let username = params.row.username;
-                        let parent = params.row.parent;
-                        this.$router.push({
-                          path: "/dealerDetail",
-                          query: {
-                            userId,
-                            displayName,
-                            username,
-                            parent
-                          }
-                        });
-                      }
-                    }
-                  },
-                  "查看"
-                ),
-                h(
-                  "Button",
-                  {
-                    props: {
-                      type: "text",
-                      size: "small"
-                    },
-                    style: {
-                      color: color,
-                      display: this.stopManager ? "inline" : "none"
-                    },
-                    on: {
-                      click: () => {
-                        this.$Modal.confirm({
-                          title: "提示!",
-                          content: `<p>是否${text}线路商</p>`,
-                          onOk: () => {
-                            userChangeStatus({
-                              role: "10",
-                              status,
-                              userId: params.row.userId
-                            }).then(res => {
-                              if (res.code == 0) {
-                                this.$Message.success(`${text}成功`);
-                                this.init();
-                              }
-                            });
-                          }
-                        });
-                      }
-                    }
-                  },
-                  text
-                ),
-                h(
-                   "Button",
-                  {
-                    props: {
-                      type: "text",
-                      size: "small"
-                    },
-                    style: {
-                      color: '#20a0ff',
-                      display: this.goManager ? "inline" : "none"
-                    },
-                    on:{
-                      click:()=>{
-                        let url=process.env.NODE_ENV == 'production'?'http://xl.na12345.com/#/login':'http://dev-manager.na12345.com/#/login';
-                        //http://localhost:8080   http://dev-merchant.na12345.com/#/login
-                        let uname=params.row.uname;
-                        let suffix=params.row.suffix;
-                        url=url+'?uname='+uname+'&suffix='+suffix;
-                        window.open(url)
-                      }
-                    }
-                  },
-                  '前往线路商系统'
-                )
-              ]);
-          }
+          slot: "operate",
+          align: 'center'
         }
       ]
     };
   },
   methods: {
+    //商户数量
+    merchantCountConfig(row) {
+      this.$router.push({name: "merchantList",query:{suffix:row.suffix}})
+      localStorage.setItem('merchantList','merchantList')
+    },
+    /* 点数 */
+    // 剩余点数
+    balanceCount(row) {
+      return thousandFormatter(row.balance.toFixed(2));
+    },
+    //加点
+    addBalance(row) {
+      let admininfo = JSON.parse(localStorage.getItem("userInfo"));
+      let admin = admininfo.uname;
+      let adminId = admininfo.userId;
+      let userName = admininfo.username;
+
+      this.plus = true;
+      this.modal = true;
+      this.disabled = true;
+      this.uname = row.uname;
+      let option = [
+        {
+          value: adminId,
+          label: "【管理员】" + admin
+        }
+      ];
+      if (row.parent != "01") {
+        let another = {
+          value: params.row.parent,
+          label: "【线路商】" + row.parentDisplayName
+        };
+        option.push(another);
+      }
+      this.options = option;
+      this.toRole = "10";
+      this.toUser = row.username;
+    },
+    //减点
+    reduceBalance(row) {
+      let admininfo = JSON.parse(localStorage.getItem("userInfo"));
+      let admin = admininfo.uname;
+      let adminId = admininfo.userId;
+      let userName = admininfo.username;
+
+      this.plus = false;
+      this.modal = true;
+      this.disabled = true;
+      this.uname = row.uname;
+      let option = [
+        {
+          value: adminId,
+          label: "【管理员】" + admin,
+          role: "1",
+          userName: userName
+        }
+      ];
+      this.$store.commit('updateBill',{params:row.balance})
+      if (row.parent != "01") {
+        let another = {
+          value: row.parent,
+          label:
+            "【线路商】" + row.parentDisplayName,
+          role: row.parentRole,
+          userName: row.parentName
+        };
+        option.push(another);
+      }
+      this.options = option;
+      this.fromUserId = row.userId;
+    },
+    //线路商户游戏
+    managerGameConfig(row) {
+      let columns = [
+        {
+          title: "游戏",
+          key: "name",
+          align: "center"
+        },
+        {
+          title: "商户占成",
+          align: "center",
+          key: "rate"
+        }
+      ];
+      let data = [];
+      for (let item of row.gameList) {
+        let obj = {};
+        obj.rate = item.rate + "%";
+        obj.name = item.name;
+        data.push(obj);
+      }
+      return { columns, data };
+    },
+    //创建时间
+    createdAtConfig(row) {
+      return dayjs(row.createdAt).format("YYYY-MM-DD")
+    },
+    //状态
+    statusConfig(row, bool) {
+      if (bool) {
+        return row.status == 1 ? "#20a0ff" : "#f5141e";
+      } else {
+        return row.status == 1 ? "#f5141e" : "20a0ff";
+      }
+    },
+
+    /* 操作 */
+    //查看
+    operateCheck(row) {
+      let userId = row.userId;
+      let displayName = row.displayName;
+      let username = row.username;
+      let parent = row.parent;
+      this.$router.push({
+        path: "/dealerDetail",
+        query: {
+          userId,
+          displayName,
+          username,
+          parent
+        }
+      });
+    },
+    //启用停用
+    operateStatus(row) {
+      let text = row.status == 1 ? "禁用" : "启用";
+      let status = null;
+      this.$Modal.confirm({
+        title: "提示!",
+        content: `<p>是否${text}线路商</p>`,
+        onOk: () => {
+          userChangeStatus({
+            role: "10",
+            status,
+            userId: row.userId
+          }).then(res => {
+            if (res.code == 0) {
+              this.$Message.success(`${text}成功`);
+              this.init();
+            }
+          });
+        }
+      });
+    },
+    //前往商户系统
+    opertaeGo(row) {
+      let url=process.env.NODE_ENV == 'production'?'http://xl.na12345.com/#/login':'http://dev-manager.na12345.com/#/login';
+      //http://localhost:8080   http://dev-merchant.na12345.com/#/login
+      let uname=row.uname;
+      let suffix=row.suffix;
+      url=url+'?uname='+uname+'&suffix='+suffix;
+      window.open(url)
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     async ok() {
       if (this.plus == true) {
         this.fromUserId = this.select;
@@ -484,7 +405,6 @@ export default {
           }
         }
       }
-      // console.log(this.toRole, this.select);
       this.$store.commit('changeLoading',{params:true})
       await this.$store.dispatch("transferBill", {
           fromUserId: this.fromUserId,
@@ -506,19 +426,7 @@ export default {
       this.note = "";
       this.point = "";
     },
-    // changepage(index) {
-    //   var _start = (index - 1) * 50;
-    //   var _end = index * 50;
-    //   this.showData = this.waterfall.slice(_start, _end);
-    // },
-    // handlePage() {
-    //   // 初始化显示，小于每页显示条数，全显，大于每页显示条数，取前每页条数显示
-    //   if (this.total < 50) {
-    //     this.showData = this.waterfall;
-    //   } else {
-    //     this.showData = this.waterfall.slice(0, 50);
-    //   }
-    // },
+    
     async changeOption(id) {
       if(this.plus){
         if (id) {
@@ -561,13 +469,12 @@ export default {
         sortkey: "createdAt",
         sort: "desc"
       };
-      this.$store.dispatch("getManagerList", params);
+      getManagers(params).then(res => {
+        this.showData = res.payload
+      })
     },
   },
   computed: {
-    showData() {
-      return this.$store.state.merchants.managerList;
-    },
     spinShow() {
       return this.$store.state.merchants.spinShow;
     },
@@ -652,4 +559,26 @@ export default {
 /deep/ .ivu-table-cell {
   padding: 0
 }    
+.ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
+    border: 1px solid #ccc;
+    color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
+    background: #000;
+    color: #fff;
+  }
+  
 </style>
