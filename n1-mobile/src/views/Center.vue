@@ -15,16 +15,7 @@
       <v-card color="grey darken-1" dark>
         <v-card-title primary-title class="py-2">
           <div>
-            <div class="headline">
-              <animate-number
-                ref="num0"
-                from="0"
-                to="2000.55"
-                duration="1000"
-                easing="easeInQuad"
-                :formatter="num => new Intl.NumberFormat().format(num)"
-              ></animate-number>
-            </div>
+            <div class="headline">{{total}}</div>
           </div>
         </v-card-title>
       </v-card>
@@ -245,6 +236,7 @@ export default {
       dialogReg: false,
       dialogEdit: false,
       dialogURL: false,
+      total: 0,
       // 输入框
       parent: {},
       gameTypes: ["H5电子游戏"],

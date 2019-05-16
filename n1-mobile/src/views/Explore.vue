@@ -25,16 +25,7 @@
       <v-card color="grey darken-1" dark>
         <v-card-title primary-title class="py-2">
           <div>
-            <div class="headline">
-              <animate-number
-                ref="num0"
-                from="0"
-                to="2000.55"
-                duration="1000"
-                easing="easeInQuad"
-                :formatter="num => new Intl.NumberFormat().format(num)"
-              ></animate-number>
-            </div>
+            <div class="headline">{{total}}（洗码量）</div>
           </div>
         </v-card-title>
       </v-card>
@@ -108,7 +99,8 @@ export default {
       username: JSON.parse(localStorage.getItem("token")).username,
       password: "",
       startTime: TimeUtil.getWeekStartDate().getTime(),
-      endTime: TimeUtil.getWeekEndDate().getTime()
+      endTime: TimeUtil.getWeekEndDate().getTime(),
+      total: 0
     };
   },
   methods: {
@@ -159,6 +151,10 @@ export default {
         endTime: +this.endTime
       });
       this.items = res.payload;
+      this.total = this.items.reduce((acc, cur) => {
+        return acc + cur.mixAmount;
+      }, 0);
+      this.total = this.total.toFixed(2);
     }
   }
 };
