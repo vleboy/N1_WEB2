@@ -65,7 +65,6 @@
       <div style="text-align: right;margin:2rem 0">
         <Page
           :total="playerList.length"
-          show-elevator
           :page-size="20"
           :current.sync="currentPage"
           @on-change="getNowpage"
