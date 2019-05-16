@@ -133,7 +133,13 @@ export default {
           
         },
         {
-          title: "商户ID",
+          title: "玩家昵称",
+          slot: "nickname",
+         
+          align: "center"
+        },
+        {
+          title: "所属商户ID",
           key: "buId",
           align: "center",
          
@@ -143,14 +149,9 @@ export default {
           align: "center",
           minWidth: 50,
           key: "merchantName",
-          sortable: true
+          
         },
-        {
-          title: "玩家昵称",
-          slot: "nickname",
-         
-          align: "center"
-        },
+        
         {
           title: "状态",
           slot: "state",
