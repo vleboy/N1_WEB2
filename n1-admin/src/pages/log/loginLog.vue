@@ -1,39 +1,47 @@
 <template>
   <div class="adminLogin">
     <div class="search">
-      <Row class="row">
-        <Col span="3">
-          <Select v-model="model1" style="width:100%" >
-            <Option v-for="item in members" :value="item.value" :key="item.value" @click.native="selRole(item.role)">{{ item.label }}</Option>
+      <Row class="row" style="display:flex;align-items:center">
+          <Select v-model="model1" style="width:150px" size="small">
+            <Option
+              v-for="item in members"
+              :value="item.value"
+              :key="item.value"
+              @click.native="selRole(item.role)"
+              size="small"
+            >{{ item.label }}</Option>
           </Select>
-        </Col>
-        <Col span='1' offset="0"> 账号:
-        </Col>
-        <Col span="3">
-        <Input v-model="username" placeholder="请输入"></Input>
-        </Col>
-        <Col span='1'> 昵称:
-        </Col>
-        <Col span="3">
-        <Input v-model="displayName" placeholder="请输入"></Input>
-        </Col>
-        <Col span="3">
-        <div class="btns">
-          <Button type="primary" class="searchbtn" @click="search">搜索</Button>
-          <Button type="primary" class="searchbtn" @click="reset">重置</Button>
-        </div>
-        </Col>
+        <p style="margin:0 1rem">账号</p>
+        <p>
+          <Input v-model="username" placeholder="请输入" size="small"></Input>
+        </p>
+        <p style="margin:0 1rem">昵称:</p>
+        <p>
+          <Input v-model="displayName" placeholder="请输入" size="small"></Input>
+        </p>
+            <Button type="primary" class="searchbtn" @click="search" size="small" style="margin:0 .3rem 0 1rem">搜索</Button>
+            <Button type="primary" class="searchbtn" @click="reset" size="small"> 重置</Button>
       </Row>
     </div>
     <div class="table">
-      <Table :columns="columns1" :data="columns2" size="small" ></Table>
+      <Table :columns="columns1" :data="columns2" size="small">
+        <template slot-scope="{row, index}" slot="lastTime">
+          <span>{{lastTimeConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="userNameDetail">
+          <span :style="{color:userNameDetailConfig(row)}">{{row.detail}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="loginState">
+          <span :style="{color:loginStateConfig(row)}">{{row.ret == "Y" ? "正常" : "异常"}}</span>
+        </template>
+      </Table>
     </div>
     <div class="btn">
-      <Button type="primary" :disabled='firstPage' class="lastpage" @click="homePage">首页</Button>
+      <Button type="primary" :disabled="firstPage" class="lastpage" @click="homePage">首页</Button>
       <Button type="primary" class="nextpage" @click="nextPage">下一页</Button>
     </div>
     <Spin size="large" fix v-show="spinShow">
-      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+      <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
       <div>加载中...</div>
     </Spin>
   </div>
@@ -45,24 +53,24 @@ export default {
   data() {
     return {
       spinShow: false,
-      role: '1',
+      role: "1",
       startKey: null,
       members: [
         {
-          role: '1',
+          role: "1",
           value: "管理员",
           label: "管理员"
         },
         {
-          role: '10',
+          role: "10",
           value: "线路商",
           label: "线路商"
         },
         {
-          role: '100',
+          role: "100",
           value: "商户",
           label: "商户"
-        },
+        }
       ],
       model1: "管理员",
       username: "",
@@ -72,117 +80,77 @@ export default {
         {
           title: "序号",
           type: "index",
-          align: 'center',
+          align: "center",
           maxWidth: 60
         },
-          {
-            title: "账号",
-            align: 'center',
-            key: "username"
-          },
+        {
+          title: "账号",
+          align: "center",
+          key: "username"
+        },
         {
           title: "昵称",
-          maxWidth: 100,
-          align: 'center',
+          
+          align: "center",
           key: "displayName"
         },
         {
           title: "最后登录IP",
-          align: 'center',
+          align: "center",
           key: "lastIP"
         },
         {
           title: "最后登录时间",
-          align: 'center',
-          key: "",
-          render: (h, params) => {
-            return h(
-              "span",
-              dayjs(params.row.lastLogin).format("YYYY-MM-DD HH:mm:ss")
-            );
-          }
+          align: "center",
+          slot: "lastTime"
         },
         {
           title: "账号详情",
-          align: 'center',
-          maxWidth: 120,
-          key: "",
-          render: (h, params) => {
-            if (params.row.ret == "Y") {
-              return h(
-                "span",
-                {
-                  style: {
-                    color: "#0c0"
-                  }
-                },
-                params.row.detail
-              );
-            } else {
-              return h(
-                "span",
-                {
-                  style: {
-                    color: "#f30"
-                  }
-                },
-                params.row.detail
-              );
-            }
-          }
+          align: "center",
+          slot: "userNameDetail",
         },
         {
           title: "登录状态",
-          maxWidth: 120,
-          align: 'center',
-          key: "",
-          render: (h, params) => {
-            if (params.row.ret == "Y") {
-              return h(
-                "span",
-                {
-                  style: {
-                    color: "#0c0"
-                  }
-                },
-                "正常"
-              );
-            } else {
-              return h(
-                "span",
-                {
-                  style: {
-                    color: "#f30"
-                  }
-                },
-                "异常"
-              );
-            }
-          }
+          align: "center",
+          slot: "loginState"
         }
       ],
       columns2: []
     };
   },
   methods: {
+    //最后登录时间
+    lastTimeConfig(row) {
+      return dayjs(row.lastLogin).format("YYYY-MM-DD HH:mm:ss")  
+    },
+    //账号详情
+    userNameDetailConfig(row) {
+      return row.ret == "Y" ? "#0c0" : "#f30"
+    },
+    //登录状态
+    loginStateConfig(row) {
+      return row.ret == "Y" ? "#0c0" : "#f30" 
+    },
+
+
     selRole(value) {
       this.username = "";
       this.displayName = "";
-      this.role = value
-      this.startKey = null
-      this.init()
+      this.role = value;
+      this.startKey = null;
+      this.init();
     },
     nextPage() {
-      this.firstPage = false
-      this.init()
+      this.firstPage = false;
+      this.init();
     },
     homePage() {
-      this.startKey = null
+      this.startKey = null;
       this.firstPage = true;
       this.init();
     },
     init() {
-      this.spinShow = true
+      this.spinShow = true;
       let query = {
         username: this.username,
         displayName: this.displayName
@@ -199,23 +167,23 @@ export default {
         pageSize: "50",
         startKey: this.startKey,
         query: query
-      }
+      };
       httpRequest("post", "/logList", params).then(res => {
-        this.columns2 = res.payload.Items
-        this.startKey = res.payload.LastEvaluatedKey
-        this.spinShow = false
-      })
+        this.columns2 = res.payload.Items;
+        this.startKey = res.payload.LastEvaluatedKey;
+        this.spinShow = false;
+      });
     },
     search() {
-      this.startKey = null
-      this.init()
+      this.startKey = null;
+      this.init();
     },
     reset() {
       this.username = "";
       this.displayName = "";
-      this.model1 = '管理员';
-      this.role = '1';
-      this.startKey = null
+      this.model1 = "管理员";
+      this.role = "1";
+      this.startKey = null;
       this.init();
     }
   },
@@ -247,7 +215,14 @@ export default {
   }
 }
 .demo-spin-icon-load {
-    animation: ani-demo-spin 1s linear infinite;
+  animation: ani-demo-spin 1s linear infinite;
+}
+/deep/ .ivu-input {
+    border-color: #000;
+    background: #fff;
+  }
+  /deep/.ivu-select-selection {
+    border-color: #000;
   }
 </style>
 

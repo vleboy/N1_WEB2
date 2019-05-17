@@ -1,19 +1,15 @@
 <template>
   <div class="notransfer">
     <div class="search">
-      <Row class="row">
-        <Col span="12">
+      <Row class="row" style="display:flex">
         <span class="label">接入方标识</span>
-        <Input v-model="plat" @keyup.native.enter="search" style="width: 150px" placeholder="请输入"></Input>
-        <Select v-model="gameType" style="width:110px" @on-change="search">
+        <Input v-model="plat" @keyup.native.enter="search" style="width: 150px;margin:0 1rem" placeholder="请输入" size="small"></Input>
+        <Select v-model="gameType" style="width:110px" @on-change="search" size="small">
           <Option v-for="item in gameTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
-        </Col>
-        <Col span="12" style="textAlign:right">
-        <DatePicker type="datetimerange" :options="options" :editable='false' v-model="defaultTime" placeholder="选择日期时间范围(默认最近一周)" style="width: 300px" @on-ok="search"></DatePicker>
-        <Button type="primary" @click="search">搜索</Button>
-        <Button  @click="reset">重置</Button>
-        </Col>
+        <DatePicker size="small" type="datetimerange" :options="options" :editable='false' v-model="defaultTime" placeholder="选择日期时间范围(默认最近一周)" style="width: 300px;margin:0 1rem" @on-ok="search"></DatePicker>
+        <Button size="small" type="primary" @click="search" style="margin-right:.3rem">搜索</Button>
+        <Button size="small"  @click="reset">重置</Button>
       </Row>
     </div>
     <Table :columns="columns" size="small" :data="reportList"></Table>

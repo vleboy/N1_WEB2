@@ -1022,7 +1022,7 @@ export default {
           this.gameList = res.payload;
         }
       }); */
-      this.gameList = GameListEnum[value]
+      this.gameList = GameListEnum()[value]
     },
     selectGame(o) {
       this.selected = true;

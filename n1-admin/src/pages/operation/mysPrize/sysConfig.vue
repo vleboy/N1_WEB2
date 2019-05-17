@@ -5,11 +5,33 @@
         <Option v-for="item in seriesList" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>
       <Button class="reset" type="primary" @click="init">刷新</Button>
-    </div>
-    <Table :columns="columns1" :data="prizeList" size="small"></Table>
+    </div> 
+    <Table :columns="columns1" :data="prizeList" size="small">
+      <template slot-scope="{row, index}" slot="robotCount">
+        <span>{{row.bonusRobots.length}}</span>
+      </template>  
+      <template slot-scope="{row, index}" slot="bonusHitRate">
+        <span>{{`1/${row.bonusHitRate}`}}</span>
+      </template>  
+      <template slot-scope="{row, index}" slot="gameOperate">
+        <Button type="text" size="small" style="color:#20a0ff" @click="gameOperateEdit(row)">编辑</Button>
+        <Button type="text" size="small" style="color:#20a0ff" @click="gameOperateAdd(row)">添加机器人</Button>
+      </template>  
+    </Table>
     <div v-if="gameSeries!='all'">
       <p class="robot_title">机器人系列</p>
-      <Table :columns="columns2" :data="robotList" size="small"></Table>
+      <Table :columns="columns2" :data="robotList" size="small">
+        <template slot-scope="{row, index}" slot="robotState">
+          <span :style="{color:robotStateConfig(row)}">{{row.isActive ? "启用" : "禁用"}}</span>
+        </template> 
+        <template slot-scope="{row, index}" slot="startTime">
+          <div style="text-algin:center;background-color:#e4e8f1;border-radius:4px;height:26px;line-height:26px">{{`${row.workTimes[0].start||''}--${row.workTimes[0].end||''}`}}</div>
+        </template> 
+        <template slot-scope="{row, index}" slot="robotOperate">
+        <Button type="text" size="small" style="color:#20a0ff" @click="robotOperateEdit(row)">编辑</Button>
+        <Button type="text" size="small" style="color:#20a0ff" @click="robotOperateDel(row)">删除</Button>
+      </template>  
+      </Table>
     </div>
     <Spin size="large" fix v-if="spin">
       <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
@@ -316,11 +338,7 @@ export default {
         {
           title: "机器人数量",
           align: 'center',
-          key: "",
-          render: (h, params) => {
-            let bonusRobots = params.row.bonusRobots;
-            return h("span", bonusRobots.length);
-        }
+          slot: "robotCount"
         },
         {
           title: "下注抽取比例",
@@ -330,10 +348,7 @@ export default {
          {
           title: "中奖比例",
           align: 'center',
-          key: "bonusHitRate",
-          render:(h,params)=>{
-            return h('span',`1/${params.row.bonusHitRate}`)
-          }
+          slot: "bonusHitRate"
         },
         {
           title: "机器人注入奖池金额",
@@ -350,50 +365,7 @@ export default {
           title: "操作",
           minWidth: 25,
           align: 'center',
-          key: "",
-          render: (h, params) => {
-            return h("div", [
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "text",
-                    size: "small"
-                  },
-                  style: {
-                    color: "#20a0ff"
-                  },
-                  on: {
-                    click: () => {
-                      this.rowParams = this.cloneObj(params.row)
-                      this.cloneParams=this.cloneObj(params.row)
-                      this.editPrice = true;
-                    }
-                  }
-                },
-                "编辑"
-              ),
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "text",
-                    size: "small"
-                  },
-                  style: {
-                    color: "#20a0ff"
-                  },
-                  on: {
-                    click: () => {
-                      this.rowParams = params.row;
-                      this.editRobot = true;
-                    }
-                  }
-                },
-                "添加机器人"
-              )
-            ]);
-          }
+          slot: "gameOperate"
         }
       ],
       prizeList: [],
@@ -405,22 +377,8 @@ export default {
         },
         {
           title: "状态",
-          key: "isActive",
-          align: 'center',
-          render: (h, params) => {
-            let status = params.row.isActive;
-            let color = status ? "#20a0ff" : "#f5141e";
-            let text = status ? "启用" : "禁用";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              text
-            );
-          }
+          slot: "robotState",
+          align: 'center'
         },
         {
           title: "下注金额",
@@ -435,115 +393,12 @@ export default {
         {
           title: "启用时段",
           align: 'center',
-          key: "",
-          render: (h, params) => {
-            let work = params.row.workTimes;
-            return h(
-              "div",
-              work.map(item => {
-                return h(
-                  "p",
-                  {
-                    style: {
-                      textAlign: "center",
-                      backgroundColor: "#e4e8f1",
-                      borderRadius: " 4px",
-                      height: "26px",
-                      lineHeight: "26px"
-                    }
-                  },
-                  `${item.start||''}--${item.end||''}`
-                );
-              })
-            );
-          }
+          slot: "startTime"
         },
         {
           title: "操作",
           align: 'center',
-          key: "",
-          render: (h, params) => {
-            return h("div", [
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "text",
-                    size: "small"
-                  },
-                  style: {
-                    color: "#20a0ff"
-                  },
-                  on: {
-                    click: () => {
-                      this.editRobot = true;
-                      this.changeRobot = true;
-                      this.handleRowbot(params.row);
-                    }
-                  }
-                },
-                "编辑"
-              ),
-              // h(
-              //   "Button",
-              //   {
-              //     props: {
-              //       type: "text",
-              //       size: "small"
-              //     },
-              //     style: {
-              //       color: "#20a0ff"
-              //     },
-              //     on: {
-              //       click: () => {}
-              //     }
-              //   },
-              //   "禁用"
-              // ),
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "text",
-                    size: "small"
-                  },
-                  style: {
-                    color: "#20a0ff"
-                  },
-                  on: {
-                    click: () => {
-                      this.$Modal.confirm({
-                        title: "是否删除机器人",
-                        onOk: () => {
-                          let robotList = this.robotList;
-                          let id = params.row.id;
-                          robotList.map((item, index) => {
-                            if (item.id == id) {
-                              robotList.splice(index, 1);
-                            }
-                          });
-                          let list = this.prizeList[0];
-                          list.bonusRobots = robotList;
-                          httpRequest(
-                            "post",
-                            "/setBonusConfig",
-                            { gameType: list.gameType, config: list },
-                            "prize"
-                          ).then(res => {
-                            if (res.code == 0) {
-                              this.$Message.success("修改成功");
-                              this.init();
-                            }
-                          });
-                        }
-                      });
-                    }
-                  }
-                },
-                "删除"
-              )
-            ]);
-          }
+          slot: "robotOperate"
         }
       ],
       robotList: []
@@ -556,6 +411,111 @@ export default {
     this.init();
   },
   methods: {
+    /* 游戏系列 */
+    /* 操作 */
+    //编辑
+    gameOperateEdit(row) {
+      this.rowParams = this.cloneObj(row)
+      this.cloneParams=this.cloneObj(row)
+      this.editPrice = true;
+    },
+    //添加机器人
+    gameOperateAdd(row) {
+      this.rowParams = row;
+      this.editRobot = true;
+    },
+
+    /* 机器人系列 */
+    //状态
+    robotStateConfig(row) {
+      return row.isActive ? "#20a0ff" : "#f5141e"
+    },
+    /* 操作 */
+    //编辑
+    robotOperateEdit(row) {
+      this.editRobot = true
+      this.changeRobot = true
+      this.handleRowbot(row)
+    },
+    //删除
+    robotOperateDel(row) {
+      this.$Modal.confirm({
+      title: "是否删除机器人",
+      onOk: () => {
+        let robotList = this.robotList;
+        let id = row.id;
+        robotList.map((item, index) => {
+          if (item.id == id) {
+            robotList.splice(index, 1);
+          }
+        });
+        let list = this.prizeList[0];
+        list.bonusRobots = robotList;
+        httpRequest(
+          "post",
+          "/setBonusConfig",
+          { gameType: list.gameType, config: list },
+          "prize"
+        ).then(res => {
+          if (res.code == 0) {
+            this.$Message.success("修改成功");
+            this.init();
+          }
+        });
+      }
+    });
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     handleRowbot(row) {
       this.robot = this.cloneObj(row);
       this.robotId = row.id;

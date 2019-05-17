@@ -579,7 +579,7 @@ export default {
       });
     },
     selectCompany(value) {
-      this.gameList = GameListEnum[value]
+      this.gameList = GameListEnum()[value]
     },
     selectGame(o) {
       this.selected = true;

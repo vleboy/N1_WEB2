@@ -46,9 +46,7 @@ export default {
           title: "所有权限",
           expand: true,
           children: [
-            /* {
-              title: "看板"
-            }, */
+           
             {
               title: "数据看板"
             },

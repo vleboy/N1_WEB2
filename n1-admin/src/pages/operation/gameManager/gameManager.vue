@@ -1,6 +1,12 @@
 <template>
   <div class="p-gameList">
-    <RadioGroup v-model="companyInfo" @on-change="startSearch" class="searchbox" type="button">
+    <RadioGroup
+      v-model="companyInfo"
+      @on-change="startSearch"
+      class="searchbox"
+      type="button"
+      size="small"
+    >
       <Radio
         v-for="(item,index) of companyOptions"
         :key="index"
@@ -9,7 +15,7 @@
     </RadioGroup>
     <Row>
       <Col :span="21">
-        <Button type="primary" @click="goCreate">创建新游戏</Button>
+        <Button type="primary" @click="goCreate" size="small">创建新游戏</Button>
       </Col>
       <Col :span="3">
         <Select
@@ -18,6 +24,7 @@
           filterable
           clearable
           @on-change="statusSearch"
+          size="small"
         >
           <Option value="2" label="全部"></Option>
           <Option value="1" label="正常"></Option>
@@ -26,7 +33,22 @@
       </Col>
     </Row>
     <div class="outresult">
-      <Table :columns="columns" :data="gameItems"></Table>
+      <Table :columns="columns" :data="gameItems">
+        <template slot-scope="{row, index}" slot="classify">
+          <span>{{classifyConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="state">
+          <Tag type="border" :color="stateConfig(row).color">
+            {{stateConfig(row).state}}
+          </Tag>
+        </template>
+        <template slot-scope="{row, index}" slot="operate">
+          <Button type="text" size="small" style="color:#20a0ff;" @click="operateCheck(row)">查看</Button>
+          <Button type="text" size="small" style="color:#20a0ff;" @click=" operateEdit(row)">编辑</Button>
+          <Button type="text" size="small" :style="{color: operateState(row)}" @click="operateConfig(row)">{{row.gameStatus ? "停用" : "启用"}}</Button>
+          <Button type="text" size="small" style="color:#20a0ff;" @click="operateOrder(row)">排序</Button>
+        </template>
+      </Table>
       <Spin size="large" fix v-if="isFetching">
         <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
         <div>加载中...</div>
@@ -60,6 +82,8 @@
 <script type="text/ecmascript-6">
 import { httpRequest } from "@/service/index";
 import detailModal from "@/components/detailModal";
+import { getGameType } from "@/config/getGameType";
+import { log } from "util";
 
 export default {
   beforeRouteEnter(to, from, next) {
@@ -82,8 +106,6 @@ export default {
   name: "gameList",
   components: { detailModal },
   created() {
-    console.log(this.searchInfo);
-    
     this.isFetching = true;
     this.getCompanyList(); // 获取所属游戏商信息
     //this.getGameType();
@@ -99,31 +121,7 @@ export default {
       currentPage: 1,
       isFetching: false,
       isShowDetail: false,
-      gameTypeList: [
-        { company: "NA", code: "10000", name: "NA棋牌游戏" },
-        { company: "NA", code: "30000", name: "NA真人视讯" },
-        { company: "NA", code: "40000", name: "NA电子游戏" },
-        { company: "NA", code: "50000", name: "NA街机游戏" },
-        { company: "NA", code: "60000", name: "NA捕鱼游戏" },
-        { company: "NA", code: "70000", name: "H5电子游戏" },
-        { company: "NA", code: "80000", name: "H5真人视讯" },
-        { company: "NA", code: "90000", name: "H5电子游戏-无神秘奖" },
-        { company: "KY", code: "1070000", name: "KY棋牌游戏" },
-        { company: "TTG", code: "1010000", name: "TTG电子游戏" },
-        { company: "PNG", code: "1020000", name: "PNG电子游戏" },
-        { company: "MG", code: "10300000", name: "MG电子游戏" },
-        { company: "HABA", code: "1040000", name: "HABA电子游戏" },
-        { company: "AG", code: "1050000", name: "AG真人游戏" },
-        { company: "SA", code: "1060000", name: "SA真人游戏" },
-        { company: "SA", code: "1110000", name: "SA捕鱼游戏" },
-        { company: "PG", code: "1090000", name: "PG电子游戏" },
-        { company: "YSB", code: "1130000", name: "YSB体育游戏" },
-        { company: "RTG", code: "1140000", name: "RTG电子游戏" },
-        { company: "SB", code: "1080000", name: "SB电子游戏" },
-        { company: "SB", code: "1120000", name: "SB真人游戏" },
-        { company: "DT", code: "1150000", name: "DT电子游戏" },
-        { company: "PP", code: "1160000", name: "PP电子游戏" }
-      ],
+
       companyInfo: "",
       companyOptions: [],
       gameStatusNum: ["下线", "正常"],
@@ -146,19 +144,19 @@ export default {
       searchInfo: {
         gameStatus: "2",
         companyIden: "",
-        status: '2'
+        status: "2"
       },
       columns: [
         {
           title: "顺序",
           key: "sortOrder",
-          align: 'center',
+          align: "center",
           maxWidth: 120
         },
         {
           title: "游戏名称",
           key: "gameName",
-          align: 'center',
+          align: "center",
           maxWidth: 120
         },
         {
@@ -171,15 +169,13 @@ export default {
           title: "分类",
           maxWidth: 120,
           align: "center",
-          render: (h, params) => {
-            return h("span", this.getType(params.row));
-          }
+          slot: "classify"
         },
         {
           title: "游戏Id",
           key: "kindId",
           align: "center",
-          maxWidth: 120,
+          maxWidth: 120
         },
         {
           title: "游戏链接",
@@ -190,103 +186,13 @@ export default {
           title: "状态",
           maxWidth: 120,
           align: "center",
-          render: (h, params) => {
-            return h(
-              "Tag",
-              {
-                props: {
-                  type: "border",
-                  color: params.row.gameStatus ? "green" : "red"
-                }
-              },
-              this.gameStatusNum[params.row.gameStatus]
-            );
-          }
+          slot: "state"
         },
         {
           title: "操作",
-          key: "action",
-          align: 'center',
-          maxWidth: 250,
-          render: (h, params) => {
-            return h("div", [
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "text",
-                    size: "small"
-                  },
-                  style: {
-                    color: "#20a0ff",
-                    marginRight: "5px"
-                  },
-                  on: {
-                    click: () => {
-                      this.goDetail(params.row);
-                    }
-                  }
-                },
-                "查看"
-              ),
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "text",
-                    size: "small"
-                  },
-                  style: {
-                    color: "#20a0ff"
-                  },
-                  on: {
-                    click: () => {
-                      this.goUpdate(params.row);
-                    }
-                  }
-                },
-                "编辑"
-              ),
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "text",
-                    size: "small"
-                  },
-                  style: {
-                    color: "#20a0ff"
-                  },
-                  on: {
-                    click: () => {
-                      this.gameOperation(params.row);
-                    }
-                  }
-                },
-                `${params.row.gameStatus ? "停用" : "启用"}`
-              ),
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "text",
-                    size: "small"
-                  },
-                  style: {
-                    color: "#20a0ff"
-                  },
-                  on: {
-                    click: () => {
-                      this.gameId = params.row.gameId;
-                      this.gameType = params.row.gameType;
-                      this.orderModal = true;
-                    }
-                  }
-                },
-                "排序"
-              )
-            ]);
-          }
+          slot: "operate",
+          align: "center",
+          maxWidth: 250
         }
       ],
       gameListData: [],
@@ -306,16 +212,64 @@ export default {
     }
   },
   methods: {
+
+    //分类
+    classifyConfig(row) {
+      return this.getType(row)
+    },
+    //状态
+    stateConfig(row) {  
+      let color = row.gameStatus ? "green" : "red"
+      return {state: this.gameStatusNum[row.gameStatus], color}
+    },
+   
+    
+     /* 操作 */
+     //查看
+     operateCheck(row) {
+       this.goDetail(row);
+     },
+     //编辑
+    operateEdit(row) {
+       this.goUpdate(row);
+     },
+     //停用启用
+    operateConfig(row) {
+      this.gameOperation(row)
+    },
+    //停用启用状态
+    operateState(row) {
+      return row.gameStatus ? "red" : "#20a0ff"
+    },
+     //排序
+    operateOrder(row) {
+       this.gameId = row.gameId;
+       this.gameType = row.gameType;
+       this.orderModal = true;   
+     },
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     saveOrder() {
-      httpRequest(
-        "post",
-        "/gameChangeOrder",
-        {
-          gameType: this.gameType,
-          gameId: this.gameId,
-          sortOrder: this.gameOrder
-        }
-      ).then(res => {
+      httpRequest("post", "/gameChangeOrder", {
+        gameType: this.gameType,
+        gameId: this.gameId,
+        sortOrder: this.gameOrder
+      }).then(res => {
         if (res.code == 0) {
           this.$Message.success("操作成功");
           this.gameOrder = 0;
@@ -328,11 +282,13 @@ export default {
     },
     getGameList() {
       this.isFetching = true;
-      if ( this.$route.name == "gameManager" && localStorage.gameManager == "gameManager") {
-         localStorage.removeItem("gameManager");
+      if (
+        this.$route.name == "gameManager" &&
+        localStorage.gameManager == "gameManager"
+      ) {
+        localStorage.removeItem("gameManager");
       }
 
-      
       if (
         this.searchInfo.gameStatus == "" ||
         this.searchInfo.gameStatus == "2"
@@ -342,15 +298,14 @@ export default {
       if (this.searchInfo.companyIden == "") {
         delete this.searchInfo.companyIden;
       }
-      
-      httpRequest(
-        "post",
-        "/gameList",
-        {
-          gameType: null,
-          query: {companyIden: this.searchInfo.companyIden, gameStatus: this.searchInfo.gameStatus}
+
+      httpRequest("post", "/gameList", {
+        gameType: null,
+        query: {
+          companyIden: this.searchInfo.companyIden,
+          gameStatus: this.searchInfo.gameStatus
         }
-      )
+      })
         .then(result => {
           this.gameListData = result.payload;
         })
@@ -392,34 +347,23 @@ export default {
     },
     goDetail(row) {
       this.propChild = "";
-      httpRequest(
-        "get",
-        `/gameOne/${row.gameType}/${row.gameId}`,
-        {}
-      ).then(data => {
-        this.propChild = data.payload;
-      });
+      httpRequest("get", `/gameOne/${row.gameType}/${row.gameId}`, {}).then(
+        data => {
+          this.propChild = data.payload;
+        }
+      );
       this.isShowDetail = !this.isShowDetail;
     },
     getType(row) {
-      for (var i = 0; i < this.gameTypeList.length; i++) {
-        if (this.gameTypeList[i].code === row.gameType) {
-          return this.gameTypeList[i].name;
+      for (var i = 0; i < getGameType().length; i++) {
+        if (getGameType()[i].code === row.gameType) {
+          return getGameType()[i].name;
         }
       }
     },
-    /* getGameType() {
-      httpRequest("post", "/gameType", {}, "game").then(res => {
-        this.gameTypeList = res.payload;
-
-        console.log(this.gameTypeList);
-        
-        
-      });
-    }, */
+    
     getNowpage(page) {
       this.nowPage = page;
-      console.log("当前是第:" + page + "页");
     },
     gameOperation(row) {
       this.$Modal.confirm({
@@ -430,39 +374,27 @@ export default {
             : "此操作将启用该游戏，是否继续？"
         }`,
         onOk: () => {
-          httpRequest(
-            "post",
-            "/gameChangeStatus",
-            {
-              gameType: row.gameType,
-              gameId: row.gameId,
-              status: row.gameStatus ? 0 : 1
-            }
-          ).then(res => {
+          httpRequest("post", "/gameChangeStatus", {
+            gameType: row.gameType,
+            gameId: row.gameId,
+            status: row.gameStatus ? 0 : 1
+          }).then(res => {
             this.$Message.success("状态改变成功");
             this.getGameList();
           });
         }
       });
-    }, 
+    },
     // 更改玩家状态
     getCompanyList() {
-     /*  httpRequest(
-        "post",
-        "/companySelect",
-        {
-          parent: localStorage.loginRole == 1 ? "" : localStorage.loginId
-        },
-        "game"
-      ).then(result => {
-        */
-        this.companyInfo = this.$store.state.add.gameIden
-          ? this.$store.state.add.gameIden
-          : this.companyOptions[0].company;
-        this.searchInfo.companyIden = this.companyInfo;
-        this.startSearch();
+      
+      this.companyInfo = this.$store.state.add.gameIden
+        ? this.$store.state.add.gameIden
+        : this.companyOptions[0].company;
+      this.searchInfo.companyIden = this.companyInfo;
+      this.startSearch();
       //});
-    }, 
+    },
     //获取运营商列表
     startSearch(val) {
       this.searchInfo.companyIden =
@@ -471,9 +403,8 @@ export default {
       this.getGameList();
     },
     statusSearch(val) {
+      this.searchInfo.gameStatus = val;
 
-      this.searchInfo.gameStatus = val
-      
       this.searchInfo.companyIden =
         this.companyInfo == "全部厂商" ? "" : this.companyInfo;
       this.nowPage = 1;
@@ -487,6 +418,11 @@ export default {
         this.$store.state.add.isRefresh = false;
       }
     }
+  },
+  mounted() {
+    console.log(getGameType());
+    getGameType().shift();
+    console.log(getGameType());
   }
 };
 </script>
@@ -509,6 +445,21 @@ export default {
   }
   .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
+  }
+  /deep/.ivu-select-selection {
+    border-color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
+    border: 1px solid #ccc;
+    color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
+    background: #000;
+    color: #fff;
   }
 }
 </style>

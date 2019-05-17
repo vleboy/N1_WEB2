@@ -582,36 +582,7 @@ export default {
         return item
       })
       return roleList
-      /* console.log(roleList);
       
-      return roleList */
-            /* let tags = params.row.permissions;
-            return h(
-              "Tooltip",
-              {
-                props: {
-                  placement: "bottom-start"
-                }
-              }, */
-              //`${params.row.permissions.length}项权限`
-              
-               // h("div", `${params.row.permissions.length}项权限`),
-                /* params.row.permissions.map(
-                  item => {
-                    return h('span',{slot:'content',props:{maxWidth:10}},item)
-                  }
-                ) */
-                /* h("div", { slot: "content" }, [
-                  params.row.permissions.map(item => {
-                    return h(
-                      "p",
-                      { slot: "content", props: { maxWidth: 10 } },
-                      item
-                    );
-                  })
-                ])
-              ]
-            ); */
       
     },
 

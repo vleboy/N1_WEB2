@@ -1,31 +1,42 @@
 <template>
   <div class="adminLog">
     <div class="reload">
-      <Row class="row">
-        <Col span="3">
-          <Select v-model="model1" style="width:100%">
+      <Row class="row" style="display:flex;align-items:center">
+        
+          <Select v-model="model1" style="width:150px" size="small">
             <Option
               v-for="item in members"
               :value="item.value"
               :key="item.value"
               @click.native="selRole(item.role)"
+              
             >{{ item.label }}</Option>
           </Select>
-        </Col>
-        <Col span="1" offset="1">操作人:</Col>
-        <Col span="4">
-          <Input v-model.trim="userName" placeholder="请输入"></Input>
-        </Col>
-        <Col span="3">
+     
+        <p style="margin:0 1rem">操作人:</p>
+        <p span="4">
+          <Input v-model.trim="userName" placeholder="请输入" size="small"></Input>
+        </p>
+       
           <div class="btns">
-            <Button type="primary" @click="search">搜索</Button>
-            <Button  @click="reset">重置</Button>
+            <Button type="primary" @click="search" size="small" style="margin:0 .3rem 0 1rem">搜索</Button>
+            <Button  @click="reset" size="small">重置</Button>
           </div>
-        </Col>
+      
       </Row>
     </div>
     <div class="table">
-      <Table :columns="columns1" :data="columns2" size="small"></Table>
+      <Table :columns="columns1" :data="columns2" size="small">
+        <template slot-scope="{row, index}" slot="operator">
+          <span>{{row.operateToken ? row.operateToken.username : row.username}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="operateTime">
+          <span>{{operateTimeConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="operateResult">
+          <span :style="{color:operateResultConfig(row)}">{{row.ret == "Y" ? "成功" : "失败"}}</span>
+        </template>
+      </Table>
     </div>
     <div class="btn">
       <Button type="primary" :disabled="firstPage" class="lastpage" @click="homePage">首页</Button>
@@ -71,27 +82,12 @@ export default {
         {
           title: "操作人",
           align: 'center',
-          key: "username",
-          render: (h, params) => {
-            let name = "";
-            if (params.row.operateToken) {
-              name = params.row.operateToken.username;
-            } else {
-              name = params.row.username;
-            }
-            return h("span", name);
-          }
+          slot: "operator"
         },
         {
           title: "操作时间",
           align: 'center',
-          key: "",
-          render: (h, params) => {
-            return h(
-              "span",
-              this.dayjs(params.row.createdAt).format("YYYY-MM-DD HH:mm:ss")
-            );
-          }
+          slot: "operateTime"
         },
         {
           title: "操作",
@@ -101,37 +97,26 @@ export default {
         {
           title: "操作结果",
           align: 'center',
-          maxWidth: 120,
-          key: "",
-          render: (h, params) => {
-            if (params.row.ret == "Y") {
-              return h(
-                "span",
-                {
-                  style: {
-                    color: "#0c0"
-                  }
-                },
-                "成功"
-              );
-            } else {
-              return h(
-                "span",
-                {
-                  style: {
-                    color: "#f30"
-                  }
-                },
-                "失败"
-              );
-            }
-          }
+          slot: "operateResult"
         }
       ],
       columns2: []
     };
   },
   methods: {
+    //操作时间
+    operateTimeConfig(row) {
+      return this.dayjs(row.createdAt).format("YYYY-MM-DD HH:mm:ss")
+    },
+    //操作结果
+    operateResultConfig(row) {
+      return row.ret == "Y" ? "#0c0" : "#f30"
+    },
+
+
+
+
+
     selRole(value) {
       this.userName = "";
       this.role = value
@@ -203,5 +188,12 @@ export default {
 .demo-spin-icon-load {
   animation: ani-demo-spin 1s linear infinite;
 }
+/deep/ .ivu-input {
+    border-color: #000;
+    background: #fff;
+  }
+  /deep/.ivu-select-selection {
+    border-color: #000;
+  }
 </style>
 

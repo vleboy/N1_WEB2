@@ -3,17 +3,28 @@
     <div class="option">
       <Row class="row">
         <Col span="16">
-        <RadioGroup v-model="role" @on-change="changeRole" type="button">
+        <RadioGroup v-model="role" @on-change="changeRole" type="button" size="small">
             <Radio v-for="item in selectOption" :label="item.value" :key="item.value">{{ item.label }}</Radio>
         </RadioGroup>
         <!-- <Select style="width:200px;float:right" @on-change='changeRole' v-model="role">
           <Option v-for="item in selectOption" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select> -->
         </Col>
-      </Row>
+      </Row>,
+          
     </div>
     <div class="table">
-      <Table :columns="columns1" :data="debugLog" size="small" ></Table>
+      <Table :columns="columns1" :data="debugLog" size="small" >
+        <template slot-scope="{row, index}" slot="createdAt">
+          <span>{{createdAtConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="inparams">
+          <span>{{JSON.stringify(row.inparams)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="state">
+          <span :style="{color: stateConfig(row)}">{{row.ret == "Y" ? "已处理" : "未处理"}}</span>
+        </template>
+      </Table>
     </div>
     <div class="btn">
       <Button type="primary" :disabled='firstPage' class="lastpage" @click="homePage">首页</Button>
@@ -62,41 +73,12 @@ export default {
         {
           title: "时间",
           align: 'center',
-          key: "",
-          render: (h, params) => {
-            return h(
-              "span",
-              dayjs(params.row.createdAt).format("YYYY-MM-DD HH:mm:ss")
-            );
-          }
+          slot: "createdAt"
         },
         {
           title: "状态",
           align: 'center',
-          key: "",
-          render: (h, params) => {
-            if (params.row.ret == "Y") {
-              return h(
-                "span",
-                {
-                  style: {
-                    color: "#0c0"
-                  }
-                },
-                "已处理"
-              );
-            } else {
-              return h(
-                "span",
-                {
-                  style: {
-                    color: "#f30"
-                  }
-                },
-                "未处理"
-              );
-            }
-          }
+          slot: "state"
         },
         {
           title: "详情",
@@ -106,10 +88,7 @@ export default {
         {
           title: "参数",
           align: 'center',
-          key: "inparams",
-          render: (h, params) => {
-            return h("span", JSON.stringify(params.row.inparams));
-          }
+          slot: "inparams"
         }
       ]
     };
@@ -120,6 +99,16 @@ export default {
     }
   },
   methods: {
+
+    //时间
+    createdAtConfig(row) {
+      return dayjs(row.createdAt).format("YYYY-MM-DD HH:mm:ss")
+    },
+    //状态
+    stateConfig(row) {
+      return row.ret == "Y" ? "#0c0" : "#f30"
+    },
+
     nextPage() {
       let startKey = this.$store.state.admin.startKey;
       let role = this.role;
@@ -172,12 +161,25 @@ export default {
       margin: 20px;
     }
   }
-  .option{
-    padding-bottom: 16px;
-  }
 }
 .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
+    border: 1px solid #ccc;
+    color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-input {
+    border-color: #000;
+    background: #fff;
   }
 </style>
 

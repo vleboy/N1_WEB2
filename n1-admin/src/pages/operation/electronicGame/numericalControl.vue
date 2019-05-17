@@ -3,10 +3,24 @@
     <div class="nowList">
       <div>
     <p>
-      <Table :columns="columns1" :data="getMys" style="margin-bottom: 5rem"></Table>
+      <Table :columns="columns1" :data="mysArr" style="margin-bottom: 1rem" size="small">
+        <template slot-scope="{row, index}" slot="prizeOption">
+          <RadioGroup :value="prizeOptionConfig(row)" @on-change="prizeOptionChange(row)">
+            <Radio label="0">配置0-默认配置</Radio>
+            <Radio label="1">配置1-88%</Radio>
+            <Radio label="2">配置2-90%</Radio>
+            <Radio label="3">配置3-92%</Radio>
+            <Radio label="4">配置4-94%</Radio>
+            <Radio label="5">配置5-96%</Radio>
+          </RadioGroup>  
+        </template>
+        <template slot-scope="{row, index}" slot="prizeOperate">
+          <span style="cursor:pointer;color:#20a0ff" @click="prizeOperateConfig(row)">修改并启用配置</span>
+        </template>
+      </Table>
     </p>
     <p>
-      <Table :columns="columns2" :data="getNoMys"></Table>
+      <Table :columns="columns2" :data="noMysArr" size="small"></Table>
     </p> 
   </div>
     </div>
@@ -25,6 +39,8 @@ export default {
     return {
       spinShow: false,
       dataList: [],
+      mysArr: [],
+      noMysArr: [],
       columns1: [
         {
           title: "游戏系列-神秘大奖版",
@@ -34,121 +50,16 @@ export default {
         },
         {
           title: "数值配表",
-          key: "option",
+          slot: "prizeOption",
           align: 'center',
           minWidth: 600,
 
-          render: (h, params) => {
-            return h(
-              "RadioGroup",
-              {
-                props: {
-                  value: params.row.killRateLevel
-                },
-                on: {
-                  "on-change": val => {
-                    params.row.killRateLevel = val;
-                  }
-                }
-              },
-              [
-                h(
-                  "Radio",
-                  {
-                    props: {
-                      label: 0
-                    }
-                  },
-                  "配置0-默认配置"
-                ),
-                h(
-                  "Radio",
-                  {
-                    props: {
-                      label: 1
-                    }
-                  },
-                  "配置1-88%"
-                ),
-                h(
-                  "Radio",
-                  {
-                    props: {
-                      label: 2
-                    }
-                  },
-                  "配置2-90%"
-                ),
-                h(
-                  "Radio",
-                  {
-                    props: {
-                      label: 3
-                    }
-                  },
-                  "配置3-92%"
-                ),
-                h(
-                  "Radio",
-                  {
-                    props: {
-                      label: 4
-                    }
-                  },
-                  "配置4-94%"
-                ),
-                h(
-                  "Radio",
-                  {
-                    props: {
-                      label: 5
-                    }
-                  },
-                  "配置5-96%"
-                )
-              ]
-            );
-          }
+          
         },
         {
           title: "操作",
-          key: "setting",
-          align: "center",
-          render: (h, params) =>{
-           //console.log(window.selfs);
-           
-            return h(
-              "span",
-              {
-                style: {
-                  cursor: "pointer",
-                  color: "#20a0ff"
-                },
-                on: {
-                  click: () => {
-                    this.$Modal.confirm({
-                    title: '操作',
-                    content: '确定修改并启用配置？',
-                    onOk: () => {
-                      httpRequest(
-                      "post",
-                      "/setGameConfig",
-                      { gameType: params.row.gameType,config:{killRateLevel:params.row.killRateLevel}},
-                      "prize"
-                    )
-                        this.$Message.info('操作成功');
-                    },
-                    onCancel: () => {
-                        this.$Message.info('操作取消');
-                    }
-                    });
-                    
-                  }
-                }
-              },
-              "修改并启用配置"
-            );
-          }
+          slot: "prizeOperate",
+          align: "center"
         }
       ],
       columns2: [
@@ -278,61 +189,80 @@ export default {
     };
   },
   methods: {
+    /* 神秘大奖系列 */
+    //数值配标
+    prizeOptionConfig(row) {
+      //console.log(row.killRateLevel.toString());
+      
+      return row.killRateLevel.toString()
+    },
+    prizeOptionChange(value) {
+      console.log(value)
+      
+     /*  console.log(this.mysArr)
+      console.log(this.mysArr[parseInt(val)].killRateLevel)
+      
+      this.mysArr[parseInt(val)].killRateLevel = val.toString()
+       */
+      /* row.killRateLevel = val */
+    },
+    //操作
+    prizeOperateConfig(row) {
+      console.log(row.killRateLevel);
+      
+      /* this.$Modal.confirm({
+        title: '操作',
+        content: '确定修改并启用配置？',
+        onOk: () => {
+          httpRequest(
+            "post",
+            "/setGameConfig",
+            { gameType: row.gameType,config:{killRateLevel:row.killRateLevel}},
+            "prize"
+          )
+            this.$Message.info('操作成功');
+        },
+        onCancel: () => {
+            this.$Message.info('操作取消');
+        }
+      }) */
+    },
+
+
+    /* 无神秘大奖系列 */
+    //数值配标
+    //操作
+
     async getData() {
-      let _this = this
       httpRequest(
         "post",
         "/getGameConfig",
         { gameType: 'all'},
         "prize"
       ).then(res => {
-        _this.dataList = res.config;
-      
-      });
-      /* let data = [
-        {
-          _id: "5c7f2dd9837d662b4759404a",
-          gameType: "panda",
-          killRateLevel: "0"
-        },
-        {
-          _id: "5c7f2dd9f087042b40d70800",
-          gameType: "243",
-          killRateLevel: "1"
-        },
-        {
-          _id: "5c7f2dd9bb0b8b2b51ad77de",
-          gameType: "panda_bonus",
-          killRateLevel: "2"
-        },
-        {
-          _id: "5c7f2ddae675162b46ad20a1",
-          gameType: "243_bonus",
-          killRateLevel: "0"
-        },
-        {
-          _id: "5c7f2ddb8ad5f82b5dff7e06",
-          gameType: "tree_bonus",
-          killRateLevel: "1"
-        },
-        {
-          _id: "5c7f2ddb9584b92b572e9773",
-          gameType: "tree",
-          killRateLevel: "2"
-        }
-      ];
-      this.dataList = data; */
-    },
+        res.config.forEach(item => {
+          if (item.gameType.indexOf("_") != -1) {
+            this.mysArr.push(item);
+          }
+        })
+        res.config.forEach(item => {
+          if (item.gameType.indexOf("_") == -1) {
+            this.noMysArr.push(item);
+          }
+        })
+      })
+    }
 
   },
   computed: {
-    getMys() {
+    /* getMys() {
       let mysArr = [];
       this.dataList.forEach(item => {
         if (item.gameType.indexOf("_") != -1) {
           mysArr.push(item);
         }
       });
+      
       return mysArr;
     },
     getNoMys() {
@@ -343,7 +273,7 @@ export default {
         }
       });
       return mysArr;
-    }
+    } */
   }
 };
 </script>

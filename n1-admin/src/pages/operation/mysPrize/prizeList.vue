@@ -1,7 +1,7 @@
 <template>
   <div class="prizeList">
     <div class="search">
-      <Input v-model="sn" style="width: 200px" placeholder="请输入商户标识"></Input>
+      <Input v-model="sn" style="width: 200px;margin-right:1rem" placeholder="请输入商户标识" size="small"></Input>
       <DatePicker
         type="datetimerange"
         :options="options"
@@ -10,11 +10,22 @@
         placeholder="选择日期时间范围(默认最近一周)"
         style="width: 300px"
         @on-ok="init"
+        size="small"
       ></DatePicker>
-      <Button type="primary" @click="init">搜索</Button>
-      <Button  @click="reset">重置</Button>
+      <Button type="primary" @click="init" size="small" style="margin:0 .3rem 0 1rem">搜索</Button>
+      <Button  @click="reset" size="small">重置</Button>
     </div>
-    <Table :columns="columns1" :data="prizeList" size="small"></Table>
+    <Table :columns="columns1" :data="prizeList" size="small">
+      <template slot-scope="{row, index}" slot="userName">
+        <span style="color:#20a0ff;cursor:pointer" @click="userNameConfig(row)">{{row.userName}}</span>
+      </template>
+      <template slot-scope="{row, index}" slot="betTime">
+        <span>{{betTimeConfig(row)}}</span>
+      </template>
+      <template slot-scope="{row, index}" slot="winAmount">
+        <span>{{row.winAmount.toFixed(2)}}</span>
+      </template>
+    </Table>
     <Spin size="large" fix v-if="spin">
       <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
       <div>加载中...</div>
@@ -128,31 +139,7 @@ export default {
         {
           title: "玩家账号",
           align: 'center',
-          key: "userName",
-          render: (h, params) => {
-            let name = params.row.userName;
-            return h(
-              "span",
-              {
-                style: {
-                  color: "rgb(32, 160, 255)",
-                  cursor: "pointer"
-                },
-                on: {
-                  click: () => {
-                    localStorage.setItem("playerName", name);
-                    this.$router.push({
-                      name: "playDetail",
-                      query: {
-                        name
-                      }
-                    });
-                  }
-                }
-              },
-              name
-            );
-          }
+          slot: "userName"
         },
         {
           title: "玩家ID",
@@ -167,13 +154,7 @@ export default {
         {
           title: "日期",
           align: 'center',
-          key: "",
-          render: (h, params) => {
-            return h(
-              "span",
-              dayjs(params.row.betTime).format("YYYY-MM-DD HH:mm:ss")
-            );
-          }
+          slot: "betTime"
         },
         {
           title: "游戏类型",
@@ -198,10 +179,7 @@ export default {
         {
           title: "中奖金额",
           align: 'center',
-          key: "winAmount",
-          render:(h,params)=>{
-            return h('span',params.row.winAmount.toFixed(2))
-          }
+          slot: "winAmount"
         }
       ],
       prizeList: []
@@ -222,6 +200,46 @@ export default {
     this.init();
   },
   methods: {
+    //玩家账号
+    userNameConfig(row) {
+      localStorage.setItem("playerName", row.userName);
+      this.$router.push({
+        name: "playDetail",
+        query: {
+          name
+        }
+      });    
+    },
+    //日期
+    betTimeConfig(row) {
+      return dayjs(row.betTime).format("YYYY-MM-DD HH:mm:ss")
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     reset() {
       this.sn = "";
       this.defaultTime = getDefaultTime(true);
@@ -254,7 +272,6 @@ export default {
 .prizeList {
   min-height: 87vh;
   .search {
-    text-align: right;
     margin-bottom: 10px;
   }
 }

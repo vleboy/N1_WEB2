@@ -422,7 +422,7 @@ export default {
           });
         }
       }); */
-      this.selectOption = this.GameListEnum
+      this.selectOption = GameListEnum
     },
     search(val) {
         if (val == '') {
