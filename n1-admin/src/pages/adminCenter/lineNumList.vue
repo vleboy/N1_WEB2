@@ -8,7 +8,7 @@
         <Col span="4">
         <div class="btns">
           <Button type="primary" class="searchbtn" @click="search">搜索</Button>
-          <Button type="ghost" @click="reset">重置</Button>
+          <Button  @click="reset">重置</Button>
         </div>
         </Col>
       </Row>

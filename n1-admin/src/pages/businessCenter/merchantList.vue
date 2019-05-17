@@ -168,9 +168,12 @@ export default {
       //因为当钩子执行前，组件实例还没被创建
       // vm 就是当前组件的实例相当于上面的 this，所以在 next 方法里你就可以把 vm 当 this 来用了。
       //console.log(vm);//当前组件的实例
+      console.log(localStorage);
       if (localStorage.merchantList == "merchantList") {
         vm.supSuffix = vm.$route.query.suffix;
         vm.displayId = vm.$route.query.buId;
+        console.log(1);
+        
         vm.init();
       }
     });
@@ -534,7 +537,6 @@ export default {
         sort: "desc"
       };
       getMerchants(params).then(res => {
-        console.log(res);
         this.showData = res.payload;
         this.spinShow = false;
       });
@@ -545,7 +547,7 @@ export default {
       return JSON.parse(localStorage.userInfo).subRolePermission;
     }
   },
-  created() {
+  mounted() {
     if (this.permission.includes("正式数据")) {
       this.source = "0";
     }

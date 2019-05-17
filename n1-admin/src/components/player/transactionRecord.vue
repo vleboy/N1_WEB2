@@ -17,14 +17,14 @@
       </Row>
       <Row>
         <Col span="7">
-          <DatePicker v-model="amountDate" type="datetimerange" :options="options" :transfer='true' style="width: 300px" @on-ok="searchAmount" placeholder="选择日期时间范围">
+          <DatePicker size="small" v-model="amountDate" type="datetimerange" :options="options" :transfer='true' style="width: 300px" @on-ok="searchAmount" placeholder="选择日期时间范围">
         </DatePicker>
         </Col>
         <Col span="17" style="float: right; text-align: right">
-        <Input v-model="betId" placeholder="请输入交易号" style="width: 30%;"></Input>
-        <Button type="primary" @click="searchAmount">搜索</Button>
-        <Button type="ghost" @click="reset">重置</Button>
-        <Button type="primary" @click="exportData">导出数据</Button>
+        <Input v-model="betId" placeholder="请输入交易号" style="width: 30%;" size="small"></Input>
+        <Button type="primary" @click="searchAmount" size="small">搜索</Button>
+        <Button @click="reset" size="small">重置</Button>
+        <Button type="primary" @click="exportData" size="small">导出数据</Button>
         </Col>
         <!-- <Col span="7"> -->
         <!-- <span class="justfy2">当前剩余点数：<span style="color: #F7BA2A">{{formatPoints(balance)}}</span></span> -->
@@ -34,7 +34,32 @@
     </div>
 
     <div class="-p-content">
-      <Table :columns="columns" :data="dataList"></Table>
+
+      <Table :columns="columns" :data="dataList">
+        <template slot-scope="{row, index}" slot="createdAt">
+          <span>{{createdAtConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="gameId">
+          <span>{{gameIdConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="oldBalance">
+          <span>{{oldBalanceConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="balance">
+          <span>{{balanceConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="newBalance">
+          <span>{{newBalanceConfig(row)}}</span>
+        </template>   
+        <template slot-scope="{row, index}" slot="profit">
+          <span :style="{color:profitConfig(row).color}">{{profitConfig(row).profit}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="operate">
+            <Button v-if="operateState(row)" type="text" size="small" style="color:#20a0ff" @click="operateCheck(row)">查看战绩</Button>   
+            <Button v-if="operateState(row)" type="text" size="small" style="color:#20a0ff" @click="operateWater(row)">流水详情</Button>   
+        </template>
+      </Table>
+
       <Row style="padding: 20px 0">
         <Col span="12" class="g-text-right">
         <div style="margin-bottom: 10px;font-size: 15px;" v-if='radioInfo!=-1'>本页输赢总计:
@@ -211,13 +236,7 @@ export default {
       GameListEnum: {
         All:[
           { company: "全部", code: "", name: "全部" },
-          /* { company: "NA", code: "10000", name: "NA棋牌游戏" },
-          { company: "NA", code: "30000", name: "NA真人视讯" },
-          { company: "NA", code: "40000", name: "NA电子游戏" },
-          { company: "NA", code: "50000", name: "NA街机游戏" },
-          { company: "NA", code: "60000", name: "NA捕鱼游戏" }, */
           { company: "NA", code: "70000", name: "H5电子游戏" },
-          //{ company: "NA", code: "80000", name: "H5真人视讯" },
           { company: "NA", code: "90000", name: "H5电子游戏-无神秘奖" },
           { company: "KY", code: "1070000", name: "KY棋牌游戏" },
           { company: "TTG", code: "1010000", name: "TTG电子游戏" },
@@ -236,15 +255,8 @@ export default {
           { company: "PP", code: "1160000", name: "PP电子游戏" }
         ],
         NA: [
-          // { company: 'NA', code: '3', name: 'NA商城' },
           { company: "全部", code: "", name: "全部" },
-          /* { company: "NA", code: "10000", name: "NA棋牌游戏" },
-          { company: "NA", code: "30000", name: "NA真人视讯" },
-          { company: "NA", code: "40000", name: "NA电子游戏" },
-          { company: "NA", code: "50000", name: "NA街机游戏" },
-          { company: "NA", code: "60000", name: "NA捕鱼游戏" }, */
           { company: "NA", code: "70000", name: "H5电子游戏" },
-          //{ company: "NA", code: "80000", name: "H5真人视讯" },
           { company: "NA", code: "90000", name: "H5电子游戏-无神秘奖" }
         ],
         KY: [
@@ -285,135 +297,50 @@ export default {
         {
           title: "交易号",
           key: "businessKey",
-          minWidth: 120
+          minWidth: 120,
+          align: "center"
         },
         {
           title: "交易时间",
-          key: "",
+          slot: "createdAt",
           minWidth: 120,
-          render: (h, params) => {
-            return h(
-              "span",
-              dayjs(params.row.createdAt).format("YYYY-MM-DD HH:mm:ss")
-            );
-          }
+          align: "center"
         },
         {
           title: "游戏类型",
-          key: "typeName"
+          key: "typeName",
+          align: "center"
         },
         {
           title: "游戏ID",
-          key: "gameId",
-          render: (h, params) => {
-            return h('span', this.GameNameEnum[params.row.gameId] ? `${params.row.gameId}(${this.GameNameEnum[params.row.gameId]})`: params.row.gameId)    
-          }
+          slot: "gameId",
+          align: "center"
         },
         {
-          title: "结算前余额",
-          key: "",
-          render: (h, params) => {
-            return h("span", thousandFormatter(params.row.originalAmount));
-          }
+          title: "结算前金额",
+          slot: "oldBalance",
+          align: "center"
         },
         {
           title: "操作金额",
-          key: "",
-          render: (h, params) => {
-            return h("span", thousandFormatter(params.row.betAmount));
-          }
+          slot: "balance",
+          align: "center"
         },
         {
           title: "返还金额",
-          key: "",
-          render: (h, params) => {
-            return h("span", thousandFormatter(params.row.retAmount));
-          }
+          slot: "newBalance",
+          align: "center"
         },
         {
           title: "净利润",
-          key: "",
-          render: (h, params) => {
-            return h(
-              "span",
-              {
-                class: {
-                  "-p-green": params.row.profitAmount >= 0,
-                  "-p-red": params.row.profitAmount < 0
-                }
-              },
-              thousandFormatter(params.row.profitAmount)
-            );
-          }
+          slot: "profit",
+          align: "center"
         },
-        // {
-        //   title: '成数',
-        //   key: '',
-        //   render: (h, params) => {
-        //     return h('span', `${params.row.rate}%`)
-        //   }
-        // },
-        // {
-        //   title: '洗码比',
-        //   key: '',
-        //   render: (h, params) => {
-        //     return h('span', `${params.row.mix}%`)
-        //   }
-        // },
+        
         {
           title: "操作",
-          key: "action",
-          align: "center",
-          render: (h, params) => {
-            if (
-              params.row.gameType != 1 &&
-              params.row.gameType != 2 &&
-              params.row.gameType != 3
-            ) {
-              return h("div", [
-                h(
-                  "Button",
-                  {
-                    props: {
-                      type: "text",
-                      size: "small"
-                    },
-                    style: {
-                      color: "#20a0ff"
-                      // marginRight: '5px'
-                    },
-                    on: {
-                      click: () => {
-                        this.mystical=false
-                        this.fudai=false;
-                        this.nomalType=false
-                        this.openModalBill(params.row);
-                      }
-                    }
-                  },
-                  "查看战绩"
-                ),
-                h(
-                  "Button",
-                  {
-                    props: {
-                      type: "text",
-                      size: "small"
-                    },
-                    style: {
-                      color: "#20a0ff"
-                    },
-                    on: {
-                      click: () => {
-                        this.openModalRunning(params.row);
-                      }
-                    }
-                  },
-                  "流水详情"
-                )
-              ]);
-            }
-          }
+          slot: "operate",
+          align: "center"
         }
       ],
       realTypeIds: ["30000", "1050000", "1060000"]
@@ -456,6 +383,55 @@ export default {
     //this.companySelectList();
   },
   methods: {
+    //交易时间
+    createdAtConfig(row) {
+      return dayjs(row.createdAt).format("YYYY-MM-DD HH:mm:ss")  
+    },
+    //游戏ID
+    gameIdConfig(row) {
+      return this.GameNameEnum[row.gameId] ? `${row.gameId}(${this.GameNameEnum[row.gameId]})`: row.gameId   
+    },
+    //结算前金额
+    oldBalanceConfig(row) {
+      return thousandFormatter(row.originalAmount)
+    },
+    //操作金额
+    balanceConfig(row) {
+      return thousandFormatter(row.betAmount)
+    },
+    //返还金额
+    newBalanceConfig(row) {
+      return thousandFormatter(row.retAmount)
+    },
+    //利润
+    profitConfig(row) {
+      let color =     row.profitAmount >=0 ? "green" : "red"
+      return {profit: thousandFormatter(row.profitAmount), color}
+    },
+    /* 操作 */
+    //显示状态
+    operateState(row) {
+      return row.gameType != 1 && row.gameType != 2 && row.gameType != 3 ? true : false
+    },
+    //查看战绩
+    operateCheck(row) {
+      this.mystical=false
+      this.fudai=false;
+      this.nomalType=false
+      this.openModalBill(row);
+    },
+    //流水详情
+    operateWater(row) {
+      this.openModalRunning(row);
+    },
+    
+
+
+
+
+
+
+
     reset() {
       this.companyInfo = '全部厂商'
       this.selType = 'All'

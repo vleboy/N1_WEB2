@@ -1,19 +1,6 @@
 <template>
   <div class="adminList">
-    <!-- <div class="search">
-      <Row class="row">
-        <Col span="2" offset="14">用户名</Col>
-        <Col span="4">
-        <Input v-model="username" placeholder="请输入"></Input>
-        </Col>
-        <Col span="3">
-        <div class="btns">
-          <Button type="primary" class="searchbtn">搜索</Button>
-          <Button type="ghost">重置</Button>
-        </div>
-        </Col>
-      </Row>
-    </div> -->
+    
     <div class="option">
       <p class="create">
         <Button type="primary" @click="addAdmin">创建管理员</Button>
@@ -21,7 +8,19 @@
       </p>
     </div>
     <div class="table">
-      <Table :columns="columns1" :data="adminList" size="small" ></Table>
+      <Table :columns="columns1" :data="adminList" size="small" >
+        <template slot-scope="{row, index}" slot="createdAt">
+          <span>{{createdAtConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="balance">
+          <span>{{balanceConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="operate">
+          <span style="color: #20a0ff;cursor:pointer;padding-right:.3rem" @click="operatePwd(row)">修改密码</span>
+          <span>|</span>
+          <span style="color: #20a0ff;cursor:pointer;padding-left:.3rem" @click="operateRole(row)">修改角色</span>
+        </template>
+      </Table>
     </div>
     <Modal v-model="modal" title="修改密码" :width='350' @on-ok="ok" @on-cancel='cancel'>
       <p class="modal_input">
@@ -100,25 +99,16 @@ export default {
         },
         {
           title: "剩余点数",
-          key: "balance",
+          slot: "balance",
           align: 'center',
-          sortable:true,
-          render:(h,params)=>{
-            return h('span',thousandFormatter(params.row.balance))
-          }
+          sortable:true
         },
         {
           title: "创建时间",
-          key: "createdAt",
+          slot: "createdAt",
           align: 'center',
           sortable:true,
-          minWidth:20,
-          render: (h, params) => {
-            return h(
-              "span",
-              dayjs(params.row.createdAt).format("YYYY-MM-DD")
-            );
-          }
+          minWidth:20
         },
         {
           title: "邮箱",
@@ -128,49 +118,9 @@ export default {
         },
         {
           title: "操作",
-          key: "",
+          slot: "operate",
           align: 'center',
-          minWidth:20,
-          render: (h, params) => {
-            return h("p", [
-              h(
-                "span",
-                {
-                  style: {
-                    color: "#20a0ff",
-                    cursor: "pointer",
-                    paddingRight: "5px"
-                  },
-                  on: {
-                    click: () => {
-                      this.modal = true;
-                      this.userId = params.row.userId;
-                    }
-                  }
-                },
-                "修改密码"
-              ),
-              h("span", "|"),
-              h(
-                "span",
-                {
-                  style: {
-                    color: "#20a0ff",
-                    cursor: "pointer",
-                    paddingLeft: "5px"
-                  },
-                  on: {
-                    click: () => {
-                      this.userId = params.row.userId;
-                      this.subRole = params.row.subRole;
-                      this.roleModal = true;
-                    }
-                  }
-                },
-                "修改角色"
-              )
-            ]);
-          }
+          minWidth:20
         }
       ],
       spinShow: false
@@ -182,6 +132,29 @@ export default {
     }
   },
   methods: {
+    //创建时间
+    createdAtConfig(row) {
+      return dayjs(row.createdAt).format("YYYY-MM-DD")   
+    },
+    //剩余点数
+    balanceConfig(row) {
+      return thousandFormatter(row.balance)
+    },
+    /* 操作 */
+    //修改面膜
+    operatePwd(row) {
+      this.modal = true;
+      this.userId = row.userId;
+    },
+    //修改角色
+    operateRole(row) {
+      this.userId = row.userId;
+      this.subRole = row.subRole;
+      this.roleModal = true;
+    },
+            
+
+
     addAdmin() {
       this.$router.push({ name: "addAdmin" });
     },

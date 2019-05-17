@@ -1,37 +1,15 @@
 <template>
   <div class="p-detail">
-    <div class="-d-title">
-      <h2>{{userName}}</h2>
+    <div>
+     <Table :columns="columns" :data="dataList" size="small" style="margin-bottom:1rem">
+       <template slot-scope="{row, index}" slot="gameState">
+         <span>{{gameStateConfig(row)}}</span>
+       </template>
+       <template slot-scope="{row, index}" slot="joinTime">
+         <span>{{joinTimeConfig(row)}}</span>
+       </template>
+     </Table>
     </div>
-     <Collapse v-model="panel1" :style="{marginBottom:'15px'}">
-      <Panel name="1">
-      基本信息  所属商户: {{detailInfo.merchantName}} 
-        <div slot="content">
-          <div class="-d-base">
-            <!-- <h4>基本信息</h4> -->
-            <div class="-b-form">
-              <Row>
-                <Col span="6"><span class="-span-base">商户ID：{{detailInfo.buId}}</span></Col>
-                <Col span="6"><span class="-span-base">所属商户：{{detailInfo.merchantName}}</span></Col>
-                <Col span="6"><span class="-span-base">商户标识：{{detailInfo.sn}}</span></Col>
-                <Col span="6"><span class="-span-base">线路号：{{detailInfo.msn}}</span></Col>
-              </Row>
-              <Row>
-                <Col span="6"><span class="-span-base">玩家ID：{{detailInfo.userId}}</span></Col>
-                <Col span="6"><span class="-span-base" >游戏状态：{{gameStatus[detailInfo.gameState]}}</span></Col>
-                <Col span="6"><span class="-span-base" >余额：{{detailInfo.balance}}</span></Col>
-                <Col span="6"><span class="-span-base">最近登录游戏：{{lastTime}}</span></Col>
-              </Row>
-              <Row>
-                <Col span="6" v-for="(item,index) of detailInfo.gameList" :key="index">
-                <span class="-span-base">{{item.name+'洗码比'}}：{{item.mix}}%</span>
-                </Col>
-              </Row>
-            </div>
-          </div>
-        </div>
-      </Panel>
-     </Collapse>
     <div class="-d-content">
       <!-- <h4>消费信息</h4> -->
       <RadioGroup v-model="reportType" type="button" :style="{paddingBottom:'10px'}" size="small">
@@ -75,7 +53,49 @@ export default {
         '1': '离线',
         '2': '在线',
         '3': '游戏中'
-      }
+      },
+      columns: [
+        {
+          title: "商户ID",
+          key: "buId"
+        },
+        {
+          title: "所属商户",
+          align: "center",
+          key: "merchantName"
+        },
+        {
+          title: "商户标识",
+           align: "center",
+          key: "sn"
+        },
+        {
+          title: "线路号",
+           align: "center",
+          key: "msn"
+        },
+        {
+          title: "玩家ID",
+           align: "center",
+          key: "userId"
+        },
+        {
+          title: "游戏状态",
+           align: "center",
+          slot: "gameState"
+        },
+        {
+          title: "余额",
+           align: "center",
+          key: "balance"
+        },
+        {
+          title: "最近登录游戏",
+           align: "center",
+          slot: "joinTime"
+        },
+      ],
+      dataList: []
     }
   },
   mounted () {
@@ -93,7 +113,17 @@ export default {
     }
   },
   methods: {
+    //游戏状态
+    gameStateConfig(row) {
+      return this.gameStatus[row.gameState]
+    },
+    //最近登录时间
+    joinTimeConfig(row) {
+      return dayjs(row.joinTime).format("YYYY-MM-DD HH:mm:ss")
+    },
+
     getPlayerDetail () {
+      this.dataList = []
       if(this.isFetching) return
       this.isFetching = true
       let name = localStorage.playerName
@@ -103,6 +133,7 @@ export default {
       }).then(
         result => {
           this.playerDetailInfo = result.userInfo
+          this.dataList.push(this.playerDetailInfo)
           this.reportType = '1'
           // this.$store.commit('closeLoading')
         }
@@ -174,5 +205,48 @@ export default {
     .demo-spin-icon-load{
       animation: ani-demo-spin 1s linear infinite;
     }
+    /deep/ .ivu-tabs-bar {
+    height: 2.25rem;
+  }
+  /deep/ .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-nav-container {
+    height: 2.25rem;
+  }
+  /deep/ .ivu-tabs-nav {
+    height: 2.25rem;
+  }
+  /deep/ .ivu-tabs-nav-scroll {
+    height: 2.25rem;
+  }
+  
+  /deep/ .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab {
+    border-color: #000;
+    color: #000;
+    background: #fff;
+  }
+ 
+  /deep/ .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab-active {
+    background: #000;
+    color: #fff;
+  }
+  
+  /deep/.ivu-select-selection {
+    border-color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
+    border: 1px solid #ccc;
+    color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-input {
+    border-color: #000;
+    background: #fff;
+  }
   }
 </style>

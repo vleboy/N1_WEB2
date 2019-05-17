@@ -14,7 +14,7 @@
         <Col span="5">
         <div class="btns">
           <Button type="primary" @click="getPropPrizeList">搜索</Button>
-          <Button type="ghost" @click="resetSearch">重置</Button>
+          <Button  @click="resetSearch">重置</Button>
         </div>
         </Col>
       </Row>

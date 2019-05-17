@@ -23,7 +23,7 @@
       >隐藏测试</Checkbox>
       <span class="btn">
         <Button type="primary" @click="search">搜索</Button>
-        <Button type="ghost" @click="reset">重置</Button>
+        <Button  @click="reset">重置</Button>
       </span>
     </div>
     <Table :columns="columns1" :data="player" size="small" ref="table"></Table>

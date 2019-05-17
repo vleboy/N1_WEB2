@@ -12,7 +12,7 @@
         @on-ok="init"
       ></DatePicker>
       <Button type="primary" @click="init">搜索</Button>
-      <Button type="ghost" @click="reset">重置</Button>
+      <Button  @click="reset">重置</Button>
     </div>
     <Table :columns="columns1" :data="prizeList" size="small"></Table>
     <Spin size="large" fix v-if="spin">

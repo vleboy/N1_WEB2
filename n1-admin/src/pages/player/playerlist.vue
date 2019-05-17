@@ -1,55 +1,44 @@
 <template>
   <div class="p-playerlist">
     <div class="propList-search">
-      <Row class="row -search-row">
-        <Col span="2" offset="2">玩家ID</Col>
-        <Col span="4">
-          <Input v-model="searchInfo.userId" placeholder="请输入"></Input>
-        </Col>
-        <Col span="2">玩家账号</Col>
-        <Col span="4">
-          <Input v-model="searchInfo.userName" placeholder="请输入"></Input>
-        </Col>
-        <Col span="2">玩家昵称</Col>
-        <Col span="4">
-          <Input v-model="searchInfo.nickname" placeholder="请输入"></Input>
-        </Col>
-        <Col span="4">
-          <div class="btns">
-            <Button type="primary" @click="getSearch(true)">搜索</Button>
-            <Button @click="getSearch(false)">重置</Button>
-          </div>
-        </Col>
-      </Row>
-      <Row class="row -search-row" v-if="role!='100'">
-        <Col span="2" offset="2">商户ID</Col>
-        <Col span="4">
-          <Input v-model="searchInfo.buId" placeholder="请输入"></Input>
-        </Col>
-
-        <Col span="2">商户标识</Col>
-        <Col span="4">
-          <Input v-model="searchInfo.parentSn" placeholder="请输入"></Input>
-        </Col>
-
-        <Col span="2">游戏状态</Col>
-        <Col span="4">
-          <Select
-            v-model="searchInfo.gameId"
-            clearable
-            placeholder="请选择游戏状态"
-            style="text-align: left"
-          >
-            <Option
-              v-for="(item, index) in gameTypeList"
-              :value="item.code"
-              :key="index"
-            >{{ item.name }}</Option>
-          </Select>
-        </Col>
-        
-      </Row>
+      <p >玩家ID</p>
+      <p class="input">
+        <Input v-model="searchInfo.userId" placeholder="请输入" size="small"></Input>
+      </p>
+      <p>玩家昵称</p>
+      <p class="input">
+        <Input v-model="searchInfo.nickname" placeholder="请输入" size="small"></Input>
+      </p>
+      <p>商户ID</p>
+      <p class="input">
+        <Input v-model="searchInfo.buId" placeholder="请输入" size="small"></Input>
+      </p>
+      <p>商户标识</p>
+      <p class="input">
+        <Input v-model="searchInfo.parentSn" placeholder="请输入" size="small"></Input>
+      </p>
+      <p>游戏状态</p>
+      <p class="input">
+        <Select
+          size="small"
+          v-model="searchInfo.gameId"
+          clearable
+          placeholder="请选择游戏状态"
+          style="text-align: left"
+        >
+          <Option
+            v-for="(item, index) in gameTypeList"
+            :value="item.code"
+            :key="index"
+          >{{ item.name }}</Option>
+        </Select>
+      </p>
+      <p>
+        <Button type="primary" @click="getSearch(true)" style="margin-right:.3rem" size="small">搜索</Button>
+        <Button @click="getSearch(false)" size="small">重置</Button>
+      </p>
     </div>
+
     <div class="playerform">
       <!--<Row class="-list-btn">-->
       <!--<Col>-->
@@ -57,7 +46,49 @@
       <!--<Button type="primary" @click="allChangeState(1)">批量开启</Button>-->
       <!--</Col>-->
       <!--</Row>-->
-      <Table :columns="columns" :data="getItems"></Table>
+
+
+      <Table :columns="columns" :data="getItems">
+        <template slot-scope="{row, index}" slot="buId">
+          <Tooltip content="前往商户列表" placement="top">
+            <span @click="buIdConfig(row)" style="color:#20a0ff;cursor:pointer">{{row.buId}}</span>
+          </Tooltip>
+        </template>  
+        <template slot-scope="{row, index}" slot="nickname">
+          <span>{{row.nickname === "NULL!" ? "-" : row.nickname}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="state">
+          <Tag type="border" :color="stateConfig(row).color">
+            {{stateConfig(row).state}}
+          </Tag> 
+        </template>
+        <template slot-scope="{row, index}" slot="gameState">
+          <Tag type="border" :color="gameStateConfig(row)">
+            {{row.gameStateName}}
+          </Tag> 
+        </template>
+        <template slot-scope="{row, index}" slot="balance">
+         <span>{{balanceConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="createdAt">
+         <span>{{createdAtConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="joinTime">
+         <span>{{joinTimeConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="operate">
+         <div style="display:flex;justify-content: space-around">
+           <Button type="text" size="small" style="color:#20a0ff" @click="operateCheck(row)">查看</Button>
+           <Button type="text" size="small" :style="{color:operateConfig(row)}" @click="operateState(row)">{{row.state ? "停用" : "开启"}}</Button>
+         </div>
+        </template>
+      </Table>
+
+
+
+
+
+
       <Spin size="large" fix v-if="isFetching">
         <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
         <div>加载中...</div>
@@ -82,7 +113,7 @@ import {
   unFormatUserName,
   thousandFormatter
 } from "@/config/format";
-import { getGameType } from "@/config/getGameType"
+import { getGameType } from "@/config/getGameType";
 export default {
   beforeRouteEnter(to, from, next) {
     /* console.log(this, 'beforeRouteEnter'); // undefined
@@ -93,11 +124,10 @@ export default {
       //因为当钩子执行前，组件实例还没被创建
       // vm 就是当前组件的实例相当于上面的 this，所以在 next 方法里你就可以把 vm 当 this 来用了。
       //console.log(vm);//当前组件的实例
-      if (localStorage.playList == 'playList') {
+      if (localStorage.playList == "playList") {
         vm.searchInfo.parentSn = vm.$route.query.sn;
-        vm.getSearch(true)
+        vm.getSearch(true);
       }
-
     });
   },
   beforeCreate() {},
@@ -130,7 +160,6 @@ export default {
         {
           title: "玩家ID",
           key: "userId",
-          sortable: true,
           align: "center",
           maxWidth: 100
         },
@@ -138,174 +167,60 @@ export default {
           title: "玩家账号",
           key: "userName",
           align: "center",
-          sortable: true
+     
+        },
+        {
+          title: "玩家昵称",
+          slot: "nickname",
+
+          align: "center"
         },
         {
           title: "商户ID",
-          key: "buId",
-          sortable: true,
-          align: "center",
-          render: (h, params) => {
-            return h(
-              "Tooltip",
-              {
-                style: {
-                  color: "#20a0ff",
-                  cursor: "pointer"
-                },
-                props: {
-                  content: "前往商户列表",
-                  placement: "top"
-                }
-                
-              },
-              [h('span',{
-                on: {
-                  click: () => {
-                    this.$router.push({name: "merchantList",query:{buId:params.row.buId}})
-                     localStorage.setItem('merchantList','merchantList')
-                  }
-                }
-              },params.row.buId)]
-              
-            );
-          }
+          slot: "buId",
+ 
+          align: "center"
         },
         {
           title: "所属商户",
           key: "merchantName",
           align: "center",
-          sortable: true
-        },
-        {
-          title: "玩家昵称",
-          key: "nickname",
-          sortable: true,
-          align: "center",
-          render: (h, params) => {
-            //console.log(params);
 
-            return h(
-              "span",
-              params.row.nickname === "NULL!" ? "-" : params.row.nickname
-            );
-          }
         },
+        
         {
           title: "状态",
-          key: "state",
+          slot: "state",
           sortable: true,
-          align: "center",
-          render: (h, params) => {
-            return h(
-              "Tag",
-              {
-                props: {
-                  type: "border",
-                  color: params.row.state ? "green" : "red"
-                }
-              },
-              this.playerStatus[params.row.state]
-            );
-          }
+          align: "center"
         },
         {
           title: "游戏状态",
-          key: "gameStateName",
+          slot: "gameState",
           sortable: true,
-          align: "center",
-          render: (h, params) => {
-            return h(
-              "Tag",
-              {
-                props: {
-                  type: "border",
-                  color:
-                    params.row.gameState == 3 || params.row.gameState == 2
-                      ? "green"
-                      : ""
-                }
-              },
-              params.row.gameStateName
-            );
-          }
+          align: "center"
         },
         {
           title: "点数",
-          key: "balance",
+          slot: "balance",
           sortable: true,
-          align: "center",
-          render: (h, params) => {
-            return h("span", thousandFormatter(params.row.balance));
-          }
+          align: "center"
         },
         {
           title: "注册时间",
-          key: "createdAt",
+          slot: "createdAt",
           sortable: true,
-          maxWidth: 120,
-          render: (h, params) => {
-            return h(
-              "span",
-              dayjs(params.row.createdAt).format("YYYY-MM-DD")
-            );
-          }
+          maxWidth: 120
         },
         {
           title: "最近登录游戏时间",
-          key: "joinTime",
-          sortable: true,
-          render: (h, params) => {
-            return h(
-              "span",
-              params.row.joinTime ? dayjs(params.row.joinTime).format("YYYY-MM-DD HH:mm:ss") : ''
-            );
-          }
+          slot: "joinTime",
+          sortable: true
         },
         {
           title: "操作",
-          key: "action",
-          align: "center",
-          render: (h, params) => {
-            return h("div", [
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "text",
-                    size: "small"
-                  },
-                  style: {
-                    color: "#20a0ff"
-                  },
-                  on: {
-                    click: () => {
-                      this.playDetail(params.row);
-                    }
-                  }
-                },
-                "查看"
-              ),
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "text",
-                    size: "small"
-                  },
-                  style: {
-                    color: "#20a0ff"
-                  },
-                  on: {
-                    click: () => {
-                      this.changeStatus(params.row);
-                    }
-                  }
-                },
-                params.row.state ? "停用" : "开启"
-              )
-            ]);
-          }
+          slot: "operate",
+          align: "center"
         }
       ]
     };
@@ -327,6 +242,75 @@ export default {
     }
   },
   methods: {
+
+    //商户ID
+    buIdConfig(row) {
+     
+      localStorage.setItem("merchantList", "merchantList")
+      console.log(localStorage.getItem('merchantList'));
+      
+      
+      this.$router.push({
+        name: "merchantList",
+        query: { buId: row.buId }
+      });
+      
+    },
+    //状态
+    stateConfig(row) {
+     let color = row.state ? "green" : "red"
+     return {state: this.playerStatus[row.state], color}
+    },
+    //游戏状态
+    gameStateConfig(row) {
+      return row.gameState == 3 || row.gameState == 2 ? "green" : ""
+    },
+    //点数
+    balanceConfig(row) {
+      return thousandFormatter(row.balance)  
+    },
+    //注册时间
+    createdAtConfig(row) {
+      return dayjs(row.createdAt).format("YYYY-MM-DD")
+    },
+    //最近登录时间
+    joinTimeConfig(row) {
+      return dayjs(row.joinTime).format("YYYY-MM-DD HH:mm:ss")
+    },
+    //操作
+    //查看
+    operateCheck(row) {
+      this.playDetail(row)
+    },
+    //启用停用
+    operateState(row) {
+      this.changeStatus(row);
+    },
+    operateConfig(row) {
+      return row.state ? "red" : "blue"
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     selectionChange(val) {
       this.checkedArray = val;
       // console.log(this.checkedArray, '被选中的多选')
@@ -342,8 +326,11 @@ export default {
     },
     getPlayList() {
       this.isFetching = true;
-      if (this.$route.name == 'playList' && localStorage.playList == 'playList') {
-        localStorage.removeItem('playList')
+      if (
+        this.$route.name == "playList" &&
+        localStorage.playList == "playList"
+      ) {
+        localStorage.removeItem("playList");
       }
       //if (this.isFetching) return;
       // this.$store.commit('startLoading')
@@ -483,11 +470,11 @@ export default {
         
         // this.$store.commit('closeLoading')
       });*/
-      this.gameTypeList = getGameType()
-      this.gameTypeList.shift()
-      this.gameTypeList.unshift({ code: "0", name: "离线" })
-      this.gameTypeList.unshift({ code: "1", name: "大厅" })
-      this.gameTypeList.unshift({ code: "", name: "全部" , value: "全部"})
+      this.gameTypeList = getGameType();
+      this.gameTypeList.shift();
+      this.gameTypeList.unshift({ code: "0", name: "离线" });
+      this.gameTypeList.unshift({ code: "1", name: "大厅" });
+      this.gameTypeList.unshift({ code: "", name: "全部", value: "全部" });
     }
   }
 };
@@ -495,23 +482,61 @@ export default {
 
 <style scpoed lang="less" type="text/less">
 .p-playerlist {
-  min-height: 89vh;
-  .propList {
-    padding: 1rem 2rem;
-  }
-  .-list-btn {
-    padding: 16px 0;
-  }
-  .-search-row {
-    padding-bottom: 10px;
-  }
   .propList-search {
-    line-height: 32px;
-    text-align: center;
-    padding-bottom: 6px;
+    display: flex;
+    margin-bottom: 1rem;
+    align-items: center;
+    .input {
+      
+      margin: 0 1rem;
+    }
   }
   .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
   }
+  /deep/ .ivu-tabs-bar {
+    height: 2.25rem;
+  }
+  /deep/ .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-nav-container {
+    height: 2.25rem;
+  }
+  /deep/ .ivu-tabs-nav {
+    height: 2.25rem;
+  }
+  /deep/ .ivu-tabs-nav-scroll {
+    height: 2.25rem;
+  }
+  
+  /deep/ .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab {
+    border-color: #000;
+    color: #000;
+    background: #fff;
+  }
+ 
+  /deep/ .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab-active {
+    background: #000;
+    color: #fff;
+  }
+  
+  /deep/.ivu-select-selection {
+    border-color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
+    border: 1px solid #ccc;
+    color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-input {
+    border-color: #000;
+    background: #fff;
+  }
 }
+
 </style>

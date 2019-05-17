@@ -53,29 +53,19 @@ import adminRole from '@/pages/adminCenter/adminRole'
 
 import operationLog from '@/pages/log/operationLog'
 import loginLog from '@/pages/log/loginLog'
-import lineLoginLog from '@/pages/log/lineLoginLog'
-import merchantLog from '@/pages/log/merchantLog'
-import adminLog from '@/pages/log/adminLog'
 import debugLog from '@/pages/log/debugLog'
-import managerOpreateLog from '@/pages/log/managerOpreateLog'
-import merchantOpreateLog from '@/pages/log/merchantOpreateLog'
-import adminLoginLog from '@/pages/log/adminLoginLog'
+
 
 import prizeList from '@/pages/operation/mysPrize/prizeList'
 import sysConfig from '@/pages/operation/mysPrize/sysConfig'
 import dataRepair from '@/pages/log/dataRepair'
 import playerlist from '@/pages/player/playerlist'
-import gameNoticeList from '@/pages/operation/gameNoticeMgr/gameNoticeList'
+
 import numericalControl from '@/pages/operation/electronicGame/numericalControl'
-import gameMailList from '@/pages/operation/mailMgr/gameMailList'
-import horseRaceLampList from '@/pages/operation/horseRaceLampMgr/horseRaceLampList'
-import businessRecordList from '@/pages/operation/businessRecord/businessRecordList'
-import boothList from '@/pages/operation/booth/boothList'
-import propPrizeList from '@/pages/operation/propPrize/propPrizeList'
 import flow from '@/pages/notransfer/flow'
 import noTransferReport from '@/pages/notransfer/noTransferReport'
 import gameManager from '@/pages/operation/gameManager/gameManager'
-import addGame from '@/pages/operation/gameManager/addGame'
+
 
 const loginRouter = {
     path: '/login',

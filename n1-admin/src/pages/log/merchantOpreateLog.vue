@@ -13,7 +13,7 @@
             <Col span="5" >
             <div class="btns">
               <Button type="primary" @click="search">搜索</Button>
-              <Button type="ghost" @click="reset">重置</Button>
+              <Button  @click="reset">重置</Button>
             </div>
             </Col>
           </Row>

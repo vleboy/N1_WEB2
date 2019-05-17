@@ -13,7 +13,7 @@
         <div class="right">
           <DatePicker type="daterange" :options="options" :editable='false' :value="defaultTime" placeholder="选择日期时间范围(默认最近一个月)" style="width: 300px" confirm @on-ok="confirms" @on-change="handle"></DatePicker>
           <Button type="primary" @click="search">搜索</Button>
-          <Button type="ghost" @click="reset">重置</Button>
+          <Button  @click="reset">重置</Button>
         </div>
       </div>
     </div>

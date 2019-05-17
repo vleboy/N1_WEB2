@@ -63,7 +63,7 @@
             :before-upload="beforeUpload"
             :action="actionUrl"
             style="display: inline-block;width:58px;">
-            <Button type="ghost" icon="ios-cloud-upload-outline" :loading="loadingStatus">请选择需要上传文件</Button>
+            <Button  icon="ios-cloud-upload-outline" :loading="loadingStatus">请选择需要上传文件</Button>
           </Upload>
           <div style="padding: 16px 0">只能上传一张jpg/png文件，且不超过2M</div>
           <div style="overflow: hidden"><img style="width: 80%" :src="noticeInfo.img"></div>

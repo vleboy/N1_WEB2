@@ -9,7 +9,7 @@
             <Radio label="1">测试</Radio>
             <Radio label="2" v-if="permission.includes('正式数据')">全部</Radio>
           </RadioGroup>
-          <Button type="ghost" @click="exportdata('table_0')">导出数据</Button>
+          <Button  @click="exportdata('table_0')">导出数据</Button>
         </p>
         <div class="right">
           <DatePicker
@@ -24,7 +24,7 @@
             @on-clear="claer"
           ></DatePicker>
           <Button type="primary" @click="search">搜索</Button>
-          <Button type="ghost" @click="reset">重置</Button>
+          <Button  @click="reset">重置</Button>
         </div>
       </div>
       <Table :columns="columns1" :data="user" size="small" ref="table_0"></Table>
@@ -32,21 +32,21 @@
     <div class="childList">
       <p class="title">
         直属下级列表
-        <Button type="ghost" @click="exportdata('table_1')">导出数据</Button>
+        <Button  @click="exportdata('table_1')">导出数据</Button>
       </p>
       <Table :columns="columns1" :data="child" size="small" ref="table_1"></Table>
     </div>
     <div class="childList" v-for="(item,index) in reportChild" :key="index">
       <p class="title">
         ({{item.length > 0 && item[0].parentDisplayName ? item[0].parentDisplayName : ''}}) 直属下级列表
-        <Button type="ghost" @click="exportdata(index)">导出数据</Button>
+        <Button  @click="exportdata(index)">导出数据</Button>
       </p>
       <Table :columns="columns1" :data="item" size="small" :ref="'table'+index"></Table>
     </div>
     <div class="playerList" id="playerList">
       <p class="title">
         <span v-show="showName">({{ userName }})</span>所属玩家列表
-        <Button type="ghost" @click="exportdata('table_2')">导出数据</Button>
+        <Button  @click="exportdata('table_2')">导出数据</Button>
       </p>
       <Table :columns="columns2" :data="playerList" size="small" ref="table_2"></Table>
     </div>
