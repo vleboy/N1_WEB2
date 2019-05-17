@@ -3,6 +3,7 @@ module.exports = {
 
   pwa: {
     name: 'NA代理',
+    themeColor: '#FFFFFF',
     msTileColor: '#FFFFFF',
     workboxOptions: {
       runtimeCaching: [{
