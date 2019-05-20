@@ -9,24 +9,48 @@
         placeholder="选择日期时间范围(默认最近一周)"
         style="width: 300px"
         @on-ok="search"
+        size="small"
       ></DatePicker>
-      <span class="searchLabel">所属标识:</span>
-      <Input v-model.trim="parent" placeholder="所属标识" style="width: 200px"></Input>
-      <span class="searchLabel">请选择游戏:</span>
-      <Select style="width:200px" v-model="game">
-        <Option v-for="(item,index) in selectOption" @click.native="search(item.code)" :value="item.name" :key="index">{{ item.name }}</Option>
+      <span class="searchLabel">所属标识</span>
+      <Input v-model.trim="parent" placeholder="所属标识" style="width: 200px" size="small"></Input>
+      <span class="searchLabel">请选择游戏</span>
+      <Select style="width:200px" v-model="game" size="small">
+        <Option v-for="(item,index) in selectOption" @click.native="changeGameType(item.code)" :value="item.name" :key="index">{{ item.name }}</Option>
       </Select>
       <Checkbox
         v-model="isTest"
-        :style="{marginLeft:'10px',fontSize:'14px'}"
+        :style="{marginLeft:'1rem',fontSize:'14px'}"
         @on-change="search"
       >隐藏测试</Checkbox>
       <span class="btn">
-        <Button type="primary" @click="search">搜索</Button>
-        <Button  @click="reset">重置</Button>
+        <Button type="primary" @click="search" size="small" style="margin-right: .3rem">搜索</Button>
+        <Button  @click="reset" size="small">重置</Button>
       </span>
     </div>
-    <Table :columns="columns1" :data="player" size="small" ref="table"></Table>
+    <Table :columns="columns1" :data="player" size="small" ref="table">
+      <template slot-scope="{row, index}" slot="isTest">
+        <span>{{row.isTest == 0 ? "正式" : "测试"}}</span>
+      </template>
+      <template slot-scope="{row, index}" slot="userName">
+        <Tooltip content="前往玩家详情" placement="top">
+          <span style="cursor:pointer;color:#20a0ff" @click="userName(row)">{{row.userName}}</span>
+        </Tooltip>
+      </template>
+      <template slot-scope="{row, index}" slot="betAmount">
+        <span>{{betAmount(row)}}</span>
+      </template>
+      <template slot-scope="{row, index}" slot="winloseAmount">
+        <span :style="{color:winloseAmount(row).color}">{{winloseAmount(row).winloseAmount}}</span>
+      </template>
+      <template slot-scope="{row, index}" slot="gameTypeMap">
+        <Poptip placement="left-end" width="400" trigger="hover" transfer>
+          <span style="color:#20a0ff;cursor:pointer">{{gameTypeMap(row).len + '款游戏'}}</span>
+          <div slot="content">
+            <Table :columns="gameTypeMap(row).column" :data="gameTypeMap(row).data"></Table>    
+          </div>
+        </Poptip>
+      </template>
+    </Table>
     <Row class="count_row">
       <Col span="4" offset="12">
         总下注次数:
@@ -51,6 +75,7 @@
 import { httpRequest } from "@/service/index";
 import dayjs from "dayjs";
 import { thousandFormatter } from "@/config/format";
+import { getGameType } from "@/config/getGameType";
 import { getDefaultTime } from "@/config/getDefaultTime";
 export default {
   name: "playerReport",
@@ -63,26 +88,6 @@ export default {
   props: {},
   data() {
     return {
-      GameListEnum: [
-        { company: "全部", code: "", name: "全部游戏" },
-        { company: "NA", code: "70000", name: "H5电子游戏" },
-        { company: "NA", code: "90000", name: "H5电子游戏-无神秘奖" },
-        { company: "KY", code: "1070000", name: "KY棋牌游戏" },
-        { company: "TTG", code: "1010000", name: "TTG电子游戏" },
-        { company: "PNG", code: "1020000", name: "PNG电子游戏" },
-        { company: "MG", code: "10300000", name: "MG电子游戏" },
-        { company: "HABA", code: "1040000", name: "HABA电子游戏" },
-        { company: "AG", code: "1050000", name: "AG真人游戏" },
-        { company: "SA", code: "1060000", name: "SA真人游戏" },
-        { company: "SA", code: "1110000", name: "SA捕鱼游戏" },
-        { company: "PG", code: "1090000", name: "PG电子游戏" },
-        { company: "YSB", code: "1130000", name: "YSB体育游戏" },
-        { company: "RTG", code: "1140000", name: "RTG电子游戏" },
-        { company: "SB", code: "1080000", name: "SB电子游戏" },
-        { company: "SB", code: "1120000", name: "SB真人游戏" },
-        { company: "DT", code: "1150000", name: "DT电子游戏" },
-        { company: "PP", code: "1160000", name: "PP电子游戏" }
-      ],
       options: {
         shortcuts: [
           {
@@ -171,14 +176,10 @@ export default {
       game: "全部游戏",
       parent: "",
       isTest: true,
+      gameTypeList: [],
       gameType: [
         3,
-        //30000,
-        //40000,
-        //50000,
-       // 60000,
         70000,
-        //80000,
         90000,
         1070000,
         1010000,
@@ -202,10 +203,7 @@ export default {
         },
         {
           title: "类型",
-          key: "isTest",
-          render: (h, params) => {
-            return h("span", params.row.isTest == 0 ? "正式" : "测试");
-          }
+          slot: "isTest"
         },
         {
           title: "所属用户",
@@ -221,41 +219,7 @@ export default {
         },
         {
           title: "玩家账号",
-          key: "userName",
-          render: (h, params) => {
-            return h(
-              "Tooltip",
-              {
-                style: {
-                  cursor: "pointer",
-                  color: "#20a0ff"
-                },
-                props: {
-                  content: "前往玩家详情",
-                  placement: "top"
-                }
-              },
-              [
-                h(
-                  "span",
-                  {
-                    on: {
-                      click: () => {
-                        localStorage.setItem("playerName", params.row.userName);
-                        this.$router.push({
-                          name: "playDetail",
-                          query: {
-                            name: params.row.userName
-                          }
-                        });
-                      }
-                    }
-                  },
-                  params.row.userName
-                )
-              ]
-            );
-          }
+          slot: "userName"
         },
         {
           title: "玩家ID",
@@ -267,91 +231,15 @@ export default {
         },
         {
           title: "下注金额",
-          key: "betAmount",
-          render: (h, params) => {
-            return h("span", thousandFormatter(params.row.betAmount));
-          }
+          slot: "betAmount"
         },
         {
           title: "输赢金额",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let color = params.row.winloseAmount < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: { color: color }
-              },
-              thousandFormatter(params.row.winloseAmount)
-            );
-          }
+          slot: "winloseAmount"
         },
         {
           title: "游戏详情",
-          key: "gameTypeMap",
-          render: (h, params) => {
-            let column = [
-              {
-                title: "游戏名",
-                key: "gameTypeName"
-              },
-              {
-                title: "下注次数",
-                key: "betCount"
-              },
-              {
-                title: "下注金额",
-                key: "betAmount"
-              },
-              {
-                title: "输赢金额",
-                key: "winloseAmount"
-              }
-            ];
-            let gameList = params.row.gameTypeMap;
-            let data = [];
-            for (let key in gameList) {
-              let obj = {};
-              let item = gameList[key];
-              obj.gameTypeName = item.gameTypeName;
-              obj.betCount = item.betCount;
-              obj.betAmount = item.betAmount;
-              obj.winloseAmount = item.winloseAmount;
-              data.push(obj);
-            }
-            let len = data.length;
-            return h(
-              "Poptip",
-              {
-                props: {
-                  trigger: "hover",
-                  placement: "left-end"
-                }
-              },
-              [
-                h(
-                  "span",
-                  {
-                    style: {
-                      cursor: "pointer",
-                      color: "#20a0ff"
-                    }
-                  },
-                  len + "款游戏"
-                ),
-                h("Table", {
-                  props: {
-                    columns: column,
-                    data: data,
-                    border: true,
-                    size: "small",
-                    width: 500
-                  },
-                  slot: "content"
-                })
-              ]
-            );
-          }
+          slot: "gameTypeMap"
         }
       ],
       player: []
@@ -379,10 +267,78 @@ export default {
     this.getPlayerList(this.gameType);
   },
   methods: {
-    getPlayerList(gameList) {
+
+    //玩家账号
+    userName(row) {
+      localStorage.setItem("playerName", row.userName);
+      this.$router.push({
+        name: "playDetail",
+        query: {
+          name: row.userName
+        }
+      })
+    },
+    //下注金额
+    betAmount(row) {
+      return thousandFormatter(row.betAmount)
+    },
+    //输赢金额
+    winloseAmount(row) {
+      let color = row.winloseAmount < 0 ? "#f30" : "#0c0";
+      return {winloseAmount: thousandFormatter(row.winloseAmount), color}  
+    },
+    //游戏详情
+    gameTypeMap(row) {
+   
+      let column = [
+        {
+          title: "游戏名",
+          key: "gameTypeName"
+        },
+        {
+          title: "下注次数",
+          key: "betCount"
+        },
+        {
+          title: "下注金额",
+          key: "betAmount"
+        },
+        {
+          title: "输赢金额",
+          key: "winloseAmount"
+        }
+      ];
+      let gameList = row.gameTypeMap;
+      let data = [];
+      for (let key in gameList) {
+        let obj = {};
+        let item = gameList[key]
+        obj.gameTypeName = item.gameTypeName
+        obj.betCount = item.betCount
+        obj.betAmount = item.betAmount
+        obj.winloseAmount = item.winloseAmount
+        data.push(obj);
+      }
+      let len = data.length
+            
+      return {column,data,len}          
+          
+    },
+
+
+
+
+
+
+
+    changeGameType(val) {
+      this.gameTypeList = val
+      this.getPlayerList()
+    },
+    getPlayerList() {
       this.spinShow = true;
       httpRequest("post", "/queryRealPlayerStat", {
-        gameType: gameList,
+        gameType: this.gameTypeList == "" ? this.gameType : this.gameTypeList,
         query: {
           createdAt: this.changedTime,
           parent: this.parent
@@ -413,24 +369,10 @@ export default {
       this.allWinLose = +this.allWinLose.toFixed(2);
     },
     getGames() {
-      /* httpRequest("post", "/gameType", {}, "game").then(res => {
-        if (res.code == 0) {
-          this.selectOption = res.payload;
-          this.selectOption.unshift({
-            name: "全部游戏",
-            code: "-1"
-          });
-        }
-      }); */
-      this.selectOption = GameListEnum
+      this.selectOption = getGameType()
     },
-    search(val) {
-        if (val == '') {
-          val = this.gameType
-        }
-       
-        this.getPlayerList(val);
-      
+    search() {
+      this.getPlayerList();
     },
     reset() {
       this.defaultTime = getDefaultTime();
@@ -448,11 +390,10 @@ export default {
   .search {
     margin-bottom: 16px;
     .searchLabel {
-      padding: 10px;
+      margin: 0 1rem;
     }
     .btn {
-      position: absolute;
-      right: 18px;
+      margin-left: 1rem;
     }
   }
   .count_row {
@@ -466,4 +407,11 @@ export default {
 .demo-spin-icon-load {
   animation: ani-demo-spin 1s linear infinite;
 }
+/deep/ .ivu-input {
+    border-color: #000;
+    background: #fff;
+  }
+  /deep/.ivu-select-selection {
+    border-color: #000;
+  }
 </style>

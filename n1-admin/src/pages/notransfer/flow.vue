@@ -2,43 +2,35 @@
   <div class="flow">
     <div class="top">
       <div class="search">
-        <Row class="row">
-          <Col span="13">
-          <span class="label">接入方标识</span>
-          <Input v-model="plat" style="width: 100px" placeholder="请输入"></Input>
-          <span class="label">玩家ID</span>
-          <Input v-model="userId" style="width: 100px" placeholder="请输入"></Input>
-          <span class="label">交易号</span>
-          <Input v-model="businessKey" style="width: 120px" placeholder="请输入"></Input>
-          </Col>
-          <Col span="11" style="textAlign:right">
-          <DatePicker type="datetimerange" :options="options" :editable='false' v-model="defaultTime" placeholder="选择日期时间范围(默认最近一周)" style="width: 300px" @on-ok="search"></DatePicker>
-          <Button type="primary" @click="search">搜索</Button>
-          <Button  @click="reset">重置</Button>
-          </Col>
-        </Row>
+        <div style="display:flex;align-items:center;margin-bottom:1rem">
+          <div>
+            <span class="label">接入方标识</span>
+            <Input v-model="plat" style="width: 100px;margin:0 1rem" placeholder="请输入" size="small"></Input>
+            <span class="label">玩家ID</span>
+            <Input v-model="userId" style="width: 100px;margin:0 1rem" placeholder="请输入" size="small"></Input>
+            <span class="label">交易号</span>
+            <Input v-model="businessKey" style="width: 120px;margin:0 1rem" placeholder="请输入" size="small"></Input>
+          </div>
+          <div>
+            <DatePicker size="small" type="datetimerange" :options="options" :editable='false' v-model="defaultTime" placeholder="选择日期时间范围(默认最近一周)" style="width: 300px" @on-ok="search"></DatePicker>
+            <Button size="small" type="primary" @click="search" style="margin:0 .3rem 0 1rem">搜索</Button>
+            <Button size="small"  @click="reset">重置</Button>
+          </div>
+        </div>
       </div>
     </div>
-    <Row class="row selection">
-      <Col span="8">
-      <RadioGroup v-model="reportType" type="button" :style="{paddingBottom:'10px'}" @on-change="search">
+    <div style="display:flex;align-items:center;margin-bottom:1rem">
+      <RadioGroup v-model="reportType" type="button" @on-change="search" size="small" >
         <Radio label="1">流水记录</Radio>
         <Radio label="2">交易记录</Radio>
       </RadioGroup>
-        <Select v-model="gameType" style="width:110px" @on-change="search">
+        <Select v-model="gameType" style="width:110px;margin:0 1rem" @on-change="search" size="small">
           <Option v-for="item in gameTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
-      <Select v-model="status" style="width:90px" v-if="reportType=='1'" @on-change="search">
+      <Select v-model="status" style="width:90px" v-if="reportType=='1'" @on-change="search" size="small">
         <Option v-for="item in statusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>
-      </Col>
-      <!-- <Col span="8">
-       <span>分页数量:</span>
-      <Select v-model="pageSize" style="width:90px" @on-change="search">
-        <Option v-for="item in sizeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-      </Select>
-      </Col> -->
-    </Row>
+    </div>
     <Table :columns="columns" no-data-text='请输入查询条件' size="small" v-if="reportType==1" :data="dataList"></Table>
     <Table :columns="columns1" no-data-text='请输入查询条件' size="small" v-else :data="dataList"></Table>
     <Row class="count_row" v-if="reportType=='1'">
@@ -719,7 +711,6 @@ export default {
   min-height: 89vh;
   .row {
     line-height: 32px;
-    padding-bottom: 16px;
   }
   .page {
     text-align: right;
@@ -744,5 +735,24 @@ export default {
 }
 .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
+  }
+  /deep/.ivu-select-selection {
+    border-color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
+    border: 1px solid #ccc;
+    color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-input {
+    border-color: #000;
+    background: #fff;
   }
 </style>
