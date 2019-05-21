@@ -2,51 +2,159 @@
   <div class="naAll" :style="{width:getTabWidth}">
     <div class="nowList">
       <div class="top">
-        <p class="title">
-          当前用户列表
-          <RadioGroup v-model="source" class="radioGroup" type="button" @on-change="changeSource">
-            <Radio label="0" v-if="permission.includes('正式数据')">正式</Radio>
-            <Radio label="1">测试</Radio>
-            <Radio label="2" v-if="permission.includes('正式数据')">全部</Radio>
-          </RadioGroup>
-          <Button  @click="exportdata('table_0')">导出数据</Button>
-        </p>
-        <div class="right">
-          <DatePicker
-            type="datetimerange"
-            :options="options"
-            :editable="false"
-            v-model="defaultTime"
-            placeholder="选择日期时间范围(默认最近一周)"
-            style="width: 300px"
-            @on-ok="confirm"
-          ></DatePicker>
-          <Button type="primary" @click="search">搜索</Button>
-          <Button  @click="reset">重置</Button>
-        </div>
+        <h2>当前用户列表</h2>
+        <RadioGroup v-model="source" class="radioGroup" type="button" @on-change="changeSource" size="small" style="margin:0 1rem">
+          <Radio label="0" v-if="permission.includes('正式数据')" size="small">正式</Radio>
+          <Radio label="1">测试</Radio>
+          <Radio label="2" v-if="permission.includes('正式数据')" size="small">全部</Radio>
+        </RadioGroup>
+        <Button  @click="exportdata('table_0')" size="small" >导出数据</Button>
+        <DatePicker
+          type="datetimerange"
+          :options="options"
+          :editable="false"
+          v-model="defaultTime"
+          placeholder="选择日期时间范围(默认最近一周)"
+          style="width: 300px"
+          @on-ok="confirm"
+          size="small"
+        ></DatePicker>
+        <Button type="primary" @click="search" size="small" style="margin:0 .3rem 0 1rem">搜索</Button>
+        <Button  @click="reset" size="small">重置</Button>
       </div>
-      <Table :columns="columns11" :data="user" size="small" ref="table_0"></Table>
+      <Table :columns="columns11" :data="user" size="small" ref="table_0">
+        <template slot-scope="{row, index}" slot="role">
+          <span>{{roleConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uname">
+          <Tooltip content="显示下一级" placement="top">
+            <span @click="unameConfig(row)" style="color:#20a0ff;cursor:pointer">
+               {{row.uname}}
+            </span>
+          </Tooltip>
+        </template>
+        <template slot-scope="{row, index}" slot="betCount">
+          <span>{{betCountConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="userWinloseAmount">
+          <span :style="{color:winloseAmountConfig(row).color}">{{winloseAmountConfig(row).winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="submitAmount">
+          <span>{{submitAmountConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="h5WinloseAmount">
+          <span :style="{color:gameWinloseAmount(row, '70000').color}">{{gameWinloseAmount(row, '70000').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="h5SubmitAmount">
+          <span>{{gameSubmitAmount(row, '70000')}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="h5noWinloseAmount">
+          <span :style="{color:gameWinloseAmount(row, '90000').color}">{{gameWinloseAmount(row, '90000').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="h5noSubmitAmount">
+          <span>{{gameSubmitAmount(row, '90000')}}</span>
+        </template>
+      </Table>
     </div>
     <div class="childList">
       <p class="title">
         直属下级列表
-        <Button  @click="exportdata('table_1')">导出数据</Button>
+        <Button  @click="exportdata('table_1')" size="small">导出数据</Button>
       </p>
-      <Table :columns="columns11" :data="child" size="small" ref="table_1"></Table>
+      <Table :columns="columns11" :data="child" size="small" ref="table_1">
+        <template slot-scope="{row, index}" slot="role">
+          <span>{{roleConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uname">
+          <Tooltip content="显示下一级" placement="top">
+            <span @click="unameConfig(row)" style="color:#20a0ff;cursor:pointer">
+               {{row.uname}}
+            </span>
+          </Tooltip>
+        </template>
+        <template slot-scope="{row, index}" slot="betCount">
+          <span>{{betCountConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="userWinloseAmount">
+          <span :style="{color:winloseAmountConfig(row).color}">{{winloseAmountConfig(row).winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="submitAmount">
+          <span>{{submitAmountConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="h5WinloseAmount">
+          <span :style="{color:gameWinloseAmount(row, '70000').color}">{{gameWinloseAmount(row, '70000').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="h5SubmitAmount">
+          <span>{{gameSubmitAmount(row, '70000')}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="h5noWinloseAmount">
+          <span :style="{color:gameWinloseAmount(row, '90000').color}">{{gameWinloseAmount(row, '90000').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="h5noSubmitAmount">
+          <span>{{gameSubmitAmount(row, '90000')}}</span>
+        </template>
+      </Table>
     </div>
     <div class="childList" v-for="(item,index) in reportChild" :key="index">
       <p class="title">
         ({{item.length > 0 && item[0].parentDisplayName ? item[0].parentDisplayName : ''}}) 直属下级列表
         <Button  @click="exportdata(index)">导出数据</Button>
       </p>
-      <Table :columns="columns11" :data="item" size="small" :ref="'table'+index"></Table>
+      <Table :columns="columns11" :data="item" size="small" :ref="'table'+index">
+        <template slot-scope="{row, index}" slot="role">
+          <span>{{roleConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="uname">
+          <Tooltip content="显示下一级" placement="top">
+            <span @click="unameConfig(row)" style="color:#20a0ff;cursor:pointer">
+              {{row.uname}}
+            </span>
+          </Tooltip>
+        </template>
+        <template slot-scope="{row, index}" slot="betCount">
+          <span>{{betCountConfig(row)}}</span>
+        </template>
+         <template slot-scope="{row, index}" slot="userWinloseAmount">
+          <span :style="{color:winloseAmountConfig(row).color}">{{winloseAmountConfig(row).winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="submitAmount">
+          <span>{{submitAmountConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="h5WinloseAmount">
+          <span :style="{color:gameWinloseAmount(row, '70000').color}">{{gameWinloseAmount(row, '70000').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="h5SubmitAmount">
+          <span>{{gameSubmitAmount(row, '70000')}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="h5noWinloseAmount">
+          <span :style="{color:gameWinloseAmount(row, '90000').color}">{{gameWinloseAmount(row, '90000').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="h5noSubmitAmount">
+          <span>{{gameSubmitAmount(row, '90000')}}</span>
+        </template>
+      </Table>
     </div>
     <div class="playerList" id="playerList">
       <p class="title">
         <span v-show="showName">({{ userName }})</span>所属玩家列表
-        <Button  @click="exportdata('table_2')">导出数据</Button>
+        <Button  @click="exportdata('table_2')" size="small">导出数据</Button>
       </p>
-      <Table :columns="columns22" :data="playerList" size="small" ref="table_2"></Table>
+      <Table :columns="columns22" :data="playerList" size="small" ref="table_2">
+        <template slot-scope="{row, index}" slot="playerName">
+          <Tooltip content="前往玩家详情">
+            <span style="color:#20a0ff;cursor:pointer" @click="playerName(row)">{{row.userName}}</span>
+          </Tooltip>
+        </template>
+        <template slot-scope="{row, index}" slot="playerWinloseAmount">
+          <span :style="{color:winloseAmountConfig(row).color}">{{winloseAmountConfig(row).winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="pH5WinloseAmount">
+          <span :style="{color:gameWinloseAmount(row, '70000').color}">{{gameWinloseAmount(row, '70000').winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="pH5noWinloseAmount">
+          <span :style="{color:gameWinloseAmount(row, '90000').color}">{{gameWinloseAmount(row, '90000').winloseAmount}}</span>
+        </template>
+      </Table>
     </div>
     <Spin size="large" fix v-if="spinShow">
       <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
@@ -161,10 +269,7 @@ export default {
         },
         {
           title: "类型",
-          key: "role",
-          render: (h, params) => {
-            return h("span", this.types(params.row.role));
-          }
+          slot: "role"
         },
         {
           title: "昵称",
@@ -172,672 +277,36 @@ export default {
         },
         {
           title: "管理员账号",
-          key: "uname",
-          render: (h, params) => {
-            return h(
-              "Tooltip",
-              {
-                style: {
-                  cursor: "pointer",
-                  color: "#20a0ff"
-                },
-                props: {
-                  content: "显示下一级",
-                  placement: "top"
-                }
-              },
-              [
-                h(
-                  "span",
-                  {
-                    on: {
-                      click: async () => {
-                        this.spinShow = true;
-                        if (params.row.role == "1") {
-                          //管理员
-                          this.$store
-                            .dispatch("getUserChild", {
-                              parent: "01",
-                              isTest: +this.source,
-                              gameType: this.gameType,
-                              query: {
-                                createdAt: this.changedTime
-                              }
-                            })
-                            .then(res => {
-                              this.child = res.payload;
-                              this.reportChild = [];
-                              this.showName = false;
-                              this.playerList = [];
-                              this.spinShow = false;
-                            });
-                        } else if (params.row.role == "100") {
-                          //商户
-                          this.userName = params.row.displayName;
-                          this.showName = true;
-                          let userId = params.row.userId;
-                          let level = params.row.level;
-                          let oldArr = this.reportChild;
-                          let len = oldArr.length;
-                          if (len > 0) {
-                            while (len--) {
-                              if (oldArr[len][0].level >= level + 1) {
-                                oldArr.splice(len, 1);
-                              }
-                            }
-                          }
-                          this.$store
-                            .dispatch("getPlayerList", {
-                              parentId: userId,
-                              gameType: this.gameType,
-                              query: {
-                                createdAt: this.changedTime
-                              }
-                            })
-                            .then(res => {
-                              this.playerList = res.payload;
-                              this.spinShow = false;
-                            });
-                          let anchor = this.$el.querySelector("#playerList");
-                          document.documentElement.scrollTop = anchor.offsetTop;
-                        } else if (params.row.role == "10") {
-                          //线路商
-                          this.playerList = [];
-                          this.showName = false;
-                          let userId = params.row.userId;
-                          let level = params.row.level;
-                          if (level == 1) {
-                            this.reportChild = [];
-                          }
-                          let oldArr = this.reportChild;
-                          let len = oldArr.length;
-                          if (len > 0) {
-                            while (len--) {
-                              if (oldArr[len][0].level > level + 1) {
-                                oldArr.splice(len, 1);
-                              }
-                            }
-                          }
-                          let showList = await this.getNextLevel(
-                            this.reportChild,
-                            userId
-                          );
-                          showList = _.filter(showList, function(o) {
-                            return o.length;
-                          });
-                          this.reportChild = showList;
-                        }
-                      }
-                    }
-                  },
-                  params.row.uname
-                )
-              ]
-            );
-          }
+          slot: "uname"
         },
         {
           title: "交易次数",
-          key: "betCount",
-          render: (h, params) => {
-            let arr = this.child;
-            let count = 0;
-            for (let item of arr) {
-              count += item.betCount;
-            }
-            if (params.row.role == "1") {
-              return h("span", count);
-            } else {
-              return h("span", params.row.betCount);
-            }
-          }
+          slot: "betCount"
         },
         {
           title: "总游戏输赢金额",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let arr = this.child;
-            let count = 0;
-            for (let item of arr) {
-              count += item.winloseAmount;
-            }
-            let color = "";
-            if (params.row.role == "1") {
-              color = count < 0 ? "#f30" : "#0c0";
-              return h(
-                "span",
-                {
-                  style: {
-                    color: color
-                  }
-                },
-                thousandFormatter(count.toFixed(2))
-              );
-            } else {
-              color = params.row.winloseAmount < 0 ? "#f30" : "#0c0";
-              return h(
-                "span",
-                {
-                  style: {
-                    color: color
-                  }
-                },
-                thousandFormatter(params.row.winloseAmount)
-              );
-            }
-          }
+          slot: "userWinloseAmount"
         },
         {
           title: "总游戏交公司",
-          key: "submitAmount",
-          render: (h, params) => {
-            if (params.row.role == "1") {
-              return h("span", 0);
-            } else {
-              return h(
-                "span",
-                thousandFormatter(params.row.submitAmount.toFixed(2))
-              );
-            }
-          }
+          slot: "submitAmount"
         },
         {
           title: "NA电子H5(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let arr = this.child;
-            let count = 0;
-            for (let item of arr) {
-              for (let key in item.gameTypeMap) {
-                if (key == "70000") {
-                  count += item.gameTypeMap[key].winloseAmount;
-                }
-              }
-            }
-            let color = "";
-            if (params.row.role == "1") {
-              color = count < 0 ? "#f30" : "#0c0";
-              return h(
-                "span",
-                {
-                  style: {
-                    color: color
-                  }
-                },
-                thousandFormatter(count.toFixed(2))
-              );
-            } else {
-              let winloseAmount = 0;
-              if (params.row.gameTypeMap["70000"] !== undefined) {
-                winloseAmount = params.row.gameTypeMap[
-                  "70000"
-                ].winloseAmount.toFixed(2);
-              }
-              color = winloseAmount < 0 ? "#f30" : "#0c0";
-              return h(
-                "span",
-                {
-                  style: {
-                    color: color
-                  }
-                },
-                thousandFormatter(winloseAmount)
-              );
-            }
-          }
+          slot: "h5WinloseAmount"
         },
         {
           title: "NA电子H5(商家交公司)",
-          key: "submitAmount",
-          render: (h, params) => {
-            if (params.row.role == "1") {
-              return h("span", "0.00");
-            } else {
-              let submitAmount = 0;
-              if (params.row.gameTypeMap["70000"] !== undefined) {
-                submitAmount = params.row.gameTypeMap[
-                  "70000"
-                ].submitAmount.toFixed(2);
-              }
-              return h("span", thousandFormatter(submitAmount));
-            }
-          }
+          slot: "h5SubmitAmount"
         },
-        /*  {
-          title: "NA棋牌游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let arr = this.child;
-            let count = 0;
-            for (let item of arr) {
-              for (let key in item.gameTypeMap) {
-                if (key == "10000") {
-                  count += item.gameTypeMap[key].winloseAmount;
-                }
-              }
-            }
-            let color = "";
-            if (params.row.role == "1") {
-              color = count < 0 ? "#f30" : "#0c0";
-              return h(
-                "span",
-                {
-                  style: {
-                    color: color
-                  }
-                },
-                thousandFormatter(count.toFixed(2))
-              );
-            } else {
-              let winloseAmount = 0;
-              if (params.row.gameTypeMap["10000"] !== undefined) {
-                winloseAmount = params.row.gameTypeMap[
-                  "10000"
-                ].winloseAmount.toFixed(2);
-              }
-              color = winloseAmount < 0 ? "#f30" : "#0c0";
-              return h(
-                "span",
-                {
-                  style: {
-                    color: color
-                  }
-                },
-                thousandFormatter(winloseAmount)
-              );
-            }
-          }
-        },
-        {
-          title: "NA棋牌游戏(商家交公司)",
-          key: "submitAmount",
-          render: (h, params) => {
-            if (params.row.role == "1") {
-              return h("span", "0.00");
-            } else {
-              let submitAmount = 0;
-              if (params.row.gameTypeMap["10000"] !== undefined) {
-                submitAmount = params.row.gameTypeMap[
-                  "10000"
-                ].submitAmount.toFixed(2);
-              }
-              return h("span", thousandFormatter(submitAmount));
-            }
-          }
-        },
-        {
-          title: "NA真人游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let arr = this.child;
-            let count = 0;
-            for (let item of arr) {
-              for (let key in item.gameTypeMap) {
-                if (key == "30000") {
-                  count += item.gameTypeMap[key].winloseAmount;
-                }
-              }
-            }
-            let color = "";
-            if (params.row.role == "1") {
-              color = count < 0 ? "#f30" : "#0c0";
-              return h(
-                "span",
-                {
-                  style: {
-                    color: color
-                  }
-                },
-                thousandFormatter(count.toFixed(2))
-              );
-            } else {
-              let winloseAmount = 0;
-              if (params.row.gameTypeMap["30000"] !== undefined) {
-                winloseAmount = params.row.gameTypeMap[
-                  "30000"
-                ].winloseAmount.toFixed(2);
-              }
-              color = winloseAmount < 0 ? "#f30" : "#0c0";
-              return h(
-                "span",
-                {
-                  style: {
-                    color: color
-                  }
-                },
-                thousandFormatter(winloseAmount)
-              );
-            }
-          }
-        },
-        {
-          title: "NA真人游戏(商家交公司)",
-          key: "submitAmount",
-          render: (h, params) => {
-            if (params.row.role == "1") {
-              return h("span", "0.00");
-            } else {
-              let submitAmount = 0;
-              if (params.row.gameTypeMap["30000"] !== undefined) {
-                submitAmount = params.row.gameTypeMap[
-                  "30000"
-                ].submitAmount.toFixed(2);
-              }
-              return h("span", thousandFormatter(submitAmount));
-            }
-          }
-        },
-        {
-          title: "NA电子游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let arr = this.child;
-            let count = 0;
-            for (let item of arr) {
-              for (let key in item.gameTypeMap) {
-                if (key == "40000") {
-                  count += item.gameTypeMap[key].winloseAmount;
-                }
-              }
-            }
-            let color = "";
-            if (params.row.role == "1") {
-              color = count < 0 ? "#f30" : "#0c0";
-              return h(
-                "span",
-                {
-                  style: {
-                    color: color
-                  }
-                },
-                thousandFormatter(count.toFixed(2))
-              );
-            } else {
-              let winloseAmount = 0;
-              if (params.row.gameTypeMap["40000"] !== undefined) {
-                winloseAmount = params.row.gameTypeMap[
-                  "40000"
-                ].winloseAmount.toFixed(2);
-              }
-              color = winloseAmount < 0 ? "#f30" : "#0c0";
-              return h(
-                "span",
-                {
-                  style: {
-                    color: color
-                  }
-                },
-                thousandFormatter(winloseAmount)
-              );
-            }
-          }
-        },
-        {
-          title: "NA电子游戏(商家交公司)",
-          key: "submitAmount",
-          render: (h, params) => {
-            if (params.row.role == "1") {
-              return h("span", "0.00");
-            } else {
-              let submitAmount = 0;
-              if (params.row.gameTypeMap["40000"] !== undefined) {
-                submitAmount = params.row.gameTypeMap[
-                  "40000"
-                ].submitAmount.toFixed(2);
-              }
-              return h("span", thousandFormatter(submitAmount));
-            }
-          }
-        },
-        {
-          title: "NA街机游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let arr = this.child;
-            let count = 0;
-            for (let item of arr) {
-              for (let key in item.gameTypeMap) {
-                if (key == "50000") {
-                  count += item.gameTypeMap[key].winloseAmount;
-                }
-              }
-            }
-            let color = "";
-            if (params.row.role == "1") {
-              color = count < 0 ? "#f30" : "#0c0";
-              return h(
-                "span",
-                {
-                  style: {
-                    color: color
-                  }
-                },
-                thousandFormatter(count.toFixed(2))
-              );
-            } else {
-              let winloseAmount = 0;
-              if (params.row.gameTypeMap["50000"] !== undefined) {
-                winloseAmount = params.row.gameTypeMap[
-                  "50000"
-                ].winloseAmount.toFixed(2);
-              }
-              color = winloseAmount < 0 ? "#f30" : "#0c0";
-              return h(
-                "span",
-                {
-                  style: {
-                    color: color
-                  }
-                },
-                thousandFormatter(winloseAmount)
-              );
-            }
-          }
-        },
-        {
-          title: "NA街机游戏(商家交公司)",
-          key: "submitAmount",
-          render: (h, params) => {
-            if (params.row.role == "1") {
-              return h("span", "0.00");
-            } else {
-              let submitAmount = 0;
-              if (params.row.gameTypeMap["50000"] !== undefined) {
-                submitAmount = params.row.gameTypeMap[
-                  "50000"
-                ].submitAmount.toFixed(2);
-              }
-              return h("span", thousandFormatter(submitAmount));
-            }
-          }
-        },
-        {
-          title: "NA捕鱼游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let arr = this.child;
-            let count = 0;
-            for (let item of arr) {
-              for (let key in item.gameTypeMap) {
-                if (key == "60000") {
-                  count += item.gameTypeMap[key].winloseAmount;
-                }
-              }
-            }
-            let color = "";
-            if (params.row.role == "1") {
-              color = count < 0 ? "#f30" : "#0c0";
-              return h(
-                "span",
-                {
-                  style: {
-                    color: color
-                  }
-                },
-                thousandFormatter(count.toFixed(2))
-              );
-            } else {
-              let winloseAmount = 0;
-              if (params.row.gameTypeMap["60000"] !== undefined) {
-                winloseAmount = params.row.gameTypeMap[
-                  "60000"
-                ].winloseAmount.toFixed(2);
-              }
-              color = winloseAmount < 0 ? "#f30" : "#0c0";
-              return h(
-                "span",
-                {
-                  style: {
-                    color: color
-                  }
-                },
-                thousandFormatter(winloseAmount)
-              );
-            }
-          }
-        },
-        {
-          title: "NA捕鱼游戏(商家交公司)",
-          key: "submitAmount",
-          render: (h, params) => {
-            if (params.row.role == "1") {
-              return h("span", "0.00");
-            } else {
-              let submitAmount = 0;
-              if (params.row.gameTypeMap["60000"] !== undefined) {
-                submitAmount = params.row.gameTypeMap[
-                  "60000"
-                ].submitAmount.toFixed(2);
-              }
-              return h("span", thousandFormatter(submitAmount));
-            }
-          }
-        },
-        
-        {
-          title: "NA真人h5(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let arr = this.child;
-            let count = 0;
-            for (let item of arr) {
-              for (let key in item.gameTypeMap) {
-                if (key == "80000") {
-                  count += item.gameTypeMap[key].winloseAmount;
-                }
-              }
-            }
-            let color = "";
-            if (params.row.role == "1") {
-              color = count < 0 ? "#f30" : "#0c0";
-              return h(
-                "span",
-                {
-                  style: {
-                    color: color
-                  }
-                },
-                thousandFormatter(count.toFixed(2))
-              );
-            } else {
-              let winloseAmount = 0;
-              if (params.row.gameTypeMap["80000"] !== undefined) {
-                winloseAmount = params.row.gameTypeMap[
-                  "80000"
-                ].winloseAmount.toFixed(2);
-              }
-              color = winloseAmount < 0 ? "#f30" : "#0c0";
-              return h(
-                "span",
-                {
-                  style: {
-                    color: color
-                  }
-                },
-                thousandFormatter(winloseAmount)
-              );
-            }
-          }
-        },
-        {
-          title: "NA电子H5(商家交公司)",
-          key: "submitAmount",
-          render: (h, params) => {
-            if (params.row.role == "1") {
-              return h("span", "0.00");
-            } else {
-              let submitAmount = 0;
-              if (params.row.gameTypeMap["80000"] !== undefined) {
-                submitAmount = params.row.gameTypeMap[
-                  "80000"
-                ].submitAmount.toFixed(2);
-              }
-              return h("span", thousandFormatter(submitAmount));
-            }
-          }
-        }, */
 
         {
           title: "NA电子H5无神秘奖(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let arr = this.child;
-            let count = 0;
-            for (let item of arr) {
-              for (let key in item.gameTypeMap) {
-                if (key == "90000") {
-                  count += item.gameTypeMap[key].winloseAmount;
-                }
-              }
-            }
-            let color = "";
-            if (params.row.role == "1") {
-              color = count < 0 ? "#f30" : "#0c0";
-              return h(
-                "span",
-                {
-                  style: {
-                    color: color
-                  }
-                },
-                thousandFormatter(count.toFixed(2))
-              );
-            } else {
-              let winloseAmount = 0;
-              if (params.row.gameTypeMap["90000"] !== undefined) {
-                winloseAmount = params.row.gameTypeMap[
-                  "90000"
-                ].winloseAmount.toFixed(2);
-              }
-              color = winloseAmount < 0 ? "#f30" : "#0c0";
-              return h(
-                "span",
-                {
-                  style: {
-                    color: color
-                  }
-                },
-                thousandFormatter(winloseAmount)
-              );
-            }
-          }
+          slot: "h5noWinloseAmount"
         },
         {
           title: "NA电子H5无神秘奖(商家交公司)",
-          key: "submitAmount",
-          render: (h, params) => {
-            if (params.row.role == "1") {
-              return h("span", "0.00");
-            } else {
-              let submitAmount = 0;
-              if (params.row.gameTypeMap["90000"] !== undefined) {
-                submitAmount = params.row.gameTypeMap[
-                  "90000"
-                ].submitAmount.toFixed(2);
-              }
-              return h("span", thousandFormatter(submitAmount));
-            }
-          }
+          slot: "h5noSubmitAmount"
         }
       ],
       columns2: [
@@ -847,38 +316,7 @@ export default {
         },
         {
           title: "用户名",
-          key: "userName",
-          render: (h, params) => {
-            let name = params.row.userName;
-            return h(
-              "Tooltip",
-              {
-                style: {
-                  color: "#20a0ff",
-                  cursor: "pointer"
-                },
-                props: {
-                  content: "前往玩家详情",
-                  placement: "top"
-                },
-                
-              },
-              [h('span',{
-                on: {
-                  click: () => {
-                    localStorage.setItem("playerName", name);
-                    this.$router.push({
-                      name: "playDetail",
-                      query: {
-                        name: name
-                      }
-                    });
-                  }
-                }
-              },name)]
-              
-            );
-          }
+          slot: "playerName"
         },
         {
           title: "昵称",
@@ -890,196 +328,15 @@ export default {
         },
         {
           title: "总游戏输赢金额",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let color = params.row.winloseAmount ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(params.row.winloseAmount)
-            );
-          }
+          slot: "playerWinloseAmount"
         },
         {
           title: "NA电子H5(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let winloseAmount = 0;
-            if (params.row.gameTypeMap["70000"] !== undefined) {
-              winloseAmount = params.row.gameTypeMap[
-                "70000"
-              ].winloseAmount.toFixed(2);
-            }
-            let color = winloseAmount < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(winloseAmount)
-            );
-          }
+          slot: "pH5WinloseAmount"
         },
-        /*  {
-          title: "NA棋牌游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let winloseAmount = 0;
-            if (params.row.gameTypeMap["10000"] !== undefined) {
-              winloseAmount = params.row.gameTypeMap[
-                "10000"
-              ].winloseAmount.toFixed(2);
-            }
-            let color = winloseAmount < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(winloseAmount)
-            );
-          }
-        },
-        {
-          title: "NA真人游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let winloseAmount = 0;
-            if (params.row.gameTypeMap["30000"] !== undefined) {
-              winloseAmount = params.row.gameTypeMap[
-                "30000"
-              ].winloseAmount.toFixed(2);
-            }
-            let color = winloseAmount < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(winloseAmount)
-            );
-          }
-        },
-        {
-          title: "NA电子游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let winloseAmount = 0;
-            if (params.row.gameTypeMap["40000"] !== undefined) {
-              winloseAmount = params.row.gameTypeMap[
-                "40000"
-              ].winloseAmount.toFixed(2);
-            }
-            let color = winloseAmount < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(winloseAmount)
-            );
-          }
-        },
-        {
-          title: "NA街机游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let winloseAmount = 0;
-            if (params.row.gameTypeMap["50000"] !== undefined) {
-              winloseAmount = params.row.gameTypeMap[
-                "50000"
-              ].winloseAmount.toFixed(2);
-            }
-            let color = winloseAmount < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(winloseAmount)
-            );
-          }
-        },
-         {
-          title: "NA捕鱼游戏(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let winloseAmount = 0;
-            if (params.row.gameTypeMap["60000"] !== undefined) {
-              winloseAmount = params.row.gameTypeMap[
-                "60000"
-              ].winloseAmount.toFixed(2);
-            }
-            let color = winloseAmount < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(winloseAmount)
-            );
-          }
-        },
-         
-        {
-          title: "NA真人h5(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let winloseAmount = 0;
-            if (params.row.gameTypeMap["80000"] !== undefined) {
-              winloseAmount = params.row.gameTypeMap[
-                "80000"
-              ].winloseAmount.toFixed(2);
-            }
-            let color = winloseAmount < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(winloseAmount)
-            );
-          }
-        }, */
         {
           title: "NA电子H5无神秘奖(输赢金额)",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let winloseAmount = 0;
-            if (params.row.gameTypeMap["90000"] !== undefined) {
-              winloseAmount = params.row.gameTypeMap[
-                "90000"
-              ].winloseAmount.toFixed(2);
-            }
-            let color = winloseAmount < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(winloseAmount)
-            );
-          }
+          slot: "pH5noWinloseAmount"
         }
       ]
     };
@@ -1108,6 +365,177 @@ export default {
     }
   },
   methods: {
+    //类型
+    roleConfig(row) {
+      return this.types(row.role)
+    },
+    //管理员账号
+    async unameConfig(row) {
+      this.spinShow = true;
+      if (row.role == "1") {
+        //管理员
+        this.$store
+          .dispatch("getUserChild", {
+            parent: "01",
+            isTest: +this.source,
+            gameType: this.gameType,
+            query: {
+              createdAt: this.changedTime
+            }
+          })
+          .then(res => {
+            this.child = res.payload;
+            this.reportChild = [];
+            this.showName = false;
+            this.playerList = [];
+            this.spinShow = false;
+          });
+      } else if (row.role == "100") {
+        //商户
+        this.userName = row.displayName;
+        this.showName = true;
+        let userId = row.userId;
+        let level = row.level;
+        let oldArr = this.reportChild;
+        let len = oldArr.length;
+        if (len > 0) {
+          while (len--) {
+            if (oldArr[len][0].level >= level + 1) {
+              oldArr.splice(len, 1);
+            }
+          }
+        }
+        this.$store
+          .dispatch("getPlayerList", {
+            parentId: userId,
+            gameType: this.gameType,
+            query: {
+              createdAt: this.changedTime
+            }
+          })
+          .then(res => {
+            this.playerList = res.payload;
+            this.spinShow = false;
+          });
+        let anchor = this.$el.querySelector("#playerList");
+        document.documentElement.scrollTop = anchor.offsetTop;
+      } else if (row.role == "10") {
+        //线路商
+        this.playerList = [];
+        this.showName = false;
+        let userId = row.userId;
+        let level = row.level;
+        if (level == 1) {
+          this.reportChild = [];
+        }
+        let oldArr = this.reportChild;
+        let len = oldArr.length;
+        if (len > 0) {
+          while (len--) {
+            if (oldArr[len][0].level > level + 1) {
+              oldArr.splice(len, 1);
+            }
+          }
+        }
+        let showList = await this.getNextLevel(
+          this.reportChild,
+          userId
+        );
+        showList = _.filter(showList, function(o) {
+          return o.length;
+        });
+        this.reportChild = showList;
+      }     
+    },
+    //交易次数
+    betCountConfig(row) {
+      let arr = this.child;
+      let count = 0;
+      for (let item of arr) {
+        count += item.betCount;
+      }
+      if (row.role == "1") {
+        return count
+      } else {
+        return row.betCount
+      }   
+    },
+    //总游戏输赢金额
+    winloseAmountConfig(row) {
+      let arr = this.child;
+      let count = 0;
+      let color = "";
+      if (row.role == "1") {
+        for (let item of arr) {
+          count += item.winloseAmount;
+        }
+        color = count < 0 ? "#f30" : "#0c0";
+        return {winloseAmount: thousandFormatter(count.toFixed(2)), color}
+      } else {
+        color = row.winloseAmount < 0 ? "#f30" : "#0c0";
+        return {winloseAmount: thousandFormatter(row.winloseAmount), color}
+      }   
+    },
+    //总游戏交公司
+    submitAmountConfig(row) {
+      if (row.role == "1") {
+        return 0
+      } else {
+        return thousandFormatter(row.submitAmount.toFixed(2))
+      }
+    },
+    //游戏输赢金额
+    gameWinloseAmount(row,gameCode) {
+      let arr = this.child;
+      let count = 0;
+      let color = "";
+      if (row.role == "1") {
+        for (let item of arr) {
+          for (let key in item.gameTypeMap) {
+            if (key == gameCode) {
+              count += item.gameTypeMap[key].winloseAmount;
+            }
+          }
+        }
+        color = count < 0 ? "#f30" : "#0c0";
+        return {winloseAmount:thousandFormatter(count.toFixed(2)), color}
+      } else {
+        let winloseAmount = 0;
+        if (row.gameTypeMap[gameCode] !== undefined) {
+          winloseAmount = row.gameTypeMap[
+            gameCode
+          ].winloseAmount.toFixed(2);
+        }
+        color = winloseAmount < 0 ? "#f30" : "#0c0";
+        return {winloseAmount:thousandFormatter(winloseAmount), color}
+      }  
+    },
+    //游戏商家交公司
+    gameSubmitAmount(row, gameCode) {
+      if (row.role == "1") {
+        return "0.00"
+      } else {
+        let submitAmount = 0;
+        if (row.gameTypeMap[gameCode] !== undefined) {
+          submitAmount = row.gameTypeMap[
+            gameCode
+          ].submitAmount.toFixed(2);
+        }
+        return thousandFormatter(submitAmount)
+      }  
+    },
+    /* 玩家 */
+    //用户名
+    playerName(row) {
+      let name = row.userName;
+      localStorage.setItem("playerName", name);
+      this.$router.push({
+        name: "playDetail",
+        query: {
+          name: name
+        }
+      })
+    },  
     confirm() {
       this.reportChild = [];
       this.playerList = [];
@@ -1261,6 +689,8 @@ export default {
       }
     }
   },
+  
+          
   created() {
     if (this.permission.includes("正式数据")) {
       this.source = "0";
@@ -1280,13 +710,28 @@ export default {
     display: inline-block;
   }
   .top {
-    .right {
-      display: inline-block;
-      padding-left: 20px;
-    }
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
   }
   .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
+    border: 1px solid #ccc;
+    color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-input {
+    border-color: #000;
+    background: #fff;
   }
 }
 </style>

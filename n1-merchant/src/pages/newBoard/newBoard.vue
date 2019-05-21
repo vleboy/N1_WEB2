@@ -220,6 +220,10 @@ export default {
       }
     },
     getGameList() {
+      
+      console.log(JSON.parse(localStorage.getItem('userInfo')).gameList);
+      
+      
       this.gameType = getGameType()
     },
     selGame(code) {

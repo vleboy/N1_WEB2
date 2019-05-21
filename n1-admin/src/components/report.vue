@@ -4,14 +4,13 @@
       <div class="top">
         <p class="title">
           当前用户列表
-          <RadioGroup v-model="source" class="radioGroup" type="button" @on-change="changeSource">
+          <RadioGroup v-model="source" class="radioGroup" type="button" @on-change="changeSource" size="small" style="margin:0 1rem">
             <Radio label="0" v-if="permission.includes('正式数据')">正式</Radio>
             <Radio label="1">测试</Radio>
             <Radio label="2" v-if="permission.includes('正式数据')">全部</Radio>
           </RadioGroup>
-          <Button  @click="exportdata('table_0')">导出数据</Button>
+          <Button  @click="exportdata('table_0')" size="small" style="margin-right:1rem">导出数据</Button>
         </p>
-        <div class="right">
           <DatePicker
             type="datetimerange"
             :options="options"
@@ -22,33 +21,147 @@
             @on-ok="confirm"
             clearable
             @on-clear="claer"
+            size="small"
+            
           ></DatePicker>
-          <Button type="primary" @click="search">搜索</Button>
-          <Button  @click="reset">重置</Button>
-        </div>
+          <Button type="primary" @click="search" size="small" style="margin:0 .3rem 0 1rem">搜索</Button>
+          <Button  @click="reset" size="small">重置</Button>
       </div>
-      <Table :columns="columns1" :data="user" size="small" ref="table_0"></Table>
+      <Table :columns="columns1" :data="user" size="small" ref="table_0">
+        <template slot-scope="{row, inedx}" slot="role">
+          <span>{{roleConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, inedx}" slot="userDisplayName">
+          <Tooltip content="前往日报表" placement="top">
+            <span style="color:#20a0ff;cursor:pointer" @click="userDisplayName(row)">{{row.displayName}}</span>
+          </Tooltip>
+        </template>
+        <template slot-scope="{row, inedx}" slot="userAccount">
+          <Tooltip content="显示下一级" placement="top">
+            <span style="cursor:pointer;color:#20a0ff" @click="userAccount(row)">{{userAccountConfig(row)}}</span>
+          </Tooltip>
+        </template>
+        <template slot-scope="{row, inedx}" slot="betCount">
+          <span>{{betCount(row)}}</span>
+        </template>
+        <template slot-scope="{row, inedx}" slot="userBetAmount">
+          <span>{{betAmount(row)}}</span>
+        </template>
+        <template slot-scope="{row, inedx}" slot="userWinloseAmount">
+          <span :style="{color:winloseAmount(row).color}">{{winloseAmount(row).winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, inedx}" slot="rate">
+          <span>{{rateConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, inedx}" slot="submitAmount">
+          <span>{{submitAmount(row)}}</span>
+        </template>
+        <template slot-scope="{row, inedx}" slot="mixAmount">
+          <span>{{mixAmount(row)}}</span>
+        </template>
+      </Table>
     </div>
     <div class="childList">
       <p class="title">
         直属下级列表
-        <Button  @click="exportdata('table_1')">导出数据</Button>
+        <Button  @click="exportdata('table_1')" size="small">导出数据</Button>
       </p>
-      <Table :columns="columns1" :data="child" size="small" ref="table_1"></Table>
+      <Table :columns="columns1" :data="child" size="small" ref="table_1">
+        <template slot-scope="{row, inedx}" slot="role">
+          <span>{{roleConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, inedx}" slot="userDisplayName">
+          <Tooltip content="前往日报表" placement="top">
+            <span style="color:#20a0ff;cursor:pointer" @click="userDisplayName(row)">{{row.displayName}}</span>
+          </Tooltip>
+        </template>
+        <template slot-scope="{row, inedx}" slot="userAccount">
+          <Tooltip content="显示下一级" placement="top">
+            <span style="cursor:pointer;color:#20a0ff" @click="userAccount(row)">{{userAccountConfig(row)}}</span>
+          </Tooltip>
+        </template>
+        <template slot-scope="{row, inedx}" slot="betCount">
+          <span>{{betCount(row)}}</span>
+        </template>
+         <template slot-scope="{row, inedx}" slot="userBetAmount">
+          <span>{{betAmount(row)}}</span>
+        </template>
+        <template slot-scope="{row, inedx}" slot="userWinloseAmount">
+          <span :style="{color:winloseAmount(row).color}">{{winloseAmount(row).winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, inedx}" slot="rate">
+          <span>{{rateConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, inedx}" slot="submitAmount">
+          <span>{{submitAmount(row)}}</span>
+        </template>
+         <template slot-scope="{row, inedx}" slot="mixAmount">
+          <span>{{mixAmount(row)}}</span>
+        </template>
+      </Table>
     </div>
     <div class="childList" v-for="(item,index) in reportChild" :key="index">
       <p class="title">
         ({{item.length > 0 && item[0].parentDisplayName ? item[0].parentDisplayName : ''}}) 直属下级列表
         <Button  @click="exportdata(index)">导出数据</Button>
       </p>
-      <Table :columns="columns1" :data="item" size="small" :ref="'table'+index"></Table>
+      <Table :columns="columns1" :data="item" size="small" :ref="'table'+index">
+        <template slot-scope="{row, inedx}" slot="role">
+          <span>{{roleConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, inedx}" slot="userDisplayName">
+          <Tooltip content="前往日报表" placement="top">
+            <span style="color:#20a0ff;cursor:pointer" @click="userDisplayName(row)">{{row.displayName}}</span>
+          </Tooltip>
+        </template>
+        <template slot-scope="{row, inedx}" slot="userAccount">
+          <Tooltip content="显示下一级" placement="top">
+            <span style="cursor:pointer;color:#20a0ff" @click="userAccount(row)">{{userAccountConfig(row)}}</span>
+          </Tooltip>
+        </template>
+        <template slot-scope="{row, inedx}" slot="betCount">
+          <span>{{betCount(row)}}</span>
+        </template>
+         <template slot-scope="{row, inedx}" slot="userBetAmount">
+          <span>{{betAmount(row)}}</span>
+        </template>
+        <template slot-scope="{row, inedx}" slot="userWinloseAmount">
+          <span :style="{color:winloseAmount(row).color}">{{winloseAmount(row).winloseAmount}}</span>
+        </template>
+        <template slot-scope="{row, inedx}" slot="rate">
+          <span>{{rateConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, inedx}" slot="submitAmount">
+          <span>{{submitAmount(row)}}</span>
+        </template>
+         <template slot-scope="{row, inedx}" slot="mixAmount">
+          <span>{{mixAmount(row)}}</span>
+        </template>
+      </Table>
     </div>
     <div class="playerList" id="playerList">
       <p class="title">
         <span v-show="showName">({{ userName }})</span>所属玩家列表
-        <Button  @click="exportdata('table_2')">导出数据</Button>
+        <Button  @click="exportdata('table_2')" size="small">导出数据</Button>
       </p>
-      <Table :columns="columns2" :data="playerList" size="small" ref="table_2"></Table>
+      <Table :columns="columns2" :data="playerList" size="small" ref="table_2">
+        <template slot-scope="{row, inedx}" slot="playerNickname">
+          <Tooltip content="前往日报表" placement="top">
+            <span style="color:#20a0ff;cursor:pointer" @click="playerNickname(row)">{{row.nickname == "NULL!" ? "-" : row.nickname}}</span>
+          </Tooltip>
+        </template>
+        <template slot-scope="{row, inedx}" slot="playerUsername">
+          <Tooltip content="前往玩家详情" placement="top">
+            <span style="color:#21a0ff;cursor:pointer" @click="playerUsername(row)">{{row.userName}}</span>
+          </Tooltip>
+        </template>
+         <template slot-scope="{row, inedx}" slot="playerBetAmount">
+          <span>{{betAmount(row)}}</span>
+        </template>
+        <template slot-scope="{row, inedx}" slot="playerWinloseAmount">
+          <span :style="{color:winloseAmount(row).color}">{{winloseAmount(row).winloseAmount}}</span>
+        </template>
+      </Table>
     </div>
     <Spin size="large" fix v-if="spinShow">
       <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
@@ -161,323 +274,42 @@ export default {
         {
           title: "序号",
           type: "index",
-          width: 100
         },
         {
           title: "类型",
-          key: "role",
-          render: (h, params) => {
-            return h("span", this.types(params.row.role));
-          },
-          width: 100
+          slot: "role",
         },
         {
           title: "昵称",
-          key: "displayName",
-          render: (h, params) => {
-            return h(
-              "Tooltip",
-              {
-                style: {
-                  cursor: "pointer",
-                  color: "#20a0ff"
-                },
-                props: {
-                  content: "前往日报表",
-                  placement: "top"
-                }
-              },
-              [
-                h(
-                  "span",
-                  {
-                    on: {
-                      click: () => {
-                        let time = this.changedTime;
-
-                        if (params.row.role == "1") {
-                          this.$router.push({
-                            name: "dayCompany",
-                            query: {
-                              name: "dayCompany",
-                              time: time,
-                              type: this.gameType,
-                              source: this.source
-                            }
-                          });
-                          localStorage.setItem("dayCompany", "dayCompany");
-                        } else if (params.row.role == "10") {
-                          this.$router.push({
-                            name: "dayManager",
-                            query: {
-                              name: params.row.suffix,
-                              time: time,
-                              type: this.gameType,
-                              source: this.source
-                            }
-                          });
-                          localStorage.setItem("dayManager", "dayManager");
-                        } else {
-                          this.$router.push({
-                            name: "dayMerchant",
-                            query: {
-                              name: params.row.sn,
-                              time: time,
-                              type: this.gameType
-                            }
-                          });
-                          localStorage.setItem("dayMerchant", "dayMerchant");
-                        }
-                      }
-                    }
-                  },
-                  params.row.displayName
-                )
-              ]
-            );
-          },
-          width: 200
+          slot: "userDisplayName"
         },
         {
           title: "账号/标识",
-          key: "uname",
-          render: (h, params) => {
-            //console.log(params);
-            var name = "";
-            if (params.row.role == "1") {
-              name = params.row.uname;
-            } else if (params.row.role == "10") {
-              name = params.row.suffix;
-            } else {
-              name = params.row.sn;
-            }
-            return h(
-              "Tooltip",
-              {
-                style: {
-                  cursor: "pointer",
-                  color: "#20a0ff"
-                },
-                props: {
-                  content: "显示下一级",
-                  placement: "top"
-                }
-              },
-              [
-                h(
-                  "span",
-                  {
-                    on: {
-                      click: async () => {
-                        this.spinShow = true;
-                        if (params.row.role == "1") {
-                          //管理员
-                          this.$store
-                            .dispatch("getUserChild", {
-                              parent: "01",
-                              isTest: +this.source,
-                              gameType: this.gameType,
-                              query: {
-                                createdAt: this.changedTime
-                              }
-                            })
-                            .then(res => {
-                              this.child = res.payload;
-                              this.showName = false;
-                              this.playerList = [];
-                              this.reportChild = [];
-                              this.spinShow = false;
-                            });
-                        } else if (params.row.role == "100") {
-                          //商户
-                          this.userName = params.row.displayName;
-                          this.showName = true;
-                          let userId = params.row.userId;
-                          let level = params.row.level;
-                          let oldArr = this.reportChild;
-                          let len = oldArr.length;
-                          if (len > 0) {
-                            while (len--) {
-                              if (oldArr[len][0].level >= level + 1) {
-                                oldArr.splice(len, 1);
-                              }
-                            }
-                          }
-                          this.$store
-                            .dispatch("getPlayerList", {
-                              parentId: userId,
-                              gameType: this.gameType,
-                              query: {
-                                createdAt: this.changedTime
-                              }
-                            })
-                            .then(res => {
-                              this.playerList = res.payload;
-                              this.spinShow = false;
-                            });
-                          let anchor = this.$el.querySelector("#playerList");
-                          document.documentElement.scrollTop = anchor.offsetTop;
-                        } else if (params.row.role == "10") {
-                          //线路商
-                          this.playerList = [];
-                          this.showName = false;
-                          let userId = params.row.userId;
-                          let level = params.row.level;
-                          if (level == 1) {
-                            this.reportChild = [];
-                          }
-                          let oldArr = this.reportChild;
-                          let len = oldArr.length;
-                          if (len > 0) {
-                            while (len--) {
-                              if (oldArr[len][0].level > level + 1) {
-                                oldArr.splice(len, 1);
-                              }
-                            }
-                          }
-                          let showList = await this.getNextLevel(
-                            this.reportChild,
-                            userId
-                          );
-                          showList = _.filter(showList, function(o) {
-                            return o.length;
-                          });
-                          this.reportChild = showList;
-                        }
-                      }
-                    }
-                  },
-                  name
-                )
-              ]
-            );
-          }
+          slot: "userAccount"
         },
         {
           title: "交易次数",
-          key: "betCount",
-          render: (h, params) => {
-            let arr = this.child;
-            let count = 0;
-            for (let item of arr) {
-              count += item.betCount;
-            }
-            if (params.row.role == "1") {
-              return h("span", count);
-            } else {
-              return h("span", params.row.betCount);
-            }
-          }
+          slot: "betCount"
         },
         {
           title: "投注金额",
-          key: "betAmount",
-          render: (h, params) => {
-            let arr = this.child;
-            let count = 0;
-            for (let item of arr) {
-              count += item.betAmount;
-            }
-            if (params.row.role == "1") {
-              return h("span", thousandFormatter(count.toFixed(2)));
-            } else {
-              return h("span", thousandFormatter(params.row.betAmount));
-            }
-          }
+          slot: "userBetAmount"
         },
         {
           title: "输赢金额",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let arr = this.child;
-            let count = 0;
-            for (let item of arr) {
-              count += item.winloseAmount;
-            }
-            let color = "";
-            if (params.row.role == "1") {
-              color = count < 0 ? "#f30" : "#0c0";
-              return h(
-                "span",
-                {
-                  style: {
-                    color: color
-                  }
-                },
-                thousandFormatter(count.toFixed(2))
-              );
-            } else {
-              color = params.row.winloseAmount < 0 ? "#f30" : "#0c0";
-              return h(
-                "span",
-                {
-                  style: {
-                    color: color
-                  }
-                },
-                thousandFormatter(params.row.winloseAmount)
-              );
-            }
-          }
+          slot: "userWinloseAmount"
         },
         {
           title: "商家占成",
-          key: "",
-          render: (h, params) => {
-            if (params.row.role != "1") {
-              let arr = params.row.gameList;
-              let result = null;
-              for (let item of arr) {
-                if (item.code == this.gameType) {
-                  result = item.rate;
-                }
-              }
-              return h("span", result + "%");
-            } else {
-              return h("span", "100%");
-            }
-          }
+          slot: "rate"
         },
         {
           title: "商家交公司",
-          key: "submitAmount",
-          render: (h, params) => {
-            if (params.row.role == "1") {
-              return h("span", 0);
-            } else {
-              return h("span", thousandFormatter(params.row.submitAmount));
-            }
-          }
+          slot: "submitAmount"
         },
         {
           title: "获利比例",
-          key: "rate",
-          render: (h, params) => {
-            if (params.row.role == "1") {
-              let arr = this.child;
-              let winloseAmount = 0;
-              let mixAmount = 0;
-              for (let item of arr) {
-                winloseAmount += item.winloseAmount;
-                mixAmount += item.mixAmount;
-              }
-              let result = "";
-              if (winloseAmount != 0) {
-                result = ((100 * winloseAmount) / mixAmount).toFixed(2) + "%";
-              } else {
-                result = 0;
-              }
-              return h("span", result);
-            } else {
-              return h(
-                "span",
-                (
-                  100 *
-                  (params.row.winloseAmount / params.row.mixAmount)
-                ).toFixed(2) + "%"
-              );
-            }
-          }
+          slot: "mixAmount"
         }
       ],
       columns2: [
@@ -487,75 +319,11 @@ export default {
         },
         {
           title: "昵称",
-          key: "nickname",
-          render: (h, params) => {
-            return h(
-              "Tooltip",
-              {
-                style: {
-                  color: "#20a0ff",
-                  cursor: "pointer"
-                },
-                props: {
-                  content: "前往日报表",
-                  placement: "top"
-                },
-                
-              },
-              [h('span',{
-                on: {
-                  click: () => {
-                    this.$router.push({
-                      name: "dayPlayer",
-                      query: {
-                        name: params.row.userName,
-                        time: this.changedTime,
-                        type: this.gameType
-                      }
-                    });
-                    localStorage.setItem("dayPlayer", "dayPlayer");
-                  }
-                }
-              },params.row.nickname)]
-            );
-          }
+          slot: "playerNickname"
         },
         {
           title: "账号",
-          key: "userName",
-          render: (h, params) => {
-            //console.log(params);
-
-            let name = params.row.userName;
-            return h(
-              "Tooltip",
-              {
-                style: {
-                  color: "#20a0ff",
-                  cursor: "pointer"
-                },
-                props: {
-                  content: "前往玩家详情",
-                  placement: "top"
-                },
-                
-              },[
-              h('span',{
-                on: {
-                  click: () => {
-                    localStorage.setItem("playerName", name);
-                    this.$router.push({
-                      name: "playDetail",
-                      query: {
-                        name: name
-                      }
-                    });
-                  }
-                }
-              },name)]
-              
-            );
-          }
+          slot: "playerUsername"
         },
 
         {
@@ -564,26 +332,11 @@ export default {
         },
         {
           title: "投注金额",
-          key: "betAmount",
-          render: (h, params) => {
-            return h("span", thousandFormatter(params.row.betAmount));
-          }
+          slot: "playerBetAmount"
         },
         {
           title: "输赢金额",
-          key: "winloseAmount",
-          render: (h, params) => {
-            let color = params.row.winloseAmount < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(params.row.winloseAmount)
-            );
-          }
+          slot: "playerWinloseAmount"
         },
         {
           title: "洗码量",
@@ -614,6 +367,293 @@ export default {
   },
 
   methods: {
+    /* 用户 */
+    //类型
+    roleConfig(row) {
+      return this.types(row.role)
+    },
+    //用户昵称
+    userDisplayName(row) {
+      
+      let time = this.changedTime;
+
+      if (row.role == "1") {
+        this.$router.push({
+          name: "dayCompany",
+          query: {
+            name: "dayCompany",
+            time: time,
+            type: this.gameType,
+            source: this.source
+          }
+        });
+        localStorage.setItem("dayCompany", "dayCompany");
+      } else if (row.role == "10") {
+        this.$router.push({
+          name: "dayManager",
+          query: {
+            name: row.suffix,
+            time: time,
+            type: this.gameType,
+            source: this.source
+          }
+        });
+        localStorage.setItem("dayManager", "dayManager");
+      } else {
+        this.$router.push({
+          name: "dayMerchant",
+          query: {
+            name: row.sn,
+            time: time,
+            type: this.gameType
+          }
+        });
+        localStorage.setItem("dayMerchant", "dayMerchant");
+      }   
+    },
+    //账号/标识
+    userAccountConfig(row) {
+      if (row.role == "1") {
+        return row.uname
+      } else if (row.role == "10") {
+        return row.suffix
+      } else {
+        return row.sn
+      }
+    },
+    async userAccount(row) {
+        this.spinShow = true;
+        if (row.role == "1") {
+          //管理员
+          this.$store
+            .dispatch("getUserChild", {
+              parent: "01",
+              isTest: +this.source,
+              gameType: this.gameType,
+              query: {
+                createdAt: this.changedTime
+              }
+            })
+            .then(res => {
+              this.child = res.payload;
+              this.showName = false;
+              this.playerList = [];
+              this.reportChild = [];
+              this.spinShow = false;
+            });
+        } else if (row.role == "100") {
+          //商户
+          this.userName = row.displayName;
+          this.showName = true;
+          let userId = row.userId;
+          let level = row.level;
+          let oldArr = this.reportChild;
+          let len = oldArr.length;
+          if (len > 0) {
+            while (len--) {
+              if (oldArr[len][0].level >= level + 1) {
+                oldArr.splice(len, 1);
+              }
+            }
+          }
+          this.$store
+            .dispatch("getPlayerList", {
+              parentId: userId,
+              gameType: this.gameType,
+              query: {
+                createdAt: this.changedTime
+              }
+            })
+            .then(res => {
+              this.playerList = res.payload;
+              this.spinShow = false;
+            });
+          let anchor = this.$el.querySelector("#playerList");
+          document.documentElement.scrollTop = anchor.offsetTop;
+        } else if (row.role == "10") {
+          //线路商
+          this.playerList = [];
+          this.showName = false;
+          let userId = row.userId;
+          let level = row.level;
+          if (level == 1) {
+            this.reportChild = [];
+          }
+          let oldArr = this.reportChild;
+          let len = oldArr.length;
+          if (len > 0) {
+            while (len--) {
+              if (oldArr[len][0].level > level + 1) {
+                oldArr.splice(len, 1);
+              }
+            }
+          }
+          let showList = await this.getNextLevel(
+            this.reportChild,
+            userId
+          );
+          showList = _.filter(showList, function(o) {
+            return o.length;
+          });
+          this.reportChild = showList;
+        }  
+    },
+    //交易次数
+    betCount(row) {
+      let arr = this.child;
+      let count = 0;
+      for (let item of arr) {
+        count += item.betCount;
+      }
+      if (row.role == "1") {
+        return count
+      } else {
+        return row.betCount
+      }
+          
+    },
+    //投注金额
+    betAmount(row) {
+      let arr = this.child;
+      let count = 0;
+      for (let item of arr) {
+        count += item.betAmount;
+      }
+      if (row.role == "1") {
+        return thousandFormatter(count.toFixed(2))
+      } else {
+        return thousandFormatter(row.betAmount)
+      }
+          
+    },
+    //输赢金额
+    winloseAmount(row) {
+      let arr = this.child;
+      let count = 0;
+      let color = "";
+      if (row.role == "1") {
+        for (let item of arr) {
+          count += item.winloseAmount;
+        }
+        color = count < 0 ? "#f30" : "#0c0";
+        return {winloseAmount: thousandFormatter(count.toFixed(2)), color}
+      } else {
+        color = row.winloseAmount < 0 ? "#f30" : "#0c0";
+        return {winloseAmount: thousandFormatter(row.winloseAmount), color}
+      }    
+    },
+    //商家占成
+    rateConfig(row) {
+      if (row.role != "1") {
+        let arr = row.gameList;
+        let result = null;
+        for (let item of arr) {
+          if (item.code == this.gameType) {
+            result = item.rate;
+          }
+        }
+        return result + "%"
+      } else {
+        return"100%"
+      }
+          
+    },
+    //商家交公司
+    submitAmount(row) {
+      if (row.role == "1") {
+        return 0
+      } else {
+        return thousandFormatter(row.submitAmount)
+      }     
+    },
+    //获利比例
+    mixAmount(row) {
+      if (row.role == "1") {
+        let arr = this.child;
+        let winloseAmount = 0;
+        let mixAmount = 0;
+        for (let item of arr) {
+          winloseAmount += item.winloseAmount;
+          mixAmount += item.mixAmount;
+        }
+        let result = "";
+        if (winloseAmount != 0) {
+          result = ((100 * winloseAmount) / mixAmount).toFixed(2) + "%";
+        } else {
+          result = 0;
+        }
+        return result
+      } else {
+        return 100 * (row.winloseAmount / row.mixAmount).toFixed(2) + "%"
+      }
+    },   
+    /* 玩家 */
+    //昵称
+    playerNickname(row) {
+      this.$router.push({
+        name: "dayPlayer",
+        query: {
+          name: row.userName,
+          time: this.changedTime,
+          type: this.gameType
+        }
+      })
+      localStorage.setItem("dayPlayer", "dayPlayer")    
+    },
+    //账号
+    playerUsername(row) {
+      localStorage.setItem("playerName", name);
+      this.$router.push({
+        name: "playDetail",
+        query: {
+          name: name
+        }
+      })
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     confirm() {
       this.reportChild = [];
       this.playerList = [];
@@ -755,13 +795,28 @@ export default {
     display: inline-block;
   }
   .top {
-    clear: both;
-    .right {
-      float: right;
-    }
+    display: flex;
+    align-items: center;
+    
   }
   .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
+    border: 1px solid #ccc;
+    color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-input {
+    border-color: #000;
+    background: #fff;
   }
 }
 </style>

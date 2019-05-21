@@ -1,4 +1,4 @@
-export const getGameType = () => {
+/* export const getGameType = () => {
   return  [
     { company: "全部", code: "", name: "全部游戏" },
     { company: "NA", code: "70000", name: "H5电子游戏" },
@@ -19,4 +19,11 @@ export const getGameType = () => {
     { company: "DT", code: "1150000", name: "DT电子游戏" },
     { company: "PP", code: "1160000", name: "PP电子游戏" }
   ]
+} */
+
+export const getGameType = () => {
+  let gameList = (JSON.parse(localStorage.getItem('userInfo')).gameList)
+  //gameList.splice(0, 8)
+  gameList.unshift({ company: "全部", code: "", name: "全部游戏" })
+  return gameList
 }
