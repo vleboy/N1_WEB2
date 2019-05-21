@@ -23,7 +23,14 @@
 
 export const getGameType = () => {
   let gameList = (JSON.parse(localStorage.getItem('userInfo')).gameList)
-  //gameList.splice(0, 8)
+  let removeArr = ['NA棋牌游戏', 'NA捕鱼游戏', 'NA街机游戏', 'NA真人游戏', 'NA电子游戏', 'NA真人视讯']//移除的权限
+  for (let i = 0; i < removeArr.length; i++) {
+    for (let j = 0; j < gameList.length; j++) {
+      if (removeArr[i] == gameList[j].name) {
+        gameList.splice(j, 1)
+      }
+    }
+  }
   gameList.unshift({ company: "全部", code: "", name: "全部游戏" })
   return gameList
 }
