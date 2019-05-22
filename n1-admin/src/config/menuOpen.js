@@ -76,5 +76,7 @@
     } else if (name == 'gameManager') {
       openName = ['operation']
     }
+    console.log(openName);
+    
     return openName
   }

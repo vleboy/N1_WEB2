@@ -1,6 +1,6 @@
 <template>
     <div class="sider">
-        <Sider :width='menuWidth' collapsible hide-trigger :style="{position: 'fixed', height: '100vh', left: 0, overflow: 'auto'}" class="side">
+        <Sider :width='menuWidth' collapsible hide-trigger :style="{position: 'fixed', height: '100vh', left: 0, overflow: 'auto'}" class="side showMenu">
             <div id="logo">
               <p class="logoimg" v-if="unFlodMenu">
                 <img src="../../public/logo.png" alt="">
@@ -100,7 +100,7 @@
                 <MenuItem name="allreport" v-if='permission.includes("日报表") && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
                   <Icon type="md-stats" @click="unfold"/>
                 </MenuItem>
-                <Submenu name="dayCompany" v-if='permission.includes("日报表") && unFlodMenu' class="sideMenu">
+                <Submenu name="dayReport" v-if='permission.includes("日报表") && unFlodMenu' class="sideMenu">
                   <template slot="title">
                     <Icon type="md-stats" />
                     <span>日报表</span>
@@ -134,7 +134,7 @@
                     <MenuItem name="adminRole" v-if='permission.includes("管理员角色列表")'>管理员角色列表</MenuItem>
                 </Submenu>
                 <MenuItem name="gameManager" v-if='permission.includes("运营中心") && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
-                  <Icon type="imd-settings" @click="unfold"/>
+                  <Icon type="md-settings" @click="unfold"/>
                 </MenuItem>
                 <Submenu class="sideMenu" name="operation" v-if='permission.includes("运营中心") && unFlodMenu'>
                     <template slot="title">
@@ -237,6 +237,9 @@ export default {
 
 <style scoped lang="less">
   .sider {
+    .showMenu {
+      transition: all 0.2s ease;
+    }
     .foldIcon {
       cursor: pointer;
       margin-right:1.5rem;
@@ -283,6 +286,7 @@ export default {
         color:#fff;
       }
     }
+    
   }
   
   /deep/.ivu-menu-dark.ivu-menu-vertical .ivu-menu-item {
@@ -314,5 +318,16 @@ export default {
   }
   .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item:hover {
     background: #192028;
+  }
+  /deep/.ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item[data-v-19f8877c]:hover {
+    background: #192028;
+    color: #20c1dc;
+  }
+  /deep/ .ivu-menu-dark.ivu-menu-vertical .ivu-menu-opened .ivu-menu-submenu-title {
+    background: #1c2327;
+  }
+  /deep/ .ivu-menu-dark.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu) {
+    background: #20c1dc;
+    color: #fff;
   }
 </style>
