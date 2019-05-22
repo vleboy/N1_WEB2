@@ -56,7 +56,7 @@
           <span :style="{color:profitConfig(row).color}">{{profitConfig(row).amount}}</span>
         </template>
         <template slot-scope="{row, index}" slot="action">
-          <Button v-if="actionConfig(row)" type="text" size="small" style="color:#20a0ff;marginRight:5px" @click="record(row)">查看战绩</Button>
+          <Button v-if="actionConfig(row)" type="text" size="small" style="color:#20a0ff;" @click="record(row)">查看战绩</Button>
           <Button v-if="actionConfig(row)" type="text" size="small" style="color:#20a0ff;" @click="waterDetaill(row)">流水详情</Button>
         </template>
       </Table>

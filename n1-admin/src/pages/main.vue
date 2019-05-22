@@ -1,14 +1,14 @@
 <template>
   <div class="home">
     <sidebar :openName='openName'/>
-    <Layout :style="{marginLeft: '256px'}">
+    <Layout :style="{marginLeft: layoutWidth}">
       <Header class="main_header">
         <div class="tags-con">
           <tag-close :pageTagsList="pageTagsList"/>
         </div>
         <div class="user-dropdown-menu-con">
           <Row type="flex" justify="end" align="middle" class="user-dropdown-innercon">
-            <Avatar icon="person" size="small" style="background: #619fe7;margin-right: 8px;"></Avatar>
+            <Avatar icon="md-person" size="small" style="background: #619fe7;margin-right: 8px;"></Avatar>
             <Dropdown transfer trigger="click" @on-click="handleClickUserDropdown">
               <a href="javascript:void(0)">
                 <span class="main-user-name">{{ userName }} ({{ uname}})</span>
@@ -50,6 +50,9 @@ export default {
     },
     uname(){
       return JSON.parse(localStorage.userInfo).uname;
+    },
+    layoutWidth() {
+      return this.$store.state.home.menuSize
     }
   },
   methods: {
@@ -106,13 +109,13 @@ export default {
 </script>
 <style lang="less" scoped>
 .tags-con {
-  height: 64px;
+  height: 50px;
   z-index: -1;
   overflow: hidden;
   //   background: #f0f0f0;
 }
 .main_header {
-  height: 64px;
+  height: 50px;
   background: #fff;
   box-shadow: 0 2px 1px 1px rgba(100, 100, 100, 0.1);
   position: relative;
@@ -120,7 +123,7 @@ export default {
 }
 .user-dropdown-menu-con {
   position: absolute;
-  right: 0;
+  right: .5rem;
   top: 0;
   box-sizing: border-box;
   text-align: center;
@@ -128,6 +131,13 @@ export default {
   background: white;
   z-index: 10;
   margin-right: 10px;
+  /deep/ .ivu-dropdown {
+    height: 50px;
+    /deep/ .ivu-dropdown-rel {
+      height: 50px;
+      line-height: 50px;
+    }
+  }
 }
 .ivu-layout-header {
   padding: 0 50px 0 10px;

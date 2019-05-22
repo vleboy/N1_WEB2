@@ -70,31 +70,12 @@ export default {
                     {
                       title: "NA游戏总报表"
                     } ,
-                   /* {
-                      title: "NA电子游戏报表"
-                    },
-                    {
-                      title: "NA街机游戏报表"
-                    },
-                    {
-                      title: "NA棋牌游戏报表"
-                    }, */
                      {
                       title: "NA电子H5报表"
                     },
                     {
                       title: "NA电子H5无神秘奖报表"
                     }
-                    /* ,
-                     {
-                      title: "NA真人h5报表"
-                    },
-                    {
-                      title: "NA真人游戏报表"
-                    },
-                    {
-                      title: "NA捕鱼游戏报表"
-                    } */
                   ]
                 },
                 {
@@ -277,13 +258,8 @@ export default {
               ]
             },
             {
-              title: "玩家中心",
+              title: "玩家列表",
               expand: true,
-              children: [
-                {
-                  title: "玩家列表"
-                }
-              ]
             },
             {
               title: "管理员中心",
@@ -320,7 +296,7 @@ export default {
                   title: "神秘大奖"
                 },
                 {
-                  title: "电子游戏配置"
+                  title: "数值调控中心"
                 },
                 {
                   title: "游戏管理"
@@ -332,7 +308,10 @@ export default {
             expand: true,
             children: [
               {
-                title: "流水交易",
+                title: "免转流水",
+              },
+              {
+                title: "免转报表",
               },
             ]
           },

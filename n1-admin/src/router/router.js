@@ -317,8 +317,8 @@ export const appRouter = [
            name: 'transfer',
            component: main,
            children: [
-             { path: 'flow', title: '流水交易', name: 'flow', component: flow },
-             { path: 'report', title: '输赢报表', name: 'noTransferReport', component: noTransferReport }
+             { path: 'flow', title: '免转流水', name: 'flow', component: flow },
+             { path: 'report', title: '免转报表', name: 'noTransferReport', component: noTransferReport }
            ]
          },
          {

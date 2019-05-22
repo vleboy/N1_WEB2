@@ -3,7 +3,7 @@
     <div ref="scrollBody" class="tags-inner-scroll-body">
       <!--  :style="{left: tagBodyLeft + 'px'}"-->
       <transition-group name="taglist-moving-animation">
-        <Tag type="dot" v-for="(item, index) in pageTagsList" ref="tagsPageOpened" :key="item.name" :name="item.name" @on-close="closePage" @click.native="linkTo(item)" :closable="true" :color="item.children?(item.children[0].name===currentPageName?'blue':'default'):(item.name===currentPageName?'blue':'default')">{{ item.title }}</Tag>
+        <Tag type="dot" v-for="(item, index) in arrList" ref="tagsPageOpened" :key="item.name" :name="item.name" @on-close="closePage" @click.native="linkTo(item)" :closable="true" :color="item.children?(item.children[0].name===currentPageName?'#000':'default'):(item.name===currentPageName?'#000':'default')">{{ item.title }}</Tag>
       </transition-group>
     </div>
   </div>
@@ -27,6 +27,16 @@ export default {
     }
   },
   computed: {
+    //只能同时打开五个标签
+    arrList() {
+      //console.log(this.pageTagsList.length);
+      if (this.pageTagsList.length >=6) {
+        this.pageTagsList.shift()
+        //console.log("1"+this.pageTagsList.length);
+      } 
+        return this.pageTagsList
+      
+    },
     tagsList() {
       return this.$store.state.home.pageOpenedList;
     }
@@ -140,6 +150,9 @@ export default {
     overflow: visible;
     white-space: nowrap;
     transition: left 0.3s ease;
+    height: 50px;
+    display: flex;
+    align-items: center;
   }
 }
 .taglist-moving-animation-move {

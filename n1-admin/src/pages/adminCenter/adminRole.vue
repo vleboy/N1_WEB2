@@ -388,15 +388,9 @@ export default {
               ]
             },
             {
-              title: "玩家中心",
+              title: "玩家列表",
               expand: true,
               checked: false,
-              children: [
-                {
-                  title: "玩家列表",
-                  checked: false
-                }
-              ]
             },
             {
               title: "日志中心",
@@ -427,7 +421,7 @@ export default {
                   checked: false
                 },
                 {
-                  title: "电子游戏配置",
+                  title: "数值调控中心",
                   checked: false
                 },
                 {
@@ -442,7 +436,11 @@ export default {
               checked: false,
               children: [
                 {
-                  title: "流水交易",
+                  title: "免转流水",
+                  checked: false
+                },
+                {
+                  title: "免转报表",
                   checked: false
                 }
               ]

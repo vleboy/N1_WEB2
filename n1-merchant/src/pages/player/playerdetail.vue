@@ -4,6 +4,9 @@
       <template slot-scope="{row, index}" slot="gameState">
         {{gameStateConfig(row)}}
       </template>
+      <template slot-scope="{row, index}" slot="joinTime">
+        {{joinTimeConfig(row)}}
+      </template>
     </Table>
     <div class="-d-content">
       <RadioGroup v-model="reportType" type="button" :style="{paddingBottom:'10px'}" size="small">
@@ -67,7 +70,7 @@ export default {
         {
           title: "最近登录游戏",
           align: "center",
-          key: "lastTime"
+          slot: "joinTime"
         },
         {
           title: "所属商户ID",
@@ -107,6 +110,11 @@ export default {
     gameStateConfig(row) {
       return this.gameStatus[row.gameState]
     },
+    //最近登录时间
+    //最近游戏登录时间
+    joinTimeConfig(row) {
+      return dayjs(row.joinTime).format("YYYY-MM-DD HH:mm:ss")
+    },
     getPlayerDetail () {
       this.dataList = []
       if(this.isFetching) return
@@ -117,6 +125,7 @@ export default {
       }).then(
         result => {
           this.playerDetailInfo = result.userInfo
+          
           this.dataList.push(this.playerDetailInfo)
           //console.log(this.dataList);
           this.reportType = '1'
