@@ -17,10 +17,10 @@
           <Form label-position="left" :label-width="100">
             <Row>
               <Col span="8">
-                <FormItem label="线路商ID">{{ lineDetail.displayId}}</FormItem>
+                <FormItem label="上级线路商">{{lineDetail.parentDisplayName}}</FormItem>
               </Col>
               <Col span="8">
-                <FormItem label="上级线路商">{{lineDetail.parentDisplayName}}</FormItem>
+                <FormItem label="线路商ID">{{ lineDetail.displayId}}</FormItem>
               </Col>
               <Col span="8">
                 <FormItem label="线路商标识">{{lineDetail.suffix}}</FormItem>
@@ -32,7 +32,7 @@
               </Col>
               <Col span="8">
                 <FormItem
-                  label="最后登录时间"
+                  label="上次登录时间"
                 >{{dayjs(lineDetail.updatedAt).format("YYYY-MM-DD HH:mm:ss")}}</FormItem>
               </Col>
               <Col span="8">

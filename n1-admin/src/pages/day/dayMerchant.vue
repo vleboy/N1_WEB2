@@ -4,13 +4,13 @@
       <div class="top">
         <p class="title">
           <Row class="row -search-row" type="flex" align="middle">
-            <Col span="5">商户标识</Col>
-            <Col span="6">
-              <Input v-model="buSN" placeholder="请输入" size="small"></Input>
-            </Col>
-            <Col span="4" offset="1">商户ID</Col>
+            <Col span="5">商户ID</Col>
             <Col span="6">
               <Input v-model="buID" placeholder="请输入" size="small"></Input>
+            </Col>
+            <Col span="4" offset="1">商户标识</Col>
+            <Col span="6">
+              <Input v-model="buSN" placeholder="请输入" size="small"></Input>
             </Col>
           </Row>
         </p>

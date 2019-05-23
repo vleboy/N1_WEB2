@@ -18,6 +18,10 @@
     </p> 
   </div>
     </div>
+    <Spin size="large" fix v-show="spinShow" style="z-index:200;">
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <div style>加载中...</div>
+    </Spin>
   </div>
 </template>
 
@@ -242,12 +246,14 @@ export default {
     },
 
     async getData() {
+      this.spinShow = true
       httpRequest(
         "post",
         "/getGameConfig",
         { gameType: 'all'},
         "prize"
       ).then(res => {
+        this.spinShow = false
         res.config.forEach(item => {
           if (item.gameType.indexOf("_") != -1) {
             this.mysArr.push(item);

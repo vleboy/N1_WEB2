@@ -31,7 +31,7 @@
                 <FormItem label="管理员账号">{{ merchantDetail.uname}}</FormItem>
               </Col>
               <Col span="8">
-                <FormItem label="标识">{{merchantDetail.sn}}</FormItem>
+                <FormItem label="商户标识">{{merchantDetail.sn}}</FormItem>
               </Col>
               <Col span="8">
                 <FormItem label="商户前缀">{{merchantDetail.suffix}}</FormItem>

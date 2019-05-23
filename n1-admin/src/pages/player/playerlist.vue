@@ -5,10 +5,6 @@
       <p class="input">
         <Input v-model="searchInfo.userId" placeholder="请输入" size="small"></Input>
       </p>
-      <p>玩家昵称</p>
-      <p class="input">
-        <Input v-model="searchInfo.nickname" placeholder="请输入" size="small"></Input>
-      </p>
       <p>商户ID</p>
       <p class="input">
         <Input v-model="searchInfo.buId" placeholder="请输入" size="small"></Input>
@@ -48,7 +44,7 @@
       <!--</Row>-->
 
 
-      <Table :columns="columns" :data="getItems">
+      <Table :columns="columns" :data="getItems" no-data-text="请输入查询条件">
         <template slot-scope="{row, index}" slot="buId">
           <Tooltip content="前往商户列表" placement="top">
             <span @click="buIdConfig(row)" style="color:#20a0ff;cursor:pointer">{{row.buId}}</span>
@@ -144,7 +140,6 @@ export default {
       searchInfo: {
         gameId: "",
         userName: "",
-        nickname: "",
         suffix: "",
         parentSn: "",
         msn: ""

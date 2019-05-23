@@ -18,9 +18,9 @@
         <Col span="3">
           <Input v-model="supSuffix" placeholder="请输入" size="small"></Input>
         </Col>
-        <Col span="2">
+        <Col span="3">
           <div class="btns">
-            <Button type="primary" @click="init" style="margin:0 .3rem 0 1rem" size="small">搜索</Button>
+            <Button type="primary" @click="init" style="margin:0 .3rem 0 0" size="small">搜索</Button>
             <Button @click="reset" size="small">重置</Button>
           </div>
         </Col>
