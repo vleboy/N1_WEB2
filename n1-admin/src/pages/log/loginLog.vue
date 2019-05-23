@@ -15,7 +15,7 @@
         <p>
           <Input v-model="username" placeholder="请输入" size="small"></Input>
         </p>
-        <p style="margin:0 1rem">昵称:</p>
+        <p style="margin:0 1rem">昵称</p>
         <p>
           <Input v-model="displayName" placeholder="请输入" size="small"></Input>
         </p>

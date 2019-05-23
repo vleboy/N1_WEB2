@@ -29,7 +29,7 @@
           @click="getWaterfallList"
         >(点击查询)</span>
       </h2>
-      <Table :columns="columns1" :data="showData" size="small">
+      <Table :columns="columns1" :data="showWaterList" size="small">
         <template slot-scope="{row, index}" slot="createdAt">{{createdAtConfig(row)}}</template>
         <template slot-scope="{row, index}" slot="toUser">
           <span>{{row.fromLevel > row.toLevel ? row.toDisplayName + " 对 " + row.fromDisplayName : row.fromDisplayName + " 对 " + row.toDisplayName}}</span>
@@ -52,14 +52,7 @@
           <span v-else></span>
         </template>
       </Table>
-      <Page
-        :total="total"
-        class="page"
-        show-elevator
-        :page-size="pageSize"
-        show-total
-        @on-change="changepage"
-      ></Page>
+      <Page :total="totalPage" class="page" :page-size="pageSize" @on-change="changepage"></Page>
     </div>
     <Modal v-model="modal" title="修改密码" :width="350" @on-ok="ok" @on-cancel="cancel">
       <p class="modal_input">
@@ -79,30 +72,32 @@
         </Row>
       </p>
     </Modal>
-   
+
     <Spin size="large" fix v-show="$store.state.login.loading" style="z-index:200;">
-      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <Icon type="ios-loading" size="64" class="demo-spin-icon-load"></Icon>
       <div style>加载中...</div>
     </Spin>
   </div>
 </template>
 <script>
 import dayjs from "dayjs";
-import { getWaterfall, adminCenter } from "@/service/index";
+import { httpRequest, adminCenter } from "@/service/index";
 import { thousandFormatter } from "@/config/format";
+import _ from "lodash";
 export default {
   name: "ownSpace",
   data() {
     return {
       modal: false,
       showPass: false,
+      startKey: false,
       thousandFormatter: thousandFormatter,
       password: "",
       repassword: "",
       dayjs: dayjs,
-      pageSize: 100,
       admin: {},
       dataList: [],
+      showWaterList: [],
       waterfall: [],
       showData: [],
       columns: [
@@ -147,7 +142,7 @@ export default {
         {
           title: "交易时间",
           slot: "createdAt",
-          
+
           align: "center"
         },
         {
@@ -159,32 +154,28 @@ export default {
           title: "交易类型",
           slot: "amountType",
           align: "center",
-          
+
           maxWidth: 120
         },
         {
           title: "交易前余额",
           slot: "oldBalance",
-          align: "center",
-        
+          align: "center"
         },
         {
           title: "交易点数",
           slot: "amount",
-          align: "center",
-  
+          align: "center"
         },
         {
           title: "交易后余额",
           align: "center",
-          slot: "newBalance",
-        
+          slot: "newBalance"
         },
         {
           title: "操作人",
           slot: "operator",
-          align: "center",
-        
+          align: "center"
         },
         {
           title: "备注",
@@ -192,7 +183,11 @@ export default {
           slot: "remark",
           maxWidth: 60
         }
-      ]
+      ],
+      totalPage: 100, //数据总量
+      pageSize: 20, //每页显示数据量
+      currentPage: 1, //当前页码
+      showNext: false //是否显示下100条
     };
   },
   computed: {
@@ -237,9 +232,9 @@ export default {
     //备注
     remarkConfig(row) {
       if (row.remark == "NULL!" || row.remark == null) {
-        return {isShow:false, remark: row.remark}
+        return { isShow: false, remark: row.remark };
       } else {
-       return {isShow:true, remark: row.remark}
+        return { isShow: true, remark: row.remark };
       }
     },
 
@@ -250,12 +245,6 @@ export default {
       } else {
         this.showData = this.waterfall.slice(0, this.pageSize);
       }
-    },
-    changepage(index) {
-      let size = this.pageSize;
-      let _start = (index - 1) * size;
-      let _end = index * size;
-      this.showData = this.waterfall.slice(_start, _end);
     },
     newPassword() {
       this.modal = true;
@@ -291,8 +280,7 @@ export default {
             adminCenter().then(res => {
               self.dataList = [];
               self.admin = res.payload;
-             
-              
+
               self.dataList.push(self.admin);
               self.$store.commit("updateLoading", { params: false });
               self.$Message.success("修改成功");
@@ -340,13 +328,49 @@ export default {
     reset() {
       this.init();
     },
+    //切页
+    changepage(index) {
+      if (index % 5 == 0 && this.showData.length <= index * 20) {
+        this.showNext = true;
+        this.getWaterfallList();
+      }
+      this.showWaterList = _.chunk(this.showData, 20)[index - 1];
+    },
+    //获取流水列表
     async getWaterfallList() {
       let userId = localStorage.loginId ? localStorage.getItem("loginId") : "";
-      let req1 = getWaterfall(userId);
-      this.$store.commit("updateLoading", { params: true });
-      let waterfall = await this.axios.all([req1]);
-      this.$store.commit("updateLoading", { params: false });
-      this.showData = waterfall[0].payload;
+      if (this.showNext) {
+        console.log(this.showData[this.showData.length - 1].oldBalance);
+        
+        let params = {
+          createdAt: this.startKey.createdAt,
+          sn: this.startKey.sn,
+          balance: this.showData[this.showData.length - 1].oldBalance
+        };
+        this.$store.commit("updateLoading", { params: true });
+        let waterfall = await httpRequest(
+          "get",
+          `/waterfall/${userId}`,
+          params
+        );
+        this.$store.commit("updateLoading", { params: false });
+        this.showData = this.showData.concat(waterfall.payload);
+        this.totalPage = this.showData.length;
+        this.startKey = waterfall.startKey;
+      } else {
+        let params = "";
+        this.$store.commit("updateLoading", { params: true });
+        let waterfall = await httpRequest(
+          "get",
+          `/waterfall/${userId}`,
+          params
+        );
+        this.$store.commit("updateLoading", { params: false });
+        this.showData = waterfall.payload;
+        this.totalPage = this.showData.length;
+        this.startKey = waterfall.startKey;
+        this.showWaterList = _.chunk(this.showData, 20)[0];
+      }
     },
     async init() {
       this.dataList = [];

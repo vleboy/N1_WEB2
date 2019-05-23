@@ -24,7 +24,7 @@
             <Input  v-model="managerName" placeholder="请输入" size="small"></Input>
           </p>
             <p style="margin-left:1rem">
-              <DatePicker size="small" type="daterange" :options="options" :editable='false' :value="defaultTime" placeholder="选择日期时间范围(默认最近一个月)" confirm @on-ok="confirms" @on-change="handle"></DatePicker>
+              <DatePicker style="width: 300px" size="small" type="daterange" :options="options" :editable='false' :value="defaultTime" placeholder="选择日期时间范围(默认最近一个月)" confirm @on-ok="confirms" @on-change="handle"></DatePicker>
             </p>
           <div class="title2">
           <p style="margin-left:1rem;margin-right:.5rem">

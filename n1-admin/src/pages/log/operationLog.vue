@@ -13,7 +13,7 @@
             >{{ item.label }}</Option>
           </Select>
      
-        <p style="margin:0 1rem">操作人:</p>
+        <p style="margin:0 1rem">操作人</p>
         <p span="4">
           <Input v-model.trim="userName" placeholder="请输入" size="small"></Input>
         </p>

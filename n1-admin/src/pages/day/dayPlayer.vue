@@ -89,7 +89,7 @@ export default {
       playerID: "",
       playerName: "",
       dayStatList: [],
-      model1: "全部",
+      model1: "全部游戏",
       showChat: false,
       
       columns1: [
