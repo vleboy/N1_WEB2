@@ -291,7 +291,9 @@ export default {
             adminCenter().then(res => {
               self.dataList = [];
               self.admin = res.payload;
-              self.dataList.push(admin);
+             
+              
+              self.dataList.push(self.admin);
               self.$store.commit("updateLoading", { params: false });
               self.$Message.success("修改成功");
             });

@@ -4,11 +4,11 @@
       <div style="display:flex;align-items:center;margin-bottom:1rem;">
         <p>玩家ID</p>
         <p class="input">
-          <Input v-model="searchInfo.userId" placeholder="请输入" size="small"></Input>
+          <Input v-model="searchInfo.userId" placeholder="请输入" size="small" style="width:15rem"></Input>
         </p>
         <p style="margin-right:1rem;">玩家账号</p>
         <p style="margin-right:1rem;">
-          <Input v-model="searchInfo.userName" placeholder="请输入" size="small"></Input>
+          <Input v-model="searchInfo.userName" placeholder="请输入" size="small" style="width:15rem"></Input>
         </p>
         <p>游戏状态</p>
         <p class="input">
@@ -17,7 +17,7 @@
             v-model="searchInfo.gameId"
             clearable
             placeholder="请选择游戏状态"
-            style="text-align: left"
+            style="text-align: left;width:15rem"
           >
             <Option
               v-for="(item, index) in gameTypeList"
@@ -30,11 +30,11 @@
       <div style="display:flex;align-items:center;">
         <p>商户ID</p>
         <p class="input">
-          <Input v-model="searchInfo.buId" placeholder="请输入" size="small"></Input>
+          <Input v-model="searchInfo.buId" placeholder="请输入" size="small" style="width:15rem"></Input>
         </p>
         <p>商户标识</p>
         <p class="input">
-          <Input v-model="searchInfo.parentSn" placeholder="请输入" size="small"></Input>
+          <Input v-model="searchInfo.parentSn" placeholder="请输入" size="small" style="width:15rem"></Input>
         </p>
 
         <p>

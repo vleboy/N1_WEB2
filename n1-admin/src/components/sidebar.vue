@@ -106,8 +106,8 @@
                     <span>日报表</span>
                   </template>
                   <MenuItem name="dayCompany" v-if='permission.includes("公司日报表")'>公司日报表</MenuItem>
-                  <MenuItem name="dayMerchant" v-if='permission.includes("商户日报表")'>商户日报表</MenuItem>
                   <MenuItem name="dayManager" v-if='permission.includes("线路商日报表")'>线路商日报表</MenuItem>
+                  <MenuItem name="dayMerchant" v-if='permission.includes("商户日报表")'>商户日报表</MenuItem>
                   <MenuItem name="dayPlayer" v-if='permission.includes("玩家日报表")'>玩家日报表</MenuItem>
                 </Submenu>
                 <MenuItem name="dealerList" v-if='permission.includes("商户中心") && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
