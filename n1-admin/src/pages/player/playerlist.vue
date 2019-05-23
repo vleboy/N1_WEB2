@@ -1,38 +1,47 @@
 <template>
   <div class="p-playerlist">
     <div class="propList-search">
-      <p >玩家ID</p>
-      <p class="input">
-        <Input v-model="searchInfo.userId" placeholder="请输入" size="small"></Input>
-      </p>
-      <p>商户ID</p>
-      <p class="input">
-        <Input v-model="searchInfo.buId" placeholder="请输入" size="small"></Input>
-      </p>
-      <p>商户标识</p>
-      <p class="input">
-        <Input v-model="searchInfo.parentSn" placeholder="请输入" size="small"></Input>
-      </p>
-      <p>游戏状态</p>
-      <p class="input">
-        <Select
-          size="small"
-          v-model="searchInfo.gameId"
-          clearable
-          placeholder="请选择游戏状态"
-          style="text-align: left"
-        >
-          <Option
-            v-for="(item, index) in gameTypeList"
-            :value="item.code"
-            :key="index"
-          >{{ item.name }}</Option>
-        </Select>
-      </p>
-      <p>
-        <Button type="primary" @click="getSearch(true)" style="margin-right:.3rem" size="small">搜索</Button>
-        <Button @click="getSearch(false)" size="small">重置</Button>
-      </p>
+      <div style="display:flex;align-items:center;margin-bottom:1rem;">
+        <p>玩家ID</p>
+        <p class="input">
+          <Input v-model="searchInfo.userId" placeholder="请输入" size="small"></Input>
+        </p>
+        <p style="margin-right:1rem;">玩家账号</p>
+        <p style="margin-right:1rem;">
+          <Input v-model="searchInfo.userName" placeholder="请输入" size="small"></Input>
+        </p>
+        <p>游戏状态</p>
+        <p class="input">
+          <Select
+            size="small"
+            v-model="searchInfo.gameId"
+            clearable
+            placeholder="请选择游戏状态"
+            style="text-align: left"
+          >
+            <Option
+              v-for="(item, index) in gameTypeList"
+              :value="item.code"
+              :key="index"
+            >{{ item.name }}</Option>
+          </Select>
+        </p>
+      </div>
+      <div style="display:flex;align-items:center;">
+        <p>商户ID</p>
+        <p class="input">
+          <Input v-model="searchInfo.buId" placeholder="请输入" size="small"></Input>
+        </p>
+        <p>商户标识</p>
+        <p class="input">
+          <Input v-model="searchInfo.parentSn" placeholder="请输入" size="small"></Input>
+        </p>
+
+        <p>
+          <Button type="primary" @click="getSearch(true)" style="margin-right:.3rem" size="small">搜索</Button>
+          <Button @click="getSearch(false)" size="small">重置</Button>
+        </p>
+      </div>
     </div>
 
     <div class="playerform">
@@ -43,47 +52,47 @@
       <!--</Col>-->
       <!--</Row>-->
 
-
       <Table :columns="columns" :data="getItems" no-data-text="请输入查询条件">
         <template slot-scope="{row, index}" slot="buId">
           <Tooltip content="前往商户列表" placement="top">
             <span @click="buIdConfig(row)" style="color:#20a0ff;cursor:pointer">{{row.buId}}</span>
           </Tooltip>
-        </template>  
+        </template>
         <template slot-scope="{row, index}" slot="nickname">
           <span>{{row.nickname === "NULL!" ? "-" : row.nickname}}</span>
         </template>
         <template slot-scope="{row, index}" slot="state">
-          <Tag type="border" :color="stateConfig(row).color">
-            {{stateConfig(row).state}}
-          </Tag> 
+          <Tag type="border" :color="stateConfig(row).color">{{stateConfig(row).state}}</Tag>
         </template>
         <template slot-scope="{row, index}" slot="gameState">
-          <Tag type="border" :color="gameStateConfig(row)">
-            {{row.gameStateName}}
-          </Tag> 
+          <Tag type="border" :color="gameStateConfig(row)">{{row.gameStateName}}</Tag>
         </template>
         <template slot-scope="{row, index}" slot="balance">
-         <span>{{balanceConfig(row)}}</span>
+          <span>{{balanceConfig(row)}}</span>
         </template>
         <template slot-scope="{row, index}" slot="createdAt">
-         <span>{{createdAtConfig(row)}}</span>
+          <span>{{createdAtConfig(row)}}</span>
         </template>
         <template slot-scope="{row, index}" slot="joinTime">
-         <span>{{joinTimeConfig(row)}}</span>
+          <span>{{joinTimeConfig(row)}}</span>
         </template>
         <template slot-scope="{row, index}" slot="operate">
-         <div style="display:flex;justify-content: space-around">
-           <Button type="text" size="small" style="color:#20a0ff" @click="operateCheck(row)">查看</Button>
-           <Button type="text" size="small" :style="{color:operateConfig(row)}" @click="operateState(row)">{{row.state ? "停用" : "开启"}}</Button>
-         </div>
+          <div style="display:flex;justify-content: space-around">
+            <Button type="text" size="small" style="color:#20a0ff" @click="operateCheck(row)">查看</Button>
+            <Button
+              type="text"
+              size="small"
+              :style="{color:operateConfig(row)}"
+              @click="operateState(row)"
+            >{{row.state ? "停用" : "开启"}}</Button>
+          </div>
         </template>
       </Table>
 
       <Spin size="large" fix v-show="isFetching" style="z-index:200;">
-      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
-      <div style>加载中...</div>
-    </Spin>
+        <Icon type="ios-loading" size="64" class="demo-spin-icon-load"></Icon>
+        <div style>加载中...</div>
+      </Spin>
       <div style="text-align: right;margin:2rem 0">
         <Page
           :total="playerList.length"
@@ -156,8 +165,7 @@ export default {
         {
           title: "玩家账号",
           key: "userName",
-          align: "center",
-     
+          align: "center"
         },
         {
           title: "玩家昵称",
@@ -168,16 +176,15 @@ export default {
         {
           title: "商户ID",
           slot: "buId",
- 
+
           align: "center"
         },
         {
           title: "所属商户",
           key: "merchantName",
-          align: "center",
-
+          align: "center"
         },
-        
+
         {
           title: "状态",
           slot: "state",
@@ -232,74 +239,49 @@ export default {
     }
   },
   methods: {
-
     //商户ID
     buIdConfig(row) {
-     
-      localStorage.setItem("merchantList", "merchantList")
+      localStorage.setItem("merchantList", "merchantList");
       //(localStorage.getItem('merchantList'));
-      
-      
+
       this.$router.push({
         name: "merchantList",
         query: { buId: row.buId }
       });
-      
     },
     //状态
     stateConfig(row) {
-     let color = row.state ? "green" : "red"
-     return {state: this.playerStatus[row.state], color}
+      let color = row.state ? "green" : "red";
+      return { state: this.playerStatus[row.state], color };
     },
     //游戏状态
     gameStateConfig(row) {
-      return row.gameState == 3 || row.gameState == 2 ? "green" : ""
+      return row.gameState == 3 || row.gameState == 2 ? "green" : "";
     },
     //点数
     balanceConfig(row) {
-      return thousandFormatter(row.balance)  
+      return thousandFormatter(row.balance);
     },
     //注册时间
     createdAtConfig(row) {
-      return dayjs(row.createdAt).format("YYYY-MM-DD")
+      return dayjs(row.createdAt).format("YYYY-MM-DD");
     },
     //最近登录时间
     joinTimeConfig(row) {
-      return dayjs(row.joinTime).format("YYYY-MM-DD HH:mm:ss")
+      return dayjs(row.joinTime).format("YYYY-MM-DD HH:mm:ss");
     },
     //操作
     //查看
     operateCheck(row) {
-      this.playDetail(row)
+      this.playDetail(row);
     },
     //启用停用
     operateState(row) {
       this.changeStatus(row);
     },
     operateConfig(row) {
-      return row.state ? "red" : "blue"
+      return row.state ? "red" : "blue";
     },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     selectionChange(val) {
       this.checkedArray = val;
@@ -473,22 +455,19 @@ export default {
 <style scpoed lang="less" type="text/less">
 .p-playerlist {
   .propList-search {
-    display: flex;
     margin-bottom: 1rem;
-    align-items: center;
     .input {
-      
       margin: 0 1rem;
     }
     .ivu-btn {
-    background: #fff;
-    color: #000;
-    border-color: #000;
-  }
-  .ivu-btn:hover {
-    background: #000;
-    color: #fff;
-  }
+      background: #fff;
+      color: #000;
+      border-color: #000;
+    }
+    .ivu-btn:hover {
+      background: #000;
+      color: #fff;
+    }
   }
   .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
@@ -505,18 +484,18 @@ export default {
   /deep/ .ivu-tabs-nav-scroll {
     height: 2.25rem;
   }
-  
+
   /deep/ .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab {
     border-color: #000;
     color: #000;
     background: #fff;
   }
- 
+
   /deep/ .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab-active {
     background: #000;
     color: #fff;
   }
-  
+
   /deep/.ivu-select-selection {
     border-color: #000;
   }
@@ -536,7 +515,5 @@ export default {
     border-color: #000;
     background: #fff;
   }
-  
 }
-
 </style>

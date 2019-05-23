@@ -122,11 +122,11 @@
                   <MenuItem name="dealerList" v-if='permission.includes("线路商列表")'>线路商列表</MenuItem>
                 </Submenu>
                 <MenuItem name="adminList" v-if='permission.includes("管理员中心") && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
-                  <Icon type="ios-people" @click="unfold"/>
+                  <Icon type="ios-ribbon" @click="unfold"/>
                 </MenuItem>
                 <Submenu class="sideMenu" name="adminCenter" v-if='permission.includes("管理员中心") && unFlodMenu'>
                     <template slot="title">
-                        <Icon type="ios-people" />
+                        <Icon type="ios-ribbon" />
                         <span>管理员中心</span>
                     </template>
                     <MenuItem name="adminList" v-if='permission.includes("管理员列表")'>管理员列表</MenuItem>

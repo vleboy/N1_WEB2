@@ -386,7 +386,6 @@ export default {
 .dayReport {
   min-height: 90vh;
   .title {
-    font-size: 0.95rem;
     margin: 0.5rem 0 0.5rem;
     display: inline-block;
   }

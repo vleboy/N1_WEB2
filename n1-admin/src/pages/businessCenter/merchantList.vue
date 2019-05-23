@@ -2,13 +2,13 @@
   <div class="business">
     <div class="search">
       <Row class="row" type="flex" justify="start">
-        <span style="margin-right:1rem">商户标识</span>
-        <Col span="3">
-          <Input v-model="sn" placeholder="请输入" size="small"></Input>
-        </Col>
-        <span style="margin:0 1rem">商户ID</span>
+        <span style="margin:0 1rem 0 0">商户ID</span>
         <Col span="3">
           <Input v-model="displayId" placeholder="请输入" size="small"></Input>
+        </Col>
+        <span style="margin:0 1rem">商户标识</span>
+        <Col span="3">
+          <Input v-model="sn" placeholder="请输入" size="small"></Input>
         </Col>
         <span style="margin:0 1rem">商户昵称</span>
         <Col span="3">
