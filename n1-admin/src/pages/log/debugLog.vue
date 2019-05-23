@@ -30,9 +30,10 @@
       <Button type="primary" :disabled='firstPage' class="lastpage" @click="homePage">首页</Button>
       <Button type="primary" class="nextpage" @click="nextPage">下一页</Button>
     </div>
-    <Spin size="large" fix v-if="$store.state.admin.loading">
-      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+  
+    <Spin size="large" fix v-show="$store.state.admin.loading" style="z-index:200;">
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <div style>加载中...</div>
     </Spin>
   </div>
 </template>
@@ -180,6 +181,15 @@ export default {
   /deep/ .ivu-input {
     border-color: #000;
     background: #fff;
+  }
+  .ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
   }
 </style>
 

@@ -279,7 +279,6 @@ export const appRouter = [
            children: [
              { path: 'merchant', title: '商户列表', name: 'merchantList', component: merchantList },
              { path: 'manager', title: '线路商列表', name: 'dealerList', component: managerList },
-             { path: 'warn', title: '接入商点数警告列表', name: 'warnList', component: warnList }
            ]
          },
          {
@@ -306,10 +305,10 @@ export const appRouter = [
          },
          {
            path: '/play',
-           title: '玩家列表',
+           title: '玩家中心',
            name: 'play',
            component: main,
-           children: [{ path: 'list', title: '玩家列表', name: 'playList', component: playerlist }]
+           children: [{ path: 'list', title: '玩家中心', name: 'playList', component: playerlist }]
          },
          {
            path: '/transfer',

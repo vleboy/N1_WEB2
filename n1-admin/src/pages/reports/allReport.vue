@@ -3,7 +3,7 @@
  <!--  <div class="allreport" style="width:200%"> -->
     <div class="nowList">
       <div class="top">
-        <p class="title">
+        <p class="title" style="margin-top:0">
           当前用户列表
           <RadioGroup v-model="source" class="radioGroup" type="button" @on-change="changeSource" size="small" style="margin:0 1rem">
             <Radio label="0" v-if="permission.includes('正式数据')">正式</Radio>
@@ -141,7 +141,7 @@
     <div class="childList">
       <p class="title">
         直属下级列表
-        <Button  @click="exportdata('table_1')">导出数据</Button>
+        <Button  @click="exportdata('table_1')" size="small">导出数据</Button>
       </p>
       <Table :columns="columns11" :data="child" size="small" ref="table_1">
         <template slot-scope="{row, index}" slot="userRole">
@@ -257,7 +257,7 @@
     <div class="childList" v-for="(item,index) in reportChild" :key="index">
       <p class="title">
         ({{item.length > 0 && item[0].parentDisplayName ? item[0].parentDisplayName : ''}}) 直属下级列表
-        <Button  @click="exportdata(index)">导出数据</Button>
+        <Button  @click="exportdata(index)" size="small">导出数据</Button>
       </p>
       <Table :columns="columns11" :data="item" size="small" :ref="'table'+index">
         <template slot-scope="{row, index}" slot="userRole">
@@ -373,7 +373,7 @@
     <div class="playerList" id="playerList">
       <p class="title">
         <span v-show="showName">({{ userName }})</span>所属玩家列表
-        <Button  @click="exportdata('table_2')">导出数据</Button>
+        <Button  @click="exportdata('table_2')" size="small">导出数据</Button>
       </p>
       <Table :columns="columns22" :data="playerList" size="small" ref="table_2">
         <template slot-scope="{row, index}" slot="playerNickname">
@@ -399,9 +399,9 @@
         </template>
       </Table>
     </div>
-    <Spin size="large" fix v-if="spinShow">
-      <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+    <Spin size="large" fix v-show="spinShow" style="z-index:200;">
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <div style>加载中...</div>
     </Spin>
   </div>
 </template>
@@ -1454,9 +1454,9 @@ export default {
 
   .title {
     font-size: 1.2rem;
-    margin: 0.5rem 0 0.5rem;
     font-weight: 600;
     display: inline-block;
+    margin: 1rem 0;
   }
   .top {
     .right {
@@ -1486,6 +1486,15 @@ export default {
   /deep/ .ivu-input {
     border-color: #000;
     background: #fff;
+  }
+  .ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
   }
 .Nico {
   display: none;

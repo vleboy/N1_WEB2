@@ -243,7 +243,7 @@ export default {
       this.getGameType()
     },
     postCreateform () {
-      console.log(this.managerInfo);
+      //(this.managerInfo);
       
       if(this.isSending) return
       if (!this.isfinish.gameName || !this.managerInfo.gameType ||
@@ -353,7 +353,7 @@ export default {
           this.$Message.success('上传亚马逊成功')
           this.managerInfo.gameImg = (process.env.NODE_ENV == 'development') ? dev : prod
           
-          console.log(this.managerInfo.gameImg)
+          //(this.managerInfo.gameImg)
           
         }).finally(()=>{
         this.dialogLoading = false

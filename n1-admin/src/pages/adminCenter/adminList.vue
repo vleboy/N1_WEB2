@@ -3,8 +3,8 @@
     
     <div class="option">
       <p class="create">
-        <Button type="primary" @click="addAdmin">创建管理员</Button>
-        <Button type="primary" class="searchbtn" @click="reset">刷新</Button>
+        <Button type="primary" @click="addAdmin" size="small">创建管理员</Button>
+        <Button type="primary" class="searchbtn" @click="reset" size="small">刷新</Button>
       </p>
     </div>
     <div class="table">
@@ -51,9 +51,10 @@
         </Row>
       </p>
     </Modal>
-    <Spin size="large" fix v-if="$store.state.admin.loading">
-      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+   
+    <Spin size="large" fix v-show="$store.state.admin.loading" style="z-index:200;">
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <div style>加载中...</div>
     </Spin>
   </div>
 </template>
@@ -297,5 +298,14 @@ export default {
 }
 .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
+  }
+  .ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
   }
 </style>

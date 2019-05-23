@@ -1,8 +1,8 @@
 <template>
   <div class="report">
     <div class="nowList">
-      <div class="top">
-        <p class="title">
+      <div class="top" style="margin-bottom:1rem">
+        <p class="title" style="margin:0">
           当前用户列表
           <RadioGroup v-model="source" class="radioGroup" type="button" @on-change="changeSource" size="small" style="margin:0 1rem">
             <Radio label="0" v-if="permission.includes('正式数据')">正式</Radio>
@@ -163,9 +163,9 @@
         </template>
       </Table>
     </div>
-    <Spin size="large" fix v-if="spinShow">
-      <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+    <Spin size="large" fix v-show="spinShow" style="z-index:200;">
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <div style>加载中...</div>
     </Spin>
   </div>
 </template>
@@ -790,14 +790,13 @@ export default {
   min-height: 90vh;
   .title {
     font-size: 1.2rem;
-    margin: 0.5rem 0 0.5rem;
+    margin: 1rem 0;
     font-weight: 600;
     display: inline-block;
   }
   .top {
     display: flex;
     align-items: center;
-    
   }
   .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
@@ -817,6 +816,15 @@ export default {
   /deep/ .ivu-input {
     border-color: #000;
     background: #fff;
+  }
+  .ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
   }
 }
 </style>

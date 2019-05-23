@@ -89,9 +89,9 @@
       <oneRunningAccount :dataProp="runningDetail"></oneRunningAccount>
     </Modal>
 
-    <Spin size="large" fix v-if="isFetching">
-      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+    <Spin size="large" fix v-show="isFetching" style="z-index:200;">
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <div style>加载中...</div>
     </Spin>
   </div>
 </template>
@@ -406,7 +406,7 @@ export default {
       }
     },
     async openModalBill(data) {
-      console.log(data);
+      //(data);
       
       this.propChild = data;
       if (this.isRealLife) {

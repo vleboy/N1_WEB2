@@ -39,7 +39,7 @@ export default {
   },
   computed: {
     detailInfo () {
-      console.log(this.dataProp);
+      //(this.dataProp);
       
       return this.dataProp
     }

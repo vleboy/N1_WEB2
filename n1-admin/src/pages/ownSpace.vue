@@ -79,9 +79,10 @@
         </Row>
       </p>
     </Modal>
-    <Spin size="large" fix v-if="$store.state.login.loading">
-      <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+   
+    <Spin size="large" fix v-show="$store.state.login.loading" style="z-index:200;">
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <div style>加载中...</div>
     </Spin>
   </div>
 </template>
@@ -146,7 +147,7 @@ export default {
         {
           title: "交易时间",
           slot: "createdAt",
-          sortable: true,
+          
           align: "center"
         },
         {
@@ -158,32 +159,32 @@ export default {
           title: "交易类型",
           slot: "amountType",
           align: "center",
-          sortable: true,
+          
           maxWidth: 120
         },
         {
           title: "交易前余额",
           slot: "oldBalance",
           align: "center",
-          sortable: true
+        
         },
         {
           title: "交易点数",
           slot: "amount",
           align: "center",
-          sortable: true
+  
         },
         {
           title: "交易后余额",
           align: "center",
           slot: "newBalance",
-          sortable: true
+        
         },
         {
           title: "操作人",
           slot: "operator",
           align: "center",
-          sortable: true
+        
         },
         {
           title: "备注",

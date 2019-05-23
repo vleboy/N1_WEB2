@@ -1,8 +1,8 @@
 <template>
   <div class="adminrole">
     <p class="create">
-      <Button type="primary" @click="addRole">创建新角色</Button>
-      <Button type="primary" class="searchbtn" @click="reset">刷新</Button>
+      <Button type="primary" @click="addRole" size="small">创建新角色</Button>
+      <Button type="primary" class="searchbtn" @click="reset" size="small">刷新</Button>
     </p>
     <Table :columns="columns" :data="subRoleList" size="small">
       <template slot-scope="{row, index}" slot="createdAt">
@@ -66,9 +66,9 @@
         </Form>
       </section>
     </Modal>
-    <Spin size="large" fix v-if="spinShow">
-      <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+    <Spin size="large" fix v-show="spinShow" style="z-index:200;">
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <div style>加载中...</div>
     </Spin>
   </div>
 </template>
@@ -359,10 +359,6 @@ export default {
                   checked: false
                 },
                 {
-                  title: "接入商点数警告列表",
-                  checked: false
-                },
-                {
                   title: "接入商停启用",
                   checked: false
                 },
@@ -388,7 +384,7 @@ export default {
               ]
             },
             {
-              title: "玩家列表",
+              title: "玩家中心",
               expand: true,
               checked: false,
             },
@@ -506,6 +502,7 @@ export default {
         {
           title: "操作",
           slot: "operate",
+          align: "center",
           maxWidth: 120
         }
       ],
@@ -673,6 +670,15 @@ export default {
 }
 .demo-spin-icon-load {
   animation: ani-demo-spin 1s linear infinite;
-  
 }
+.ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
+  }
+
 </style>

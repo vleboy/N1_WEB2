@@ -42,10 +42,11 @@
       <Button type="primary" :disabled="firstPage" class="lastpage" @click="homePage">首页</Button>
       <Button type="primary" class="nextpage" @click="nextPage">下一页</Button>
     </div>
-    <Spin size="large" fix v-show="spinShow">
-      <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+    <Spin size="large" fix v-show="spinShow" style="z-index:200;">
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <div style>加载中...</div>
     </Spin>
+
   </div>
 </template>
 <script>
@@ -194,6 +195,15 @@ export default {
   }
   /deep/.ivu-select-selection {
     border-color: #000;
+  }
+  .ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
   }
 </style>
 

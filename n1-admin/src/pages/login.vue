@@ -35,6 +35,7 @@
               <img class="validateImg" v-else :src="codeSrc" @click="getCode" style="background:grey;positon:relative;">
               <Spin fix v-if='loadImg'>
              </Spin>
+             
             </Col>
           </Row>
         </FormItem>

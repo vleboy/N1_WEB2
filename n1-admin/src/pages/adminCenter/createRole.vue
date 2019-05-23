@@ -258,7 +258,7 @@ export default {
               ]
             },
             {
-              title: "玩家列表",
+              title: "玩家中心",
               expand: true,
             },
             {

@@ -1,7 +1,7 @@
 <template>
   <div class="newBoard">
     <Spin size="large" fix v-show="spinShow" style="z-index:200;">
-      <Icon type="load-c" size="100" class="demo-spin-icon-load" style></Icon>
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
       <div style>加载中...</div>
     </Spin>
     <div class="top">
@@ -1957,7 +1957,7 @@ export default {
     // justify-content: space-around;
   }
 
-  /deep/ .ivu-tabs-bar {
+  /* /deep/ .ivu-tabs-bar {
     height: 2.25rem;
   }
   /deep/ .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-nav-container {
@@ -1968,7 +1968,7 @@ export default {
   }
   /deep/ .ivu-tabs-nav-scroll {
     height: 2.25rem;
-  }
+  } */
   
   /deep/ .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab {
     border-color: #000;

@@ -13,7 +13,7 @@
         :label="item.company"
       >{{item.company}}</Radio>
     </RadioGroup>
-    <Row>
+    <Row class="row">
       <Col :span="21">
         <Button type="primary" @click="goCreate" size="small">创建新游戏</Button>
       </Col>
@@ -49,10 +49,11 @@
           <Button type="text" size="small" style="color:#20a0ff;" @click="operateOrder(row)">排序</Button>
         </template>
       </Table>
-      <Spin size="large" fix v-if="isFetching">
-        <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
-        <div>加载中...</div>
-      </Spin>
+      
+      <Spin size="large" fix v-show="isFetching" style="z-index:200;">
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <div style>加载中...</div>
+    </Spin>
       <div style="text-align: right;margin:2rem 0">
         <Page
           :total="gameListData.length"
@@ -420,9 +421,9 @@ export default {
     }
   },
   mounted() {
-    console.log(getGameType());
+    //(getGameType());
     getGameType().shift();
-    console.log(getGameType());
+    //console.log(getGameType());
   }
 };
 </script>
@@ -431,8 +432,9 @@ export default {
 <style scoped lang="less" type="text/less">
 .p-gameList {
   min-height: 89vh;
+  
   .searchbox {
-    padding: 16px 0;
+    padding: 0 0 16px 0;
   }
   .outresult {
     padding-top: 1rem;
@@ -445,6 +447,17 @@ export default {
   }
   .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
+  }
+  .row {
+    .ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
+  }
   }
   /deep/.ivu-select-selection {
     border-color: #000;
@@ -461,5 +474,6 @@ export default {
     background: #000;
     color: #fff;
   }
+  
 }
 </style>

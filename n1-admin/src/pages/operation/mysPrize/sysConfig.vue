@@ -1,10 +1,10 @@
 <template>
   <div class="sysConfig">
     <div class="search">
-      <Select v-model="gameSeries" style="width:100px" @on-change='init'>
+      <Select v-model="gameSeries" style="width:100px" @on-change='init' size="small">
         <Option v-for="item in seriesList" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>
-      <Button class="reset" type="primary" @click="init">刷新</Button>
+      <Button class="reset" type="primary" @click="init" size="small">刷新</Button>
     </div> 
     <Table :columns="columns1" :data="prizeList" size="small">
       <template slot-scope="{row, index}" slot="robotCount">
@@ -33,9 +33,9 @@
       </template>  
       </Table>
     </div>
-    <Spin size="large" fix v-if="spin">
-      <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+    <Spin size="large" fix v-show="spin" style="z-index:200;">
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <div style>加载中...</div>
     </Spin>
     <Modal v-model="editPrice" @on-ok="saveConfig" title="神秘大奖" id="editPrize">
       <Row class="modalrow">
@@ -666,6 +666,17 @@ export default {
 <style lang="less" scoped>
 .sysConfig {
   min-height: 87vh;
+  .search {
+    .ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
+  }
+  }
   .robot_title {
     font-size: 14px;
     font-weight: bold;
@@ -707,4 +718,5 @@ export default {
 /deep/ .ivu-table-cell {
   padding: 0;
 }  
+
 </style>

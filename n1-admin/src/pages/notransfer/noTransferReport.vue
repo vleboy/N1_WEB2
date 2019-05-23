@@ -58,9 +58,9 @@
         </Col>
       </Row>
     </Modal>
-    <Spin size="large" fix v-if="spin">
-      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+    <Spin size="large" fix v-show="spin" style="z-index:200;">
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <div style>加载中...</div>
     </Spin>
   </div>
 </template>
@@ -395,4 +395,13 @@ export default {
 /deep/ .ivu-table-cell {
   padding: 0
 } 
+.ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
+  }
 </style>

@@ -20,9 +20,9 @@
                   <Icon type="ios-person" />
                   <span v-if="unFlodMenu">个人中心</span>
                 </MenuItem>
-                <MenuItem name="playList" v-if='permission.includes("玩家列表")' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
+                <MenuItem name="playList" v-if='permission.includes("玩家中心")' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
                   <Icon type="md-game-controller-b" />
-                  <span v-if="unFlodMenu">玩家列表</span>
+                  <span v-if="unFlodMenu">玩家中心</span>
                 </MenuItem>
                 <MenuItem name="allreport" v-if='permission.includes("输赢报表") && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
                   <Icon type="ios-paper" @click="unfold"/>
@@ -118,9 +118,8 @@
                     <Icon type="md-people" />
                     <span>商户中心</span>
                   </template>
-                  <MenuItem name="dealerList" v-if='permission.includes("线路商列表")'>线路商列表</MenuItem>
                   <MenuItem name="merchantList" v-if='permission.includes("商户列表")'>商户列表</MenuItem>
-                  <MenuItem name="warnList" v-if='permission.includes("接入商点数警告列表")'>接入商点数警告列表</MenuItem>
+                  <MenuItem name="dealerList" v-if='permission.includes("线路商列表")'>线路商列表</MenuItem>
                 </Submenu>
                 <MenuItem name="adminList" v-if='permission.includes("管理员中心") && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
                   <Icon type="ios-people" @click="unfold"/>
@@ -279,55 +278,52 @@ export default {
     .side {
       overflow: auto;
       position: fixed;
-      background: #1c2327;
+
       
-      .sideMenu {
-        background: #1c2327;
-        color:#fff;
-      }
     }
-    
-  }
-  
-  /deep/.ivu-menu-dark.ivu-menu-vertical .ivu-menu-item {
-    color: #fff;
-  }
-  /deep/.ivu-menu-dark.ivu-menu-vertical .ivu-menu-item:hover {
-    background: #192028;
-    color: #20c1dc;
-  }
-  
-  /deep/.ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu-title {
-    color: #fff;
-  }
-  /deep/.ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu-title:hover {
-    background: #192028;
-    color: #20c1dc;
-  }
-  
-  /deep/.ivu-menu-dark.ivu-menu-vertical .ivu-menu-child-item-active > .ivu-menu-submenu-title {
-    color: #fff;
-  }
-  /deep/.ivu-menu-dark.ivu-menu-vertical .ivu-menu-child-item-active > .ivu-menu-submenu-title:hover {
-    background: #192028;
-    color: #20c1dc;
-  }
-  [data-v-19f8877c] .ivu-menu-dark.ivu-menu-vertical .ivu-menu-item:hover {
-    background: #192028;
-    color: #20c1dc;
-  }
-  .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item:hover {
-    background: #192028;
-  }
-  /deep/.ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item[data-v-19f8877c]:hover {
-    background: #192028;
-    color: #20c1dc;
-  }
-  /deep/ .ivu-menu-dark.ivu-menu-vertical .ivu-menu-opened .ivu-menu-submenu-title {
+    .sideMenu {
+      
+    }
+    /* 侧边栏样式 */
+    /deep/.ivu-layout-sider-children {
+      background: #1c2327;
+    }
+    //一级普通菜单
+    /deep/.ivu-menu-dark.ivu-menu-vertical .ivu-menu-item {
+      background: #1c2327;
+    }
+    /deep/.ivu-menu-dark.ivu-menu-vertical .ivu-menu-item:hover {
+      background: #192028!important;
+      color: #20c1dc;
+    }
+    .ivu-menu-dark.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu) {
+      background: #20c1dc!important;
+      color:#fff;
+    }
+    //一级下拉菜单
+   /deep/ .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu-title {
+     background: #1c2327;
+   }
+   /deep/ .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu-title:hover {
+     background: #192028!important;
+     color: #20c1dc;
+   }
+   .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu-title-active:not(.ivu-menu-submenu-title) {
+     background: #20c1dc!important;
+     color:#fff;
+   }
+
+  /deep/.ivu-menu-dark.ivu-menu-vertical .ivu-menu-opened .ivu-menu-submenu-has-parent-submenu .ivu-menu-submenu-title {
     background: #1c2327;
   }
-  /deep/ .ivu-menu-dark.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu) {
-    background: #20c1dc;
-    color: #fff;
+    //三级下拉菜单  
+    .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item-active:hover {
+      background: #192028!important;
+      color: #20c1dc;
+    }
+    .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item-active {
+      background: #20c1dc!important;
+      color:#fff;
+    }
   }
 </style>

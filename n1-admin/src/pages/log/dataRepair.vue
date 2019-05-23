@@ -2,17 +2,11 @@
   <div class="repair">
     <Alert type="warning" class="alert">该页面功能涉及底层系统数据修复，请务必在技术人员的协作下慎重使用</Alert>
      <Row class="row">
-       <Col span="6" class="label">
+       <Col span="6" class="label" offset="2">
         <span>AA扑克版本:</span>
       </Col>
        <Col span="4">
           <Input v-model="poker" type="text"/>
-      </Col>
-       <Col span="4" class="label">
-        <span class="label">N1_APP版本:</span>
-      </Col>
-       <Col span="4">
-          <Input v-model="n1app" type="text"/>
       </Col>
       <Col span="5" class="save_btn">
       <Button type="primary" @click="saveConfig">保存</Button>
@@ -29,7 +23,6 @@
       </Col>
       <Col span="12">
       <Button type="primary" @click="rangeCount">局表统计</Button>
-      <span class="warning">该功能使用前请先根据需求调整【局表】吞吐</span>
       </Col>
     </Row>
     <Row class="row">
@@ -38,7 +31,6 @@
       </Col>
       <Col span="12">
       <Button type="primary" @click="dayCount">天表统计</Button>
-      <span class="warning">该功能使用前请先根据需求调整【局天表】吞吐</span>
       </Col>
     </Row>
   </div>
@@ -184,6 +176,15 @@ export default {
   }
   .save_btn{
     margin-left: 10px;
+  }
+  .ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
   }
 }
 </style>

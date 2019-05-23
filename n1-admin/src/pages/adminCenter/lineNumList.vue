@@ -19,9 +19,9 @@
     <div class="table">
       <Table :columns="columns1" :data="lineNumList" size="small" ></Table>
     </div>
-    <Spin size="large" fix v-if="$store.state.admin.loading">
-      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+    <Spin size="large" fix v-show="$store.state.admin.loading" style="z-index:200;">
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <div style>加载中...</div>
     </Spin>
   </div>
 </template>

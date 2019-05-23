@@ -21,9 +21,9 @@
     <div class="playerList" id="playerList">
       <Table :columns="columns1" :data="dayStatList" size="small" ref="table_2"></Table>
     </div>
-    <Spin size="large" fix v-if="spinShow">
-      <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+     <Spin size="large" fix v-show="spinShow" style="z-index:200;">
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <div style>加载中...</div>
     </Spin>
   </div>
 </template>
@@ -127,7 +127,7 @@ export default {
   methods: {
     handle(daterange) {
       this.cacheTime = daterange
-      console.log(daterange);
+      //(daterange);
       
     },
     drawLine() {
@@ -210,7 +210,7 @@ export default {
         this.defaultTime = [dayjs().startOf('month').format('YYYYMMDD'), dayjs(dayjs().valueOf()-24 * 60 * 60 * 1000).format('YYYYMMDD')]
       }
 
-      console.log(this.defaultTime);
+      //(this.defaultTime);
       
     }
   },

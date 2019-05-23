@@ -84,15 +84,10 @@
         </template>
       </Table>
 
-
-
-
-
-
-      <Spin size="large" fix v-if="isFetching">
-        <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
-        <div>加载中...</div>
-      </Spin>
+      <Spin size="large" fix v-show="isFetching" style="z-index:200;">
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <div style>加载中...</div>
+    </Spin>
       <div style="text-align: right;margin:2rem 0">
         <Page
           :total="playerList.length"
@@ -247,7 +242,7 @@ export default {
     buIdConfig(row) {
      
       localStorage.setItem("merchantList", "merchantList")
-      console.log(localStorage.getItem('merchantList'));
+      //(localStorage.getItem('merchantList'));
       
       
       this.$router.push({
@@ -490,6 +485,15 @@ export default {
       
       margin: 0 1rem;
     }
+    .ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
+  }
   }
   .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
@@ -537,6 +541,7 @@ export default {
     border-color: #000;
     background: #fff;
   }
+  
 }
 
 </style>

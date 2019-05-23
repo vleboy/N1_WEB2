@@ -32,9 +32,10 @@
       </Col>
       <Col :span="12" class="-row-left">局输赢状态：{{winLostState[sportsInfo.roundStatus]}}</Col>
     </Row>
-    <Spin size="large" fix v-if="dialogLoading">
-      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+   
+    <Spin size="large" fix v-show="dialogLoading" style="z-index:200;">
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <div style>加载中...</div>
     </Spin>
   </div>
 </template>
