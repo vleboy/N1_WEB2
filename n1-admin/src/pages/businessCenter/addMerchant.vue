@@ -188,9 +188,9 @@ export default {
       if (value == "") {
         callback(new Error("标识不能为空"));
       } else {
-        let testReg = /^[A-Za-z0-9]{3,5}$/;
+        let testReg = /^[A-Za-z0-9]{3,6}$/;
         if (!testReg.test(value)) {
-          callback(new Error("3~5位,只能输入中英文、数字"));
+          callback(new Error("3~6位,只能输入中英文、数字"));
         } else {
           checkExit({
             sn: { sn: value }

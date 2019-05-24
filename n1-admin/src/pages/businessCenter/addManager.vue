@@ -153,7 +153,7 @@ export default {
       } else {
         let testReg = /^[a-zA-Z][a-zA-Z0-9]{1,5}$/;
         if (!testReg.test(value)) {
-          callback(new Error("2~6位,只能输入英文数字(字母开头)"));
+          callback(new Error("3~6位,只能输入英文数字(字母开头)"));
         } else {
           checkExit({
             suffix: { role: "10", suffix: value }
