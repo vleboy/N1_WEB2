@@ -91,11 +91,11 @@ export default {
         password: "", // 密码
         sn: "" //商户标识
       },
-      ruleValidate: {
+      /* ruleValidate: {
         username: [{ validator: validateUsername, trigger: "blur" }],
         password: [{ validator: validatePwd, trigger: "blur" }],
         sn: [{ validator: validateSn, trigger: "blur" }]
-      },
+      }, */
       validateCode: "",
       showCode: true,
       codeSrc: "",

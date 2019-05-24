@@ -71,11 +71,6 @@ export default {
           key: "sn"
         },
         {
-          title: "线路号",
-           align: "center",
-          key: "msn"
-        },
-        {
           title: "玩家ID",
            align: "center",
           key: "userId"

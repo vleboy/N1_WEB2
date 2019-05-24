@@ -31,6 +31,7 @@ $
             type="datetimerange"
             :options="options"
             @on-change="changeDate"
+            @on-ok="confirms"
             placeholder="选择日期范围"
             style="width: 300px"
             size="small"
@@ -48,7 +49,7 @@ $
             <Icon type="arrow-down-b" v-if="!isShowSearch"></Icon>
             <Icon type="arrow-up-b" v-else></Icon>
           </Button>
-          <Button type="primary" @click="searchData(true)" style="margin-right:.3rem" size="small">搜索</Button>
+          <Button type="primary" @click="searchData" style="margin-right:.3rem" size="small">搜索</Button>
           <Button @click="reset" style="margin-right:.3rem" size="small">重置</Button>
           <Button type="primary" @click="exportData" size="small">导出数据</Button>
         </Col>
@@ -438,14 +439,6 @@ export default {
       this.openModalBill(params.row);
     },
 
-
-
-
-
-
-
-
-
     reset() {
       this.companyInfo = '全部厂商'
       this.selType = 'All'
@@ -454,7 +447,7 @@ export default {
       this.radioType = ''
       this.radioMoney = ''
       this.amountDate = [new Date().getTime() - 3600 * 1000 * 24 * 6, new Date()];
-      this.changeGameType()
+      this.getPlayerAccount()
     },
     getNowpage(page) {
       this.nowPage = page;
@@ -524,7 +517,13 @@ export default {
           this.changeDate();
           break;
       }
-    }, // 最近的时间快捷选择联动
+    }, 
+    
+    confirms() {
+      this.playerAccountListStartKey = "";
+      this.getPlayerAccount()
+    },
+    // 最近的时间快捷选择联动
     changeDate() {
       if (this.amountDate) {
         // this.startDate = new Date(this.amountDate[0].setMonth(this.amountDate[0].getMonth())).setHours(0, 0, 0, 0);
@@ -535,10 +534,12 @@ export default {
         this.radioTime = "";
         this.monthDate = "";
       }
-      this.initData();
-      this.changeGameType();
-    }, //日期改变联动
+      //this.getPlayerAccount();
+      //this.changeGameType();
+    }, 
+    //日期改变联动
     changeMonth(date) {
+      this.playerAccountListStartKey = "";
       if (date && this.monthDate) {
         const month = new Date(date);
         const startDay = new Date(month.setMonth(month.getMonth(), 1));
@@ -547,23 +548,19 @@ export default {
         this.radioTime = "";
         this.changeDate();
       }
-    }, // 月份联动
+    }, 
+    //切换游戏种类
     changeGameType(val) {
       this.radioInfo = val;
       this.playerAccountListStartKey = ''
       this.getPlayerAccount();
     },
-    searchData(bool) {
-      if (!bool) {
-        this.companyInfo = "全部厂商";
-        this.radioMoney = "";
-        this.radioType = "";
-        this.sn = "";
-        this.betId = "";
-      }
-      this.initData();
+    //搜索
+    searchData() {
+      this.getPlayerAccount();
       this.changeGameType();
-    }, // 重置筛选条件
+    },
+     // 重置
     initData() {
       this.currentPage = 1;
       this.nowPage = 1;

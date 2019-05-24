@@ -17,13 +17,13 @@
       </Row>
       <Row>
         <Col span="7">
-          <DatePicker size="small" v-model="amountDate" type="datetimerange" :options="options" :transfer='true' style="width: 300px" @on-ok="searchAmount" placeholder="选择日期时间范围">
+          <DatePicker size="small" v-model="amountDate" type="datetimerange" :options="options" :transfer='true' style="width: 300px" @on-ok="confirms" placeholder="选择日期时间范围">
         </DatePicker>
         </Col>
         <Col span="17" style="float: right; text-align: right">
         <Input v-model="betId" placeholder="请输入交易号" style="width: 30%;" size="small"></Input>
-        <Button type="primary" @click="searchAmount" size="small">搜索</Button>
-        <Button @click="reset" size="small">重置</Button>
+        <Button type="primary" @click="searchAmount" size="small" style="margin:.3rem">搜索</Button>
+        <Button @click="reset" size="small" style="margin-right:.3rem">重置</Button>
         <Button type="primary" @click="exportData" size="small">导出数据</Button>
         </Col>
         <!-- <Col span="7"> -->
@@ -388,8 +388,11 @@ export default {
       this.selType = 'All'
       this.startKey = ''
       this.betId = ''
+      this.radioInfo = ''
+      this.radioMoney = ''
+      this.playerDetailStartKey = ''
       this.amountDate = [new Date().getTime() - 3600 * 1000 * 24 * 6, new Date()]
-      this.changeRadio()
+      this.getTransactionRecord()
     },
     getNowpage(page) {
       this.nowPage = page;
@@ -520,9 +523,13 @@ export default {
       this.selType = val
       
     },
-    searchAmount(val) {
-      this.radioInfo = val
-      this.changeRadio()
+    confirms() {
+      this.playerAccountListStartKey = "";
+      this.getTransactionRecord()
+    },
+    searchAmount() {
+      
+      this.getTransactionRecord()
     },
     initTime() {
       const start = this.amountDate[0]

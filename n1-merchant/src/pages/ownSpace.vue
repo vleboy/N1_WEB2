@@ -382,12 +382,7 @@ export default {
     //获取流水列表
     async getWaterfallList() {
       let userId = localStorage.loginId ? localStorage.getItem("loginId") : "";
-      /* let req1 = getWaterfall(userId);
-      this.spinShow = true
-      let waterfall = await this.axios.all([req1])
-      this.spinShow = false
-      this.showData = waterfall[0].payload */
-      //console.log(this.showData);
+    
       if (this.showNext) {
         console.log(this.showData[this.showData.length - 1].oldBalance);
         
