@@ -521,7 +521,7 @@ export default {
     changeCompany(val) {
       
       this.selType = val
-      this.radioInfo = ''
+      this.radioInfo = null
     },
     confirms() {
       this.playerAccountListStartKey = "";

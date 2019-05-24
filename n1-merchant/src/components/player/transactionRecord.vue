@@ -627,7 +627,7 @@ export default {
     },
  //获取运营商列表
     changeCompany(val) {
-      this.radioInfo = ''
+      this.radioInfo = null
       this.sel = val;
     },
     searchAmount() {

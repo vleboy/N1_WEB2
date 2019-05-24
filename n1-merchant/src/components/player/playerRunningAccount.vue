@@ -644,7 +644,7 @@ export default {
     },
     changeCompany(val) {
       this.sel = val;
-      this.radioInfo = ''
+      this.radioInfo = null
     },
     openModalBill(data) {
       this.propChild = data;
