@@ -12,7 +12,7 @@
             <Dropdown transfer trigger="click" @on-click="handleClickUserDropdown">
               <a href="javascript:void(0)">
                 <span class="main-user-name">{{ userName }} ({{ uname}})</span>
-                <Icon type="arrow-down-b"></Icon>
+                <Icon type="ios-arrow-down"></Icon>
               </a>
               <DropdownMenu slot="list">
                 <DropdownItem name="loginout" divided>退出登录</DropdownItem>
