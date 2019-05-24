@@ -134,6 +134,7 @@ export default {
   data() {
     return {
       isH5:true,
+      spinShow: false,
       uname: "", //modal增加账户
       point: "", //点数
       note: "", //备注
@@ -452,6 +453,7 @@ export default {
       this.init();
     },
     init() {
+      this.spinShow = true
        let query = {
         suffix: this.suffix,
         displayName: this.displayName
@@ -471,13 +473,11 @@ export default {
       };
       getManagers(params).then(res => {
         this.showData = res.payload
+        this.spinShow = false
       })
     },
   },
   computed: {
-    spinShow() {
-      return this.$store.state.merchants.spinShow;
-    },
     permission() {
       return JSON.parse(localStorage.userInfo).subRolePermission;
     },
