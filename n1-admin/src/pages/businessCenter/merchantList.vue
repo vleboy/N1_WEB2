@@ -383,7 +383,7 @@ export default {
       if (bool) {
         return row.status == 1 ? "#20a0ff" : "#f5141e";
       } else {
-        return row.status == 1 ? "#f5141e" : "20a0ff";
+        return row.status == 1 ? "#f5141e" : "#20a0ff";
       }
     },
     /* 操作 */
@@ -408,7 +408,7 @@ export default {
     //启用停用
     operateStatus(row) {
       let text = row.status == 1 ? "禁用" : "启用";
-      let status = null
+      let status = row.status == 1 ? 0 : 1
       this.$Modal.confirm({
         title: "提示!",
         content: `<p>是否${text}商户</p>`,
