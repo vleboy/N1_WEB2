@@ -76,7 +76,7 @@ export default {
       // vm 就是当前组件的实例相当于上面的 this，所以在 next 方法里你就可以把 vm 当 this 来用了。
       //console.log(vm);//当前组件的实例
       if (localStorage.dayMerchant == "dayMerchant") {
-        console.log("in");
+        //("in");
 
         vm.spinShow = true;
         vm.init();

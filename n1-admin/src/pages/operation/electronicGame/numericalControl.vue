@@ -225,7 +225,7 @@ export default {
     /* 神秘大奖系列 */
     //操作
     prizeOperateConfig(row) {
-      console.log(row.killRateLevel);
+      //(row.killRateLevel);
       
       this.$Modal.confirm({
         title: '操作',

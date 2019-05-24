@@ -370,7 +370,7 @@ export default {
     changepage(index) {
       if (this.showData.length >= 100) {
           if (index % 5 == 0 && this.showData.length <= index * 20) {
-          console.log(this.showData.length);
+          //(this.showData.length);
           
           this.showNext = true;
           this.getWaterfallList();
@@ -384,7 +384,7 @@ export default {
       let userId = localStorage.loginId ? localStorage.getItem("loginId") : "";
     
       if (this.showNext) {
-        console.log(this.showData[this.showData.length - 1].oldBalance);
+        //(this.showData[this.showData.length - 1].oldBalance);
         
         let params = {
           createdAt: this.startKey.createdAt,
