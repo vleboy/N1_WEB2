@@ -330,18 +330,19 @@ export default {
     },
     //切页
     changepage(index) {
-      if (index % 5 == 0 && this.showData.length <= index * 20) {
-        this.showNext = true;
-        this.getWaterfallList();
+      if (this.showData.length >= 100) {
+          if (index % 5 == 0 && this.showData.length <= index * 20) {
+          this.showNext = true;
+          this.getWaterfallList();
+        }
       }
+      
       this.showWaterList = _.chunk(this.showData, 20)[index - 1];
     },
     //获取流水列表
     async getWaterfallList() {
       let userId = localStorage.loginId ? localStorage.getItem("loginId") : "";
       if (this.showNext) {
-        console.log(this.showData[this.showData.length - 1].oldBalance);
-        
         let params = {
           createdAt: this.startKey.createdAt,
           sn: this.startKey.sn,

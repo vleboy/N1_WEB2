@@ -25,7 +25,7 @@
       <h2>财务信息
         <span style="color:#20a0ff;cursor:pointer;fontSize:1rem" @click="getWaterfallList">(点击查询)</span>
       </h2>
-      <Table :columns="columns1" :data="showData" size="small">
+      <Table :columns="columns1" :data="showWaterList" size="small">
         <template slot-scope="{ row, index }" slot="createdAt">
           <span>{{dayjs(row.createdAt).format("YYYY-MM-DD HH:mm:ss")}}</span>  
         </template>
@@ -54,7 +54,7 @@
           <span v-else>{{remarkConfig(row).content}}</span>  
         </template>
       </Table>
-      <Page :total="total" class="page" :page-size='pageSize' show-total @on-change="changepage"></Page>
+      <Page :total="totalPage" class="page" :page-size='pageSize' @on-change="changepage"></Page>
     </div>
     <Modal v-model="modal" title="修改密码" :width='350' @on-ok="ok" @on-cancel='cancel'>
       <p class="modal_input">
@@ -82,7 +82,7 @@
 </template>
 <script>
 import dayjs from "dayjs";
-import { getWaterfall, oneMerchants } from "@/service/index";
+import { httpRequest, oneMerchants } from "@/service/index";
 import { thousandFormatter } from "@/config/format";
 import { validatePwd } from "@/config/regexp";
 export default {
@@ -193,7 +193,12 @@ export default {
           slot: "operate",
           maxWidth: 60
         }
-      ]
+      ],
+      showWaterList:[],
+      totalPage: 100, //数据总量
+      pageSize: 20, //每页显示数据量
+      currentPage: 1, //当前页码
+      showNext: false //是否显示下100条
     };
   },
   computed: {
@@ -361,14 +366,60 @@ export default {
     refresh() {
       this.init();
     },
+    //切页
+    changepage(index) {
+      if (this.showData.length >= 100) {
+          if (index % 5 == 0 && this.showData.length <= index * 20) {
+          console.log(this.showData.length);
+          
+          this.showNext = true;
+          this.getWaterfallList();
+        }
+      }
+      
+      this.showWaterList = _.chunk(this.showData, 20)[index - 1];
+    },
+    //获取流水列表
     async getWaterfallList() {
       let userId = localStorage.loginId ? localStorage.getItem("loginId") : "";
-      let req1 = getWaterfall(userId);
+      /* let req1 = getWaterfall(userId);
       this.spinShow = true
       let waterfall = await this.axios.all([req1])
       this.spinShow = false
-      this.showData = waterfall[0].payload
+      this.showData = waterfall[0].payload */
       //console.log(this.showData);
+      if (this.showNext) {
+        console.log(this.showData[this.showData.length - 1].oldBalance);
+        
+        let params = {
+          createdAt: this.startKey.createdAt,
+          sn: this.startKey.sn,
+          balance: this.showData[this.showData.length - 1].oldBalance
+        };
+       this.spinShow = true
+        let waterfall = await httpRequest(
+          "get",
+          `/waterfall/${userId}`,
+          params
+        );
+        this.spinShow = false
+        this.showData = this.showData.concat(waterfall.payload);
+        this.totalPage = this.showData.length;
+        this.startKey = waterfall.startKey;
+      } else {
+        let params = "";
+        this.spinShow = true
+        let waterfall = await httpRequest(
+          "get",
+          `/waterfall/${userId}`,
+          params
+        );
+        this.spinShow = false
+        this.showData = waterfall.payload;
+        this.totalPage = this.showData.length;
+        this.startKey = waterfall.startKey;
+        this.showWaterList = _.chunk(this.showData, 20)[0];
+      }
       
     },
     async init() {

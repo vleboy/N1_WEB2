@@ -1,11 +1,14 @@
 <template>
   <div class="adminList">
-    
     <div class="option">
-      <p class="create">
+      <div class="create">
         <Button type="primary" @click="addAdmin" size="small">创建管理员</Button>
-        <Button type="primary" class="searchbtn" @click="reset" size="small">刷新</Button>
-      </p>
+        <p>
+          <span style="margin:0 .3rem 0 1rem">启用</span>
+          <i-switch v-model="switch1" @on-change="userShow"/>
+        </p>
+      </div>
+      <Button type="primary" class="searchbtn" @click="reset" size="small">刷新</Button>
     </div>
     <div class="table">
       <Table :columns="columns1" :data="adminList" size="small" >
@@ -16,9 +19,11 @@
           <span>{{balanceConfig(row)}}</span>
         </template>
         <template slot-scope="{row, index}" slot="operate">
-          <span style="color: #20a0ff;cursor:pointer;padding-right:.3rem" @click="operatePwd(row)">修改密码</span>
-          <span>|</span>
-          <span style="color: #20a0ff;cursor:pointer;padding-left:.3rem" @click="operateRole(row)">修改角色</span>
+          <span style="color: #20a0ff;cursor:pointer;" @click="operatePwd(row)">修改密码</span>
+          <span style="margin:0 .3rem">|</span>
+          <span style="color: #20a0ff;cursor:pointer;" @click="operateRole(row)">修改角色</span>
+          <span style="margin:0 .3rem">|</span>
+          <span :style="{color: statusConfig(row),cursor: 'pointer'}" @click="operateStatus(row)">{{row.status == 1 ? "禁用" : "启用"}}</span>
         </template>
       </Table>
     </div>
@@ -60,11 +65,12 @@
 </template>
 <script>
 import dayjs from "dayjs";
-import { getsbuRole, adminUpdate } from "@/service/index";
+import { getsbuRole, adminUpdate,userChangeStatus } from "@/service/index";
 import { thousandFormatter } from "@/config/format";
 export default {
   data() {
     return {
+      switch1: true,
       subRoleList: [],
       subRole: "",
       roleModal: false, //修改角色modal
@@ -129,7 +135,18 @@ export default {
   },
   computed: {
     adminList() {
-      return this.$store.state.admin.adminList;
+      let on = []//启用的管理员列表
+      let off = []//禁用的管理员列表
+      for (let i = 0; i < this.$store.state.admin.adminList.length; i++) {
+        if (this.$store.state.admin.adminList[i].status == 1) {
+          on.push(this.$store.state.admin.adminList[i])
+        } else {
+          off.push(this.$store.state.admin.adminList[i])
+        }  
+      }
+     
+      return this.switch1 ? on : off
+      
     }
   },
   methods: {
@@ -153,11 +170,37 @@ export default {
       this.subRole = row.subRole;
       this.roleModal = true;
     },
-            
+    //启用禁用
+    statusConfig(row) {
+      return row.status == 1 ? "#f5141e" : "#20a0ff"
+    },
+    operateStatus(row) {
+      let text = row.status == 1 ? "禁用" : "启用"
+      let status = row.status == 1 ? 0 : 1
+      this.$Modal.confirm({
+        title: "提示!",
+        content: `<p>是否${text}管理员</p>`,
+        onOk: () => {
+          userChangeStatus({
+            role: "1",
+            status,
+            userId: row.userId
+          }).then(res => {
+            if (res.code == 0) {
+              this.$Message.success(`${text}成功`);
+              this.init();
+            }
+          });
+        }
+      });
+    },         
 
 
     addAdmin() {
       this.$router.push({ name: "addAdmin" });
+    },
+    userShow (status) {
+      console.log(status)
     },
     ok() {
       // let passReg = /^[a-zA-Z0-9@_#$%^&*!~-]{8,16}$/;
@@ -281,8 +324,12 @@ export default {
 .adminList {
   min-height: 89vh;
   .option {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
     .create {
-      padding-bottom: 16px;
+      display: flex;
+      justify-content: start;
     }
     .searchbtn {
       float: right;
