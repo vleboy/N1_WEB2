@@ -127,7 +127,7 @@ export default {
           title: "操作",
           slot: "operate",
           align: 'center',
-          minWidth:20
+          minWidth:40
         }
       ],
       spinShow: false
