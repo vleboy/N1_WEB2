@@ -20,6 +20,10 @@ const axios = {
       let obj = await res.json()
       vuex.commit("openLoading", false)
       if (obj.code != 0) {
+        if (obj.code == -2) {
+          localStorage.clear();
+          window.location.href = window.location.origin
+        }
         vuex.commit("setErr", true)
         vuex.commit("setErrMsg", obj.msg)
         vuex.commit("setErrColor", "warning")
