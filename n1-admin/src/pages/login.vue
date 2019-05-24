@@ -30,9 +30,9 @@
         <FormItem label="验证">
           <Row>
             <Col span="8" style="display:flex;">
-            <Input v-model="validate" style="width: 5rem" :maxlength='4'></Input>
-              <span class="getCode" v-if='showCode' @click="getCode" style="width: cursor:pointer">点击显示验证码</span>
-              <img class="validateImg" v-else :src="codeSrc" @click="getCode" style="background:grey;positon:relative;">
+            <Input v-model="validate" style="width: 5rem;" :maxlength='4'></Input>
+              <span class="getCode" v-if='showCode' @click="getCode" style="flex:1;cursor:pointer">点击显示验证码</span>
+              <img class="validateImg" v-else :src="codeSrc" @click="getCode" style="background:grey;positon:relative;flex:1;cursor:pointer;">
               <Spin fix v-if='loadImg'>
              </Spin>
              

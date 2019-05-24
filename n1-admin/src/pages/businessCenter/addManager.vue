@@ -8,7 +8,7 @@
           <FormItem label="线路商标识" prop="suffix">
             <Row>
               <Col span="20">
-              <Input v-model="basic.suffix" placeholder="2~6 位,只能输入英文和数字(以字母开头)"></Input>
+              <Input v-model="basic.suffix" placeholder="3~6 位,只能输入英文和数字(以字母开头)"></Input>
               </Col>
             </Row>
           </FormItem>
@@ -63,7 +63,7 @@
       <div class="detail">
         <h2>拓展信息</h2>
         <Form ref='gameList' :model="detail" :label-width="120" :rules="detailValidate">
-          <FormItem label="线路商拥有的游戏" prop="ownGame" :required='true'>
+          <FormItem label="线路商拥有的游戏" prop="ownGame">
             <Row>
               <Col span="10">
               <Select v-model="detail.gameType" :disabled='disabled' placeholder="请选择" @on-change="selectCompany">

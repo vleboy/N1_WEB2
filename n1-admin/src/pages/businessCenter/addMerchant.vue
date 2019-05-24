@@ -5,17 +5,10 @@
       <div class="basic">
         <h2>基本信息</h2>
         <Form ref='basicform' :model="basic" :label-width="120" :rules="basicValidate">
-          <!-- <FormItem label="商户前缀" prop="suffix">
-            <Row>
-              <Col span="20">
-              <Input v-model="basic.suffix" placeholder="2~6 位,只能输入英文和数字(以字母开头)"></Input>
-              </Col>
-            </Row>
-          </FormItem> -->
           <FormItem label="商户标识" prop="sn">
             <Row>
               <Col span="20">
-              <Input v-model="basic.sn" placeholder="3~5位,只能输入英文、数字"></Input>
+              <Input v-model="basic.sn" placeholder="3~6位,只能输入英文、数字"></Input>
               </Col>
             </Row>
           </FormItem>
@@ -70,7 +63,7 @@
       <div class="detail">
         <h2>拓展信息</h2>
         <Form ref='gameList' :model="detail" :label-width="110" :rules="detailValidate">
-          <FormItem label="商户拥有的游戏" prop="ownGame" :required='true'>
+          <FormItem label="商户拥有的游戏" prop="ownGame">
             <Row>
               <Col span="10">
               <Select v-model="detail.gameType" :disabled='disabled' placeholder="请选择" @on-change="selectCompany">
@@ -84,15 +77,6 @@
               </Col>
             </Row>
           </FormItem>
-           <!-- <FormItem label="皮肤" prop="skin" :required='true'>
-            <Row>
-              <Col span="10">
-              <Select v-model="detail.skin" placeholder="请选择">
-                <Option v-for="item in skinList" :value="item.value" :key="item.value">{{item.name}}</Option>
-              </Select>
-              </Col>
-            </Row>
-          </FormItem> -->
           <FormItem v-if="selected" prop='balance'>
             <label for="" slot="label">{{game}}商家占成(%)</label>
             <Row>
@@ -121,71 +105,6 @@
               </Col>
             </Row>
           </FormItem>
-          <!-- <FormItem label="商户官网页面地址">
-            <Row>
-              <Col span="10">
-              <Select v-model="detail.httpType" placeholder="请选择">
-                <Option value="http://">http://</Option>
-                <Option value="https://">https://</Option>
-              </Select>
-              </Col>
-              <Col span="10">
-              <Input v-model="detail.url" placeholder="请输入"></Input>
-              </Col>
-              <Col span="4">
-              <span class="check" @click="merchantUrl">验证</span>
-              </Col>
-            </Row>
-          </FormItem>
-          <FormItem label="商户充值页面地址">
-            <Row>
-              <Col span="10">
-              <Select v-model="detail.chargeType" placeholder="请选择">
-                <Option value="http://">http://</Option>
-                <Option value="https://">https://</Option>
-              </Select>
-              </Col>
-              <Col span="10">
-              <Input v-model="detail.chargeUrl" :rows="4" placeholder="选填"></Input>
-              </Col>
-              <Col span="4">
-              <span class="check" @click="chargeurl">验证</span>
-              </Col>
-              <Checkbox class="browser" v-model="defaultBrower">是否在系统浏览器中打开</Checkbox>
-            </Row>
-          </FormItem>
-          <FormItem label="商户注册页面地址">
-            <Row>
-              <Col span="10">
-              <Select v-model="detail.registType" placeholder="请选择">
-                <Option value="http://">http://</Option>
-                <Option value="https://">https://</Option>
-              </Select>
-              </Col>
-              <Col span="10">
-              <Input v-model="detail.registUrl" :rows="4" placeholder="选填"></Input>
-              </Col>
-              <Col span="4">
-              <span class="check" @click="registurl">验证</span>
-              </Col>
-            </Row>
-          </FormItem>
-          <FormItem label="商户客服页面地址">
-            <Row>
-              <Col span="10">
-              <Select v-model="detail.serviceType" placeholder="请选择">
-                <Option value="http://">http://</Option>
-                <Option value="https://">https://</Option>
-              </Select>
-              </Col>
-              <Col span="10">
-              <Input v-model="detail.serviceUrl" :rows="4" placeholder="选填"></Input>
-              </Col>
-              <Col span="4">
-              <span class="check" @click="serviceurl">验证</span>
-              </Col>
-            </Row>
-          </FormItem> -->
         </Form>
       </div>
       </Col>
