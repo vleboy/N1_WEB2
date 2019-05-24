@@ -4,8 +4,9 @@
       <div class="create">
         <Button type="primary" @click="addAdmin" size="small">创建管理员</Button>
         <p>
-          <span style="margin:0 .3rem 0 1rem">启用</span>
-          <i-switch v-model="switch1" @on-change="userShow"/>
+          <Select v-model="model1" style="width:120px;margin-left:1rem;" size="small" @on-change="changeStatus">
+            <Option v-for="item in statusList" :value="item.value" :key="item.value">{{ item.value }}</Option>
+          </Select>
         </p>
       </div>
       <Button type="primary" class="searchbtn" @click="reset" size="small">刷新</Button>
@@ -70,7 +71,7 @@ import { thousandFormatter } from "@/config/format";
 export default {
   data() {
     return {
-      switch1: true,
+      model1: '启用',
       subRoleList: [],
       subRole: "",
       roleModal: false, //修改角色modal
@@ -79,6 +80,17 @@ export default {
       password: "",
       repassword: "",
       userId: "",
+      switchStatus: true,
+      statusList: [
+        {
+          code: '1',
+          value: '启用'
+        },
+        {
+          code: '0',
+          value: '禁用'
+        }
+      ],
       columns1: [
         {
           title: "序号",
@@ -145,7 +157,8 @@ export default {
         }  
       }
      
-      return this.switch1 ? on : off
+      return this.switchStatus ? on : off
+      //return on
       
     }
   },
@@ -194,7 +207,9 @@ export default {
         }
       });
     },         
-
+    changeStatus(val) {
+      this.switchStatus = val == "禁用" ? false : true
+    },
 
     addAdmin() {
       this.$router.push({ name: "addAdmin" });
