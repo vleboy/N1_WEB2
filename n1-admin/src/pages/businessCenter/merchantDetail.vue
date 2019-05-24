@@ -245,7 +245,7 @@
         </template>
       </Table>
 
-      <Page :total="totalPage" class="page" :page-size="pageSize" @on-change="changepage"></Page>
+      <Page :total="totalPage" class="page" :page-size="pageSize" @on-change="changepage" style="margin-top:1rem"></Page>
     </div>
     <Spin size="large" fix v-show="spinShow" style="z-index:200;">
       <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
@@ -298,7 +298,7 @@ export default {
     };
     return {
       showWaterList: [],
-      totalPage: 100, //数据总量
+      totalPage: 20, //数据总量
       pageSize: 20, //每页显示数据量
       currentPage: 1, //当前页码
       showNext: false, //是否显示下100条

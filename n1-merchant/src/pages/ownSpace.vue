@@ -195,7 +195,7 @@ export default {
         }
       ],
       showWaterList:[],
-      totalPage: 100, //数据总量
+      totalPage: 20, //数据总量
       pageSize: 20, //每页显示数据量
       currentPage: 1, //当前页码
       showNext: false //是否显示下100条

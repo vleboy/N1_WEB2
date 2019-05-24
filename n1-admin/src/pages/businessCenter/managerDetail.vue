@@ -197,6 +197,7 @@
         class="page"
         :page-size="pageSize"
         @on-change="changepage"
+        style="margin-top:1rem"
       ></Page>
     </div>
     <div class="next">
@@ -350,7 +351,7 @@ export default {
     };
     return {
       showWaterList:[],
-      totalPage: 100, //数据总量
+      totalPage: 20, //数据总量
       pageSize: 20, //每页显示数据量
       currentPage: 1, //当前页码
       showNext: false ,//是否显示下100条
@@ -894,13 +895,13 @@ export default {
         return modes;
       }
     },
-    changepage(index) {
+    /* changepage(index) {
       let size = this.pageSize;
       let _start = (index - 1) * size;
       let _end = index * size;
       this.showData = this.waterfall.slice(_start, _end);
       // console.log(this.showData);
-    },
+    }, */
     editBtn() {
       this.edit = false;
       this.isedit = false;
