@@ -551,6 +551,8 @@ export default {
     }, 
     //切换游戏种类
     changeGameType(val) {
+      console.log(val)
+      
       this.radioInfo = val;
       this.playerAccountListStartKey = ''
       this.getPlayerAccount();
@@ -584,6 +586,7 @@ export default {
     //获取运营商列表
     changeCompany(val) {
       this.selType = val;
+      this.radioInfo = ''
     },
     openModalBill(data) {
       this.propChild = data;

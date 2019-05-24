@@ -519,9 +519,9 @@ export default {
       }); */
     }, //获取运营商列表
     changeCompany(val) {
-     
-      this.selType = val
       
+      this.selType = val
+      this.radioInfo = ''
     },
     confirms() {
       this.playerAccountListStartKey = "";
