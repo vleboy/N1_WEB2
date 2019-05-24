@@ -438,7 +438,6 @@ export default {
       url = url + "?uname=" + uname + "&sn=" + sn;
       window.open(url);
     },
-
     addMerchant() {
       this.$router.push({ name: "addMerchant" });
     },
