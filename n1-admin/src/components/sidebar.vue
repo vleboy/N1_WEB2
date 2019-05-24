@@ -20,10 +20,7 @@
                   <Icon type="ios-person" />
                   <span v-if="unFlodMenu">个人中心</span>
                 </MenuItem>
-                <MenuItem name="playList" v-if='permission.includes("玩家中心")' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
-                  <Icon type="md-game-controller-b" />
-                  <span v-if="unFlodMenu">玩家中心</span>
-                </MenuItem>
+                
                 <MenuItem name="allreport" v-if='permission.includes("输赢报表") && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
                   <Icon type="ios-paper" @click="unfold"/>
                 </MenuItem>
@@ -121,6 +118,10 @@
                   <MenuItem name="merchantList" v-if='permission.includes("商户列表")'>商户列表</MenuItem>
                   <MenuItem name="dealerList" v-if='permission.includes("线路商列表")'>线路商列表</MenuItem>
                 </Submenu>
+                <MenuItem name="playList" v-if='permission.includes("玩家中心")' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
+                  <Icon type="md-game-controller-b" />
+                  <span v-if="unFlodMenu">玩家中心</span>
+                </MenuItem>
                 <MenuItem name="adminList" v-if='permission.includes("管理员中心") && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
                   <Icon type="ios-ribbon" @click="unfold"/>
                 </MenuItem>
