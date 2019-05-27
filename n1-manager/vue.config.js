@@ -1,11 +1,22 @@
 module.exports = {
   productionSourceMap: false,
 
-  configureWebpack: {
-    optimization: {
+  configureWebpack: config => {
+    config.optimization = {
       splitChunks: {
-        minSize: 10000,
+        minSize: 200000,
         maxSize: 250000,
+      }
+    }
+    if (process.env.NODE_ENV != 'production') {
+      config.devtool = false
+    }
+  },
+
+  css: {
+    loaderOptions: {
+      less: {
+        javascriptEnabled: true
       }
     }
   },
@@ -15,5 +26,5 @@ module.exports = {
   assetsDir: undefined,
   runtimeCompiler: undefined,
   parallel: undefined,
-  css: undefined
+  //css: undefined
 }
