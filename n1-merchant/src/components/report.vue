@@ -35,7 +35,7 @@
           <span>{{submitAmountConfig(row)}}</span>
         </template>
         <template slot-scope="{row, index}" slot="userProfit">
-          <span v-if="profitConfig(row).isShow">{{100 *(row.winloseAmount / row.mixAmount).toFixed(2) + "%"}}</span>
+          <span v-if="profitConfig(row).isShow">{{(100 * row.winloseAmount / row.mixAmount).toFixed(2) + "%"}}</span>
           <span v-else>{{0}}</span>
         </template>
       </Table>

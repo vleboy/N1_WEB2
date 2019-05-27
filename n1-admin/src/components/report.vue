@@ -584,7 +584,7 @@ export default {
         }
         return result
       } else {
-        return 100 * (row.winloseAmount / row.mixAmount).toFixed(2) + "%"
+        return  (100 * row.winloseAmount / row.mixAmount).toFixed(2) + "%"
       }
     },   
     /* 玩家 */

@@ -1,49 +1,58 @@
 <template>
   <div class="personalcenter">
-    <div class="reload">
-      <Button type="primary" class="searchbtn" @click="reset">刷新</Button>
-    </div>
     <div class="manangeinfo">
-      <table cellspacing="0">
-         <tr>
-           <td>
-            <span>线路商标识 : {{admin.suffix}} </span>
-          </td>
-          <td>
-            <span>线路商账号 : {{admin.uname}}</span>
-          </td>
-           <td>
-             <Row>
-              <Col span="10">线路商密码 :
-              <span v-if="showPass">{{admin.password}}</span>
-              <span v-else>********</span>
-              </Col>
-              <Col span="12">
-              <span class="newPassword" @click="showPass=!showPass" v-if="!showPass">显示</span>
-              <span class="newPassword" @click="showPass=!showPass" v-else>隐藏</span>
-              <span class="newPassword" @click="newPassword">修改密码</span>
-              </Col>
-            </Row>
-          </td> 
-        </tr>
-         <tr>
-           <td>
-            <span>上次登录IP : {{admin.lastIP}}</span>
-          </td>
-          <td>
-            <span>上次登录时间 : {{dayjs(admin.loginAt).format('YYYY-MM-DD HH:mm:ss')}}</span>
-          </td>
-          <td>
-            <span>创建时间 : {{dayjs(admin.createdAt).format('YYYY-MM-DD HH:mm:ss')}}</span>
-          </td>
-        </tr>
-      </table>
+      <Table :columns="columns" :data="dataList">
+        <template slot-scope="{row, index}" slot="password">
+          <span v-if="showPass">{{row.password}}</span>
+          <span v-else>******</span>
+          <span v-if="showPass" @click="showPass = !showPass" style="color:#20a0ff;cursor:pointer;margin:0 .3rem;">隐藏</span>
+          <span v-else @click="showPass = !showPass" style="color:#20a0ff;cursor:pointer;margin:0 .3rem;">显示</span>
+          <span class="newPassword" @click="newPassword">修改密码</span>
+        </template>
+        <template slot-scope="{row, index}" slot="joinTime">
+          <span>{{joinTimeConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="createdAt">
+          <span>{{createdAtConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="operate">
+          <span @click="reset" style="color:#20a0ff;cursor:pointer">刷新</span>
+        </template>
+      </Table>
     </div>
     <div class="manager-copertion">
       <h2>财务信息
         <span style="color:#20a0ff;cursor:pointer;fontSize:1rem" @click="getWaterfallList">(点击查询)</span>
       </h2>
-      <Table :columns="columns1" :data="showWaterList" size="small"></Table>
+      <Table :columns="columns1" :data="showWaterList" size="small">
+        <template slot-scope="{row, index}" slot="waterCreatedAt">
+          <span>{{createdAtConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="amountType">
+          <span>{{row.fromLevel > row.toLevel ? "减点" : "加点"}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="toUser">
+          <span>{{row.fromLevel > row.toLevel ? `${row.toDisplayName}对${row.fromDisplayName}` : `${row.fromDisplayName}对${row.toDisplayName}`}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="oldBalance">
+          <span>{{oldBalanceConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="amount">
+          <span :style="{color: amountConfig(row).color}">{{amountConfig(row).amount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="balance">
+          <span>{{balanceConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="operator">
+          <span>{{row.operator.split("_")[1]}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="remark">
+          <Tooltip :content="remarkConfig(row).content" v-if="remarkConfig(row).isShow">
+            <Icon type="ios-search" color="#20a0ff" />
+          </Tooltip>
+          <span v-else></span>
+        </template>
+      </Table>
       <Page :total="total" class="page" :page-size='pageSize' @on-change="changepage"></Page>
     </div>
     <Modal v-model="modal" title="修改密码" :width='350' @on-ok="ok" @on-cancel='cancel'>
@@ -84,6 +93,7 @@ export default {
       dayjs: dayjs,
       pageSize: 50,
       admin: {},
+      dataList: [],
       waterfall: [],
       showData: [],
       showWaterList:[],
@@ -91,6 +101,43 @@ export default {
       pageSize: 20, //每页显示数据量
       currentPage: 1, //当前页码
       showNext: false, //是否显示下100条
+      columns: [
+        {
+          title: "线路商标识",
+          align: "center",
+          key: "suffix"
+        },
+        {
+          title: "线路商账号",
+          align: "center",
+          key: "uname"
+        },
+        {
+          title: "线路商密码",
+          align: "center",
+          slot: "password"
+        },
+        {
+          title: "上次登录IP",
+          align: "center",
+          key: "lastIP"
+        },
+        {
+          title: "上次登录时间",
+          align: "center",
+          slot: "joinTime"
+        },
+        {
+          title: "创建时间",
+          align: "center",
+          slot: "createdAt"
+        },
+        {
+          title: "操作",
+          align: "center",
+          slot: "operate"
+        }
+      ],
       columns1: [
         {
           title: "序号",
@@ -100,161 +147,53 @@ export default {
         },
         {
           title: "交易时间",
-          key: "createdAt",
+          slot: "waterCreatedAt",
           align: 'center',
           sortable: true,
-          minWidth: 50,
-          render: (h, params) => {
-            return h(
-              "span",
-              this.dayjs(params.row.createdAt).format("YYYY-MM-DD HH:mm:ss")
-            );
-          }
+          minWidth: 50
         },
         {
           title: "交易对象",
           minWidth: 50,
-          key: "toUser",
-          align: 'center',
-          render: (h, params) => {
-            let row = params.row;
-            if (row.fromLevel > row.toLevel) {
-              return h(
-                "span",
-                row.toDisplayName + " 对 " + row.fromDisplayName
-              );
-            } else {
-              return h(
-                "span",
-                row.fromDisplayName + " 对 " + row.toDisplayName
-              );
-            }
-          }
+          slot: "toUser",
+          align: 'center'
         },
         {
           title: "交易类型",
-          key: "amount",
+          slot: "amountType",
           maxWidth: 80,
           align: 'center',
-          sortable: true,
-          render: (h, params) => {
-            let row = params.row;
-            if (row.fromLevel > row.toLevel) {
-              return h("span", "减点");
-            } else {
-              return h("span", "加点");
-            }
-            // let currentLevel = JSON.parse(localStorage.userInfo).level;
-            // // 自己是目的账户
-            // if (currentLevel == row.toLevel) {
-            //   // 自己是目的账户，自己的等级高
-            //   if (row.fromLevel > row.toLevel) {
-            //     if (row.amount > 0) {
-            //       return h("span", "减点"); // 自己是目的账户，自己的等级高，自己的点数增加（自己减别人的点）
-            //     } else {
-            //       return h("span", "加点"); // 自己是目的账户，自己的等级高，自己的点数减少（自己给别人加点）
-            //     }
-            //   } else {
-            //     // 自己是目的账户，自己的等级低
-            //     if (row.amount > 0) {
-            //       return h("span", "加点"); // 自己是目的账户，自己的等级低，自己的点数增加（别人给自己加点）
-            //     } else {
-            //       return h("span", "减点"); // 自己是目的账户，自己的等级低，自己的点数减少（别人给自己减点）
-            //     }
-            //   }
-            // }
-            // // 自己是发起账户
-            // else {
-            //   // 自己是发起账户，自己的等级低
-            //   if (row.fromLevel > row.toLevel) {
-            //     if (row.amount > 0) {
-            //       return h("span", "加点"); // 自己是发起账户，自己的等级低，自己的点数增加（别人给自己加点）
-            //     } else {
-            //       return h("span", "减点"); // 自己是发起账户，自己的等级低，自己的点数减少（别人给自己减点）
-            //     }
-            //   } else {
-            //     // 自己是发起账户，自己的等级高
-            //     if (row.amount > 0) {
-            //       return h("span", "减点"); // 自己是发起账户，自己的等级高，自己的点数增加（自己减别人的点）
-            //     } else {
-            //       return h("span", "加点"); // 自己是发起账户，自己的等级高，自己的点数减少（自己给别人加点）
-            //     }
-            //   }
-            // }
-          }
+          sortable: true
         },
         {
           title: "交易前余额",
-          key: "oldBalance",
+          slot: "oldBalance",
           sortable: true,
-          align: 'center',
-          render: (h, params) => {
-            return h("span", thousandFormatter(params.row.oldBalance));
-          }
+          align: 'center'
         },
         {
           title: "交易点数",
-          key: "amount",
+          slot: "amount",
           align: 'center',
-          sortable: true,
-          render: (h, params) => {
-            let color = params.row.amount < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(params.row.amount)
-            );
-          }
+          sortable: true
         },
         {
           title: "交易后余额",
-          key: "balance",
+          slot: "balance",
           sortable: true,
-          align: 'center',
-          render: (h, params) => {
-            return h("span", thousandFormatter(params.row.balance));
-          }
+          align: 'center'
         },
         {
           title: "操作人",
-          key: "operator",
+          slot: "operator",
           align: 'center',
-          sortable: true,
-          render: (h, params) => {
-            return h("span", params.row.operator.split("_")[1]);
-          }
+          sortable: true
         },
         {
           title: "备注",
-          key: "remark",
+          slot: "remark",
           align: 'center',
-          width:90,
-          render: (h, params) => {
-            if (params.row.remark == "NULL!" || params.row.remark == null) {
-              return h("span", "");
-            } else {
-              return h(
-                "Tooltip",
-                {
-                  props: {
-                    content: params.row.remark
-                  }
-                },
-                [
-                  h("Icon", {
-                    props: {
-                      type: "search",
-                      color: "#20a0ff"
-                    }
-                  })
-                ]
-              );
-            }
-          }
+          width:90
         }
       ]
     };
@@ -265,6 +204,61 @@ export default {
     }
   },
   methods: {
+    /* 线路商信息 */
+    //线路商密码
+    passwordConfig(row) {
+
+    },
+    //上次登录时间
+    joinTimeConfig(row) {
+      return dayjs(row.joinTime).format('YYYY-MM-DD HH:mm:ss')
+    },
+    //创建时间
+    createdAtConfig(row) {
+      return dayjs(row.createdAt).format('YYYY-MM-DD HH:mm:ss')
+    },
+    /* 财务信息 */
+    //交易前余额
+    oldBalanceConfig(row) {
+      return thousandFormatter(row.oldBalance)
+    },
+    //交易点数
+    amountConfig(row) {
+      let color = row.amount < 0 ? "#f30" : "#0c0";
+      return {amount: thousandFormatter(row.amount), color}
+    },
+    //交易后余额
+    balanceConfig(row) {
+      return thousandFormatter(row.balance)
+    },
+    //备注
+    remarkConfig(row) {
+      if (row.remark == "NULL!" || row.remark == null) {
+        return false
+      } else {
+        return {isShow: true, content: row.remark}
+      }   
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     handlePage() {
       // 初始化显示，小于每页显示条数，全显，大于每页显示条数，取前每页条数显示
       if (this.total < this.pageSize) {
@@ -284,6 +278,7 @@ export default {
       this.modal = true;
     },
     ok() {
+      
       if (this.password != this.repassword) {
         this.$Message.warning({
           content: "两次密码不一致"
@@ -308,11 +303,13 @@ export default {
           password: this.repassword
         })
         .then(res => {
+          self.dataList = []
           if (res.code == 0) {
             self.password = "";
             self.repassword = "";
             oneManagers(userId).then(res => {
               self.admin = res.payload;
+              self.dataList.push(self.admin)
               self.$store.commit("updateLoading", { params: false });
               self.$Message.success("修改成功");
             });
@@ -417,6 +414,7 @@ export default {
 
     },
     async init() {
+      this.dataList = []
       this.$store.commit("updateLoading", { params: true });
       let userId = localStorage.loginId ? localStorage.getItem("loginId") : "";
       let req2 = oneManagers(userId);
@@ -424,6 +422,7 @@ export default {
       this.$store.commit("updateLoading", { params: false });
       if (admin && admin.code == 0) {
         this.admin = admin.payload;
+        this.dataList.push(this.admin)
       }
       this.handlePage();
     }

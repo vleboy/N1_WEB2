@@ -1,44 +1,59 @@
 <template>
   <div class="business">
     <div class="search">
-      <Row class="row">
-        <Col span="2" offset="4">商户标识</Col>
-        <Col span="4">
-        <Input v-model="sn" placeholder="请输入"></Input>
-        </Col>
-        <Col span="2">商户ID</Col>
-        <Col span="4">
-        <Input v-model="displayId" placeholder="请输入"></Input>
-        </Col>
-        <Col span="5">
-        <div class="btns">
-          <Button type="primary" @click="init">搜索</Button>
-          <Button type="ghost" @click="reset">重置</Button>
-        </div>
-        </Col>
-      </Row>
-      <Row class="row">
-        <Col span="2" offset="4">商户昵称</Col>
-        <Col span="4">
-        <Input v-model="displayName" placeholder="请输入"></Input>
-        </Col>
-        <Col span="2" >上级标识</Col>
-        <Col span="4">
-        <Input v-model="supSuffix" placeholder="请输入"></Input>
-        </Col>
-      </Row>
+      <p>商户标识</p>
+      <p style="margin:0 1rem">
+      <Input v-model="sn" placeholder="请输入" size="small"></Input>
+      </p>
+      <p>商户ID</p>
+      <p style="margin:0 1rem">
+      <Input v-model="displayId" placeholder="请输入" size="small"></Input>
+      </p>
+      <p>
+      </p>
+      <p>商户昵称</p>
+      <p style="margin:0 1rem">
+        <Input v-model="displayName" placeholder="请输入" size="small"></Input>
+      </p>
+      <p>上级标识</p>
+      <p style="margin:0 1rem">
+        <Input v-model="supSuffix" placeholder="请输入" size="small"></Input>
+      </p>
+      <div class="btns">
+        <Button type="primary" @click="init" size="small" style="margin-right:.3rem">搜索</Button>
+        <Button@click="reset" size="small">重置</Button>
+      </div>
     </div>
+    
     <div class="option">
       <span>H5接线</span>
-      <i-switch v-model="isH5" @on-change="init"></i-switch>
-      <RadioGroup v-model="source" class="radioGroup" type="button" @on-change='init'>
+      <i-switch v-model="isH5" @on-change="init" size="small" style="margin:0 1rem 0 .3rem"></i-switch>
+      <RadioGroup v-model="source" class="radioGroup" type="button" @on-change='init' size="small">
         <Radio label="正式"></Radio>
         <Radio label="测试"></Radio>
         <Radio label="全部"></Radio>
       </RadioGroup>
     </div>
+
     <div class="table">
-      <Table :columns="columns1" :data="showData" size="small"></Table>
+      <Table :columns="columns1" :data="showData" size="small">
+        <template slot-scope="{row, index}" slot="parentDisplayName">
+          <span>{{`${row.parentDisplayName}(${row.parentSuffix})`}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="playerCount">
+          <Tooltip content="前往玩家列表" transfer>
+            <span style="color:#20a0ff;cursor:pointer" @click="playerCount(row)">{{row.playerCount}}</span>
+          </Tooltip> 
+        </template>
+        <template slot-scope="{row, index}" slot="balance">
+          <p>{{row.balance.toFixed(2)}}</p>
+          <div style="display:flex;justify-content:center">
+            <p style="color:#20a0ff;cursor:pointer;margin-right:1rem" @click="addBalance(row)">加点</p>
+            <p style="color:#20a0ff;cursor:pointer" @click="reduceBalance(row)">减点</p>
+          </div>
+        </template>
+        
+      </Table>
     </div>
     <Spin size="large" fix v-if="spinShow">
       <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
@@ -88,6 +103,7 @@
 import dayjs from "dayjs";
 import { thousandFormatter } from "@/config/format";
 import { userChangeStatus, getBill } from "@/service/index";
+import { spawn } from 'child_process';
 export default {
   data() {
     return {
@@ -134,100 +150,21 @@ export default {
         },
         {
           title: "上级线路商",
-          key: "parentDisplayName",
+          slot: "parentDisplayName",
           sortable: true,
           align: 'center',
-          render: (h, params) => {
-            //console.log(params);
-            
-            return h(
-              "span",
-               `${params.row.parentDisplayName}(${params.row.parentSuffix})` 
-              )
-          }
+          
         },
         {
           title:'玩家数量',
-          key:'playerCount',
-          align: 'center',
-          render: (h, params) => {
-            return h(
-              "span",
-              {
-                style: {
-                  color: "#20a0ff",
-                  cursor:'pointer'
-                },
-                on: {
-                  click: () => {
-                     this.$router.push({name: "playList",query:{sn:params.row.sn}})
-                     localStorage.setItem('playList','playList')
-                  }
-                }
-              },
-              params.row.playerCount)
-          }
+          slot:'playerCount',
+          align: 'center'
         },
         {
           title: "剩余点数",
-          key: "balance",
+          slot: "balance",
           sortable: true,
-          align: 'center',
-          render: (h, params) => {
-            let adminId = localStorage.loginId;
-            return h("div", [
-              h("p", thousandFormatter(params.row.balance.toFixed(2))),
-              h("p", [
-                h(
-                  "span",
-                  {
-                    style: {
-                      color: "#20a0ff",
-                      cursor: "pointer"
-                    },
-                    on: {
-                      click: () => {
-                        this.plus = true;
-                        this.modal = true;
-                        this.uname = params.row.uname;
-                        this.fromUserId = adminId;
-                        this.toUser = params.row.username;
-                        this.toRole = "100";
-                        getBill(adminId).then(res => {
-                          this.tooltip = "起始账户余额为" + res.payload.balance;
-                        });
-                      }
-                    }
-                  },
-                  "加点"
-                ),
-                h(
-                  "span",
-                  {
-                    style: {
-                      color: "#20a0ff",
-                      cursor: "pointer",
-                      paddingLeft: "10px"
-                    },
-                    on: {
-                      click: () => {
-                        let userName = JSON.parse(localStorage.userInfo)
-                          .username;
-                        this.plus = false;
-                        this.modal = true;
-                        this.uname = params.row.uname;
-                        this.toRole = "10";
-                        this.toUser = userName;
-                        this.fromUserId = params.row.userId;
-                        this.tooltip = "起始账户余额为" + params.row.balance;
-                      }
-                    }
-                  },
-                  "减点"
-                )
-              ])
-            ]);
-          }
+          align: 'center'
         },
         {
           title: "商户游戏",
@@ -465,19 +402,66 @@ export default {
     };
   },
   methods: {
-    // changepage(index) {
-    //   var _start = (index - 1) * 50;
-    //   var _end = index * 50;
-    //   this.showData = this.waterfall.slice(_start, _end);
-    // },
-    // handlePage() {
-    //   // 初始化显示，小于每页显示条数，全显，大于每页显示条数，取前每页条数显示
-    //   if (this.total < 50) {
-    //     this.showData = this.waterfall;
-    //   } else {
-    //     this.showData = this.waterfall.slice(0, 50);
-    //   }
-    // },
+    //玩家数量
+    playerCount(row) {
+      this.$router.push({name: "playList",query:{sn:row.sn}})
+      localStorage.setItem('playList','playList')        
+    },
+    /* 剩余点数 */
+    //加点
+    addBalance(row) {
+      let adminId = localStorage.loginId
+      this.plus = true;
+      this.modal = true;
+      this.uname = row.uname;
+      this.fromUserId = adminId;
+      this.toUser = row.username;
+      this.toRole = "100";
+      getBill(adminId).then(res => {
+        this.tooltip = "起始账户余额为" + res.payload.balance;
+      })
+    },
+    //减点
+    reduceBalance(row) {
+      let userName = JSON.parse(localStorage.userInfo).username;
+      this.plus = false;
+      this.modal = true;
+      this.uname = row.uname;
+      this.toRole = "10";
+      this.toUser = userName;
+      this.fromUserId = row.userId;
+      this.tooltip = "起始账户余额为" + row.balance;
+    },
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     ok() {
       this.$store
         .dispatch("transferBussnessBill", {
@@ -562,6 +546,16 @@ export default {
 <style lang="less" scoped>
 .business {
   min-height: 89vh;
+  .search {
+    display: flex;
+    margin-bottom: 1rem;
+    align-items: center;
+  }
+  .option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
 }
 .row {
   line-height: 32px;
@@ -601,13 +595,36 @@ export default {
 .ivu-modal-footer {
   text-align: center;
 }
-.option {
-  padding-bottom: 10px;
-}
+
 .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
   }
 /deep/ .ivu-table-cell {
   padding: 0
 }   
+.ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
+    border: 1px solid #ccc;
+    color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
+    background: #000;
+    color: #fff;
+  }
+/deep/ .ivu-input {
+    border-color: #000;
+    background: #fff;
+  }
 </style>
