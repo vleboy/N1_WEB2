@@ -4,8 +4,8 @@
       <span>{{$route.query.displayName}} ({{$route.query.username }})</span>
       <span class="btns">
         <Button type="primary" class="edit" @click="reload" size="small">刷新</Button>
-        <Button type="primary" class="edit" @click.stop="editBtn" v-if="isedit" size="small">编辑</Button>
-        <Button type="primary" class="edit" @click.stop="save" v-else size="small">提交修改</Button>
+        <Button type="primary" class="edit" @click.stop="editBtn" v-if="isedit" size="small" style="margin-right:.3rem">编辑</Button>
+        <Button type="primary" class="edit" @click.stop="save" v-else size="small" style="margin-right:.3rem">提交修改</Button>
       </span>
     </div>
     <Collapse v-model="value">
@@ -97,61 +97,6 @@
         配置信息
         <div slot="content">
           <Form :model="basic" label-position="left" :label-width="100">
-            <!-- <Row>
-              <Col span="8">
-              <FormItem label="商户前端域名" v-if="edit">
-                {{merchantDetail.frontURL}}
-              </FormItem>
-              <FormItem label="商户前端域名" v-else>
-                <Row>
-                  <Col span="10">
-                  <Input v-model="basic.frontURL"></Input>
-                  </Col>
-                </Row>
-              </FormItem>
-              </Col>
-              <Col span="8">
-              <FormItem label="商户充值域名" v-if="edit">
-                {{merchantDetail.moneyURL}}
-              </FormItem>
-              <FormItem label="商户充值域名" v-else>
-                <Row>
-                  <Col span="10">
-                  <Input v-model="basic.moneyURL"></Input>
-                  </Col>
-                </Row>
-              </FormItem>
-              </Col>
-              <Col span="8">
-              <FormItem label="商户注册域名" v-if="edit">
-                {{merchantDetail.registerURL}}
-              </FormItem>
-              <FormItem label="商户注册域名" v-else>
-                <Row>
-                  <Col span="10">
-                  <Input v-model="basic.registerURL"></Input>
-                  </Col>
-                </Row>
-              </FormItem>
-              </Col>
-            </Row> -->
-            <!-- <Row>
-              <Col span="8">
-              <FormItem label="商户客服域名" v-if="edit">
-                {{merchantDetail.feedbackURL}}
-              </FormItem>
-              <FormItem label="商户客服域名" v-else>
-                <Row>
-                  <Col span="10">
-                  <Input v-model="basic.feedbackURL"></Input>
-                  </Col>
-                </Row>
-              </FormItem>
-              </Col>
-              <Col span="8">
-              <Checkbox class="browser" v-model="defaultBrower">是否在系统浏览器中打开</Checkbox>
-              </Col>
-            </Row> -->
             <Row>
               <Col span="8">
               <FormItem label="管理员密码" v-if="edit">
@@ -198,32 +143,7 @@
                 </Row>
               </FormItem>
               </Col>
-              <!-- <Col span="8">
-              <Checkbox class="browser" :disabled='edit' v-model="isTest">测试号</Checkbox>
-              </Col> -->
             </Row>
-            <!-- <Row>
-              <Col span="8">
-              <FormItem label="LOGO">
-                <img :src="merchantDetail.launchImg.logo[0]" alt="oo" class="logo">
-                <div v-if="!edit">
-                  <Upload ref="upload" :show-upload-list="false" :before-upload="beforeUploadLogo" :action="actionUrl" style="display: inline-block;width:58px;">
-                    <Button type="ghost" icon="ios-cloud-upload-outline" :loading="loadingStatusLogo">请选择需要上传文件</Button>
-                  </Upload>
-                </div>
-              </FormItem>
-              </Col>
-              <Col span="8">
-              <FormItem label="NAME">
-                <img :src="merchantDetail.launchImg.name[0]" alt="oo" class="logo">
-                <div v-if="!edit">
-                  <Upload ref="upload" :show-upload-list="false" :before-upload="beforeUploadName" :action="actionUrl" style="display: inline-block;width:58px;">
-                    <Button type="ghost" icon="ios-cloud-upload-outline" :loading="loadingStatusName">请选择需要上传文件</Button>
-                  </Upload>
-                </div>
-              </FormItem>
-              </Col>
-            </Row> -->
           </Form>
         </div>
       </Panel>
@@ -271,8 +191,37 @@
           @click="getWaterfallList"
         >(点击查询)</span>
       </h2>
-      <Table :columns="columns" :data="showData" size="small"></Table>
-      <Page :total="total" class="page" show-elevator :page-size='pageSize' show-total @on-change="changepage"></Page>
+      <Table :columns="columns" :data="showData" size="small">
+        <template slot-scope="{row, index}" slot="createdAt">
+          <span>{{createdAtConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="toUser">
+          <span>{{row.fromLevel > row.toLevel ? `${row.toDisplayName}对${row.fromDisplayName}` : `${row.fromDisplayName}对${row.toDisplayName}`}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="amountType">
+          <span>{{amountTypeConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="oldBalance">
+          <span>{{oldBalanceConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="amount">
+          <span :style="{color: amountConfig(row).color}">{{amountConfig(row).amount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="balance">
+          <span>{{balanceConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="operator">
+          <span>{{row.operator.split("_")[1]}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="remark">
+          <Tooltip :content="remarkConfig(row).content" v-if="remarkConfig(row).isShow">
+            <Icon type="ios-search" color="#20a0ff" />
+          </Tooltip>
+          <span v-else></span>
+        </template>
+        
+      </Table>
+      <Page :total="total" class="page" :page-size='pageSize' @on-change="changepage"></Page>
     </div>
     <Spin size="large" fix v-if="spinShow">
       <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
@@ -409,125 +358,46 @@ export default {
         },
         {
           title: "交易时间",
-          key: "createdAt",
+          slot: "createdAt",
           align: 'center',
-          minWidth: 100,
-          render: (h, params) => {
-            return h(
-              "span",
-              this.dayjs(params.row.createdAt).format("YYYY-MM-DD HH:mm:ss")
-            );
-          }
+          minWidth: 100
         },
         {
           title: "交易对象",
-          key: "toUser",
+          slot: "toUser",
           align: 'center',
-          minWidth: 250,
-          render: (h, params) => {
-            let row = params.row;
-            if (row.fromLevel > row.toLevel) {
-              return h(
-                "span",
-                row.toDisplayName + " 对 " + row.fromDisplayName
-              );
-            } else {
-              return h(
-                "span",
-                row.fromDisplayName + " 对 " + row.toDisplayName
-              );
-            }
-          }
+          minWidth: 250
         },
         {
           title: "交易类型",
           align: 'center',
-          key: "action",
-          render: (h, params) => {
-            let row = params.row;
-            if(row.fromDisplayName==row.toDisplayName){
-              if(row.amount<0){
-                return h('span','玩家充值')
-              }else{
-                return h('span','玩家提现')
-              }
-            }else{
-              if (row.fromLevel > row.toLevel) {
-                return h("span","减点");
-              } else {
-                return h("span","加点");
-              }
-            }
-          }
+          slot: "amountType"
         },
         {
           title: "交易前余额",
-          key: "oldBalance",
-          align: 'center',
-          render: (h, params) => {
-            return h("span", thousandFormatter(params.row.oldBalance));
-          }
+          slot: "oldBalance",
+          align: 'center'
         },
         {
           title: "交易点数",
           align: 'center',
-          key: "amount",
-          render: (h, params) => {
-            let color = params.row.amount < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(params.row.amount)
-            );
-          }
+          slot: "amount"
         },
         {
           title: "交易后余额",
-          key: "balance",
-          align: 'center',
-          render: (h, params) => {
-            return h("span", thousandFormatter(params.row.balance));
-          }
+          slot: "balance",
+          align: 'center'
         },
         {
           title: "操作人",
-          key: "operator",
-          align: 'center',
-          render: (h, params) => {
-            return h("span", params.row.operator.split("_")[1]);
-          }
+          slot: "operator",
+          align: 'center'
         },
         {
           title: "备注",
           align: 'center',
-          key: "remark",
-          maxWidth: 80,
-          render: (h, params) => {
-            if (params.row.remark == "NULL!" || params.row.remark == null) {
-              return h("span", "");
-            } else {
-              return h(
-                "Tooltip",
-                {
-                  props: {
-                    content: params.row.remark
-                  }
-                },
-                [
-                  h("Icon", {
-                    props: {
-                      type: "search",
-                      color: "#20a0ff"
-                    }
-                  })
-                ]
-              );
-            }
-          }
+          slot: "remark",
+          maxWidth: 80
         }
       ],
       waterfall: [],
@@ -557,6 +427,55 @@ export default {
     }
   },
   methods: {
+    //交易时间
+    createdAtConfig(row) {
+      return this.dayjs(row.createdAt).format("YYYY-MM-DD HH:mm:ss")  
+    },
+    //交易类型
+    amountTypeConfig(row) {
+      if(row.fromDisplayName==row.toDisplayName){
+        if(row.amount<0){
+          return '玩家充值'
+        }else{
+          return '玩家提现'
+        }
+      }else{
+        if (row.fromLevel > row.toLevel) {
+          return "减点"
+        } else {
+          return "加点"
+        }
+      }    
+    },
+    //交易前余额
+    oldBalanceConfig(row) {
+      return thousandFormatter(row.oldBalance)
+    },
+    //交易点数
+    amountConfig(row) {
+      let color = row.amount < 0 ? "#f30" : "#0c0";
+      return {amount: thousandFormatter(row.amount), color}
+    },
+    //交易后余额      
+    balanceConfig(row) {
+      return thousandFormatter(row.balance)
+    },
+    //备注
+    remarkConfig(row) {
+      if (row.remark == "NULL!" || row.remark == null) {
+        return false
+      } else {
+        return {isShow: true, content: row.remark}
+      }   
+    },
+
+
+
+
+
+
+
+
     editBtn() {
       this.edit = false;
       this.isedit = false;
@@ -973,8 +892,17 @@ export default {
   }
   .edit {
     float: right;
-    margin-right: 20px;
-    height: 38px;
+    margin-right: 0;
+    margin-top: 1rem;
+  }
+  .ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
   }
   .logo {
     width: 200px;

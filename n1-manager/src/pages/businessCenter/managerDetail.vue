@@ -140,16 +140,86 @@
     </Collapse>
     <div class="finance">
       <h2>财务信息</h2>
-      <Table :columns="columns" :data="showData" size="small"></Table>
+      <Table :columns="columns" :data="showData" size="small">
+        <template slot-scope="{row, index}" slot="tradeAt">
+          <span>{{tradeAtConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="toUser">
+          <span>{{row.fromLevel > row.toLevel ? `${row.toDisplayName}对row.fromDisplayName` : `${row.fromDisplayName}对${row.toDisplayName}`}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="tradeType">
+          <span>{{row.fromLevel > row.toLevel ? "减点" : "加点"}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="oldBalance">
+          <span>{{oldBalanceConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="amount">
+          <span :style="{color: amountConfig(row).color}">{{amountConfig(row).amount}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="balance">
+          <span>{{balanceConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="operator">
+          <span>{{row.operator.split("_")[1]}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="remark">
+          <Tooltip :content="remarkConfig(row).content" v-if="remarkConfig(row).isShow">
+            <Icon type="ios-search" color="#20a0ff" />
+          </Tooltip>
+          <span v-else></span>
+        </template>
+      </Table>
       <Page :total="total" class="page" show-elevator :page-size='pageSize' show-total @on-change="changepage"></Page>
     </div>
     <div class="next">
       <h2>下级线路商列表</h2>
-      <Table :columns="columns2" :data="nextLine" size="small"></Table>
+      <Table :columns="columns2" :data="nextLine" size="small">
+        <template slot-scope="{row, index}" slot="maDisplayName">
+           <span style="color:#20a0ff;cursor:pointer" @click="mcDisplayNameConfig(row)">{{row.displayName}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="maBalance">
+          <span>{{balanceConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="maCreatedAt">
+          <span>{{tradeAtConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="maRemark">
+          <Tooltip :content="remarkConfig(row).content" v-if="remarkConfig(row).isShow">
+            <Icon type="ios-search" color="#20a0ff" />
+          </Tooltip>
+          <span v-else></span>
+        </template>
+        <template slot-scope="{row, index}" slot="maOperate">
+          <Button type="text" size="small" style="color:#20a0ff" @click="maAddBalance(row)">加点</Button>
+          <Button type="text" size="small" style="color:#20a0ff" @click="maReduceBalance(row)">减点</Button>
+          <Button type="text" size="small" :style="{color:statusConfig(row, false)}" @click="maOperateConfig(row)">{{row.status == 1 ? "停用" : "启用"}}</Button>
+        </template>
+      </Table>
     </div>
     <div class="ownedMerchant">
       <h2>拥有商户列表</h2>
-      <Table :columns="columns3" :data="ownedbusiness" size="small"></Table>
+      <Table :columns="columns3" :data="ownedbusiness" size="small">
+        <template slot-scope="{row, index}" slot="meDisplayName">
+           <span style="color:#20a0ff;cursor:pointer" @click="meDisplayNameConfig(row)">{{row.displayName}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="meBalance">
+          <span>{{balanceConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="meCreatedAt">
+          <span>{{tradeAtConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="meRemark">
+          <Tooltip :content="remarkConfig(row).content" v-if="remarkConfig(row).isShow">
+            <Icon type="ios-search" color="#20a0ff" />
+          </Tooltip>
+          <span v-else></span>
+        </template>
+        <template slot-scope="{row, index}" slot="meOperate">
+          <Button type="text" size="small" style="color:#20a0ff" @click="meAddBalance(row)">加点</Button>
+          <Button type="text" size="small" style="color:#20a0ff" @click="meReduceBalance(row)">减点</Button>
+          <Button type="text" size="small" :style="{color:statusConfig(row, false)}" @click="meOperateConfig(row)">{{row.status == 1 ? "停用" : "启用"}}</Button>
+        </template>
+      </Table>
     </div>
     <Spin size="large" fix v-if="spinShow">
       <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
@@ -227,6 +297,7 @@ export default {
       }
     };
     return {
+      isTest: 0,
       parent: "",
       value: "",
       dayjs: dayjs,
@@ -283,218 +354,38 @@ export default {
         {
           title: "序号",
           type: "index",
+          align: "center",
           maxWidth: 80
         },
         {
           title: "线路商标识",
+          align: "center",
           key: "suffix"
         },
         {
           title: "线路商昵称",
-          key: "displayName",
-          render: (h, params) => {
-            return h(
-              "span",
-              {
-                style: {
-                  color: "#20a0ff",
-                  cursor: "pointer"
-                },
-                on: {
-                  click: () => {
-                    let userId = params.row.userId;
-                    let displayName = params.row.displayName;
-                    let username = params.row.username;
-                    let parent = params.row.parent;
-                    this.$router.push({
-                      path: "/dealerDetail",
-                      query: {
-                        userId,
-                        displayName,
-                        username,
-                        parent
-                      }
-                    });
-                  }
-                }
-              },
-              params.row.displayName
-            );
-          }
+          slot: "maDisplayName",
+          align: "center"
         },
         {
           title: "剩余点数",
-          key: "balance",
-          render: (h, params) => {
-            return h("span", thousandFormatter(params.row.balance));
-          }
+          slot: "maBalance",
+          align: "center"
         },
         {
           title: "创建时间",
-          key: "",
-          render: (h, params) => {
-            let time = params.row.createdAt;
-            return h("span", this.dayjs(time).format("YYYY-MM-DD HH:mm:ss"));
-          }
+          align: "center",
+          slot: "maCreatedAt"
         },
         {
           title: "备注",
-          key: "remark",
-          render: (h, params) => {
-            if (params.row.remark == "NULL!" || params.row.remark == null) {
-              return h("span", "");
-            } else {
-              return h(
-                "Tooltip",
-                {
-                  props: {
-                    content: params.row.remark
-                  }
-                },
-                [
-                  h("Icon", {
-                    props: {
-                      type: "search",
-                      color: "#20a0ff"
-                    }
-                  })
-                ]
-              );
-            }
-          }
+          key: "maRemark",
+          align: "center"
         },
         {
           title: "操作(对旗下线路商操作)",
-          key: "",
-          render: (h, params) => {
-            let admininfo = JSON.parse(localStorage.getItem("userInfo"));
-            let admin = admininfo.username.substr(9);
-            let adminId = admininfo.userId;
-            let userName = admininfo.username;
-            let userId = this.$route.query.userId;
-            let text = "";
-            let status = null;
-            let color = "";
-            let role = params.row.role;
-            if (params.row.status == 1) {
-              text = "停用";
-              status = 0;
-              color = "#f5141e";
-            } else {
-              text = "开启";
-              status = 1;
-              color = "#20a0ff";
-            }
-            return h("div", [
-              h(
-                "span",
-                {
-                  style: {
-                    color: "#20a0ff",
-                    cursor: "pointer",
-                    marginRight: "10px"
-                  },
-                  on: {
-                    click: () => {
-                      this.role = "10";
-                      this.plus = true;
-                      this.modal = true;
-                      this.disabled = true;
-                      this.uname = params.row.uname;
-                      let option = [
-                        {
-                          value: adminId,
-                          label: "【管理员】" + admin
-                        }
-                      ];
-                      if (params.row.parent != "01") {
-                        let another = {
-                          value: params.row.parent,
-                          label: "【线路商】" + params.row.parentDisplayName
-                        };
-                        option.push(another);
-                      }
-                      this.options = option;
-                      this.toRole = "10";
-                      this.toUser = params.row.username;
-                    }
-                  }
-                },
-                "加点"
-              ),
-              h(
-                "span",
-                {
-                  style: {
-                    color: "#20a0ff",
-                    cursor: "pointer",
-                    marginRight: "10px"
-                  },
-                  on: {
-                    click: () => {
-                      this.role = "10";
-                      this.plus = false;
-                      this.modal = true;
-                      this.disabled = true;
-                      this.uname = params.row.uname;
-                      let option = [
-                        {
-                          value: adminId,
-                          label: "【管理员】" + admin,
-                          role: "1",
-                          userName: userName
-                        }
-                      ];
-                      if (params.row.parent != "01") {
-                        let another = {
-                          value: params.row.parent,
-                          label: "【线路商】" + params.row.parentDisplayName,
-                          role: params.row.parentRole,
-                          userName: params.row.parentName
-                        };
-                        option.push(another);
-                      }
-                      this.options = option;
-                      this.fromUserId = params.row.userId;
-                    }
-                  }
-                },
-                "减点"
-              ),
-              h(
-                "span",
-                {
-                  style: {
-                    color: color,
-                    cursor: "pointer"
-                  },
-                  on: {
-                    click: () => {
-                      this.$Modal.confirm({
-                        title: "提示!",
-                        content: `<p>是否${text}线路商</p>`,
-                        onOk: () => {
-                          userChangeStatus({
-                            role,
-                            status,
-                            userId: params.row.userId
-                          }).then(res => {
-                            if (res.code == 0) {
-                              this.$Message.success(`${text}成功`);
-                              childList(userId, "10").then(res => {
-                                this.nextLine = res.payload;
-                              });
-                            }
-                          });
-                        }
-                      });
-                    }
-                  }
-                },
-                text
-              )
-            ]);
-          }
+          slot: "maOperate",
+          align: "center"
         }
       ],
       columns3: [
@@ -509,212 +400,23 @@ export default {
         },
         {
           title: "商户昵称",
-          key: "displayName",
-          render: (h, params) => {
-            return h(
-              "span",
-              {
-                style: {
-                  color: "#20a0ff",
-                  cursor: "pointer"
-                },
-                on: {
-                  click: () => {
-                    let userId = params.row.userId;
-                    let displayName = params.row.displayName;
-                    let parent = params.row.parent;
-                    let username = params.row.username;
-                    let parentDisplayName = params.row.parentDisplayName;
-                    this.$router.push({
-                      path: "/merchantDetail",
-                      query: {
-                        userId,
-                        displayName,
-                        username,
-                        parent,
-                        parentDisplayName
-                      }
-                    });
-                  }
-                }
-              },
-              params.row.displayName
-            );
-          }
+          slot: "meDisplayName"
         },
         {
           title: "剩余点数",
-          key: "balance",
-          render: (h, params) => {
-            return h("span", thousandFormatter(params.row.balance));
-          }
+          slot: "meBalance"
         },
         {
           title: "创建时间",
-          key: "",
-          render: (h, params) => {
-            let time = params.row.createdAt;
-            return h("span", this.dayjs(time).format("YYYY-MM-DD HH:mm:ss"));
-          }
+          slot: "meCreatedAt"
         },
         {
           title: "备注",
-          key: "",
-          render: (h, params) => {
-            if (params.row.remark == "NULL!" || params.row.remark == null) {
-              return h("span", "");
-            } else {
-              return h(
-                "Tooltip",
-                {
-                  props: {
-                    content: params.row.remark
-                  }
-                },
-                [
-                  h("Icon", {
-                    props: {
-                      type: "search",
-                      color: "#20a0ff"
-                    }
-                  })
-                ]
-              );
-            }
-          }
+          slot: "meRemark"
         },
         {
           title: "操作(对旗下商户操作)",
-          key: "",
-          render: (h, params) => {
-            let admininfo = JSON.parse(localStorage.getItem("userInfo"));
-            let admin = admininfo.username.substr(9);
-            let adminId = admininfo.userId;
-            let userName = admininfo.username;
-            let userId = this.$route.query.userId;
-            let text = "";
-            let status = null;
-            let color = "";
-            let role = params.row.role;
-            if (params.row.status == 1) {
-              text = "停用";
-              status = 0;
-              color = "#f5141e";
-            } else {
-              text = "开启";
-              status = 1;
-              color = "#20a0ff";
-            }
-            return h("div", [
-              h(
-                "span",
-                {
-                  style: {
-                    color: "#20a0ff",
-                    cursor: "pointer",
-                    marginRight: "10px"
-                  },
-                  on: {
-                    click: () => {
-                      this.role = "100";
-                      this.plus = true;
-                      this.modal = true;
-                      this.disabled = true;
-                      this.uname = params.row.uname;
-                      let option = [
-                        {
-                          value: adminId,
-                          label: "【管理员】" + admin
-                        }
-                      ];
-                      if (params.row.parent != "01") {
-                        let another = {
-                          value: params.row.parent,
-                          label: "【线路商】" + params.row.parentDisplayName
-                        };
-                        option.push(another);
-                      }
-                      this.options = option;
-                      this.toRole = "100";
-                      this.toUser = params.row.username;
-                    }
-                  }
-                },
-                "加点"
-              ),
-              h(
-                "span",
-                {
-                  style: {
-                    color: "#20a0ff",
-                    cursor: "pointer",
-                    marginRight: "10px"
-                  },
-                  on: {
-                    click: () => {
-                      this.role = "100";
-                      this.plus = false;
-                      this.modal = true;
-                      this.disabled = true;
-                      this.uname = params.row.uname;
-                      let option = [
-                        {
-                          value: adminId,
-                          label: "【管理员】" + admin,
-                          role: "1",
-                          userName: userName
-                        }
-                      ];
-                      if (params.row.parent != "01") {
-                        let another = {
-                          value: params.row.parent,
-                          label: "【线路商】" + params.row.parentDisplayName,
-                          role: params.row.parentRole,
-                          userName: params.row.parentName
-                        };
-                        option.push(another);
-                      }
-                      this.options = option;
-                      this.fromUserId = params.row.userId;
-                    }
-                  }
-                },
-                "减点"
-              ),
-              h(
-                "span",
-                {
-                  style: {
-                    color: color,
-                    cursor: "pointer"
-                  },
-                  on: {
-                    click: () => {
-                      this.$Modal.confirm({
-                        title: "提示!",
-                        content: `<p>是否${text}线路商</p>`,
-                        onOk: () => {
-                          userChangeStatus({
-                            role,
-                            status,
-                            userId: params.row.userId
-                          }).then(res => {
-                            if (res.code == 0) {
-                              this.$Message.success(`${text}成功`);
-                              childList(userId, "100").then(res => {
-                                this.ownedbusiness = res.payload;
-                              });
-                            }
-                          });
-                        }
-                      });
-                    }
-                  }
-                },
-                text
-              )
-            ]);
-          }
+          slot: "meOperate"
         }
       ],
       columns1: [
@@ -766,108 +468,37 @@ export default {
         },
         {
           title: "交易时间",
-          key: "createdAt",
-          minWidth: 100,
-          render: (h, params) => {
-            return h(
-              "span",
-              this.dayjs(params.row.createdAt).format("YYYY-MM-DD HH:mm:ss")
-            );
-          }
+          slot: "tradeAt",
+          minWidth: 100
         },
         {
           title: "交易对象",
-          key: "toUser",
-          minWidth: 250,
-          render: (h, params) => {
-            let row = params.row;
-            if (row.fromLevel > row.toLevel) {
-              return h(
-                "span",
-                row.toDisplayName + " 对 " + row.fromDisplayName
-              );
-            } else {
-              return h(
-                "span",
-                row.fromDisplayName + " 对 " + row.toDisplayName
-              );
-            }
-          }
+          slot: "toUser",
+          minWidth: 250
         },
         {
           title: "交易类型",
-          key: "action",
-          render: (h, params) => {
-            let row = params.row;
-            if (row.fromLevel > row.toLevel) {
-              return h("span","减点");
-            } else {
-              return h("span","加点");
-            }
-          }
+          slot: "tradeType"
         },
         {
           title: "交易前余额",
-          key: "oldBalance",
-          render: (h, params) => {
-            return h("span", thousandFormatter(params.row.oldBalance));
-          }
+          slot: "oldBalance"
         },
         {
           title: "交易点数",
-          key: "amount",
-          render: (h, params) => {
-            let color = params.row.amount < 0 ? "#f30" : "#0c0";
-            return h(
-              "span",
-              {
-                style: {
-                  color: color
-                }
-              },
-              thousandFormatter(params.row.amount)
-            );
-          }
+          slot: "amount"
         },
         {
           title: "交易后余额",
-          key: "balance",
-          render: (h, params) => {
-            return h("span", thousandFormatter(params.row.balance));
-          }
+          slot: "balance"
         },
         {
           title: "操作人",
-          key: "operator",
-          render: (h, params) => {
-            return h("span", params.row.operator.split("_")[1]);
-          }
+          slot: "operator"
         },
         {
           title: "备注",
-          key: "remark",
-          render: (h, params) => {
-            if (params.row.remark == "NULL!" || params.row.remark == null) {
-              return h("span", "");
-            } else {
-              return h(
-                "Tooltip",
-                {
-                  props: {
-                    content: params.row.remark
-                  }
-                },
-                [
-                  h("Icon", {
-                    props: {
-                      type: "search",
-                      color: "#20a0ff"
-                    }
-                  })
-                ]
-              );
-            }
-          }
+          slot: "remark"
         }
       ],
       waterfall: []
@@ -889,6 +520,260 @@ export default {
     }
   },
   methods: {
+    /* 财务信息 */
+    //交易时间
+    tradeAtConfig(row) {
+      return this.dayjs(row.createdAt).format("YYYY-MM-DD HH:mm:ss")
+    },
+    //交易前余额
+    oldBalanceConfig(row) {
+      return thousandFormatter(row.oldBalance)
+    },
+    //交易点数
+    amountConfig(row) {
+      let color = row.amount < 0 ? "#f30" : "#0c0";
+      return {amount: thousandFormatter(row.amount), color}
+    },
+    //交易后余额      
+    balanceConfig(row) {
+      return thousandFormatter(row.balance)
+    },
+    //备注
+    remarkConfig(row) {
+      if (row.remark == "NULL!" || row.remark == null) {
+        return false
+      } else {
+        return {isShow: true, content: row.remark}
+      }   
+    },
+
+    /* 下级线路商列表 */
+    //线路商昵称
+    mcDisplayNameConfig(row) {
+      let userId = row.userId;
+      let displayName = row.displayName;
+      let username = row.username;
+      let parent = row.parent;
+      this.$router.push({
+        path: "/dealerDetail",
+        query: {
+          userId,
+          displayName,
+          username,
+          parent
+        }
+      });
+    },
+
+    statusConfig(row) {
+      return row.status == 1 ? "#f5141e" : "#20a0ff"
+    },
+    //加点
+    maAddBalance(row) {
+      let admininfo = JSON.parse(localStorage.getItem("userInfo"));
+      let admin = admininfo.username.substr(9);
+      let adminId = admininfo.userId;
+      let userName = admininfo.username;
+      this.role = "10";
+      this.plus = true;
+      this.modal = true;
+      this.disabled = true;
+      this.uname = row.uname;
+      let option = [
+        {
+          value: adminId,
+          label: "【管理员】" + admin
+        }
+      ];
+      if (row.parent != "01") {
+        let another = {
+          value: row.parent,
+          label: "【线路商】" + row.parentDisplayName
+        };
+        option.push(another);
+      }
+      this.options = option;
+      this.toRole = "10";
+      this.toUser = row.username;
+    },
+    //减点
+    maReduceBalance(row) {
+      let admininfo = JSON.parse(localStorage.getItem("userInfo"));
+      let admin = admininfo.username.substr(9);
+      let adminId = admininfo.userId;
+      let userName = admininfo.username;
+      let userId = this.$route.query.userId;
+      this.role = "10";
+      this.plus = false;
+      this.modal = true;
+      this.disabled = true;
+      this.uname = row.uname;
+      let option = [
+        {
+          value: adminId,
+          label: "【管理员】" + admin,
+          role: "1",
+          userName: userName
+        }
+      ];
+      if (row.parent != "01") {
+        let another = {
+          value: row.parent,
+          label: "【线路商】" + row.parentDisplayName,
+          role: row.parentRole,
+          userName: row.parentName
+        };
+        option.push(another);
+      }
+      this.options = option;
+      this.fromUserId = row.userId;
+    },
+    //停用启用
+    maOperateConfig(row) {
+      let admininfo = JSON.parse(localStorage.getItem("userInfo"));
+      let userId = this.$route.query.userId;
+      let text = "";
+      let status = null;
+      let role = row.role;
+      if (row.status == 1) {
+        text = "停用";
+        status = 0;
+      } else {
+        text = "开启";
+        status = 1;
+      }
+      this.$Modal.confirm({
+        title: "提示!",
+        content: `<p>是否${text}线路商</p>`,
+        onOk: () => {
+          userChangeStatus({
+            role,
+            status,
+            userId: row.userId
+          }).then(res => {
+            if (res.code == 0) {
+              this.$Message.success(`${text}成功`);
+              childList(userId, "10").then(res => {
+                this.nextLine = res.payload;
+              });
+            }
+          });
+        }
+      });
+    },
+   
+
+    /* 拥有商户列表 */
+    //商户昵称
+    meDisplayName(row) {
+     
+      let userId = row.userId;
+      let displayName = row.displayName;
+      let parent = row.parent;
+      let username = row.username;
+      let parentDisplayName = row.parentDisplayName;
+      this.$router.push({
+        path: "/merchantDetail",
+        query: {
+          userId,
+          displayName,
+          username,
+          parent,
+          parentDisplayName
+        }
+      });
+                  
+    },
+    //加点
+    meAddBalance(row) {
+      let admininfo = JSON.parse(localStorage.getItem("userInfo"));
+      let admin = admininfo.username.substr(9);
+      let adminId = admininfo.userId;
+      let userName = admininfo.username;
+      this.role = "100";
+      this.plus = true;
+      this.modal = true;
+      this.disabled = true;
+      this.uname = row.uname;
+      let option = [
+        {
+          value: adminId,
+          label: "【管理员】" + admin
+        }
+      ];
+      if (row.parent != "01") {
+        let another = {
+          value: row.parent,
+          label: "【线路商】" + row.parentDisplayName
+        };
+        option.push(another);
+      }
+      this.options = option;
+      this.toRole = "100";
+      this.toUser = row.username;
+    },
+    //减点
+    meReduceBalance(row) {
+      let admininfo = JSON.parse(localStorage.getItem("userInfo"));
+      let admin = admininfo.username.substr(9);
+      let adminId = admininfo.userId;
+      let userName = admininfo.username;
+      this.role = "100";
+      this.plus = true;
+      this.modal = true;
+      this.disabled = true;
+      this.uname = row.uname;
+      let option = [
+        {
+          value: adminId,
+          label: "【管理员】" + admin
+        }
+      ];
+      if (row.parent != "01") {
+        let another = {
+          value: row.parent,
+          label: "【线路商】" + row.parentDisplayName
+        };
+        option.push(another);
+      }
+      this.options = option;
+      this.toRole = "100";
+      this.toUser = row.username;
+    },
+    //停用启用
+    meOperateConfig(row) {
+      let userId = this.$route.query.userId;
+      let text = "";
+      let status = null;
+      let role = row.role;
+      if (row.status == 1) {
+        text = "停用";
+        status = 0;
+      } else {
+        text = "开启";
+        status = 1;
+      }
+      this.$Modal.confirm({
+        title: "提示!",
+        content: `<p>是否${text}线路商</p>`,
+        onOk: () => {
+          userChangeStatus({
+            role,
+            status,
+            userId: row.userId
+          }).then(res => {
+            if (res.code == 0) {
+              this.$Message.success(`${text}成功`);
+              childList(userId, "100").then(res => {
+                this.ownedbusiness = res.payload;
+              });
+            }
+          });
+        }
+      });
+    },
+
+        
     handlePage() {
       // 初始化显示，小于每页显示条数，全显，大于每页显示条数，取前每页条数显示
       if (this.total < this.pageSize) {
