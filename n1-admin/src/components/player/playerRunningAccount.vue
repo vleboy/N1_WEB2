@@ -380,8 +380,10 @@ export default {
   computed: {
     dataList() {
       if (this.nowPage === 1) {
+        
         return this.playerAccountList.slice(0, this.nowSize);
       } else {
+        
         return this.playerAccountList.slice(
           (this.nowPage - 1) * this.nowSize,
           this.nowSize * this.nowPage
@@ -448,6 +450,7 @@ export default {
       this.radioType = ''
       this.radioMoney = ''
       this.amountDate = [new Date().getTime() - 3600 * 1000 * 24 * 6, new Date()];
+      this.changeDate()
       this.getPlayerAccount()
     },
     getNowpage(page) {
@@ -465,7 +468,7 @@ export default {
       }
     },
     getPlayerAccount() {
-      if (this.isFetching) return;
+      this.playerAccountListStartKey = ''
       this.isFetching = true;
 
       httpRequest("post", "/player/bill/flow", {
@@ -484,6 +487,8 @@ export default {
         .then(result => {
           this.isLastMessage = result.list < this.pageSize;
           this.playerAccountList = result.list;
+          console.log( this.playerAccountList);
+          
           this.playerAccountListStartKey = result.startKey;
           this.playerAccountUserName = result.userName;
           this.playerAccountListStorage.length &&
@@ -527,16 +532,12 @@ export default {
     // 最近的时间快捷选择联动
     changeDate() {
       if (this.amountDate) {
-        // this.startDate = new Date(this.amountDate[0].setMonth(this.amountDate[0].getMonth())).setHours(0, 0, 0, 0);
-        // this.endDate = new Date(this.amountDate[1].setMonth(this.amountDate[1].getMonth())).setHours(0, 0, 0, 0) + 24 * 3600 * 1000 - 1;
         this.startDate = new Date(this.amountDate[0]).getTime();
         this.endDate = new Date(this.amountDate[1]).getTime();
       } else {
         this.radioTime = "";
         this.monthDate = "";
       }
-      //this.getPlayerAccount();
-      //this.changeGameType();
     }, 
     //日期改变联动
     changeMonth(date) {
@@ -561,7 +562,7 @@ export default {
     //搜索
     searchData() {
       this.getPlayerAccount();
-      this.changeGameType();
+      //this.changeGameType();
     },
      // 重置
     initData() {

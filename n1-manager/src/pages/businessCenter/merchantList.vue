@@ -46,7 +46,7 @@
           </Tooltip> 
         </template>
         <template slot-scope="{row, index}" slot="balance">
-          <p>{{row.balance.toFixed(2)}}</p>
+          <p>{{balanceConfig(row)}}</p>
           <div style="display:flex;justify-content:center">
             <p style="color:#20a0ff;cursor:pointer;margin-right:1rem" @click="addBalance(row)">加点</p>
             <p style="color:#20a0ff;cursor:pointer" @click="reduceBalance(row)">减点</p>
@@ -59,6 +59,19 @@
               <Table :columns="merchantGame(row).columns" :data="merchantGame(row).data" border size="small" width="250"></Table>
             </div>
           </Poptip>
+        </template>
+         <template slot-scope="{row, index}" slot="createdAt">
+          <span>{{createAtConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="joinTime">
+          <span>{{joinTimeConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="status">
+          <span :style="{color:statusConfig(row, true)}">{{row.status == 1 ? "已启用" : "已停用"}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="operate">
+          <Button type="text" size="small" style="color:#20a0ff" @click="operateCheck(row)">查看</Button>
+          <Button type="text" size="small" :style="{color:statusConfig(row, false)}" @click="operateConfig(row)">{{row.status == 1 ? "停用" : "启用"}}</Button>
         </template>
       </Table>
     </div>
@@ -180,146 +193,26 @@ export default {
         },
         {
           title: "创建时间",
-          key: "createdAt",
+          slot: "createdAt",
           sortable: true,
-          align: 'center',
-          render: (h, params) => {
-            return h(
-              "span",
-              dayjs(params.row.createdAt).format("YYYY-MM-DD")
-            );
-          }
+          align: 'center'
         },
         {
           title: "最后登录时间",
-          key: "loginAt",
+          slot: "joinTime",
           sortable: true,
-          align: 'center',
-          render: (h, params) => {
-            return h(
-              "span",
-              dayjs(params.row.loginAt).format("YYYY-MM-DD")
-            );
-          }
+          align: 'center'
         },
         {
           title: "状态",
-          key: "status",
+          slot: "status",
           sortable: true,
-          align: 'center',
-          render: (h, params) => {
-            if (params.row.status == 1) {
-              return h(
-                "span",
-                {
-                  style: {
-                    color: "#20a0ff"
-                  }
-                },
-                "已启用"
-              );
-            } else {
-              return h(
-                "span",
-                {
-                  style: {
-                    color: "#f5141e"
-                  }
-                },
-                "未启用"
-              );
-            }
-          }
+          align: 'center'
         },
         {
           title: "操作",
-          key: "",
-          align: 'center',
-          render: (h, params) => {
-            let text = "";
-            let status = null;
-            let color = "";
-            if (params.row.status == 1) {
-              text = "停用";
-              status = 0;
-              color = "#f5141e";
-            } else {
-              text = "启用";
-              status = 1;
-              color = "#20a0ff";
-            }
-            return h("div", [
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "text",
-                    size: "small"
-                  },
-                  style: {
-                    color: "#20a0ff"
-                  },
-                  on: {
-                    click: () => {
-                      let userId = params.row.userId;
-                      let displayName = params.row.displayName;
-                      let parent = params.row.parent;
-                      let username = params.row.username;
-                      let parentDisplayName = params.row.parentDisplayName;
-                      this.$router.push({
-                        path: "/merchantDetail",
-                        query: {
-                          userId,
-                          displayName,
-                          username,
-                          parent,
-                          parentDisplayName
-                        }
-                      });
-                    }
-                  }
-                },
-                "查看"
-              ),
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "text",
-                    size: "small"
-                  },
-                  style: {
-                    color: color
-                  },
-                  on: {
-                    click: () => {
-                      this.$Modal.confirm({
-                        title: "提示!",
-                        content: `<p>是否${text}商户</p>`,
-                        onOk: () => {
-                          userChangeStatus({
-                            role: "100",
-                            status,
-                            userId: params.row.userId
-                          }).then(res => {
-                            if (res.code == 0) {
-                              this.$Message.success(`${text}成功`);
-                              this.$store.dispatch("getMerchantsList", {
-                                query: {},
-                                sortkey: "createdAt",
-                                sort: "desc"
-                              });
-                            }
-                          });
-                        }
-                      });
-                    }
-                  }
-                },
-                text
-              )
-            ]);
-          }
+          slot: "operate",
+          align: 'center'
         }
       ]
     };
@@ -331,6 +224,10 @@ export default {
       localStorage.setItem('playList','playList')        
     },
     /* 剩余点数 */
+    //点数
+    balanceConfig(row) {
+      return thousandFormatter(row.balance.toFixed(2))
+    },
     //加点
     addBalance(row) {
       let adminId = localStorage.loginId
@@ -383,10 +280,73 @@ export default {
       return {columns, data}
           
     },
-
-
-
-
+    //创建时间
+    createAtConfig(row) {
+      return dayjs(row.createdAt).format("YYYY-MM-DD") 
+    },
+    //最近登录时间
+    joinTimeConfig(row) {
+      return dayjs(row.loginAt).format("YYYY-MM-DD")
+    },
+    //状态
+    statusConfig(row,bool) {
+      if (bool) { 
+        return row.status == 1 ? "#20a0ff" : "#f5141e"
+      } else {
+        return row.status == 1 ? "#f5141e" : "#20a0ff"
+      }
+    },
+    /* 操作 */
+    //查看      
+    operateCheck(row) {
+      let userId = row.userId;
+      let displayName = row.displayName;
+      let parent = row.parent;
+      let username = row.username;
+      let parentDisplayName = row.parentDisplayName;
+      this.$router.push({
+        path: "/merchantDetail",
+        query: {
+          userId,
+          displayName,
+          username,
+          parent,
+          parentDisplayName
+        }
+      });
+    },
+    //启用禁用
+    operateConfig(row) {
+      let text = "";
+      let status = null;
+      if (row.status == 1) {
+        text = "停用";
+        status = 0;
+      } else {
+        text = "启用";
+        status = 1;
+      }
+        this.$Modal.confirm({
+          title: "提示!",
+          content: `<p>是否${text}商户</p>`,
+          onOk: () => {
+            userChangeStatus({
+              role: "100",
+              status,
+              userId: row.userId
+            }).then(res => {
+              if (res.code == 0) {
+                this.$Message.success(`${text}成功`);
+                this.$store.dispatch("getMerchantsList", {
+                  query: {},
+                  sortkey: "createdAt",
+                  sort: "desc"
+                });
+              }
+            });
+          }
+        })
+    },
 
 
 
@@ -500,6 +460,15 @@ export default {
     display: flex;
     margin-bottom: 1rem;
     align-items: center;
+    .ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
+  }
   }
   .option {
     display: flex;
@@ -552,15 +521,7 @@ export default {
 /deep/ .ivu-table-cell {
   padding: 0
 }   
-.ivu-btn {
-    background: #fff;
-    color: #000;
-    border-color: #000;
-  }
-  .ivu-btn:hover {
-    background: #000;
-    color: #fff;
-  }
+
   /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
     border: 1px solid #ccc;
     color: #000;

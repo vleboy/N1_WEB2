@@ -474,7 +474,7 @@ export default {
       },500)
     },
     getTransactionRecord() {
-      console.log(1);
+      this.playerDetailStartKey = ''
       
       if (this.isFetching) return;
       this.isFetching = true;
@@ -483,7 +483,8 @@ export default {
       let [startTime, endTime] = this.amountDate;
       startTime = new Date(startTime).getTime();
       endTime = new Date(endTime).getTime();
-
+      console.log(startTime);
+      
       httpRequest("post", "/player/bill/detail", {
         userName: name,
         company: this.companyInfo == "全部厂商" ? "-1" : this.companyInfo,

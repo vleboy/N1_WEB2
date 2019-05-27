@@ -1,35 +1,59 @@
 <template>
   <div class="line">
     <div class="search">
-      <Row class="row">
-        <Col span="2" offset="4">线路商标识</Col>
-        <Col span="4">
-        <Input v-model="suffix" placeholder="请输入"></Input>
-        </Col>
-        <Col span="2">线路商昵称</Col>
-        <Col span="4">
-        <Input v-model="displayName" placeholder="请输入"></Input>
-        </Col>
-        <Col span="5">
+        <p>线路商标识</p>
+        <p style="margin: 0 1rem;">
+          <Input v-model="suffix" placeholder="请输入" size="small"></Input>
+        </p>
+        <p>线路商昵称</p>
+        <p style="margin: 0 1rem;">
+          <Input v-model="displayName" placeholder="请输入" size="small"></Input>
+        </p>
+        <p>
         <div class="btns">
-          <Button type="primary" @click="init">搜索</Button>
-          <Button type="ghost" @click="reset">重置</Button>
+          <Button type="primary" @click="init" style="margin-right: .3rem;" size="small">搜索</Button>
+          <Button @click="reset" size="small">重置</Button>
         </div>
-        </Col>
-      </Row>
+        </p>
     </div>
     <div class="option">
       <span>H5接线</span>
-      <i-switch v-model="isH5" @on-change="init"></i-switch>
-      <RadioGroup v-model="source" class="radioGroup" type="button" @on-change='init'>
+      <i-switch v-model="isH5" @on-change="init" style="margin: 0 1rem 0 .3rem;" size="small"></i-switch>
+      <RadioGroup v-model="source" class="radioGroup" type="button" @on-change='init' size="small">
         <Radio label="正式"></Radio>
         <Radio label="测试"></Radio>
         <Radio label="全部"></Radio>
       </RadioGroup>
     </div>
     <div class="table">
-      <Table :columns="columns1" :data="showData" size="small"></Table>
-      <!-- <Page :total="total" class="page" show-elevator :page-size='50' show-total @on-change="changepage"></Page> -->
+      <Table :columns="columns1" :data="showData" size="small">
+        <template slot-scope="{row, index}" slot="balance">
+          <p>{{balanceConfig(row)}}</p>
+          <div style="display:flex;justify-content:center">
+            <p style="color:#20a0ff;cursor:pointer;margin-right:1rem" @click="addBalance(row)">加点</p>
+            <p style="color:#20a0ff;cursor:pointer" @click="reduceBalance(row)">减点</p>
+          </div>
+        </template>
+        <template slot-scope="{row, index}" slot="managerGame">
+          <Poptip trigger="hover" transfer placement="right">
+            <p style="color:#20a0ff;cursor:pointer">{{`${row.gameList.length}款游戏`}}</p>
+            <div slot="content">
+              <Table :columns="managerGame(row).columns" :data="managerGame(row).data" border size="small" width="250"></Table>
+            </div>
+          </Poptip>
+        </template>
+         <template slot-scope="{row, index}" slot="createdAt">
+          <span>{{createAtConfig(row)}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="status">
+          <span :style="{color:statusConfig(row, true)}">{{row.status == 1 ? "已启用" : "已停用"}}</span>
+        </template>
+        <template slot-scope="{row, index}" slot="operate">
+          <Button type="text" size="small" style="color:#20a0ff" @click="operateCheck(row)">查看</Button>
+          <Button type="text" size="small" :style="{color:statusConfig(row, false)}" @click="operateConfig(row)">{{row.status == 1 ? "停用" : "启用"}}</Button>
+        </template>
+      </Table>
+      
     </div>
     <Spin size="large" fix v-if="spinShow">
       <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
@@ -109,11 +133,6 @@ export default {
           align: 'center',
           sortable: true
         },
-        /* {
-          title: "线路商账号",
-          key: "uname",
-          sortable: true
-        }, */
         {
           title: "线路商昵称",
           key: "displayName",
@@ -128,287 +147,172 @@ export default {
         },
         {
           title: "剩余点数",
-          key: "balance",
+          slot: "balance",
           align: 'center',
-          sortable: true,
-          render: (h, params) => {
-            let adminId = localStorage.loginId;
-            return h("div", [
-              h("p", thousandFormatter(params.row.balance.toFixed(2))),
-              h("p", [
-                h(
-                  "span",
-                  {
-                    style: {
-                      color: "#20a0ff",
-                      cursor: "pointer"
-                    },
-                    on: {
-                      click: () => {
-                        this.plus = true;
-                        this.modal = true;
-                        this.uname = params.row.uname;
-                        this.fromUserId = adminId;
-                        this.toRole = "10";
-                        this.toUser = params.row.username;
-                        getBill(adminId).then(res => {
-                          this.tooltip = "起始账户余额为" + res.payload.balance;
-                        });
-                      }
-                    }
-                  },
-                  "加点"
-                ),
-                h(
-                  "span",
-                  {
-                    style: {
-                      color: "#20a0ff",
-                      cursor: "pointer",
-                      paddingLeft: "10px"
-                    },
-                    on: {
-                      click: () => {
-                        let userName = JSON.parse(localStorage.userInfo)
-                          .username;
-                        this.plus = false;
-                        this.modal = true;
-                        this.uname = params.row.uname;
-                        this.fromUserId = params.row.userId;
-                        this.toRole = "10";
-                        this.toUser = userName;
-                        this.tooltip = "起始账户余额为" + params.row.balance;
-                      }
-                    }
-                  },
-                  "减点"
-                )
-              ])
-            ]);
-          }
+          sortable: true
         },
         {
           title: "线路商游戏",
-          key: "gameList",
-          align: 'center',
-          render: (h, params) => {
-            let column = [
-              {
-                title: "线路商游戏",
-                key: "name"
-              },
-              {
-                title: "商户占成",
-                key: "rate"
-              }
-            ];
-            let data = [];
-            let gameList = params.row.gameList;
-            let len = gameList.length;
-            for (let item of gameList) {
-              let obj = {};
-              obj.rate = item.rate + "%";
-              obj.name = item.name;
-              data.push(obj);
-            }
-            return h(
-              "Poptip",
-              {
-                props: {
-                  trigger: "hover"
-                }
-              },
-              [
-                h(
-                  "span",
-                  {
-                    style: {
-                      cursor: "pointer",
-                      color: "#20a0ff"
-                    }
-                  },
-                  len + "款游戏"
-                ),
-                h("Table", {
-                  props: {
-                    columns: column,
-                    data: data,
-                    border: true,
-                    size: "small",
-                    width: 250
-                  },
-                  slot: "content"
-                })
-              ]
-            );
-          }
+          slot: "managerGame",
+          align: 'center'
         },
         {
           title: "创建时间",
-          key: "createdAt",
+          slot: "createdAt",
           sortable: true,
-          align: 'center',
-          render: (h, params) => {
-            return h(
-              "span",
-              dayjs(params.row.createdAt).format("YYYY-MM-DD")
-            );
-          }
+          align: 'center'
         },
         {
           title: "状态",
-          key: "status",
+          slot: "status",
           align: 'center',
-          sortable: true,
-          render: (h, params) => {
-            if (params.row.status == 1) {
-              return h(
-                "span",
-                {
-                  style: {
-                    color: "#20a0ff"
-                  }
-                },
-                "已启用"
-              );
-            } else {
-              return h(
-                "span",
-                {
-                  style: {
-                    color: "#f5141e"
-                  }
-                },
-                "未启用"
-              );
-            }
-          }
+          sortable: true
         },
-        /* {
-          title: "备注",
-          key: "remark",
-          maxWidth: 80,
-          render: (h, params) => {
-            let remark = params.row.remark;
-            let result = Object.prototype.toString.call(remark);
-            if (result.includes("String")) {
-              if (result != "NULL!") {
-                return h(
-                  "Tooltip",
-                  {
-                    props: {
-                      content: remark
-                    }
-                  },
-                  [
-                    h("Icon", {
-                      props: {
-                        type: "search",
-                        color: "#20a0ff"
-                      }
-                    })
-                  ]
-                );
-              } else {
-                return h("span", "");
-              }
-            } else {
-              return h("span", "");
-            }
-          }
-        }, */
         {
           title: "操作",
-          key: "",
-          align: 'center',
-          render: (h, params) => {
-            let text = "";
-            let status = null;
-            let color = "";
-            if (params.row.status == 1) {
-              text = "停用";
-              status = 0;
-              color = "#f5141e";
-            } else {
-              text = "启用";
-              status = 1;
-              color = "#20a0ff";
-            }
-            return h("div", [
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "text",
-                    size: "small"
-                  },
-                  style: {
-                    color: "#20a0ff"
-                  },
-                  on: {
-                    click: () => {
-                      let userId = params.row.userId;
-                      let displayName = params.row.displayName;
-                      let username = params.row.username;
-                      let parent = params.row.parent;
-                      this.$router.push({
-                        path: "/dealerDetail",
-                        query: {
-                          userId,
-                          displayName,
-                          username,
-                          parent
-                        }
-                      });
-                    }
-                  }
-                },
-                "查看"
-              ),
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "text",
-                    size: "small"
-                  },
-                  style: {
-                    color: color
-                  },
-                  on: {
-                    click: () => {
-                      this.$Modal.confirm({
-                        title: "提示!",
-                        content: `<p>是否${text}线路商</p>`,
-                        onOk: () => {
-                          userChangeStatus({
-                            role: "10",
-                            status,
-                            userId: params.row.userId
-                          }).then(res => {
-                            if (res.code == 0) {
-                              this.$Message.success(`${text}成功`);
-                              this.$store.dispatch("getManagerList", {
-                                query: {},
-                                sortkey: "createdAt",
-                                sort: "desc"
-                              });
-                            }
-                          });
-                        }
-                      });
-                    }
-                  }
-                },
-                text
-              )
-            ]);
-          }
+          slot: "operate",
+          align: 'center'
         }
       ]
     };
   },
   methods: {
+    /* 剩余点数 */
+    //点数
+    balanceConfig(row) {
+      return thousandFormatter(row.balance.toFixed(2))
+    },
+    //加点
+    addBalance(row) {
+      let adminId = localStorage.loginId;
+      this.plus = true;
+      this.modal = true;
+      this.uname = row.uname;
+      this.fromUserId = adminId;
+      this.toRole = "10";
+      this.toUser = row.username;
+      getBill(adminId).then(res => {
+        this.tooltip = "起始账户余额为" + res.payload.balance;
+      });
+    },
+    //减点
+    reduceBalance(row) {
+      let userName = JSON.parse(localStorage.userInfo).username;
+      this.plus = false;
+      this.modal = true;
+      this.uname = row.uname;
+      this.fromUserId = row.userId;
+      this.toRole = "10";
+      this.toUser = userName;
+      this.tooltip = "起始账户余额为" + row.balance;
+    },
+    //商户游戏
+    managerGame(row) {
+      
+      let columns = [
+        {
+          title: "线路商游戏",
+          key: "name",
+          align: "center"
+        },
+        {
+          title: "线路商占成",
+          key: "rate",
+          align: "center"
+        }
+      ];
+      let data = [];
+      let gameList = row.gameList;
+      let len = gameList.length;
+      for (let item of gameList) {
+        let obj = {};
+        obj.rate = item.rate + "%";
+        obj.name = item.name;
+        data.push(obj);
+      }
+      
+      return {columns, data}
+          
+    },
+    //创建时间
+    createAtConfig(row) {
+      return dayjs(row.createdAt).format("YYYY-MM-DD") 
+    },
+  
+    //状态
+    statusConfig(row,bool) {
+      if (bool) { 
+        return row.status == 1 ? "#20a0ff" : "#f5141e"
+      } else {
+        return row.status == 1 ? "#f5141e" : "#20a0ff"
+      }
+    },
+    /* 操作 */
+    //查看      
+    operateCheck(row) {
+      let userId = row.userId;
+      let displayName = row.displayName;
+      let username = row.username;
+      let parent = row.parent;
+      this.$router.push({
+        path: "/dealerDetail",
+        query: {
+          userId,
+          displayName,
+          username,
+          parent
+        }
+      });
+    },
+    //启用禁用
+    operateConfig(row) {
+      let text = "";
+      let status = null;
+      if (row.status == 1) {
+        text = "停用";
+        status = 0;
+      } else {
+        text = "启用";
+        status = 1;
+      }
+        this.$Modal.confirm({
+        title: "提示!",
+        content: `<p>是否${text}线路商</p>`,
+        onOk: () => {
+          userChangeStatus({
+            role: "10",
+            status,
+            userId: row.userId
+          }).then(res => {
+            if (res.code == 0) {
+              this.$Message.success(`${text}成功`);
+              this.$store.dispatch("getManagerList", {
+                query: {},
+                sortkey: "createdAt",
+                sort: "desc"
+              });
+            }
+          });
+        }
+      });
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     ok() {
       this.$store
         .dispatch("transferBill", {
@@ -497,11 +401,25 @@ export default {
 <style lang="less" scoped>
 .line {
   min-height: 89vh;
-  .row {
-    line-height: 32px;
-    text-align: center;
-    padding-bottom: 16px;
+  .search {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    .ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
   }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
+  }
+  }
+  .option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  } 
   .table {
     .page {
       text-align: right;
@@ -534,13 +452,28 @@ export default {
   padding: 30px 20px;
   font-size: 14px;
 }
-.option {
-  padding-bottom: 10px;
-}
+
 .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
   }
 /deep/ .ivu-table-cell {
   padding: 0
-}    
+}   
+/deep/ .ivu-radio-group-button .ivu-radio-wrapper {
+    border: 1px solid #ccc;
+    color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
+    background: #000;
+    color: #fff;
+  }
+/deep/ .ivu-input {
+    border-color: #000;
+    background: #fff;
+  } 
+  
 </style>
