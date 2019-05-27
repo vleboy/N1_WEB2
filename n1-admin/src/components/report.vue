@@ -602,11 +602,11 @@ export default {
     },
     //账号
     playerUsername(row) {
-      localStorage.setItem("playerName", name);
+      localStorage.setItem("playerName", row.userName);
       this.$router.push({
         name: "playDetail",
         query: {
-          name: name
+          name: row.userName
         }
       })
     },

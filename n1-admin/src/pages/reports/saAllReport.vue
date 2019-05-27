@@ -143,7 +143,7 @@
       </p>
       <Table :columns="columns2" :data="playerList" size="small" ref="table_2">
         <template slot-scope="{row, index}" slot="playerName">
-          <Tooltip content="前往玩家详情">
+          <Tooltip content="前往玩家详情" transfer>
             <span style="color:#20a0ff;cursor:pointer" @click="playerName(row)">{{row.userName}}</span>
           </Tooltip>
         </template>

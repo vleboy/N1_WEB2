@@ -258,7 +258,7 @@ export default {
     //账号
     playerNameConfig(row) {
       let name = row.userName;
-      ocalStorage.setItem("playerName", name);
+      localStorage.setItem("playerName", name);
         this.$router.push({
           name: "playDetail",
           query: {
