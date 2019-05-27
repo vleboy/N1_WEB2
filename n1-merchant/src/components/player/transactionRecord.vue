@@ -603,7 +603,6 @@ export default {
       let [startTime, endTime] = this.amountDate;
       startTime = new Date(startTime).getTime();
       endTime = new Date(endTime).getTime();
-
       httpRequest("post", "/player/bill/detail", {
         userName: name,
         company: this.companyInfo == "全部厂商" ? "-1" : this.companyInfo,
