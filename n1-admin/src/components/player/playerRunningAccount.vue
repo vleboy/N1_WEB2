@@ -1,4 +1,4 @@
-$
+
 <template>
   <div class="p-playerAccount">
     <div class="-p-base">
