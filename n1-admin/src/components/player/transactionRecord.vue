@@ -330,6 +330,8 @@ export default {
     }
   },
   mounted() {
+   
+    
      this.getTransactionRecord()
     //this.companySelectList();
   },
@@ -472,6 +474,8 @@ export default {
       },500)
     },
     getTransactionRecord() {
+      console.log(1);
+      
       if (this.isFetching) return;
       this.isFetching = true;
       this.initTime();

@@ -52,7 +52,14 @@
             <p style="color:#20a0ff;cursor:pointer" @click="reduceBalance(row)">减点</p>
           </div>
         </template>
-        
+        <template slot-scope="{row, index}" slot="merchantGame">
+          <Poptip trigger="hover" transfer placement="right">
+            <p style="color:#20a0ff;cursor:pointer">{{`${row.gameList.length}款游戏`}}</p>
+            <div slot="content">
+              <Table :columns="merchantGame(row).columns" :data="merchantGame(row).data" border size="small" width="250"></Table>
+            </div>
+          </Poptip>
+        </template>
       </Table>
     </div>
     <Spin size="large" fix v-if="spinShow">
@@ -168,59 +175,8 @@ export default {
         },
         {
           title: "商户游戏",
-          key: "",
-          align: 'center',
-          render: (h, params) => {
-            let column = [
-              {
-                title: "商户游戏",
-                key: "name"
-              },
-              {
-                title: "商户占成",
-                key: "rate"
-              }
-            ];
-            let data = [];
-            let gameList = params.row.gameList;
-            let len = gameList.length;
-            for (let item of gameList) {
-              let obj = {};
-              obj.rate = item.rate + "%";
-              obj.name = item.name;
-              data.push(obj);
-            }
-            return h(
-              "Poptip",
-              {
-                props: {
-                  trigger: "hover"
-                }
-              },
-              [
-                h(
-                  "span",
-                  {
-                    style: {
-                      cursor: "pointer",
-                      color: "#20a0ff"
-                    }
-                  },
-                  len + "款游戏"
-                ),
-                h("Table", {
-                  props: {
-                    columns: column,
-                    data: data,
-                    border: true,
-                    size: "small",
-                    width: 250
-                  },
-                  slot: "content"
-                })
-              ]
-            );
-          }
+          slot: "merchantGame",
+          align: 'center'
         },
         {
           title: "创建时间",
@@ -275,39 +231,6 @@ export default {
             }
           }
         },
-        /* {
-          title: "备注",
-          key: "remark",
-          width:50,
-          render: (h, params) => {
-            let remark = params.row.remark;
-            let result = Object.prototype.toString.call(remark);
-            if (result.includes("String")) {
-              if (remark != "NULL!") {
-                return h(
-                  "Tooltip",
-                  {
-                    props: {
-                      content: remark
-                    }
-                  },
-                  [
-                    h("Icon", {
-                      props: {
-                        type: "search",
-                        color: "#20a0ff"
-                      }
-                    })
-                  ]
-                );
-              } else {
-                return h("span", "");
-              }
-            } else {
-              return h("span", "");
-            }
-          }
-        }, */
         {
           title: "操作",
           key: "",
@@ -432,7 +355,34 @@ export default {
       this.fromUserId = row.userId;
       this.tooltip = "起始账户余额为" + row.balance;
     },
-    
+    //商户游戏
+    merchantGame(row) {
+      
+      let columns = [
+        {
+          title: "商户游戏",
+          key: "name",
+          align: "center"
+        },
+        {
+          title: "商户占成",
+          key: "rate",
+          align: "center"
+        }
+      ];
+      let data = [];
+      let gameList = row.gameList;
+      let len = gameList.length;
+      for (let item of gameList) {
+        let obj = {};
+        obj.rate = item.rate + "%";
+        obj.name = item.name;
+        data.push(obj);
+      }
+      
+      return {columns, data}
+          
+    },
 
 
 

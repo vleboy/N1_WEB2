@@ -374,6 +374,7 @@ export default {
   },
   mounted() {
     this.changeTime();
+    this.getPlayerAccount()
     /* this.companySelectList(); */
   },
   computed: {
