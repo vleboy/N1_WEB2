@@ -365,6 +365,10 @@ export default {
                 {
                   title: "设定接入商告警上限",
                   checked: false
+                },
+                {
+                  title: "接入商点数警告列表",
+                  checked: false
                 }
               ]
             },

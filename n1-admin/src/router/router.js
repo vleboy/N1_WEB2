@@ -279,6 +279,7 @@ export const appRouter = [
            children: [
              { path: 'merchant', title: '商户列表', name: 'merchantList', component: merchantList },
              { path: 'manager', title: '线路商列表', name: 'dealerList', component: managerList },
+             { path: 'warnList', title: '接入商点数警告列表', name: 'warnList', component: warnList },
            ]
          },
          {

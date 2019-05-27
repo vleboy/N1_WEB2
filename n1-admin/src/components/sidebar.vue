@@ -117,6 +117,7 @@
                   </template>
                   <MenuItem name="merchantList" v-if='permission.includes("商户列表")'>商户列表</MenuItem>
                   <MenuItem name="dealerList" v-if='permission.includes("线路商列表")'>线路商列表</MenuItem>
+                  <MenuItem name="warnList" v-if='permission.includes("接入商点数警告列表")'>接入商点数警告列表</MenuItem>
                 </Submenu>
                 <MenuItem name="playList" v-if='permission.includes("玩家中心")' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
                   <Icon type="md-game-controller-b" />

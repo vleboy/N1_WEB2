@@ -253,7 +253,7 @@ export default {
                   title: "接入商停启用"
                 },
                 {
-                  title: "设定接入商告警上限"
+                  title: "接入商点数警告列表"
                 }
               ]
             },

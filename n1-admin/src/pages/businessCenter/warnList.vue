@@ -2,38 +2,26 @@
   <div class="warn">
     <div class="head">
       <div class="left">
-        <span class="title">管理员直管接入商 </span>
-        <span class="endtime">统计截止时间:{{countTime}}</span>
-      </div>
-       <div class="search">
-         <RadioGroup v-model="source" class="radioGroup" type="button" @on-change='changeSource' size="small">
+        <p>
+          <span class="title">管理员直管接入商 </span>
+          <span class="endtime">统计截止时间:{{countTime}}</span>
+        </p>
+        <RadioGroup v-model="source" class="radioGroup" type="button" @on-change='changeSource' size="small">
           <Radio label="0" v-if="permission.includes('正式数据')">正式</Radio>
           <Radio label="1">测试</Radio>
           <Radio label="2" v-if="permission.includes('正式数据')">全部</Radio>
         </RadioGroup>
-        <Input v-model.trim="sn" placeholder="请输入接入商标识" style="width: 150px; margin:0 1rem" size="small" ></Input>
+         <Input v-model.trim="sn" placeholder="请输入接入商标识" style="width: 150px;margin: 0 1rem" size="small"></Input>
         <Button type="primary" @click="searchSn" size="small" style="margin-right:.3rem">搜索</Button>
         <Button type="primary" class="searchbtn" @click="reset" size="small">刷新</Button>
       </div>
     </div>
-
-
-
-    <Table :columns="columns" :data="warnList" size="small">
-
-    </Table>
-
-
-
+    <Table :columns="columns" :data="warnList" size="small"></Table>
     <div class="childLists" v-for="(item,index) in childList" :key="index">
       <p class="title">
         ({{item.length > 0 && item[0].parentDisplayName ? item[0].parentDisplayName : ''}}) 直属下级列表
       </p>
-
-
       <Table :columns="columns" :data="item" size="small"></Table>
-
-
     </div>
     <Modal v-model="pointModal" title="预警点数" :width='450' @on-ok="changePoint" @on-cancel='cancel'>
       <p class='gameTitle'>{{gameType}}游戏</p>
@@ -59,9 +47,9 @@
         </p>
       </div>
     </Modal>
-    <Spin size="large" fix v-show="spinShow" style="z-index:200;">
-      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
-      <div style>加载中...</div>
+    <Spin size="large" fix v-if="spinShow">
+      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+      <div>加载中...</div>
     </Spin>
   </div>
 </template>
@@ -592,12 +580,11 @@ export default {
 .warn {
   min-height: 89vh;
   .head {
-    display: flex;
-    align-items: center;
+    overflow: hidden;
     padding-bottom: 12px;
     .left {
-      //display: flex;
-      //align-items: center;
+      display: flex;
+      align-items: center;
       .title {
         font-size: 26px;
         font-weight: bold;
@@ -606,6 +593,7 @@ export default {
         font-size: 16px;
       }
     }
+    
   }
 }
 .red {
@@ -636,22 +624,6 @@ export default {
 }
 .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
-  }
-  /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
-    border: 1px solid #ccc;
-    color: #000;
-  }
-  /deep/ .ivu-radio-group-button .ivu-radio-wrapper:hover {
-    background: #000;
-    color: #fff;
-  }
-  /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
-    background: #000;
-    color: #fff;
-  }
-  /deep/ .ivu-input {
-    border-color: #000;
-    background: #fff;
   }
   .ivu-btn {
     background: #fff;
