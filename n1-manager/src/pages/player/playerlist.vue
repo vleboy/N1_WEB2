@@ -1,34 +1,28 @@
 <template>
   <div class="p-playerlist">
     <div class="propList-search">
-      <Row class="row -search-row">
-        <Col span="2" offset="4">玩家ID</Col>
-        <Col span="4">
-        <Input v-model="searchInfo.userId" placeholder="请输入"></Input>
-        </Col>
-        <Col span="2">玩家账号</Col>
-        <Col span="4">
-        <Input v-model="searchInfo.userName" placeholder="请输入"></Input>
-        </Col>
-        <Col span="5">
+        <p>玩家ID</p>
+        <p style="margin:0 1rem">
+          <Input v-model="searchInfo.userId" placeholder="请输入"size="small"></Input>
+        </p>
+        <p>玩家账号</p>
+        <p style="margin:0 1rem">
+          <Input v-model="searchInfo.userName" placeholder="请输入"size="small"></Input>
+        </p>
+        <p>玩家昵称</p>
+        <p style="margin:0 1rem">
+          <Input v-model="searchInfo.nickname" placeholder="请输入"size="small"></Input>
+        </p>
+        <p>游戏状态</p>
+        <p style="margin:0 1rem">
+          <Select v-model="searchInfo.gameId" clearable placeholder="请选择游戏状态" style="text-align: left" size="small">
+            <Option v-for="(item, index) in gameTypeList" :value="item.code" :key="index">{{ item.name }}</Option>
+          </Select>
+        </p>
         <div class="btns">
-          <Button type="primary" @click="getSearch(true)">搜索</Button>
-          <Button type="ghost" @click="getSearch(false)">重置</Button>
+          <Button type="primary" @click="getSearch(true)" style="margin-right:.3rem" size="small">搜索</Button>
+          <Button @click="getSearch(false)" size="small">重置</Button>
         </div>
-        </Col>
-      </Row>
-      <Row class="row ">
-        <Col span="2" offset="4">玩家昵称</Col>
-        <Col span="4">
-        <Input v-model="searchInfo.nickname" placeholder="请输入"></Input>
-        </Col>
-        <Col span="2" >游戏状态</Col>
-        <Col span="4">
-        <Select v-model="searchInfo.gameId" clearable placeholder="请选择游戏状态" style="text-align: left">
-          <Option v-for="(item, index) in gameTypeList" :value="item.code" :key="index">{{ item.name }}</Option>
-        </Select>
-        </Col>
-      </Row>
     </div>
     <div class="playerform">
       <!--<Row class="-list-btn">-->
@@ -470,9 +464,9 @@ export default {
     padding-bottom: 10px;
   }
   .propList-search {
-    line-height: 32px;
-    text-align: center;
-    padding-bottom: 16px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
   }
   .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;

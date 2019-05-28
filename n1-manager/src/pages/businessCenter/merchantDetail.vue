@@ -191,7 +191,7 @@
           @click="getWaterfallList"
         >(点击查询)</span>
       </h2>
-      <Table :columns="columns" :data="showData" size="small">
+      <Table :columns="columns" :data="showWaterList" size="small">
         <template slot-scope="{row, index}" slot="createdAt">
           <span>{{createdAtConfig(row)}}</span>
         </template>
@@ -221,7 +221,7 @@
         </template>
         
       </Table>
-      <Page :total="total" class="page" :page-size='pageSize' @on-change="changepage"></Page>
+      <Page :total="totalPage" class="page" :page-size='pageSize' @on-change="changepage"></Page>
     </div>
     <Spin size="large" fix v-if="spinShow">
       <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
@@ -257,6 +257,11 @@ export default {
       }
     };
     return {
+      showWaterList: [],
+      totalPage: 20, //数据总量
+      pageSize: 20, //每页显示数据量
+      currentPage: 1, //当前页码
+      showNext: false, //是否显示下100条
       parent: "",
       value: "",
       rateTip: "", //tip
@@ -269,7 +274,6 @@ export default {
       isedit: true,
       spinShow: false,
       defaultBrower: false,
-      pageSize: 100,
       showData: [], //分页显示的data
       gameDetail: [],
       gameValidate: {
@@ -502,13 +506,6 @@ export default {
         this.showData = this.waterfall.slice(0, this.pageSize);
       }
     },
-    changepage(index) {
-      let size = this.pageSize;
-      let _start = (index - 1) * size;
-      let _end = index * size;
-      this.showData = this.waterfall.slice(_start, _end);
-      // console.log(this.showData);
-    },
     save() {
       let password = this.basic.password;
       if (password == "") {
@@ -656,19 +653,59 @@ export default {
         this.gameDetail = res.payload.gameList;
       })
     },
+    //切页
+    changepage(index) {
+      if (this.showData.length >= 100) {
+          if (index % 5 == 0 && this.showData.length <= index * 20) {
+          //(this.showData.length);
+          
+          this.showNext = true;
+          this.getWaterfallList();
+        }
+      }
+      
+      this.showWaterList = _.chunk(this.showData, 20)[index - 1];
+    },
+     //获取流水列表
     async getWaterfallList() {
+      
       let userId = this.$route.query.userId;
-      let req1 = getWaterfall(userId);
-      this.spinShow = true;
-      let waterfall = await this.axios.all([req1]);
-      this.spinShow = false;
-      /* if (waterfall && waterfall.code == 0) {
-        this.waterfall = waterfall.payload;
-        console.log(this.waterfall);
-      } */
-      //console.log(waterfall[0].payload);
-
-      this.showData = waterfall[0].payload;
+    
+      if (this.showNext) {
+        //(this.showData[this.showData.length - 1].oldBalance);
+        
+        let params = {
+          createdAt: this.startKey.createdAt,
+          sn: this.startKey.sn,
+          balance: this.showData[this.showData.length - 1].oldBalance
+        };
+       this.spinShow = true
+        let waterfall = await httpRequest(
+          "get",
+          `/waterfall/${userId}`,
+          params
+        );
+        this.spinShow = false
+        this.showData = this.showData.concat(waterfall.payload);
+        this.totalPage = this.showData.length;
+        this.startKey = waterfall.startKey;
+      } else {
+        let params = "";
+        this.spinShow = true
+        let waterfall = await httpRequest(
+          "get",
+          `/waterfall/${userId}`,
+          params
+        );
+        this.spinShow = false
+        this.showData = waterfall.payload;
+        this.totalPage = this.showData.length;
+        console.log(this.totalPage);
+        
+        this.startKey = waterfall.startKey;
+        this.showWaterList = _.chunk(this.showData, 20)[0];
+      }
+      
     },
     async init() {
       this.spinShow = true;

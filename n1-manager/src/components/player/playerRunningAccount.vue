@@ -21,30 +21,33 @@ $
             type="datetimerange"
             :options="options"
             @on-change="changeDate"
-            placeholder="选择日期范围" style="width: 300px">
+            placeholder="选择日期范围" 
+            style="width: 300px"
+            size="small"
+            >
           </DatePicker>
         </Col>
         <Col span="12" class="text-right" style="display:flex;justify-content:flex-end">
            <div style="margin-right:1rem;width: 50rem;">
-            <Input v-model="sn" placeholder="请输入流水号"></Input>
+            <Input v-model="sn" placeholder="请输入流水号" size="small"></Input>
           </div>
           <div style="margin-right:1rem;width: 50rem;">
-            <Input v-model="betId" placeholder="请输入交易号"></Input>
+            <Input v-model="betId" placeholder="请输入交易号" size="small"></Input>
           </div> 
-          <Button @click="isShowSearch = !isShowSearch" type="text">高级筛选
+          <Button @click="isShowSearch = !isShowSearch" type="text" size="small">高级筛选
             <Icon type="arrow-down-b" v-if="!isShowSearch"></Icon>
             <Icon type="arrow-up-b" v-else></Icon>
           </Button>
-           <Button type="primary" @click="searchData(true)" style="margin-right:.3rem">搜索</Button>
-           <Button type="ghost" @click="reset(true)" style="margin-right:.3rem">重置</Button>
-          <Button type="primary" @click="exportData">导出数据</Button>
+           <Button type="primary" @click="searchData(true)" style="margin-right:.3rem" size="small">搜索</Button>
+           <Button @click="reset(true)" style="margin-right:.3rem" size="small"> 重置</Button>
+          <Button type="primary" @click="exportData" size="small">导出数据</Button>
         </Col>
       </Row>
       <Row v-if="isShowSearch">
        
         <div class="from-search">
           类型：
-          <RadioGroup v-model="radioType" type="button">
+          <RadioGroup v-model="radioType" type="button" size="small">
             <Radio label="">全部</Radio>
             <Radio label="3">下注</Radio>
             <Radio label="11">中心钱包</Radio>
@@ -56,7 +59,7 @@ $
         </div>
         <div class="from-search">
           资金流向：
-          <RadioGroup v-model="radioMoney" type="button">
+          <RadioGroup v-model="radioMoney" type="button" size="small">
             <Radio label="">全部</Radio>
             <Radio label="1">本次发生金额（入）</Radio>
             <Radio label="-1">本次发生金额（出）</Radio>
@@ -71,7 +74,6 @@ $
         <Row style="padding: 20px 0">
         <Col span="24" class="text-right">
           <Page :total="playerAccountList.length"
-                show-elevator
                 :page-size="20"
                 :current.sync="currentPage"
                 @on-change="getNowpage"></Page>
@@ -517,6 +519,7 @@ $
           this.betId = ''
           this.changeCompany()
         }
+        this.playerAccountListStartKey = ''
         this.initData()
         this.changeGameType()
       }, // 重置筛选条件
@@ -545,18 +548,8 @@ $
         ) */
       }, //获取运营商列表
       changeCompany (val) {
-        /* httpRequest('post','/gameBigType',{
-          companyIden: this.companyInfo == '全部厂商' ? '-1' : this.companyInfo
-        },'game').then(
-          result => {
-            this.gameTypeList = result.payload
-            this.gameTypeList.unshift({
-              code: '',
-              name: '全部'
-            })
-            this.radioInfo = ''
-          }
-        ) */
+        
+        this.radioInfo = ''
         this.sel = val;
       },
       changeGameType(val) {
@@ -659,8 +652,25 @@ $
     .text-right {
       text-align: right;
     }
+    /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
+    border: 1px solid #ccc;
+    color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
+    background: #000;
+    color: #fff;
+  }
+/deep/ .ivu-input {
+    border-color: #000;
+    background: #fff;
+  }
   }
   .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
   }
+  
 </style>

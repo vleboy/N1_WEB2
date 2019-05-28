@@ -1,38 +1,17 @@
 <template>
   <div class="p-detail">
-    <div class="-d-title">
-      <h2>{{userName}}</h2>
+    <div class="playerInfo">
+      <Table :columns="columns" :data="dataList" size="small">
+        <template slot-scope="{row, index}" slot="gameStatus">
+          {{gameStatusConfig(row)}}
+        </template>
+        <template slot-scope="{row, index}" slot="joinTime">
+          {{joinTimeConfig(row)}}
+        </template>
+      </Table>
     </div>
-    <Collapse v-model="panel1" :style="{marginBottom:'15px'}">
-      <Panel name="1">
-      基本信息  所属商户: {{detailInfo.merchantName}} 
-        <div slot="content">
-          <div class="-d-base">
-            <div class="-b-form">
-              <Row>
-                <Col span="6"><span class="-span-base">商户ID：{{detailInfo.buId}}</span></Col>
-                <Col span="6"><span class="-span-base">所属商户：{{detailInfo.merchantName}}</span></Col>
-                <Col span="6"><span class="-span-base">商户标识：{{detailInfo.sn}}</span></Col>
-                <Col span="6"><span class="-span-base">线路号：{{detailInfo.msn}}</span></Col>
-              </Row>
-              <Row>
-                <Col span="6"><span class="-span-base">玩家ID：{{detailInfo.userId}}</span></Col>
-                <Col span="6"><span class="-span-base" >游戏状态：{{gameStatus[detailInfo.gameState]}}</span></Col>
-                <Col span="6"><span class="-span-base" >余额：{{detailInfo.balance}}</span></Col>
-                <Col span="6"><span class="-span-base">最近登录游戏时间：{{lastTime}}</span></Col>
-              </Row>
-              <Row>
-                <Col span="6" v-for="(item,index) of detailInfo.gameList" :key="index">
-                <span class="-span-base">{{item.name+'洗码比'}}：{{item.mix}}%</span>
-                </Col>
-              </Row>
-            </div>
-          </div>
-        </div>
-      </Panel>
-    </Collapse>
     <div class="-d-content">
-      <RadioGroup v-model="reportType" type="button" :style="{paddingBottom:'10px'}">
+      <RadioGroup v-model="reportType" type="button" :style="{paddingBottom:'10px'}" size="small">
         <Radio label="1">流水报表</Radio>
         <Radio label="2">交易记录</Radio>
       </RadioGroup>
@@ -66,6 +45,7 @@ export default {
   data () {
     return {
       isFetching: false,
+      dataList: [],
       playerDetailInfo: '',
       reportType: '1',
       panel1:'',
@@ -73,24 +53,66 @@ export default {
         '1': '离线',
         '2': '在线',
         '3': '游戏中'
-      }
+      },
+      columns: [
+        {
+          title: "商户ID",
+          align: "center",
+          key: "buId"
+        },
+        {
+          title: "所属商户",
+          align: "center",
+          key: "merchantName"
+        },
+        {
+          title: "商户标识",
+          align: "center",
+          key: "sn"
+        },
+        {
+          title: "线路号：",
+          align: "center",
+          key: "msn"
+        },
+        {
+          title: "玩家ID",
+          align: "center",
+          key: "userId"
+        },
+        {
+          title: "游戏状态",
+          align: "center",
+          slot: "gameStatus"
+        },
+        {
+          title: "余额",
+          align: "center",
+          key: "balance"
+        },
+        {
+          title: "最近登录游戏时间",
+          align: "center",
+          slot: "joinTime"
+        },
+      ]
     }
   },
   mounted () {
     this.getPlayerDetail()
   },
   computed: {
-    detailInfo () {
-      return this.playerDetailInfo
-    },
-    lastTime () {
-      return this.playerDetailInfo.joinTime ? dayjs(this.playerDetailInfo.joinTime).format("YYYY-MM-DD HH:mm:ss") : ''
-    },
-    userName () {
-      return this.playerDetailInfo.userName || localStorage.playerName
-    }
+    
   },
   methods: {
+    //游戏状态
+    gameStatusConfig(row) {
+      return this.gameStatus[row.gameState]
+    },
+    //最近登录时间
+    joinTimeConfig(row) {
+       return row.joinTime ? dayjs(row.joinTime).format("YYYY-MM-DD HH:mm:ss") : ''
+    },
     getPlayerDetail () {
       if(this.isFetching) return
       this.isFetching = true
@@ -100,7 +122,9 @@ export default {
         userName: name
       }).then(
         result => {
+          this.dataList = []
           this.playerDetailInfo = result.userInfo
+          this.dataList.push(this.playerDetailInfo)
           this.reportType = '1'
           // this.$store.commit('closeLoading')
         }
@@ -127,6 +151,9 @@ export default {
 <style scpoed lang="less" type="text/less">
   .p-detail{
     min-height: 89vh;
+    .playerInfo {
+      margin-bottom: 1rem;
+    }
     .-d-title{
       text-align: center;
     }
@@ -164,5 +191,21 @@ export default {
     .demo-spin-icon-load{
       animation: ani-demo-spin 1s linear infinite;
     }
+    /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
+    border: 1px solid #ccc;
+    color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
+    background: #000;
+    color: #fff;
+  }
+/deep/ .ivu-input {
+    border-color: #000;
+    background: #fff;
+  }
   }
 </style>

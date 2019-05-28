@@ -3,9 +3,9 @@
     <div class="userName">
       <span>{{$route.query.displayName}} ({{$route.query.username }})</span>
       <span class="btns">
-        <Button type="primary" class="edit" @click="reload">刷新</Button>
-        <Button type="primary" class="edit" @click.stop="editBtn" v-if="isedit">编辑</Button>
-        <Button type="primary" class="edit" @click.stop="save" v-else>提交修改</Button>
+        <Button type="primary" class="edit" @click="reload" size="small" style="margin-left:.3rem">刷新</Button>
+        <Button type="primary" class="edit" @click.stop="editBtn" v-if="isedit" size="small">编辑</Button>
+        <Button type="primary" class="edit" @click.stop="save" v-else size="small">提交修改</Button>
       </span>
     </div>
     <Collapse v-model="value">
@@ -139,8 +139,14 @@
       </Panel>
     </Collapse>
     <div class="finance">
-      <h2>财务信息</h2>
-      <Table :columns="columns" :data="showData" size="small">
+      <h2>财务信息
+        <span
+          style="color:#20a0ff;cursor:pointer;fontSize:1rem"
+          @click="getWaterfallList"
+        >(点击查询)</span>
+      </h2>
+      
+      <Table :columns="columns" :data="showWaterList" size="small">
         <template slot-scope="{row, index}" slot="tradeAt">
           <span>{{tradeAtConfig(row)}}</span>
         </template>
@@ -169,13 +175,13 @@
           <span v-else></span>
         </template>
       </Table>
-      <Page :total="total" class="page" show-elevator :page-size='pageSize' show-total @on-change="changepage"></Page>
+      <Page :total="totalPage" class="page" :page-size='pageSize' @on-change="changepage"></Page>
     </div>
     <div class="next">
       <h2>下级线路商列表</h2>
       <Table :columns="columns2" :data="nextLine" size="small">
         <template slot-scope="{row, index}" slot="maDisplayName">
-           <span style="color:#20a0ff;cursor:pointer" @click="mcDisplayNameConfig(row)">{{row.displayName}}</span>
+           <span style="color:#20a0ff;cursor:pointer" @click="maDisplayNameConfig(row)">{{row.displayName}}</span>
         </template>
         <template slot-scope="{row, index}" slot="maBalance">
           <span>{{balanceConfig(row)}}</span>
@@ -277,7 +283,8 @@ import {
   childList,
   gameBigType,
   updateManagers,
-  userChangeStatus
+  userChangeStatus,
+  httpRequest
 } from "@/service/index";
 import dayjs from "dayjs";
 import { thousandFormatter } from "@/config/format";
@@ -297,6 +304,12 @@ export default {
       }
     };
     return {
+      startKey: '',
+      showWaterList: [],
+      totalPage: 20, //数据总量
+      pageSize: 20, //每页显示数据量
+      currentPage: 1, //当前页码
+      showNext: false, //是否显示下100条
       isTest: 0,
       parent: "",
       value: "",
@@ -306,7 +319,6 @@ export default {
       role: "",
       rateTip: "",
       parentGame: [],
-      pageSize: 100, //分页
       showData: [], //分页显示的data
       isedit: true,
       spinShow: false,
@@ -505,6 +517,8 @@ export default {
     };
   },
   created() {
+    console.log(1);
+    
     this.init();
   },
   computed: {
@@ -514,7 +528,7 @@ export default {
   },
   watch: {
     $route(to, from) {
-      if (to.name == "lineDetail") {
+      if (to.name == "dealerDetail") {
         this.init();
       }
     }
@@ -549,7 +563,7 @@ export default {
 
     /* 下级线路商列表 */
     //线路商昵称
-    mcDisplayNameConfig(row) {
+    maDisplayNameConfig(row) {
       let userId = row.userId;
       let displayName = row.displayName;
       let username = row.username;
@@ -665,7 +679,7 @@ export default {
 
     /* 拥有商户列表 */
     //商户昵称
-    meDisplayName(row) {
+    meDisplayNameConfig(row) {
      
       let userId = row.userId;
       let displayName = row.displayName;
@@ -773,15 +787,6 @@ export default {
       });
     },
 
-        
-    handlePage() {
-      // 初始化显示，小于每页显示条数，全显，大于每页显示条数，取前每页条数显示
-      if (this.total < this.pageSize) {
-        this.showData = this.waterfall;
-      } else {
-        this.showData = this.waterfall.slice(0, this.pageSize);
-      }
-    },
     changepage(index) {
       let size = this.pageSize;
       let _start = (index - 1) * size;
@@ -997,6 +1002,58 @@ export default {
         return modes;
       }
     },
+    //切页
+    changepage(index) {
+      if (this.showData.length >= 100) {
+          if (index % 5 == 0 && this.showData.length <= index * 20) {
+          //(this.showData.length);
+          
+          this.showNext = true;
+          this.getWaterfallList();
+        }
+      }
+      
+      this.showWaterList = _.chunk(this.showData, 20)[index - 1];
+    },
+    //获取流水列表
+    async getWaterfallList() {
+      
+      let userId = this.$route.query.userId;
+    
+      if (this.showNext) {
+        //(this.showData[this.showData.length - 1].oldBalance);
+        
+        let params = {
+          createdAt: this.startKey.createdAt,
+          sn: this.startKey.sn,
+          balance: this.showData[this.showData.length - 1].oldBalance
+        };
+       this.spinShow = true
+        let waterfall = await httpRequest(
+          "get",
+          `/waterfall/${userId}`,
+          params
+        );
+        this.spinShow = false
+        this.showData = this.showData.concat(waterfall.payload);
+        this.totalPage = this.showData.length;
+        this.startKey = waterfall.startKey;
+      } else {
+        let params = "";
+        this.spinShow = true
+        let waterfall = await httpRequest(
+          "get",
+          `/waterfall/${userId}`,
+          params
+        );
+        this.spinShow = false
+        this.showData = waterfall.payload;
+        this.totalPage = this.showData.length;
+        this.startKey = waterfall.startKey;
+        this.showWaterList = _.chunk(this.showData, 20)[0];
+      }
+      
+    },
     async init() {
       this.spinShow = true;
       let userId = this.$route.query.userId;
@@ -1005,22 +1062,18 @@ export default {
       this.userId = userId;
       this.edit = true;
       this.isedit = true;
-      let req1 = getWaterfall(userId);
       let req2 = oneManagers(userId);
       let req3 = companySelect({ parent });
       let req4 = childList(userId, "10"); //线路商
       let req5 = childList(userId, "100"); //商户
       let [
-        waterfall,
         managers,
         company,
         lineChild,
         ownBusiness
-      ] = await this.axios.all([req1, req2, req3, req4, req5]);
+      ] = await this.axios.all([req2, req3, req4, req5]);
       this.spinShow = false;
-      if (waterfall && waterfall.code == 0) {
-        this.waterfall = waterfall.payload;
-      }
+      
       if (managers && managers.code == 0) {
         this.lineDetail = managers.payload;
         this.isTest = managers.payload.isTest == 1 ? true : false;
@@ -1040,7 +1093,6 @@ export default {
           this.parentGame = res.payload.gameList || [];
         }
       });
-      this.handlePage();
     }
   }
 };
@@ -1049,11 +1101,19 @@ export default {
 .lineDetail {
   min-height: 89vh;
   .userName {
-    line-height: 36px;
     text-align: center;
     font-size: 30px;
     font-weight: bold;
     margin-bottom: 10px;
+    .ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
+  }
   }
   .showpass {
     margin-left: 0.5rem;
@@ -1068,8 +1128,9 @@ export default {
   }
   .edit {
     float: right;
-    margin-right: 20px;
+    margin-top: 1rem;
   }
+  
   .logo {
     width: 200px;
   }

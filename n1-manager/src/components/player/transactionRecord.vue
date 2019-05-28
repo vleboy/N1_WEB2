@@ -17,16 +17,14 @@
       </Row>
       <Row>
         <Col span="17" style="float: right; text-align: right">
-        <Input v-model="betId" placeholder="请输入交易号" style="width: 30%;"></Input>
-        <DatePicker v-model="amountDate" :options="options" type="datetimerange" :transfer='true' style="width: 300px" @on-ok="searchAmount" placeholder="选择日期时间范围">
+        <Input v-model="betId" placeholder="请输入交易号" style="width: 30%;" size="small"></Input>
+        <DatePicker size="small" v-model="amountDate" :options="options" type="datetimerange" :transfer='true' style="width: 300px;margin:0 1rem" @on-ok="searchAmount" placeholder="选择日期时间范围">
         </DatePicker>
-        <Button type="primary" @click="searchAmount">搜索</Button>
-        <Button type="ghost" @click="reset">重置</Button>
-        <Button type="primary" @click="exportData">导出数据</Button>
+        <Button type="primary" @click="searchAmount" size="small">搜索</Button>
+        <Button @click="reset" size="small" style="margin:0 .3rem">重置</Button>
+        <Button type="primary" @click="exportData" size="small">导出数据</Button>
         </Col>
         <Col span="7">
-        <!-- <span class="justfy2">当前剩余点数：<span style="color: #F7BA2A">{{formatPoints(balance)}}</span></span> -->
-        <Button type="text" @click="resultGetPlayerDetail">刷新</Button>
         </Col>
       </Row>
     </div>
@@ -587,28 +585,12 @@ export default {
       }); */
     }, //获取运营商列表
     changeCompany(val) {
-      /* httpRequest(
-        "post",
-        "/gameBigType",
-        {
-          companyIden: this.companyInfo == "全部厂商" ? "-1" : this.companyInfo
-        },
-        "game"
-      ).then(result => {
-        this.gameTypeList = result.payload;
-        if (this.radioInfo == "") {
-          this.initData();
-          this.getTransactionRecord();
-        }
-        this.gameTypeList.unshift({
-          code: "",
-          name: "全部"
-        });
-        this.radioInfo = "";
-      }); */
+      
+      this.radioInfo = ''
       this.sel = val;
     },
     searchAmount() {
+      this.playerDetailStartKey = ''
       this.initData();
       this.changeRadio();
     },

@@ -544,15 +544,13 @@ export default {
       return JSON.parse(localStorage.getItem("userInfo")).subRolePermission;
     }
   },
-  /* watch: {
+  watch: {
     $route(to, from) {
       if (to.name == "dealerDetail") {
-        //console.log('in magager');
-        this.spinShow = true;
         this.init();
       }
     }
-  }, */
+  },
   methods: {
     /* 游戏信息 */
     //操作
@@ -722,7 +720,7 @@ export default {
     mcDisplayNameConfig(row) {
       let userId = row.userId;
       let displayName = row.displayName;
-      let parent = paraparent;
+      let parent = row.parent;
       let username = row.username;
       let parentDisplayName = row.parentDisplayName;
       this.$router.push({

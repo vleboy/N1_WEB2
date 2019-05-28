@@ -94,7 +94,7 @@
                         <MenuItem name="pngGame">PNG电子游戏报表</MenuItem>
                     </Submenu>
                 </Submenu>
-                <MenuItem name="allreport" v-if='permission.includes("日报表") && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
+                <MenuItem name="dayCompany" v-if='permission.includes("日报表") && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
                   <Icon type="md-stats" @click="unfold"/>
                 </MenuItem>
                 <Submenu name="dayReport" v-if='permission.includes("日报表") && unFlodMenu' class="sideMenu">

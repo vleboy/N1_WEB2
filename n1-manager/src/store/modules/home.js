@@ -9,9 +9,14 @@ export const home={
         cachePage: [],
         tagsList: [...otherRouter.children],
         dontCache: [], // 在这里定义你不想要缓存的页面的name属性值(参见路由配置router.js)
+        menuSize: '240px'
     },
     mutations:{
+        changeWidth(state, params) {
+            state.menuSize = params
+        },
         //openName
+        
         addOpenSubmenu (state, name) {
             let hasThisName = false;
             let isEmpty = false;
