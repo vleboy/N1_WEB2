@@ -31,7 +31,32 @@
       <!--<Button type="primary" @click="allChangeState(1)">批量开启</Button>-->
       <!--</Col>-->
       <!--</Row>-->
-      <Table :columns="columns" :data="getItems"></Table>
+      <Table :columns="columns" :data="getItems">
+        <template slot-scope="{row, index}" slot="nickname">
+          {{row.nickname === "NULL!" ? "-" : row.nickname}}
+        </template>
+        <template slot-scope="{row, index}" slot="state">
+          <Tag type="border" :color="stateConfig(row).color">{{stateConfig(row).state}}</Tag> 
+        </template>
+        <template slot-scope="{row, index}" slot="gameState">
+          <Tag type="border" :color="gameStateConfig(row).color">{{gameStateConfig(row).gameState}}</Tag> 
+        </template>
+        <template slot-scope="{row, index}" slot="balance">
+          {{balanceConfig(row)}}
+        </template>
+        <template slot-scope="{row, index}" slot="createdAt">
+          {{createdAtConfig(row)}}
+        </template>
+        <template slot-scope="{row, index}" slot="joinTime">
+          {{joinTimeConfig(row)}}
+        </template>
+         <template slot-scope="{row, index}" slot="operate">
+          <div>
+            <Button type="text" size="small" style="color:#20a0ff" @click="operateCheck(row)">查看</Button>
+            <Button type="text" size="small" style="color:#20a0ff" @click="operateState(row)">{{row.state ? "停用" : "开启"}}</Button>
+          </div>
+        </template>
+      </Table>
       <Spin size="large" fix v-if="isFetching">
         <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
         <div>加载中...</div>
@@ -51,6 +76,7 @@ import {
   unFormatUserName,
   thousandFormatter
 } from "@/config/format";
+import { type } from 'os';
 export default {
    beforeRouteEnter(to, from, next) {
     /* console.log(this, 'beforeRouteEnter'); // undefined
@@ -142,135 +168,45 @@ export default {
         {
           title: "玩家昵称",
           align: 'center',
-          key: "nickname",
-          sortable: true,
-
-          render: (h, params) => {
-            return h(
-              "span",
-              params.row.nickname === "NULL!" ? "-" : params.row.nickname
-            );
-          }
+          slot: "nickname",
+          sortable: true
         },
         {
           title: "状态",
           align: 'center',
-          key: "state",
-          sortable: true,
-
-          render: (h, params) => {
-            return h(
-              "Tag",
-              {
-                props: {
-                  type: "border",
-                  color: params.row.state ? "green" : "red"
-                }
-              },
-              this.playerStatus[params.row.state]
-            );
-          }
+          slot: "state",
+          sortable: true
         },
         {
           title: "游戏状态",
           align: 'center',
-          key: "gameStateName",
-          sortable: true,
-          render: (h, params) => {
-            return h(
-              "Tag",
-              {
-                props: {
-                  type: "border",
-                  color:
-                    params.row.gameState == 3 || params.row.gameState == 2
-                      ? "green"
-                      : ""
-                }
-              },
-              params.row.gameStateName
-            );
-          }
+          slot: "gameState",
+          sortable: true
         },
         {
           title: "点数",
           align: 'center',
-          key: "balance",
-          sortable: true,
-          render: (h, params) => {
-            return h("span", thousandFormatter(params.row.balance));
-          }
+          slot: "balance",
+          sortable: true
         },
         {
           title: "注册时间",
           align: 'center',
-          key: "createdAt",
-          sortable: true,
-          render: (h, params) => {
-            return h(
-              "span",
-              dayjs(params.row.createdAt).format("YYYY-MM-DD")
-            );
-          }
+          slot: "createdAt",
+          sortable: true
         },
         {
           title: "最近登录游戏时间",
           align: 'center',
-          key: "joinTime",
+          slot: "joinTime",
           sortable: true,
-          minWidth: 60,
-          render: (h, params) => {
-            return h(
-              "span",
-              params.row.joinTime ? dayjs(params.row.joinTime).format("YYYY-MM-DD HH:mm:ss") : ''
-            );
-          }
+          minWidth: 60
         },
         {
           title: "操作",
           align: 'center',
-          key: "action",
-          align: "center",
-          render: (h, params) => {
-            return h("div", [
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "text",
-                    size: "small"
-                  },
-                  style: {
-                    color: "#20a0ff"
-                  },
-                  on: {
-                    click: () => {
-                      this.playDetail(params.row);
-                    }
-                  }
-                },
-                "查看"
-              ),
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "text",
-                    size: "small"
-                  },
-                  style: {
-                    color: "#20a0ff"
-                  },
-                  on: {
-                    click: () => {
-                      this.changeStatus(params.row);
-                    }
-                  }
-                },
-                params.row.state ? "停用" : "开启"
-              )
-            ]);
-          }
+          slot: "operate",
+          align: "center"
         }
       ]
     };
@@ -292,6 +228,42 @@ export default {
     }
   },
   methods: {
+    //状态
+    stateConfig(row) {
+      let color = row.state ? "green" : "red"
+      return {state: this.playerStatus[row.state], color}    
+    },
+    //游戏状态
+    gameStateConfig(row) {
+      let color = ''
+      if (row.gameState == 3 || row.gameState == 2) {
+        color = 'green'
+      } else {
+        color = '#000'
+      }
+      return {gameState: row.gameStateName, color} 
+    },
+    //点数
+    balanceConfig(row) {
+      return thousandFormatter(row.balance)
+    },
+    //注册时间
+    createdAtConfig(row) {
+      return dayjs(row.createdAt).format("YYYY-MM-DD")
+    },
+    //最近登录时间
+    joinTimeConfig(row) {
+      return row.joinTime ? dayjs(row.joinTime).format("YYYY-MM-DD HH:mm:ss") : ''    
+    },
+    /* 操作 */
+    //查看
+    operateCheck(row) {
+      this.playDetail(row);
+    },
+    //停用启用
+    operateState(row) {
+      this.changeStatus(row)
+    },
     selectionChange(val) {
       this.checkedArray = val;
       // console.log(this.checkedArray, '被选中的多选')

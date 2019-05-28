@@ -6,7 +6,6 @@ import home from '@/pages/home'
 import playerDetail from '@/pages/player/playerdetail'
 // appRouter
 import ownSpace from '@/pages/ownSpace'
-import board from '@/pages/board/board'
 import managerList from '@/pages/businessCenter/managerList'
 import merchantList from '@/pages/businessCenter/merchantList'
 import managerDetail from '@/pages/businessCenter/managerDetail'
@@ -44,17 +43,7 @@ import kyChess from '@/pages/reports/kyChess'
 import dayCompany from '@/pages/day/dayCompany'
 import dayMerchant from '@/pages/day/dayMerchant'
 
-//log
-import loginLog from '@/pages/log/loginLog'
-import operationLog from '@/pages/log/operationLog'
-import managerOpreateLog from '@/pages/log/managerOpreateLog'
-import merchantOpreateLog from '@/pages/log/merchantOpreateLog'
-import merchantLog from '@/pages/log/merchantLog'
-import managerLog from '@/pages/log/managerLog'
 import playerlist from '@/pages/player/playerlist'
-
-import flow from '@/pages/notransfer/flow'
-import noTransferReport from '@/pages/notransfer/noTransferReport'
 const loginRouter = {
   path: '/login',
   name: 'login',
@@ -95,13 +84,6 @@ export const appRouter = [
            component: main,
            children: [{ path: 'index', title: '个人中心', name: 'ownspace-index', component: ownSpace }]
          },
-         /* {
-           path: '/boards',
-           title: '看板',
-           name: 'boards',
-           component: main,
-           children: [{ path: 'board', title: '看板', name: 'board', component: board }]
-         }, */
          {
            path: '/allreport',
            title: '公司输赢总报表',
@@ -225,20 +207,6 @@ export const appRouter = [
            component: main,
            children: [{ path: 'sport', title: 'YSB体育游戏报表', name: 'ysbSport', component: ysbSport }]
          },
-        /*  {
-           path: '/log',
-           title: '日志',
-           name: 'log',
-           component: main,
-           children: [
-             { path: 'loginLog', title: '登录日志', name: 'loginLog', component: loginLog },
-             { path: 'operationLog', title: '操作日志', name: 'operationLog', component: operationLog },
-              { path: 'managerOpreate', title: '线路商操作日志', name: 'managerOpreateLog', component: managerOpreateLog },
-             { path: 'merchantOpreate', title: '商户操作日志', name: 'merchantOpreateLog', component: merchantOpreateLog },
-             { path: 'manager', title: '线路商登录日志', name: 'managerLog', component: managerLog },
-             { path: 'merchant', title: '商户登录日志', name: 'merchantLog', component: merchantLog } 
-           ]
-         }, */
          {
            path: '/day',
            title: '日报表',
@@ -259,16 +227,6 @@ export const appRouter = [
              { path: 'manager', title: '线路商列表', name: 'dealerList', component: managerList }
            ]
          },
-         /* {
-           path: '/transfer',
-           title: '',
-           name: 'transfer',
-           component: main,
-           children: [
-             { path: 'flow', title: '流水交易', name: 'flow', component: flow },
-             { path: 'report', title: '输赢报表', name: 'noTransferReport', component: noTransferReport }
-           ]
-         }, */
          {
            path: '/play',
            title: '玩家列表',
