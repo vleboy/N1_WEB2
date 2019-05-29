@@ -186,7 +186,7 @@
           <Table :columns="columns1" :data="gameDetail" width="500" class="table" size="small">
             <template slot-scope="{row, index}" slot="rate">{{row.rate + "%"}}</template>
             <template slot-scope="{row, index}" slot="operate">
-              <span v-if="this.edit" style="color:$20a0ff;cursor:pointer">删除</span>
+              <span v-if="!edit" style="color:#20a0ff;cursor:pointer" @click="operateConfig(row)">删除</span>
             </template>
           </Table>
         </div>
@@ -378,7 +378,7 @@ export default {
         },
         {
           title: "操作",
-          key: "opreate"
+          slot: "operate"
         }
       ],
       columns: [

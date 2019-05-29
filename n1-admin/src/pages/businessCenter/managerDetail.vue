@@ -103,7 +103,7 @@
             ref="gameList"
             :model="gameForm"
             :label-width="110"
-            v-if="!edit"
+            v-if="!isedit"
             :rules="gameValidate"
           >
             <FormItem prop="ownGame">
@@ -149,7 +149,7 @@
           </Form>
           <Table :columns="columns1" :data="gameDetail" width="500" class="table" size="small">
             <template slot-scope="{row, index}" slot="gameOperate">
-              <span style="color:#20a0ff;cursor:pointer" v-if="!edit" @click="gameOperateConfig(row)">删除</span>
+              <span v-if="!isedit" style="color:#20a0ff;cursor:pointer" @click="gameOperateConfig(row)">删除</span>
             </template>
           </Table>
         </div>
@@ -359,7 +359,7 @@ export default {
       isTest: false,
       value: "",
       dayjs: dayjs,
-      edit: true, //可编辑
+      edit: false, //可编辑
       game: "",
       showPass: false,
       role: "",
@@ -901,7 +901,7 @@ export default {
       // console.log(this.showData);
     }, */
     editBtn() {
-      this.edit = false;
+      this.edit = true;
       this.isedit = false;
       this.value = ["2", "3"];
       this.basic.password = this.lineDetail.password;
@@ -983,13 +983,7 @@ export default {
           });
         }
       }
-      //  else {
-      //   let testReg = /^[a-zA-Z0-9@_#$%^&*!.~-]{6,16}$/;
-      //   if (!testReg.test(password)) {
-      //     this.$Message.warning("密码为6~16位,包含字母、数字及符号");
-      //     return;
-      //   }
-      // }
+     
       this.edit = true;
       this.isedit = true;
       let userId = this.userId;
