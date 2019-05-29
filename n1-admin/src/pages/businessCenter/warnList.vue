@@ -4,7 +4,7 @@
       <div class="left">
         <p>
           <span class="title">管理员直管接入商 </span>
-          <span class="endtime">统计截止时间:{{countTime}}</span>
+          <span class="endtime">统计起始时间:2019-04-01</span>
         </p>
         <RadioGroup v-model="source" class="radioGroup" type="button" @on-change='changeSource' size="small">
           <Radio label="0" v-if="permission.includes('正式数据')">正式</Radio>
@@ -17,7 +17,7 @@
       </div>
     </div>
     <Table :columns="columns" :data="warnList" size="small"></Table>
-    <div class="childLists" v-for="(item,index) in childList" :key="index">
+    <div id="jumpTo" class="childLists" v-for="(item,index) in childList" :key="index">
       <p class="title">
         ({{item.length > 0 && item[0].parentDisplayName ? item[0].parentDisplayName : ''}}) 直属下级列表
       </p>
@@ -25,7 +25,7 @@
     </div>
     <Modal v-model="pointModal" title="预警点数" :width='450' @on-ok="changePoint" @on-cancel='cancel'>
       <p class='gameTitle'>{{gameType}}游戏</p>
-      <p class="current">当前值 {{winloseAmount}}/{{topAmount}}</p>
+      <p style="color:red;text-align:center;">上限值设置为0表示不限制</p>
       <Row class="current">
         <Col span="8"> 设定值:{{winloseAmount}}/
         </Col>
@@ -80,12 +80,14 @@ export default {
         {
           title: "序号",
           type: "index",
+          align: "center",
           maxWidth: 60
         },
         {
-          title: "类型",
+          title: "接入商类型",
+          align: "center",
           key: "role",
-          maxWidth: 80,
+          maxWidth: 120,
           sortable: true,
           render: (h, params) => {
             return h("span", this.types(params.row.role));
@@ -93,6 +95,7 @@ export default {
         },
         {
           title: "接入商标识",
+          align: "center",
           key: "",
           maxWidth: 120,
           render: (h, params) => {
@@ -105,13 +108,14 @@ export default {
         },
         {
           title: "接入商昵称",
+          align: "center",
           key: "displayName",
           sortable: true,
           maxWidth: 160,
           render: (h, params) => {
             if (params.row.role == "10") {
               return h(
-                "span",
+                "a",
                 {
                   style: {
                     cursor: "pointer",
@@ -119,6 +123,8 @@ export default {
                   },
                   on: {
                     click: async () => {
+                      
+                      
                       let userId = params.row.userId;
                       this.spinShow = true;
                       let level = params.row.level;
@@ -138,6 +144,8 @@ export default {
                         }
                       }
                       this.childList = showList;
+                      //跳转到底部
+                      document.documentElement.scrollTop = document.documentElement.scrollHeight
                     }
                   }
                 },
@@ -222,6 +230,7 @@ export default {
         },
         {
           title: "游戏点数消耗分布",
+           align: "center",
           key: "",
           align: 'center',
           render: (h, params) => {
@@ -337,6 +346,7 @@ export default {
                               this.companyList = params.row.companyList;
                               this.userId = params.row.userId;
                               this.role = params.row.role;
+                              this.newAmount = this.winloseAmount
                             }
                           }
                         },
@@ -569,6 +579,8 @@ export default {
     }
   },
   created() {
+    
+    
     if (this.permission.includes("正式数据")) {
       this.source = '0';
     }
@@ -624,6 +636,18 @@ export default {
 }
 .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
+  }
+   /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
+    border: 1px solid #ccc;
+    color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
+    background: #000;
+    color: #fff;
   }
   .ivu-btn {
     background: #fff;
