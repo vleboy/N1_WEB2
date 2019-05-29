@@ -3,7 +3,7 @@
     <div class="head">
       <div class="left">
         <p>
-          <span class="title">管理员直管接入商 </span>
+          <span class="title">风控管理 </span>
           <span class="endtime">统计起始时间:2019-04-01</span>
         </p>
         <RadioGroup v-model="source" class="radioGroup" type="button" @on-change='changeSource' size="small">
