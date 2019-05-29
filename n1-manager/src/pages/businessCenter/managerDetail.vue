@@ -14,14 +14,14 @@
         <div slot="content">
           <Form label-position="left" :label-width="100">
             <Row>
-              <Col span="8">
-              <FormItem label="线路商ID">
-                {{ lineDetail.displayId}}
+               <Col span="8">
+              <FormItem label="上级线路商">
+                {{lineDetail.parentDisplayName}}
               </FormItem>
               </Col>
               <Col span="8">
-              <FormItem label="上级线路商">
-                {{lineDetail.parentDisplayName}}
+              <FormItem label="线路商ID">
+                {{ lineDetail.displayId}}
               </FormItem>
               </Col>
               <Col span="8">
@@ -32,18 +32,18 @@
             </Row>
             <Row>
               <Col span="8">
+              <FormItem label="管理员账号">
+                {{ lineDetail.uname}}
+              </FormItem>
+              </Col>
+              <Col span="8">
               <FormItem label="创建时间">
                 {{dayjs(lineDetail.createdAt).format("YYYY-MM-DD HH:mm:ss")}}
               </FormItem>
               </Col>
               <Col span="8">
-              <FormItem label="最后登录时间">
+              <FormItem label="上次登录时间">
                 {{dayjs(lineDetail.updatedAt).format("YYYY-MM-DD HH:mm:ss")}}
-              </FormItem>
-              </Col>
-              <Col span="8">
-              <FormItem label="管理员账号">
-                {{ lineDetail.uname}}
               </FormItem>
               </Col>
             </Row>
