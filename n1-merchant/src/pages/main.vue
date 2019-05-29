@@ -117,7 +117,9 @@ export default {
     line-height: 0;
   }
 }
+
 /deep/ .ivu-layout-header {
+  background: red;
   padding: 0;
 }
 .tags-con {
@@ -126,6 +128,7 @@ export default {
   //: hidden;
   //   background: #f0f0f0;
 }
+
 .main_header {
   height: 50px;
   background: #fff;

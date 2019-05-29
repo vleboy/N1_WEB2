@@ -15,8 +15,8 @@
         </p>
         <p>游戏状态</p>
         <p style="margin:0 1rem">
-          <Select v-model="searchInfo.gameId" clearable placeholder="请选择游戏状态" style="text-align: left" size="small">
-            <Option v-for="(item, index) in gameTypeList" :value="item.code" :key="index">{{ item.name }}</Option>
+          <Select v-model="defaultStatus" clearable placeholder="请选择游戏状态" style="width:150px;text-align: left" size="small"  @on-change="changeGameStatus">
+            <Option v-for="(item, index) in gameTypeList" :value="item.name" :key="index">{{ item.name }}</Option>
           </Select>
         </p>
         <div class="btns">
@@ -70,6 +70,7 @@
 
 <script type="text/ecmascript-6">
 import { httpRequest } from "@/service/index";
+import { getGameType } from "@/config/getGameType";
 import dayjs from "dayjs";
 import {
   formatUserName,
@@ -97,6 +98,7 @@ export default {
   beforeCreate() {},
   data() {
     return {
+      defaultStatus: '全部',
       nowSize: 20,
       nowPage: 1,
       pageSize: 100,
@@ -214,6 +216,7 @@ export default {
   created() {
     // this.getPlayList();
     this.getGameTypeList();
+    this.getSearch(true)
   },
   computed: {
     getItems() {
@@ -233,6 +236,7 @@ export default {
       let color = row.state ? "green" : "red"
       return {state: this.playerStatus[row.state], color}    
     },
+    
     //游戏状态
     gameStateConfig(row) {
       let color = ''
@@ -276,6 +280,13 @@ export default {
           name: row.userName
         }
       });
+    },
+    changeGameStatus(val) {
+      for (let i = 0; i < this.gameTypeList.length; i++) {
+        if (this.gameTypeList[i].name ==  val) {
+          this.searchInfo.gameId = this.gameTypeList[i].code
+        }  
+      }
     },
     getPlayList() {
       //if (this.isFetching) return;
@@ -417,7 +428,12 @@ export default {
         );
         // this.$store.commit('closeLoading')
       }); */
-      this.gameTypeList = this.GameListEnum
+      this.gameTypeList = getGameType()
+      this.gameTypeList.unshift(
+        { code: "", name: "全部" , value: "全部"},
+        {code: "0",name: '离线'},
+        {code: '1', name: '大厅'},
+      )
     }
   }
 };

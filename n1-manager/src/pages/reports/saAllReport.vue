@@ -17,28 +17,44 @@
           <Button @click="reset" size="small">重置</Button>
         </div>
       </div>
-      <Table :columns="columns1" :data="user" size="small" ref='table_0'></Table>
+      <Table :columns="columns1" :data="user" size="small" ref='table_0'>
+        <template slot-scope="{row, index}" slot="userDisplayName">
+          <span>{{row.displayName == 'NULL!' ? '-' : row.displayName}}</span>
+        </template>
+      </Table>
     </div>
     <div class="childList">
       <p class="title">
         直属下级列表
         <Button size="small" @click="exportdata('table_1')">导出数据</Button>
       </p>
-      <Table :columns="columns1" :data="child" size="small" ref='table_1'></Table>
+      <Table :columns="columns1" :data="child" size="small" ref='table_1'>
+        <template slot-scope="{row, index}" slot="userDisplayName">
+          <span>{{row.displayName == 'NULL!' ? '-' : row.displayName}}</span>
+        </template>
+      </Table>
     </div>
     <div class="childList" v-for="(item,index) in reportChild" :key="index">
       <p class="title">
         ({{item.length > 0 && item[0].parentDisplayName ? item[0].parentDisplayName : ''}}) 直属下级列表
         <Button size="small" @click="exportdata(index)">导出数据</Button>
       </p>
-      <Table :columns="columns1" :data="item" size="small" :ref="'table'+index"></Table>
+      <Table :columns="columns1" :data="item" size="small" :ref="'table'+index">
+        <template slot-scope="{row, index}" slot="userDisplayName">
+          <span>{{row.displayName == 'NULL!' ? '-' : row.displayName}}</span>
+        </template>
+      </Table>
     </div>
     <div class="playerList" id="playerList">
       <p class="title">
         <span v-show="showName"> ({{ userName }})</span>所属玩家列表
         <Button size="small" @click="exportdata('table_2')">导出数据</Button>
       </p>
-      <Table :columns="columns2" :data="playerList" size="small" ref='table_2'></Table>
+      <Table :columns="columns2" :data="playerList" size="small" ref='table_2'>
+        <template slot-scope="{row, index}" slot="playerNickname">
+          <span>{{row.nickname == 'NULL!' ? '-' : row.nickname}}</span>
+        </template>
+      </Table>
     </div>
     <Spin size="large" fix v-if="spinShow">
       <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
@@ -107,7 +123,7 @@ export default {
         },
         {
           title: "昵称",
-          key: "displayName"
+          slot: "userDisplayName"
         },
         {
           title: "管理员账号",
@@ -358,7 +374,7 @@ export default {
         },
         {
           title: "昵称",
-          key: "nickname"
+          key: "playerNickname"
         },
         {
           title: "交易次数",

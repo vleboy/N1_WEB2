@@ -56,7 +56,11 @@
         <span v-show="showName"> ({{ userName }})</span>所属玩家列表
         <Button @click="exportdata('table_2')" size="small">导出数据</Button>
       </p>
-      <Table :columns="columns22" :data="playerList" size="small" ref='table_2'></Table>
+      <Table :columns="columns22" :data="playerList" size="small" ref='table_2'>
+        <template slot-scope="{row, index}" slot="playerNickname">
+          <span>{{row.nickname == 'NULL!' ? '-' : row.nickname}}</span>
+        </template>
+      </Table>
     </div>
     <Spin size="large" fix v-if="spinShow">
       <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
@@ -819,7 +823,7 @@ export default {
         },
         {
           title: "昵称",
-          key: "nickname"
+          slot: "playerNickname"
         },
         {
           title: "交易次数",

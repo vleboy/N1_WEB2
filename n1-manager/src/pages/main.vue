@@ -111,6 +111,9 @@ export default {
   overflow: hidden;
   //   background: #f0f0f0;
 }
+/deep/ .ivu-layout-header {
+  line-height: 45px;
+}
 .main_header {
   height: 50px;
   background: #fff;

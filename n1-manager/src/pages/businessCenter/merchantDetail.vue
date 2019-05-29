@@ -15,22 +15,33 @@
           <Form label-position="left" :label-width="100">
             <Row>
               <Col span="8">
-              <FormItem label="商户ID">
-                {{ merchantDetail.displayId }}
-              </FormItem>
-              </Col>
-              <Col span="8">
               <FormItem label="上级商户">
                 {{ merchantDetail.parentDisplayName }}
               </FormItem>
               </Col>
               <Col span="8">
+              <FormItem label="商户ID">
+                {{ merchantDetail.displayId }}
+              </FormItem>
+              </Col>
+              <Col span="8">
+              <FormItem label="商户标识">
+                {{merchantDetail.sn}}
+              </FormItem>
+              </Col>
+              
+            </Row>
+            <Row>
+              <Col span="8">
               <FormItem label="商户昵称">
                 {{merchantDetail.displayName}}
               </FormItem>
               </Col>
-            </Row>
-            <Row>
+              <Col span="8">
+              <FormItem label="管理员账号">
+                {{ merchantDetail.uname}}
+              </FormItem>
+              </Col>
               <Col span="8">
               <FormItem label="商户密匙">
                 <Row>
@@ -38,21 +49,11 @@
                   <span v-if="showKey">{{merchantDetail.apiKey}}</span>
                   <span v-else>********</span>
                   </Col>
-                  <Col span="4">
+                  <Col>
                   <span class="show" @click="showKey=!showKey" v-if="!showKey">显示</span>
                   <span class="show" @click="showKey=!showKey" v-else>隐藏</span>
                   </Col>
                 </Row>
-              </FormItem>
-              </Col>
-              <Col span="8">
-              <FormItem label="商户线路号">
-                {{merchantDetail.msn}}
-              </FormItem>
-              </Col>
-              <Col span="8">
-              <FormItem label="商户标识">
-                {{merchantDetail.suffix}}
               </FormItem>
               </Col>
             </Row>
@@ -63,18 +64,6 @@
               </FormItem>
               </Col>
               <Col span="8">
-              <FormItem label="最后登录时间">
-                {{dayjs(merchantDetail.updatedAt).format("YYYY-MM-DD HH:mm:ss")}}
-              </FormItem>
-              </Col>
-              <Col span="8">
-              <FormItem label="标识">
-                {{merchantDetail.sn}}
-              </FormItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col span="8">
               <FormItem label="上次登录时间">
                 {{dayjs(merchantDetail.loginAt).format("YYYY-MM-DD HH:mm:ss")}}
               </FormItem>
@@ -84,12 +73,7 @@
                 {{merchantDetail.lastIP}}
               </FormItem>
               </Col>
-              <Col span="8">
-              <FormItem label="管理员账号">
-                {{ merchantDetail.uname}}
-              </FormItem>
-              </Col>
-            </Row>
+            </Row> 
           </Form>
         </div>
       </Panel>
