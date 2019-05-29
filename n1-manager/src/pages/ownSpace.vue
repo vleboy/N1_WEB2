@@ -26,6 +26,7 @@
         </template>
       </Table>
     </div>
+    
     <div class="manager-copertion">
       <h2>财务信息
         <span style="color:#20a0ff;cursor:pointer;fontSize:1rem" @click="getWaterfallList">(点击查询)</span>
