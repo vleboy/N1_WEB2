@@ -66,7 +66,7 @@ export default {
       //因为当钩子执行前，组件实例还没被创建
       // vm 就是当前组件的实例相当于上面的 this，所以在 next 方法里你就可以把 vm 当 this 来用了。
       //console.log(vm);//当前组件的实例
-      if (localStorage.dayManager == 'dayManager') {
+      if (localStorage.dayCompany == 'dayCompany') {
         vm.spinShow = true 
         vm.init()
       }
@@ -314,7 +314,7 @@ export default {
     async init() {
       this.spinShow = true;
       this.showBox = true
-      if (this.$route.name == 'dayManager' && localStorage.dayManager == 'dayManager') {
+      if (this.$route.name == 'dayCompany' && localStorage.dayCompany == 'dayCompany') {
       
         let st = dayjs(this.$route.query.time[0]).format('YYYYMMDD')
         let et = dayjs(this.$route.query.time[1]).format('YYYYMMDD')
@@ -337,7 +337,7 @@ export default {
         this.showBox = true
         //this.managerName = this.$route.query.name
          this.gameCode = this.$route.query.type
-        localStorage.removeItem('dayManager')
+        localStorage.removeItem('dayCompany')
       }
       let params = {
         //suffix: this.managerName, //ZS1,XLSA

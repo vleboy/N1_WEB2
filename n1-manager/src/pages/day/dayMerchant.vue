@@ -2,25 +2,23 @@
   <div class="dayReport">
     <div class="nowList">
       <div class="top">
-        <p class="title">
-          <Row class="row -search-row" :gutter="12" type="flex" align="middle">
-          <Col span="5">商户标识</Col>
-          <Col span="6">
-          <Input v-model="buSN" placeholder="请输入"></Input>
-          </Col>
-          <Col span="4">商户ID</Col>
-          <Col span="6">
-          <Input v-model="buID" placeholder="请输入"></Input>
-          </Col>
-          </Row>
-        <Select style="width:200px;margin-right:2rem;" placeholder="选择游戏类别" ref="resetSelect" clearable v-model="model1">
-          <Option v-for="(item, index) in gameType" :value="item.name" :key="item.name" @click.native="selGame(item.code)">{{item.name}}</Option>
-        </Select>
-        <DatePicker type="daterange" :options="options" :editable='false' :value="defaultTime" placeholder="选择日期时间范围(默认最近一个月)" style="width: 300px" confirm @on-ok="confirms" @on-change="handle"></DatePicker>
-        </p>
+          <p>商户标识</p>
+          <p style="margin:0 1rem">
+          <Input v-model="buSN" placeholder="请输入" size="small"></Input>
+          </p>
+          <p>商户ID</p>
+          <p style="margin:0 1rem">
+          <Input v-model="buID" placeholder="请输入" size="small"></Input>
+          </p>
+          <p>
+            <Select style="width:200px;" placeholder="选择游戏类别" ref="resetSelect" clearable v-model="model1" size="small">
+              <Option v-for="(item, index) in gameType" :value="item.name" :key="item.name" @click.native="selGame(item.code)">{{item.name}}</Option>
+            </Select>   
+          </p>
+        <DatePicker size="small" type="daterange" :options="options" :editable='false' :value="defaultTime" placeholder="选择日期时间范围(默认最近一个月)" style="width: 300px;margin:0 1rem" confirm @on-ok="confirms" @on-change="handle"></DatePicker>
         <div class="right">
-          <Button type="primary" @click="search">搜索</Button>
-          <Button type="ghost" @click="reset">重置</Button>
+          <Button type="primary" @click="search" size="small" style="margin-right:.3rem">搜索</Button>
+          <Button @click="reset" size="small">重置</Button>
         </div>
       </div>
     </div>
@@ -389,7 +387,6 @@ export default {
   }
   .top {
     display: flex;
-    justify-content: space-between;
     margin-bottom: 1rem;
     .title {
       display: flex;
@@ -398,6 +395,34 @@ export default {
   }
   .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
+  }
+  .ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper {
+    border: 1px solid #ccc;
+    color: #000;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper:hover {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-radio-group-button .ivu-radio-wrapper-checked {
+    background: #000;
+    color: #fff;
+  }
+  /deep/ .ivu-input {
+    border-color: #000;
+    background: #fff;
+  }
+  /deep/.ivu-select-selection {
+    border-color: #000;
   }
 }
 #myChart {

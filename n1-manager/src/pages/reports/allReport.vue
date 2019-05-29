@@ -17,21 +17,39 @@
           <Button @click="reset" size="small">重置</Button>
         </div>
       </div>
-      <Table :columns="columns11" :data="user" size="small" ref='table_0'></Table>
+      <Table :columns="columns11" :data="user" size="small" ref='table_0'>
+        <template slot-scope="{row, index}" slot="userDisplayName">
+          <Tooltip content="前往日报表"  transfer>
+            <span style="color:#20a0ff;cursor:pointer" @click="userDisplayName(row)">{{row.displayName}}</span>
+          </Tooltip>
+        </template>
+      </Table>
     </div>
     <div class="childList">
       <p class="title">
         直属下级列表
         <Button @click="exportdata('table_1')" size="small">导出数据</Button>
       </p>
-      <Table :columns="columns11" :data="child" size="small" ref='table_1'></Table>
+      <Table :columns="columns11" :data="child" size="small" ref='table_1'>
+        <template slot-scope="{row, index}" slot="userDisplayName">
+          <Tooltip content="前往日报表"  transfer>
+            <span style="color:#20a0ff;cursor:pointer" @click="userDisplayName(row)">{{row.displayName}}</span>
+          </Tooltip>
+        </template>
+      </Table>
     </div>
     <div class="childList" v-for="(item,index) in reportChild" :key="index">
       <p class="title">
         ({{item.length > 0 && item[0].parentDisplayName ? item[0].parentDisplayName : ''}}) 直属下级列表
         <Button @click="exportdata(index)" size="small">导出数据</Button>
       </p>
-      <Table :columns="columns11" :data="item" size="small" :ref="'table'+index"></Table>
+      <Table :columns="columns11" :data="item" size="small" :ref="'table'+index">
+        <template slot-scope="{row, index}" slot="userDisplayName">
+          <Tooltip content="前往日报表"  transfer>
+            <span style="color:#20a0ff;cursor:pointer" @click="userDisplayName(row)">{{row.displayName}}</span>
+          </Tooltip>
+        </template>
+      </Table>
     </div>
     <div class="playerList" id="playerList">
       <p class="title">
@@ -122,25 +140,7 @@ export default {
         },
         {
           title: "昵称",
-          key: "displayName",
-          render: (h, params) => {
-            return h(
-              "span",
-              {
-                style: {
-                  cursor: "pointer",
-                  color: "#20a0ff"
-                },
-                on: {
-                  click: () => {
-                    let time = this.changedTime
-                      this.$router.push({name: "dayMerchant",query:{name:params.row.sn,time:time,type:""}})
-                      localStorage.setItem('dayMerchant','dayMerchant')
-                  }
-                }  
-              }, 
-              params.row.displayName+"(前往日报表)");
-          },
+          slot: "userDisplayName"
         },
         {
           title: "管理员账号",
@@ -1187,6 +1187,18 @@ export default {
     }
   },
   methods: {
+    /* 用户列表 */
+    //昵称
+    userDisplayName(row) {
+      let time = this.changedTime
+      if (row.role == 10) {
+        this.$router.push({name: "dayCompany",query:{time:time,type:""}})
+        localStorage.setItem('dayCompany','dayCompany')
+      } else {
+        this.$router.push({name: "dayMerchant",query:{name:row.sn,time:time,type:""}})
+        localStorage.setItem('dayMerchant','dayMerchant')
+      }
+    },
     confirm() {
       this.reportChild = [];
       this.init();
