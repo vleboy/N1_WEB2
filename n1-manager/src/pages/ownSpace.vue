@@ -15,6 +15,12 @@
         <template slot-scope="{row, index}" slot="createdAt">
           <span>{{createdAtConfig(row)}}</span>
         </template>
+        <template slot-scope="{row, index}" slot="apiKey">
+          <span v-if="showKey">{{row.apiKey}}</span>
+          <span v-else>******</span>
+          <span  @click="showKey=!showKey" v-if="showKey" style="color:#20a0ff;cursor:pointer;margin:0 .3rem;">隐藏</span>
+          <span  @click="showKey=!showKey" v-else style="color:#20a0ff;cursor:pointer;margin:0 .3rem;">显示</span>
+        </template>
         <template slot-scope="{row, index}" slot="operate">
           <span @click="reset" style="color:#20a0ff;cursor:pointer">刷新</span>
         </template>
@@ -46,6 +52,7 @@
         <template slot-scope="{row, index}" slot="operator">
           <span>{{row.operator.split("_")[1]}}</span>
         </template>
+        
         <template slot-scope="{row, index}" slot="remark">
           <Tooltip :content="remarkConfig(row).content" v-if="remarkConfig(row).isShow">
             <Icon type="ios-search" color="#20a0ff" />
@@ -86,6 +93,7 @@ import { thousandFormatter } from "@/config/format";
 export default {
   data() {
     return {
+      showKey:false,
       modal: false,
       password: "",
       showPass: false,
@@ -131,6 +139,12 @@ export default {
           title: "创建时间",
           align: "center",
           slot: "createdAt"
+        },
+        {
+          title: "商户API密钥",
+          minWidth: 100,
+          slot: "apiKey",
+          align: "center"
         },
         {
           title: "操作",
