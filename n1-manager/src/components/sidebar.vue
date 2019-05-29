@@ -112,7 +112,7 @@
                     </Submenu>
                     <MenuItem name="playList" :class="flodMenu ? 'flodMuenS' : 'class-b' ">
                         <Icon type="md-game-controller-b"></Icon>
-                        <span v-if="unFlodMenu">玩家列表</span>
+                        <span v-if="unFlodMenu">玩家中心</span>
                     </MenuItem>
                 </Menu>
             </transition>

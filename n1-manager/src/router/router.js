@@ -229,10 +229,10 @@ export const appRouter = [
          },
          {
            path: '/play',
-           title: '玩家列表',
+           title: '玩家中心',
            name: 'play',
            component: main,
-           children: [{ path: 'list', title: '玩家列表', name: 'playList', component: playerlist }]
+           children: [{ path: 'list', title: '玩家中心', name: 'playList', component: playerlist }]
          }
        ]
 // 所有上面定义的路由都要写在下面的routers里
