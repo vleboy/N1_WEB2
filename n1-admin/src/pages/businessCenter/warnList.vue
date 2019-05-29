@@ -6,6 +6,10 @@
           <span class="title">风控管理 </span>
           <span class="endtime">统计起始时间:2019-04-01</span>
         </p>
+        <p>
+          <span :style="{paddingLeft:'1rem',marginRight:'.2rem'}">H5接线</span>
+          <i-switch v-model="isH5" @on-change="init" size="small"></i-switch>
+        </p>
         <RadioGroup v-model="source" class="radioGroup" type="button" @on-change='changeSource' size="small">
           <Radio label="0" v-if="permission.includes('正式数据')">正式</Radio>
           <Radio label="1">测试</Radio>
@@ -60,6 +64,7 @@ import dayjs from "dayjs";
 export default {
   data() {
     return {
+      isH5: true,
       endTime: "",
       open: false,
       opreateModal: false,
@@ -486,7 +491,7 @@ export default {
       let req1 = configOne({
         code: "roundLast"
       });
-      let params = { parent: "01", isTest: +this.source,sn:this.sn };
+      let params = {isH5: this.isH5, parent: "01", isTest: +this.source,sn:this.sn };
       if(!this.sn){
         delete params.sn
       }
