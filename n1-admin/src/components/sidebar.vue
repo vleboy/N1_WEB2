@@ -24,7 +24,7 @@
                 <MenuItem name="allreport" v-if='authorityStr.includes("游戏报表") && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
                   <Icon type="ios-paper" @click="unfold"/>
                 </MenuItem>
-                 <Submenu name="report" v-if='authorityStr.includes("游戏") && unFlodMenu' class="sideMenu">
+                 <Submenu name="report" v-if='authorityStr.includes("游戏报表") && unFlodMenu' class="sideMenu">
                     <template slot="title">
                         <Icon type="ios-paper" />
                         <span>输赢报表</span>

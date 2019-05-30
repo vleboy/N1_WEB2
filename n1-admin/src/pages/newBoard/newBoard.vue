@@ -41,7 +41,7 @@
       <TabPane label="分布"></TabPane>
       <TabPane label="商户榜单"></TabPane>
       <TabPane label="玩家榜单"></TabPane>
-      <TabPane label="环比"></TabPane>
+      <!-- <TabPane label="环比"></TabPane> -->
     </Tabs>
     <div class="echarts" v-if="initNum == 0">
       <Row>
