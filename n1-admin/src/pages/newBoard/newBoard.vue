@@ -14,7 +14,7 @@
         >{{item.name}}</Option>
       </Select>
       <div class="right">
-        <RadioGroup v-model="dateType" @on-change="changeDate" type="button" size="small"> 
+        <RadioGroup v-model="dateType" @on-change="changeDate" type="button" size="small" v-if="showChangeTime"> 
           <Radio label="0">昨日</Radio>
           <Radio label="4">今日</Radio>
           <Radio label="1">近一周</Radio>
@@ -30,6 +30,7 @@
           style="width: 300px;margin-left:1rem"
           @on-ok="confirm"
           size="small"
+          v-if="showTime"
         ></DatePicker>
         <Button @click="search" size="small" style="margin:0 .3rem 0 1rem">搜索</Button>
         <Button @click="reset" size="small">重置</Button>
@@ -40,6 +41,7 @@
       <TabPane label="分布"></TabPane>
       <TabPane label="商户榜单"></TabPane>
       <TabPane label="玩家榜单"></TabPane>
+      <TabPane label="环比"></TabPane>
     </Tabs>
     <div class="echarts" v-if="initNum == 0">
       <Row>
@@ -172,7 +174,7 @@
         </Col>
       </Row>
     </div>
-    <div v-else>
+    <div v-else-if="initNum == 3">
       <Row>
         <Col span="12">
           <Card style="position:relative">
@@ -202,6 +204,58 @@
         </Col>
       </Row>
     </div>
+    <div v-else>
+      <Row>
+        <Col span="4">
+          <Card style="position:relative">
+            <h3 slot="title">今日投注金额环比</h3>
+            <p>今日投注金额:{{tdBetAmount}}</p>
+            <p>昨日投注金额:{{ydBetAmount}}</p>
+            <p>环比增长:{{((tdBetAmount - ydBetAmount) / ydBetAmount * 100 || 0).toFixed(2) + '%'}}</p>
+          </Card>
+        </Col>
+        <Col span="4">
+          <Card style="position:relative">
+            <h3 slot="title">今日投注次数环比</h3>
+            <p>今日投注金额:{{tdBetcount}}</p>
+            <p>昨日投注金额:{{ydBetCount}}</p>
+            <p>环比增长:{{((tdBetcount - ydBetCount) / ydBetCount * 100 || 0).toFixed(2) + '%'}}</p>
+          </Card>
+        </Col>
+        <Col span="4">
+          <Card style="position:relative">
+            <h3 slot="title">今日玩家人数环比</h3>
+            <p>今日投注金额:{{tdPlayerCount}}</p>
+            <p>昨日投注金额:{{ydPlayerCount}}</p>
+            <p>环比增长:{{((tdPlayerCount - ydPlayerCount) / ydPlayerCount * 100 || 0).toFixed(2) + '%'}}</p>
+          </Card>
+        </Col>
+        <Col span="4">
+          <Card style="position:relative">
+            <h3 slot="title">今日退款金额环比</h3>
+            <p>今日投注金额:{{tdRefundAmount}}</p>
+            <p>昨日投注金额:{{ydRefundAmount}}</p>
+            <p>环比增长:{{((tdRefundAmount - ydRefundAmount) / ydRefundAmount * 100 || 0).toFixed(2) + '%'}}</p>
+          </Card>
+        </Col>
+        <Col span="4">
+          <Card style="position:relative">
+            <h3 slot="title">今日返还金额环比</h3>
+            <p>今日投注金额:{{tdRetAmount}}</p>
+            <p>昨日投注金额:{{ydRetAmount}}</p>
+            <p>环比增长:{{((tdRetAmount - ydRetAmount) / ydRetAmount * 100 || 0).toFixed(2) + '%'}}</p>
+          </Card>
+        </Col>
+        <Col span="4">
+          <Card style="position:relative">
+            <h3 slot="title">今日输赢金额环比</h3>
+            <p>今日投注金额:{{tdWinloseAmount}}</p>
+            <p>昨日投注金额:{{ydWinloseAmount}}</p>
+            <p>环比增长:{{((tdWinloseAmount - ydWinloseAmount) / ydWinloseAmount * 100 || 0).toFixed(2) + '%'}}</p>
+          </Card>
+        </Col>
+      </Row>
+    </div> 
   </div>
 </template>
 
@@ -220,9 +274,23 @@ import dayjs from "dayjs";
 export default {
   data() {
     return {
+      showChangeTime: true,
+      showTime: true,
       source: "0",
-      initNum: "0",
+      initNum: 0,
       rankCount: 0,
+      tdBetAmount: 0,
+      ydBetAmount: 0,
+      ydBetCount: 0,
+      tdBetcount: 0,        
+      ydPlayerCount: 0,
+      tdPlayerCount: 0,
+      ydRefundAmount: 0,
+      tdRefundAmount: 0,
+      ydRetAmount: 0,
+      tdRetAmount: 0,
+      ydWinloseAmount: 0,
+      tdWinloseAmount: 0,
       options: {
         shortcuts: [
           {
@@ -369,12 +437,35 @@ export default {
     changeBoard(val) {
       this.initNum = val;
       if (this.initNum == undefined) {
-        this.initNum = "0";
+        this.initNum = 0;
       } else {
         this.initNum = val;
       }
-
-      if (this.initNum == 0) {
+       if (this.initNum == 4) {
+         this.showChangeTime = false
+         this.showTime = false
+       } else {
+         this.showChangeTime = true
+         this.showTime = true
+       }
+       switch (this.initNum) {
+          case 0:
+            this.init();
+            break;
+          case 1:
+            this.distributionInit();
+            break;
+          case 2:
+            this.mcRankInit()
+            break;
+           case 3:
+            this.pyRankInit();
+           break; 
+         default:
+            this.compareInit()
+           break;
+       }
+      /* if (this.initNum == 0) {
        
         this.init();
       } else if (this.initNum == 1) {
@@ -385,14 +476,31 @@ export default {
         this.mcRankInit();
       } else {
         this.pyRankInit();
-      }
+      } */
     },
     getGameList() {
       this.gameType = getGameType();
     },
     selGame(code) {
       this.gameCode = code;
-      if (this.initNum == 0) {
+      switch (this.initNum) {
+          case 0:
+            this.init();
+            break;
+          case 1:
+            this.distributionInit();
+            break;
+          case 2:
+            this.mcRankInit()
+            break;
+           case 3:
+            this.pyRankInit();
+           break; 
+         default:
+            this.compareInit()
+           break;
+       }
+      /* if (this.initNum == 0) {
         this.init();
       } else if (this.initNum == 1) {
         this.distributionInit();
@@ -400,7 +508,7 @@ export default {
         this.mcRankInit();
       } else {
         this.pyRankInit();
-      }
+      } */
     },
     changeDate(val) {
       if (val == undefined) {
@@ -494,8 +602,26 @@ export default {
           );
           break;
       }
-
-      if (this.initNum == 0) {
+  
+      
+      switch (this.initNum) {
+          case 0:
+            this.init();
+            break;
+          case 1:
+            this.distributionInit();
+            break;
+          case 2:
+            this.mcRankInit()
+            break;
+           case 3:
+            this.pyRankInit();
+           break; 
+         default:
+            
+           break;
+       }
+      /* if (this.initNum == 0) {
         this.changeBoard();
       } else if (this.initNum == 1) {
         this.distributionInit();
@@ -503,7 +629,7 @@ export default {
         this.mcRankInit();
       } else {
         this.pyRankInit();
-      }
+      } */
       this.rankCount++;
     },
     changeChinaDataType(val) {
@@ -675,7 +801,24 @@ export default {
     },
     confirm() {
       this.defaultTime = this.changedTime;
-      if (this.initNum == 0) {
+      switch (this.initNum) {
+          case 0:
+            this.init();
+            break;
+          case 1:
+            this.distributionInit();
+            break;
+          case 2:
+            this.mcRankInit()
+            break;
+           case 3:
+            this.pyRankInit();
+           break; 
+         default:
+            
+           break;
+       }
+      /* if (this.initNum == 0) {
         this.init();
       } else if (this.initNum == 1) {
         this.distributionInit();
@@ -683,10 +826,27 @@ export default {
         this.mcRankInit();
       } else {
         this.pyRankInit();
-      }
+      } */
     },
     search() {
-      if (this.initNum == 0) {
+      switch (this.initNum) {
+          case 0:
+            this.init();
+            break;
+          case 1:
+            this.distributionInit();
+            break;
+          case 2:
+            this.mcRankInit()
+            break;
+           case 3:
+            this.pyRankInit();
+           break; 
+         default:
+            this.compareInit()
+           break;
+       }
+      /* if (this.initNum == 0) {
         this.init();
       } else if (this.initNum == 1) {
         this.distributionInit();
@@ -694,7 +854,7 @@ export default {
         this.mcRankInit();
       } else {
         this.pyRankInit();
-      }
+      } */
     },
     reset() {
       let nowDate = new Date();
@@ -710,7 +870,24 @@ export default {
       this.$refs.resetSelect.clearSingleSelect();
       this.model1 = "全部游戏";
 
-      if (this.initNum == 0) {
+      switch (this.initNum) {
+          case 0:
+            this.init();
+            break;
+          case 1:
+            this.distributionInit();
+            break;
+          case 2:
+            this.mcRankInit()
+            break;
+           case 3:
+            this.pyRankInit();
+           break; 
+         default:
+            this.compareInit()
+           break;
+       }
+      /* if (this.initNum == 0) {
         this.init();
       } else if (this.initNum == 1) {
         this.distributionInit();
@@ -718,7 +895,7 @@ export default {
         this.mcRankInit();
       } else {
         this.pyRankInit();
-      }
+      } */
     },
 
     //趋势
@@ -1760,7 +1937,8 @@ export default {
         true
       );
     },
-
+    
+    //趋势榜单
     init() {
       this.spinShow = true;
       let params = {};
@@ -1801,6 +1979,7 @@ export default {
         });
       });
     },
+    //商户榜单
     mcRankInit() {
       let params = {};
       if (this.gameCode == "") {
@@ -1831,6 +2010,7 @@ export default {
         this.spinShow = false;
       });
     },
+    //玩家榜单
     pyRankInit() {
       let params = {};
       if (this.gameCode == "") {
@@ -1858,6 +2038,7 @@ export default {
         this.spinShow = false;
       });
     },
+    //分布
     distributionInit() {
       this.spinShow = true;
       let params = {};
@@ -1883,6 +2064,48 @@ export default {
         this.weekMomentBarConfigure();
       });
       
+    },
+    //环比
+    compareInit() {
+      this.ydBetAmount = 0
+      this.tdBetAmount = 0
+      this.ydBetCount = 0
+      this.tdBetcount = 0
+      this.ydPlayerCount = 0
+      this.tdPlayerCount = 0
+      this.ydRefundAmount = 0
+      this.tdRefundAmount = 0
+      this.ydRetAmount = 0
+      this.tdRetAmount = 0
+      this.ydWinloseAmount = 0
+      this.tdWinloseAmount = 0
+      httpRequest("get", "/visual/chain/days","map").then(res => {
+        for (const key in res.data['betAmount']) {
+          this.ydBetAmount += res.data['betAmount'][key][0]['value']
+          this.tdBetAmount += res.data['betAmount'][key][1]['value']
+        }
+        for (const key in res.data['betCount']) {
+          this.ydBetCount += res.data['betCount'][key][0]['value']
+          this.tdBetcount += res.data['betCount'][key][1]['value']
+        }
+        for (const key in res.data['playerCount']) {
+          this.ydPlayerCount += res.data['playerCount'][key][0]['value']
+          this.tdPlayerCount += res.data['playerCount'][key][1]['value']
+        }
+        for (const key in res.data['refundAmount']) {
+          this.ydRefundAmount += res.data['refundAmount'][key][0]['value']
+          this.tdRefundAmount += res.data['refundAmount'][key][1]['value']
+        }
+        for (const key in res.data['retAmount']) {
+          this.ydRetAmount += res.data['retAmount'][key][0]['value']
+          this.tdRetAmount += res.data['retAmount'][key][1]['value']
+        }
+        for (const key in res.data['winloseAmount']) {
+          this.ydWinloseAmount += res.data['winloseAmount'][key][0]['value']
+          this.tdWinloseAmount += res.data['winloseAmount'][key][1]['value']
+        }
+        
+      });
     }
   },
   computed: {
@@ -1919,7 +2142,7 @@ export default {
       margin: 0;
     }
     .right {
-      margin-left: 2rem;
+      margin-left: 1rem;
     }
   }
   .worldEcharts {

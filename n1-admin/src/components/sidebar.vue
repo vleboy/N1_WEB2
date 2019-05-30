@@ -31,7 +31,7 @@
                     </template>
                     <MenuItem name="allreport" v-if='permission.includes("公司输赢总报表")'>公司输赢总报表</MenuItem>
                     <MenuItem name="playerReport" v-if='permission.includes("玩家输赢报表")'>玩家输赢总报表</MenuItem>
-                    <Submenu name='nareport' v-if='authorityStr.includes("NA")'>
+                    <Submenu name='nareport' v-if='permission.includes("NA游戏报表")'>
                         <template slot="title">NA游戏报表</template>
                         <MenuItem name="naAll" v-if='permission.includes("NA游戏总报表")'>NA游戏总报表</MenuItem>
                         <MenuItem name="nahfive" v-if='permission.includes("NA电子H5报表")'>NA电子H5报表</MenuItem>
@@ -45,13 +45,13 @@
                         <template slot="title">TTG游戏报表</template>
                         <MenuItem name="ttgvideo">TTG电子游戏报表</MenuItem>
                     </Submenu>
-                    <Submenu name='sareport' v-if='authorityStr.includes("SA")'>
+                    <Submenu name='sareport' v-if='permission.includes("SA游戏总报表")'>
                         <template slot="title">SA游戏报表</template>
                         <MenuItem name="saAll" v-if='permission.includes("SA游戏总报表")'>SA游戏总报表</MenuItem>
                         <MenuItem name="satrue" v-if='permission.includes("SA真人游戏报表")'>SA真人游戏报表</MenuItem>
                         <MenuItem name="safishing" v-if='permission.includes("SA捕鱼游戏报表")'>SA捕鱼游戏报表</MenuItem>
                     </Submenu>
-                    <Submenu name='sbreport' v-if='authorityStr.includes("SB游戏总报表")||authorityStr.includes("SB电子游戏报表")||authorityStr.includes("SB真人游戏报表")'>
+                    <Submenu name='sbreport' v-if='permission.includes("SB游戏总报表")'>
                         <template slot="title">SB游戏报表</template>
                         <MenuItem name="sbAll" v-if='permission.includes("SB游戏总报表")'>SB游戏总报表</MenuItem>
                         <MenuItem name="sbvideo" v-if='permission.includes("SB电子游戏报表")'>SB电子游戏报表</MenuItem>
@@ -163,7 +163,7 @@
                     <MenuItem name="debugLog" v-if='permission.includes("DEBUG日志")'>DEBUG日志</MenuItem>
                     <MenuItem name="dataRepair" v-if='permission.includes("DEBUG日志")'>DEBUG修正</MenuItem>
                 </Submenu>
-                <MenuItem name="loginLog" v-if='authorityStr.includes("免转中心") && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
+                <MenuItem name="loginLog" v-if='permission.includes("免转中心") && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
                   <Icon type="logo-usd" @click="unfold"/>
                 </MenuItem>
                 <Submenu class="sideMenu" name="noTransfer" v-if='permission.includes("免转中心") && unFlodMenu'>
