@@ -262,6 +262,28 @@ export default {
               expand: true,
             },
             {
+              title: "日报表",
+              expand: true,
+              children: [
+                {
+                  title: "公司日报表",
+                 
+                },
+                {
+                  title: "商户日报表",
+                  
+                },
+                {
+                  title: "线路商日报表",
+                  
+                },
+                {
+                  title: "玩家日报表",
+                 
+                }
+              ]
+            },
+            {
               title: "管理员中心",
               expand: true,
               children: [
