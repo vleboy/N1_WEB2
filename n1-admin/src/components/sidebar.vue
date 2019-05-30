@@ -21,17 +21,17 @@
                   <span v-if="unFlodMenu">个人中心</span>
                 </MenuItem>
                 
-                <MenuItem name="allreport" v-if='permission.includes("输赢报表") && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
+                <MenuItem name="allreport" v-if='authorityStr.includes("游戏报表") && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
                   <Icon type="ios-paper" @click="unfold"/>
                 </MenuItem>
-                 <Submenu name="report" v-if='permission.includes("输赢报表") && unFlodMenu' class="sideMenu">
+                 <Submenu name="report" v-if='authorityStr.includes("游戏") && unFlodMenu' class="sideMenu">
                     <template slot="title">
                         <Icon type="ios-paper" />
                         <span>输赢报表</span>
                     </template>
                     <MenuItem name="allreport" v-if='permission.includes("公司输赢总报表")'>公司输赢总报表</MenuItem>
                     <MenuItem name="playerReport" v-if='permission.includes("玩家输赢报表")'>玩家输赢总报表</MenuItem>
-                    <Submenu name='nareport' v-if='permission.includes("NA游戏报表")'>
+                    <Submenu name='nareport' v-if='authorityStr.includes("NA")'>
                         <template slot="title">NA游戏报表</template>
                         <MenuItem name="naAll" v-if='permission.includes("NA游戏总报表")'>NA游戏总报表</MenuItem>
                         <MenuItem name="nahfive" v-if='permission.includes("NA电子H5报表")'>NA电子H5报表</MenuItem>
@@ -45,13 +45,13 @@
                         <template slot="title">TTG游戏报表</template>
                         <MenuItem name="ttgvideo">TTG电子游戏报表</MenuItem>
                     </Submenu>
-                    <Submenu name='sareport' v-if='permission.includes("SA游戏总报表")'>
+                    <Submenu name='sareport' v-if='authorityStr.includes("SA")'>
                         <template slot="title">SA游戏报表</template>
                         <MenuItem name="saAll" v-if='permission.includes("SA游戏总报表")'>SA游戏总报表</MenuItem>
                         <MenuItem name="satrue" v-if='permission.includes("SA真人游戏报表")'>SA真人游戏报表</MenuItem>
                         <MenuItem name="safishing" v-if='permission.includes("SA捕鱼游戏报表")'>SA捕鱼游戏报表</MenuItem>
                     </Submenu>
-                    <Submenu name='sbreport' v-if='permission.includes("SB游戏总报表")'>
+                    <Submenu name='sbreport' v-if='authorityStr.includes("SB")'>
                         <template slot="title">SB游戏报表</template>
                         <MenuItem name="sbAll" v-if='permission.includes("SB游戏总报表")'>SB游戏总报表</MenuItem>
                         <MenuItem name="sbvideo" v-if='permission.includes("SB电子游戏报表")'>SB电子游戏报表</MenuItem>
@@ -94,10 +94,10 @@
                         <MenuItem name="pngGame">PNG电子游戏报表</MenuItem>
                     </Submenu>
                 </Submenu>
-                <MenuItem name="dayCompany" v-if='permission.includes("日报表") && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
+                <MenuItem name="dayCompany" v-if='authorityStr.includes("日报表") && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
                   <Icon type="md-stats" @click="unfold"/>
                 </MenuItem>
-                <Submenu name="dayReport" v-if='permission.includes("日报表") && unFlodMenu' class="sideMenu">
+                <Submenu name="dayReport" v-if='authorityStr.includes("日报表") && unFlodMenu' class="sideMenu">
                   <template slot="title">
                     <Icon type="md-stats" />
                     <span>日报表</span>
@@ -107,10 +107,10 @@
                   <MenuItem name="dayMerchant" v-if='permission.includes("商户日报表")'>商户日报表</MenuItem>
                   <MenuItem name="dayPlayer" v-if='permission.includes("玩家日报表")'>玩家日报表</MenuItem>
                 </Submenu>
-                <MenuItem name="dealerList" v-if='permission.includes("商户中心") && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
+                <MenuItem name="dealerList" v-if='(permission.includes("商户列表") || permission.includes("线路商列表") || permission.includes("接入商点数警告列表")) && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
                   <Icon type="md-people" @click="unfold"/>
                 </MenuItem>
-                <Submenu class="sideMenu" name="businessCenter" v-if='permission.includes("商户中心") && unFlodMenu'>
+                <Submenu class="sideMenu" name="businessCenter" v-if='(permission.includes("商户列表") || permission.includes("线路商列表") || permission.includes("接入商点数警告列表")) && unFlodMenu'>
                   <template slot="title">
                     <Icon type="md-people" />
                     <span>商户中心</span>
@@ -123,10 +123,10 @@
                   <Icon type="md-game-controller-b" />
                   <span v-if="unFlodMenu">玩家中心</span>
                 </MenuItem>
-                <MenuItem name="adminList" v-if='permission.includes("管理员中心") && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
+                <MenuItem name="adminList" v-if='(permission.includes("管理员列表") || permission.includes("管理员角色列表")) && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
                   <Icon type="ios-ribbon" @click="unfold"/>
                 </MenuItem>
-                <Submenu class="sideMenu" name="adminCenter" v-if='permission.includes("管理员中心") && unFlodMenu'>
+                <Submenu class="sideMenu" name="adminCenter" v-if='(permission.includes("管理员列表") || permission.includes("管理员角色列表")) && unFlodMenu'>
                     <template slot="title">
                         <Icon type="ios-ribbon" />
                         <span>管理员中心</span>
@@ -134,10 +134,10 @@
                     <MenuItem name="adminList" v-if='permission.includes("管理员列表")'>管理员列表</MenuItem>
                     <MenuItem name="adminRole" v-if='permission.includes("管理员角色列表")'>管理员角色列表</MenuItem>
                 </Submenu>
-                <MenuItem name="gameManager" v-if='permission.includes("运营中心") && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
+                <MenuItem name="gameManager" v-if='(permission.includes("神秘大奖") || permission.includes("数值调控中心") || permission.includes("游戏管理")) && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
                   <Icon type="md-settings" @click="unfold"/>
                 </MenuItem>
-                <Submenu class="sideMenu" name="operation" v-if='permission.includes("运营中心") && unFlodMenu'>
+                <Submenu class="sideMenu" name="operation" v-if='(permission.includes("神秘大奖") || permission.includes("数值调控中心") || permission.includes("游戏管理")) && unFlodMenu'>
                     <template slot="title">
                         <Icon type="md-settings" />
                         <span>运营中心</span>
@@ -150,10 +150,10 @@
                       <MenuItem name="prizeList">中奖记录</MenuItem>
                     </Submenu>
                 </Submenu>
-                <MenuItem name="loginLog" v-if='permission.includes("日志中心") && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
+                <MenuItem name="loginLog" v-if='permission.includes("日志") && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
                   <Icon type="md-paper" @click="unfold"/>
                 </MenuItem>
-                <Submenu class="sideMenu" name="logCenter" v-if='permission.includes("日志中心") && unFlodMenu'>
+                <Submenu class="sideMenu" name="logCenter" v-if='permission.includes("日志") && unFlodMenu'>
                     <template slot="title">
                         <Icon type="md-paper" />
                         <span>日志中心</span>
@@ -163,7 +163,7 @@
                     <MenuItem name="debugLog" v-if='permission.includes("DEBUG日志")'>DEBUG日志</MenuItem>
                     <MenuItem name="dataRepair" v-if='permission.includes("DEBUG日志")'>DEBUG修正</MenuItem>
                 </Submenu>
-                <MenuItem name="loginLog" v-if='permission.includes("免转中心") && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
+                <MenuItem name="loginLog" v-if='(permission.includes("免转流水") || permission.includes("免转报表")) && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
                   <Icon type="logo-usd" @click="unfold"/>
                 </MenuItem>
                 <Submenu class="sideMenu" name="noTransfer" v-if='permission.includes("免转中心") && unFlodMenu'>
