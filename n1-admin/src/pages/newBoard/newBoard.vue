@@ -14,7 +14,7 @@
         >{{item.name}}</Option>
       </Select>
       <div class="right">
-        <RadioGroup v-model="dateType" @on-change="changeDate" type="button" size="small" v-if="showChangeTime"> 
+        <RadioGroup v-model="dateType" @on-change="changeDate" type="button" size="small" v-show="showChangeTime"> 
           <Radio label="0">昨日</Radio>
           <Radio label="4">今日</Radio>
           <Radio label="1">近一周</Radio>
@@ -30,7 +30,7 @@
           style="width: 300px;margin-left:1rem"
           @on-ok="confirm"
           size="small"
-          v-if="showTime"
+          v-show="showTime"
         ></DatePicker>
         <Button @click="search" size="small" style="margin:0 .3rem 0 1rem">搜索</Button>
         <Button @click="reset" size="small">重置</Button>
@@ -205,56 +205,77 @@
       </Row>
     </div>
     <div v-else>
+      <div style="margin:0 0 1rem 0">
+        <RadioGroup v-model="cpCode" type="button" @on-change="changCompare">
+          <Radio label="0">日环比</Radio>
+          <Radio label="1">周环比</Radio>
+          <Radio label="2">月环比</Radio>
+        </RadioGroup>
+      </div>
       <Row>
-        <Col span="4">
+        <Col span="8">
           <Card style="position:relative">
-            <h3 slot="title">今日投注金额环比</h3>
-            <!-- <p>今日投注金额:{{dayCompare.betAmount}}</p>
-            <p>昨日投注金额:{{dayCompare.betAmount}}</p> -->
-            <!-- <p>环比增长:{{((dayCompare.betAmount.allGameTypeSum[0] - dayCompare.betAmount.allGameTypeSum[1]) / dayCompare.betAmount.allGameTypeSum[1] * 100 || 0).toFixed(2) + '%'}}</p> -->
+            <h3 slot="title">投注金额环比</h3>
+            <div>
+              <Table :columns="columns1" :data="cpGameBetAmount">
+                
+              </Table>
+            </div>
           </Card>
         </Col>
-        <Col span="4">
+        <Col span="8">
           <Card style="position:relative">
-            <h3 slot="title">今日投注次数环比</h3>
-            <!-- <p>今日投注金额:{{dayCompare.tdBetcount}}</p>
-            <p>昨日投注金额:{{dayCompare.ydBetCount}}</p>
-            <p>环比增长:{{((dayCompare.tdBetcount - dayCompare.ydBetCount) / dayCompare.ydBetCount * 100 || 0).toFixed(2) + '%'}}</p> -->
+            <h3 slot="title">投注次数环比</h3>
+            <div>
+              <Table :columns="columns1" :data="cpGameBetCount">
+               
+              </Table>
+            </div>
           </Card>
         </Col>
-        <Col span="4">
+        <Col span="8">
           <Card style="position:relative">
-            <h3 slot="title">今日玩家人数环比</h3>
-           <!--  <p>今日投注金额:{{dayCompare.tdPlayerCount}}</p>
-            <p>昨日投注金额:{{dayCompare.ydPlayerCount}}</p>
-            <p>环比增长:{{((dayCompare.tdPlayerCount - dayCompare.ydPlayerCount) / dayCompare.ydPlayerCount * 100 || 0).toFixed(2) + '%'}}</p> -->
-          </Card>
-        </Col>
-        <Col span="4">
-          <Card style="position:relative">
-            <h3 slot="title">今日退款金额环比</h3>
-            <!-- <p>今日投注金额:{{dayCompare.tdRefundAmount}}</p>
-            <p>昨日投注金额:{{dayCompare.ydRefundAmount}}</p>
-            <p>环比增长:{{((dayCompare.tdRefundAmount - dayCompare.ydRefundAmount) / dayCompare.ydRefundAmount * 100 || 0).toFixed(2) + '%'}}</p> -->
-          </Card>
-        </Col>
-        <Col span="4">
-          <Card style="position:relative">
-            <h3 slot="title">今日返还金额环比</h3>
-            <!-- <p>今日投注金额:{{dayCompare.tdRetAmount}}</p>
-            <p>昨日投注金额:{{dayCompare.ydRetAmount}}</p>
-            <p>环比增长:{{((dayCompare.tdRetAmount - dayCompare.ydRetAmount) / dayCompare.ydRetAmount * 100 || 0).toFixed(2) + '%'}}</p> -->
-          </Card>
-        </Col>
-        <Col span="4">
-          <Card style="position:relative">
-            <h3 slot="title">今日输赢金额环比</h3>
-            <!-- <p>今日投注金额:{{dayCompare.tdWinloseAmount}}</p>
-            <p>昨日投注金额:{{dayCompare.ydWinloseAmount}}</p>
-            <p>环比增长:{{((dayCompare.tdWinloseAmount - dayCompare.ydWinloseAmount) / dayCompare.ydWinloseAmount * 100 || 0).toFixed(2) + '%'}}</p> -->
+            <h3 slot="title">玩家人数环比</h3>
+            <div>
+              <Table :columns="columns1" :data="cpGamePlayerCount">
+            
+              </Table>
+            </div>
           </Card>
         </Col>
       </Row>
+      <Row>
+        <Col span="8">
+          <Card style="position:relative">
+            <h3 slot="title">退款金额环比</h3>
+            <div>
+              <Table :columns="columns1" :data="cpGameRefundAmount">
+                
+              </Table>
+            </div>
+          </Card>
+        </Col>
+        <Col span="8">
+          <Card style="position:relative">
+            <h3 slot="title">返还金额环比</h3>
+            <div>
+              <Table :columns="columns1" :data="cpGameRetAmount">
+                
+              </Table>
+            </div>
+          </Card>
+        </Col>
+        <Col span="8">
+          <Card style="position:relative">
+            <h3 slot="title">输赢金额环比</h3>
+            <div>
+              <Table :columns="columns1" :data="cpGameWinloseAmount">
+                
+              </Table>
+            </div>
+          </Card>
+        </Col>
+      </Row> 
     </div> 
   </div>
 </template>
@@ -279,24 +300,60 @@ export default {
       source: "0",
       initNum: 0,
       rankCount: 0,
-      dayBetAmount:[],
-      dayBetAmount:[],
-      dayBetAmount:[],
-      dayBetAmount:[],
-      dayBetAmount:[],
-      dayBetAmount:[],
-      dayBetAmount:[],
-      dayBetAmount:[],
-      dayBetAmount:[],
-      dayBetAmount:[],
-      dayBetAmount:[],
-      dayBetAmount:[],
-      dayBetAmount:[],
-      dayBetAmount:[],
-      dayBetAmount:[],
-      dayBetAmount:[],
-      dayBetAmount:[],
-      dayBetAmount:[],
+      cpCode: "0",
+      cpBetAmount:[],
+      cpGameBetAmount:[],
+      cpBetCount:[],
+      cpGameBetCount:[],
+      cpPlayerCount:[],
+      cpGamePlayerCount:[],
+      cpRefundAmount:[],
+      cpGameRefundAmount:[],
+      cpWinloseAmount:[],
+      cpGameWinloseAmount:[],
+      cpRetAmount:[],
+      cpGameRetAmount:[],
+      columns1: [
+        {
+          title: "游戏名",
+          align: "center",
+          key: "name"
+        },
+        {
+          title: "昨日投注金额",
+          align: "center",
+          key: "yd"
+        },
+        {
+          title: "今日投注金额",
+          align: "center",
+          key: "td"
+        },
+        {
+          title: "环比增长",
+          align: "center",
+          key: "rate",
+          render: (h, params)=> {
+            let color = ''
+            if (parseFloat(params.row.rate) > 0) {
+              color = 'red'
+            } else if(parseFloat(params.row.rate) < 0) {
+              color = 'green'
+            } else {
+              color = '#000'
+            }
+            return h(
+              "span",
+              {
+                style: {
+                  color: color
+                },
+              },
+              params.row.rate == '-' ? '-' :params.row.rate + '%'
+            )
+          }
+        }
+      ],
       options: {
         shortcuts: [
           {
@@ -440,6 +497,24 @@ export default {
     this.changeDate();
   },
   methods: {
+    //环比增长
+    rateConfig(row) {
+      let color = ''
+      let rate =  row.rate == '-' ? '-' : `${row.rate}%`
+      if (row.rate > 0) {
+        color = 'green'
+      } else if(row.rate < 0) {
+        color = 'red'
+      } else {
+        color = '#000'
+      }
+
+      return {rate, color}
+    },
+    changCompare(val) {
+      this.cpCode = val
+      this.compareInit()
+    },
     changeBoard(val) {
       this.initNum = val;
       if (this.initNum == undefined) {
@@ -1582,7 +1657,7 @@ export default {
             axisPointer: {
               type: "shadow"
             },
-            formatter: "{b0}</br>{c0} 人"
+            formatter: "{b0}</hr>{c0} 人"
           },
           xAxis: {
             name: "单位\n人",
@@ -2073,51 +2148,38 @@ export default {
     },
     //环比
     compareInit() {
-      //0代表今天 1代表昨天
-      httpRequest("get", "/visual/chain/days","map").then(res => {
-        this.dayBetAmount = res.data.betAmount.allGameTypeSum
-        console.log(this.dayBetAmount);
+      let url = ''
+      if (this.cpCode == 0) {
+        url = "/visual/chain/days","map"
+        this.columns1[1].title = "昨日"
+        this.columns1[2].title = "今日"
+      } else if(this.cpCode == 1) {
+        url = "/visual/chain/weeks","map"
+        this.columns1[1].title = "上周"
+        this.columns1[2].title = "本周"
+      } else {
+        url = "/visual/chain/months","map"
+        this.columns1[1].title = "上月"
+        this.columns1[2].title = "本月"
+      }
+      httpRequest("get", url).then(res => {
+        /* this.cpBetAmount = res.data.betAmount.allGameTypeSum
+        this.cpBetCount = res.data.betCount.allGameTypeSum
+        this.cpPlayerCount = res.data.playerCount.allGameTypeSum
+        this.cpRefundAmount = res.data.refundAmount.allGameTypeSum
+        this.cpRetAmount = res.data.retAmount.allGameTypeSum
+        this.cpWinloseAmount = res.data.winloseAmount.allGameTypeSum */
+        this.cpGameBetAmount = res.data.betAmount.gameTypeList
+        this.cpGameBetCount = res.data.betCount.gameTypeList
         
+        
+        this.cpGamePlayerCount = res.data.playerCount.gameTypeList
+      
+        this.cpGameRefundAmount = res.data.refundAmount.gameTypeList
+    
+        this.cpGameRetAmount = res.data.retAmount.gameTypeList
+        this.cpGameWinloseAmount = res.data.winloseAmount.gameTypeList
       })
-      /* this.ydBetAmount = 0
-      this.tdBetAmount = 0
-      this.ydBetCount = 0
-      this.tdBetcount = 0
-      this.ydPlayerCount = 0
-      this.tdPlayerCount = 0
-      this.ydRefundAmount = 0
-      this.tdRefundAmount = 0
-      this.ydRetAmount = 0
-      this.tdRetAmount = 0
-      this.ydWinloseAmount = 0
-      this.tdWinloseAmount = 0
-      httpRequest("get", "/visual/chain/days","map").then(res => {
-        for (const key in res.data['betAmount']) {
-          this.ydBetAmount += res.data['betAmount'][key][0]['value']
-          this.tdBetAmount += res.data['betAmount'][key][1]['value']
-        }
-        for (const key in res.data['betCount']) {
-          this.ydBetCount += res.data['betCount'][key][0]['value']
-          this.tdBetcount += res.data['betCount'][key][1]['value']
-        }
-        for (const key in res.data['playerCount']) {
-          this.ydPlayerCount += res.data['playerCount'][key][0]['value']
-          this.tdPlayerCount += res.data['playerCount'][key][1]['value']
-        }
-        for (const key in res.data['refundAmount']) {
-          this.ydRefundAmount += res.data['refundAmount'][key][0]['value']
-          this.tdRefundAmount += res.data['refundAmount'][key][1]['value']
-        }
-        for (const key in res.data['retAmount']) {
-          this.ydRetAmount += res.data['retAmount'][key][0]['value']
-          this.tdRetAmount += res.data['retAmount'][key][1]['value']
-        }
-        for (const key in res.data['winloseAmount']) {
-          this.ydWinloseAmount += res.data['winloseAmount'][key][0]['value']
-          this.tdWinloseAmount += res.data['winloseAmount'][key][1]['value']
-        }
-        
-      }); */
     }
   },
   computed: {
