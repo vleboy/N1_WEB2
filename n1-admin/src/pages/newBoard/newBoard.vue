@@ -215,10 +215,9 @@
       <Row>
         <Col span="8">
           <Card style="position:relative">
-            <h3 slot="title">投注金额环比</h3>
+            <h3 slot="title">玩家人数环比</h3>
             <div>
-              <Table :columns="columns1" :data="cpGameBetAmount">
-                
+              <Table :columns="columns1" :data="cpGamePlayerCount">
               </Table>
             </div>
           </Card>
@@ -228,17 +227,15 @@
             <h3 slot="title">投注次数环比</h3>
             <div>
               <Table :columns="columns1" :data="cpGameBetCount">
-               
               </Table>
             </div>
           </Card>
         </Col>
         <Col span="8">
           <Card style="position:relative">
-            <h3 slot="title">玩家人数环比</h3>
+            <h3 slot="title">投注金额环比</h3>
             <div>
-              <Table :columns="columns1" :data="cpGamePlayerCount">
-            
+              <Table :columns="columns1" :data="cpGameBetAmount">
               </Table>
             </div>
           </Card>
