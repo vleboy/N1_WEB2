@@ -8,7 +8,7 @@
             <Option v-for="item in subRoleList" :value="item.name" :key="item.name">{{ item.name }}</Option>
           </Select>
         </FormItem>
-        <FormItem label="管理员用户名" prop="username">
+        <FormItem label="管理员账号" prop="username">
           <Input v-model="formItem.username" placeholder="5-16位,限英文和数字"></Input>
         </FormItem>
         <FormItem label="管理员密码" prop='password'>
@@ -37,7 +37,7 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       if (value == "") {
-        callback(new Error("用户名不能为空"));
+        callback(new Error("账号不能为空"));
       } else {
         let nameReg = /^[a-zA-Z0-9]{5,16}$/;
         if (!nameReg.test(value)) {

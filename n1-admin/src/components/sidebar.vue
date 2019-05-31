@@ -150,10 +150,10 @@
                       <MenuItem name="prizeList">中奖记录</MenuItem>
                     </Submenu>
                 </Submenu>
-                <MenuItem name="loginLog" v-if='permission.includes("日志") && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
+                <MenuItem name="loginLog" v-if='authorityStr.includes("日志") && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
                   <Icon type="md-paper" @click="unfold"/>
                 </MenuItem>
-                <Submenu class="sideMenu" name="logCenter" v-if='permission.includes("日志") && unFlodMenu'>
+                <Submenu class="sideMenu" name="logCenter" v-if='authorityStr.includes("日志") && unFlodMenu'>
                     <template slot="title">
                         <Icon type="md-paper" />
                         <span>日志中心</span>

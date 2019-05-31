@@ -41,7 +41,7 @@
       <TabPane label="分布"></TabPane>
       <TabPane label="商户榜单"></TabPane>
       <TabPane label="玩家榜单"></TabPane>
-      <!-- <TabPane label="环比"></TabPane> -->
+      <TabPane label="环比"></TabPane>
     </Tabs>
     <div class="echarts" v-if="initNum == 0">
       <Row>
@@ -209,49 +209,49 @@
         <Col span="4">
           <Card style="position:relative">
             <h3 slot="title">今日投注金额环比</h3>
-            <p>今日投注金额:{{tdBetAmount}}</p>
-            <p>昨日投注金额:{{ydBetAmount}}</p>
-            <p>环比增长:{{((tdBetAmount - ydBetAmount) / ydBetAmount * 100 || 0).toFixed(2) + '%'}}</p>
+            <!-- <p>今日投注金额:{{dayCompare.betAmount}}</p>
+            <p>昨日投注金额:{{dayCompare.betAmount}}</p> -->
+            <!-- <p>环比增长:{{((dayCompare.betAmount.allGameTypeSum[0] - dayCompare.betAmount.allGameTypeSum[1]) / dayCompare.betAmount.allGameTypeSum[1] * 100 || 0).toFixed(2) + '%'}}</p> -->
           </Card>
         </Col>
         <Col span="4">
           <Card style="position:relative">
             <h3 slot="title">今日投注次数环比</h3>
-            <p>今日投注金额:{{tdBetcount}}</p>
-            <p>昨日投注金额:{{ydBetCount}}</p>
-            <p>环比增长:{{((tdBetcount - ydBetCount) / ydBetCount * 100 || 0).toFixed(2) + '%'}}</p>
+            <!-- <p>今日投注金额:{{dayCompare.tdBetcount}}</p>
+            <p>昨日投注金额:{{dayCompare.ydBetCount}}</p>
+            <p>环比增长:{{((dayCompare.tdBetcount - dayCompare.ydBetCount) / dayCompare.ydBetCount * 100 || 0).toFixed(2) + '%'}}</p> -->
           </Card>
         </Col>
         <Col span="4">
           <Card style="position:relative">
             <h3 slot="title">今日玩家人数环比</h3>
-            <p>今日投注金额:{{tdPlayerCount}}</p>
-            <p>昨日投注金额:{{ydPlayerCount}}</p>
-            <p>环比增长:{{((tdPlayerCount - ydPlayerCount) / ydPlayerCount * 100 || 0).toFixed(2) + '%'}}</p>
+           <!--  <p>今日投注金额:{{dayCompare.tdPlayerCount}}</p>
+            <p>昨日投注金额:{{dayCompare.ydPlayerCount}}</p>
+            <p>环比增长:{{((dayCompare.tdPlayerCount - dayCompare.ydPlayerCount) / dayCompare.ydPlayerCount * 100 || 0).toFixed(2) + '%'}}</p> -->
           </Card>
         </Col>
         <Col span="4">
           <Card style="position:relative">
             <h3 slot="title">今日退款金额环比</h3>
-            <p>今日投注金额:{{tdRefundAmount}}</p>
-            <p>昨日投注金额:{{ydRefundAmount}}</p>
-            <p>环比增长:{{((tdRefundAmount - ydRefundAmount) / ydRefundAmount * 100 || 0).toFixed(2) + '%'}}</p>
+            <!-- <p>今日投注金额:{{dayCompare.tdRefundAmount}}</p>
+            <p>昨日投注金额:{{dayCompare.ydRefundAmount}}</p>
+            <p>环比增长:{{((dayCompare.tdRefundAmount - dayCompare.ydRefundAmount) / dayCompare.ydRefundAmount * 100 || 0).toFixed(2) + '%'}}</p> -->
           </Card>
         </Col>
         <Col span="4">
           <Card style="position:relative">
             <h3 slot="title">今日返还金额环比</h3>
-            <p>今日投注金额:{{tdRetAmount}}</p>
-            <p>昨日投注金额:{{ydRetAmount}}</p>
-            <p>环比增长:{{((tdRetAmount - ydRetAmount) / ydRetAmount * 100 || 0).toFixed(2) + '%'}}</p>
+            <!-- <p>今日投注金额:{{dayCompare.tdRetAmount}}</p>
+            <p>昨日投注金额:{{dayCompare.ydRetAmount}}</p>
+            <p>环比增长:{{((dayCompare.tdRetAmount - dayCompare.ydRetAmount) / dayCompare.ydRetAmount * 100 || 0).toFixed(2) + '%'}}</p> -->
           </Card>
         </Col>
         <Col span="4">
           <Card style="position:relative">
             <h3 slot="title">今日输赢金额环比</h3>
-            <p>今日投注金额:{{tdWinloseAmount}}</p>
-            <p>昨日投注金额:{{ydWinloseAmount}}</p>
-            <p>环比增长:{{((tdWinloseAmount - ydWinloseAmount) / ydWinloseAmount * 100 || 0).toFixed(2) + '%'}}</p>
+            <!-- <p>今日投注金额:{{dayCompare.tdWinloseAmount}}</p>
+            <p>昨日投注金额:{{dayCompare.ydWinloseAmount}}</p>
+            <p>环比增长:{{((dayCompare.tdWinloseAmount - dayCompare.ydWinloseAmount) / dayCompare.ydWinloseAmount * 100 || 0).toFixed(2) + '%'}}</p> -->
           </Card>
         </Col>
       </Row>
@@ -279,18 +279,24 @@ export default {
       source: "0",
       initNum: 0,
       rankCount: 0,
-      tdBetAmount: 0,
-      ydBetAmount: 0,
-      ydBetCount: 0,
-      tdBetcount: 0,        
-      ydPlayerCount: 0,
-      tdPlayerCount: 0,
-      ydRefundAmount: 0,
-      tdRefundAmount: 0,
-      ydRetAmount: 0,
-      tdRetAmount: 0,
-      ydWinloseAmount: 0,
-      tdWinloseAmount: 0,
+      dayBetAmount:[],
+      dayBetAmount:[],
+      dayBetAmount:[],
+      dayBetAmount:[],
+      dayBetAmount:[],
+      dayBetAmount:[],
+      dayBetAmount:[],
+      dayBetAmount:[],
+      dayBetAmount:[],
+      dayBetAmount:[],
+      dayBetAmount:[],
+      dayBetAmount:[],
+      dayBetAmount:[],
+      dayBetAmount:[],
+      dayBetAmount:[],
+      dayBetAmount:[],
+      dayBetAmount:[],
+      dayBetAmount:[],
       options: {
         shortcuts: [
           {
@@ -2067,7 +2073,13 @@ export default {
     },
     //环比
     compareInit() {
-      this.ydBetAmount = 0
+      //0代表今天 1代表昨天
+      httpRequest("get", "/visual/chain/days","map").then(res => {
+        this.dayBetAmount = res.data.betAmount.allGameTypeSum
+        console.log(this.dayBetAmount);
+        
+      })
+      /* this.ydBetAmount = 0
       this.tdBetAmount = 0
       this.ydBetCount = 0
       this.tdBetcount = 0
@@ -2105,7 +2117,7 @@ export default {
           this.tdWinloseAmount += res.data['winloseAmount'][key][1]['value']
         }
         
-      });
+      }); */
     }
   },
   computed: {
