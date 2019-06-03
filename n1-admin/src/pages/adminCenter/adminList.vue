@@ -71,7 +71,7 @@ import { thousandFormatter } from "@/config/format";
 export default {
   data() {
     return {
-      model1: '启用',
+      model1: '已启用',
       subRoleList: [],
       subRole: "",
       roleModal: false, //修改角色modal
@@ -84,11 +84,11 @@ export default {
       statusList: [
         {
           code: '1',
-          value: '启用'
+          value: '已启用'
         },
         {
           code: '0',
-          value: '停用'
+          value: '已停用'
         }
       ],
       columns1: [
@@ -208,7 +208,7 @@ export default {
       });
     },         
     changeStatus(val) {
-      this.switchStatus = val == "停用" ? false : true
+      this.switchStatus = val == "已停用" ? false : true
     },
 
     addAdmin() {
