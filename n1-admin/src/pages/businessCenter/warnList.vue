@@ -21,12 +21,16 @@
       </div>
     </div>
     <Table :columns="columns" :data="warnList" size="small"></Table>
+
+
     <div id="jumpTo" class="childLists" v-for="(item,index) in childList" :key="index">
       <p class="title">
         ({{item.length > 0 && item[0].parentDisplayName ? item[0].parentDisplayName : ''}}) 直属下级列表
       </p>
       <Table :columns="columns" :data="item" size="small"></Table>
     </div>
+
+
     <Modal v-model="pointModal" title="预警点数" :width='450' @on-ok="changePoint" @on-cancel='cancel'>
       <p class='gameTitle'>{{gameType}}游戏</p>
       <p style="color:red;text-align:center;">上限值设置为0表示不限制</p>
@@ -120,11 +124,14 @@ export default {
           render: (h, params) => {
             if (params.row.role == "10") {
               return h(
-                "a",
+                "Tooltip",
                 {
                   style: {
                     cursor: "pointer",
                     color: "#20a0ff"
+                  },
+                  props: {
+                    content: "显示下一级"
                   },
                   on: {
                     click: async () => {
@@ -288,6 +295,7 @@ export default {
                           backgroundColor: color,
                           marginTop: "-18px",
                           borderRadius: "5px",
+                          lineHeight: "22px",
                           height: "22px"
                         }
                       })
@@ -314,13 +322,16 @@ export default {
               return h(
                 "div",
                 companyList.map(item => {
+                  let color = ''
                   let text = "";
                   let open = false;
                   let opreate = null;
                   if (item.status == 1) {
+                    color = 'red'  
                     text = "停用";
                     opreate = 0;
                   } else {
+                    color = '#20a0ff'
                     text = "启用";
                     open = true;
                     opreate = 1;
@@ -362,7 +373,7 @@ export default {
                         "span",
                         {
                           style: {
-                            color: "#20a0ff",
+                            color: color,
                             cursor: "pointer",
                             marginRight: "5px"
                           },
@@ -389,13 +400,16 @@ export default {
               return h(
                 "div",
                 companyList.map(item => {
+                  let color = ''
                   let text = "";
                   let open = false;
                   let opreate = null;
                   if (item.status == 1) {
+                    color = 'red'
                     text = "停用";
                     opreate = 0;
                   } else {
+                    color = '#20a0ff'
                     text = "启用";
                     open = true;
                     opreate = 1;
@@ -414,7 +428,7 @@ export default {
                         "span",
                         {
                           style: {
-                            color: "#20a0ff",
+                            color: color,
                             cursor: "pointer",
                             marginRight: "5px"
                           },
@@ -544,6 +558,7 @@ export default {
       });
     },
     async getNextLevel(showList, userId) {
+      showList = []
       return new Promise((resolve, reject) => {
         queryUserStat({ parent: userId ,isTest: +this.source}).then(res => {
           showList.push(res.payload);

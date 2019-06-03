@@ -381,7 +381,7 @@ export default {
     //状态
     statusConfig(row, bool) {
       if (bool) {
-        return row.status == 1 ? "#b7eb8f" : "#f5141e";
+        return row.status == 1 ? "green" : "#f5141e";
       } else {
         return row.status == 1 ? "#f5141e" : "#20a0ff";
       }

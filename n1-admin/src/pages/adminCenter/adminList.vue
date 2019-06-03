@@ -88,7 +88,7 @@ export default {
         },
         {
           code: '0',
-          value: '禁用'
+          value: '停用'
         }
       ],
       columns1: [
