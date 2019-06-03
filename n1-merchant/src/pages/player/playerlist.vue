@@ -46,7 +46,7 @@
           <span>{{row.nickname === "NULL!" ? "-" : row.nickname}}</span>
         </template>
         <template slot-scope="{row, index}" slot="state">
-          <Tag type="border" :color="stateConfig(row)">{{playerStatus[row.state]}}</Tag>
+          <Tag type="border" :color="stateConfig(row ,true)">{{playerStatus[row.state]}}</Tag>
         </template>
         <template slot-scope="{row, index}" slot="gameStateName">
           <Tag type="border" :color="gameStateConfig(row)">{{row.gameStateName}}</Tag>
@@ -62,7 +62,7 @@
         </template>
        <template slot-scope="{row, index}" slot="action">
           <Button type="text" size="small" style="color:#20a0ff" @click="playDetail(row)">查看</Button>
-          <Button type="text" size="small" style="color:#20a0ff" @click="changeStatus(row)">{{row.state ? "停用" : "开启"}}</Button>
+          <Button type="text" size="small" :style="{color:stateConfig(row, false)}" @click="changeStatus(row)">{{row.state ? "停用" : "开启"}}</Button>
         </template>
       </Table>
 
@@ -211,11 +211,11 @@ export default {
   },
   methods: {
     //状态
-    stateConfig(row) {
-      if (row.state) {
-        return 'green'
+    stateConfig(row, bool) {
+      if (bool) {
+        return row.state ? 'green' : 'red'
       } else {
-        return 'red'
+        return row.state ? 'red' : '#20a0ff'
       }
     },
     //游戏状态
@@ -280,6 +280,7 @@ export default {
           this.isFetching = false;
         });
     },
+   
     changeStatus(row) {
       this.$Modal.confirm({
         title: "提示!",

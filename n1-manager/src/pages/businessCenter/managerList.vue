@@ -46,7 +46,7 @@
           <span>{{createAtConfig(row)}}</span>
         </template>
         <template slot-scope="{row, index}" slot="status">
-          <span :style="{color:statusConfig(row, true)}">{{row.status == 1 ? "已启用" : "已停用"}}</span>
+          <Button size="small" type="text" :style="{borderColor:statusConfig(row, true), color:statusConfig(row, true)}">{{row.status == 1 ? "已启用" : "已停用"}}</Button>
         </template>
         <template slot-scope="{row, index}" slot="operate">
           <Button type="text" size="small" style="color:#20a0ff" @click="operateCheck(row)">查看</Button>
@@ -242,7 +242,7 @@ export default {
     //状态
     statusConfig(row,bool) {
       if (bool) { 
-        return row.status == 1 ? "#20a0ff" : "#f5141e"
+        return row.status == 1 ? "green" : "#f5141e"
       } else {
         return row.status == 1 ? "#f5141e" : "#20a0ff"
       }

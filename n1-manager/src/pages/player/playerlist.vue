@@ -53,7 +53,7 @@
          <template slot-scope="{row, index}" slot="operate">
           <div>
             <Button type="text" size="small" style="color:#20a0ff" @click="operateCheck(row)">查看</Button>
-            <Button type="text" size="small" style="color:#20a0ff" @click="operateState(row)">{{row.state ? "停用" : "开启"}}</Button>
+            <Button type="text" size="small" :style="{color:statusConfig(row)}" @click="operateState(row)">{{row.state ? "停用" : "开启"}}</Button>
           </div>
         </template>
       </Table>
@@ -236,7 +236,9 @@ export default {
       let color = row.state ? "green" : "red"
       return {state: this.playerStatus[row.state], color}    
     },
-    
+    statusConfig(row) {
+      return row.state ? 'red' : '#20a0ff'
+    },
     //游戏状态
     gameStateConfig(row) {
       let color = ''
