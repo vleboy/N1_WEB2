@@ -42,6 +42,7 @@
         </Col>
       </Row>
     </Modal>
+
     <Modal v-model="opreateModal" :width='450' @on-ok="handleOpreate">
       <div class="open" v-if="open">
         <p slot="header" class="modalHead">启用</p>
@@ -56,18 +57,20 @@
       </div>
     </Modal>
     <Spin size="large" fix v-if="spinShow">
-      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <Icon type="ios-loading" size="64" class="demo-spin-icon-load"></Icon>
       <div style>加载中...</div>
     </Spin>
   </div>
 </template>
 <script>
 import _ from "lodash";
-import { configOne, queryUserStat, userChangeStatus } from "@/service/index";
+import { configOne, queryUserStat, userChangeStatus, httpRequest } from "@/service/index";
 import dayjs from "dayjs";
 export default {
+
   data() {
     return {
+      itemIndex: 0,
       isH5: true,
       endTime: "",
       open: false,
@@ -327,7 +330,7 @@ export default {
               let companyList = params.row.companyList || [];
               return h(
                 "div",
-                companyList.map(item => {
+                companyList.map((item,index) => {
                   let color = ''
                   let text = "";
                   let open = false;
@@ -362,6 +365,8 @@ export default {
                           },
                           on: {
                             click: () => {
+                              console.log(index)
+                              
                               this.winloseAmount = item.winloseAmount;
                               this.topAmount = item.topAmount;
                               this.gameType = item.company;
@@ -552,16 +557,22 @@ export default {
           item.topAmount = point;
         }
       }
-      userChangeStatus({
-        companyList,
+      
+      let params = {
         userId: this.userId,
-        role: this.role
-      }).then(res => {
+        role: this.role,
+        updateItem: {
+          company: companyList[this.itemIndex].company,
+          topAmount: companyList[this.itemIndex].topAmount
+        }
+      }
+      httpRequest("post", "/setUserMap", params).then(res => {
         if (res.code == 0) {
           this.$Message.success("操作成功");
           this.init();
         }
-      });
+      })
+
     },
     async getNextLevel(showList, userId) {
       showList = []
@@ -582,17 +593,21 @@ export default {
           item.status = opreate;
         }
       }
-      userChangeStatus({
-        companyList,
-        switch: opreate,
+      let params = {
         userId: this.userId,
-        role: this.role
-      }).then(res => {
+        role: this.role,
+        updateItem: {
+          company: companyList[this.itemIndex].company,
+          status: companyList[this.itemIndex].status
+        }
+      }
+      httpRequest("post", "/setUserMap", params).then(res => {
         if (res.code == 0) {
           this.$Message.success("操作成功");
           this.init();
         }
-      });
+      })
+      
     },
     types(value) {
       switch (value) {
