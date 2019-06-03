@@ -133,10 +133,14 @@ export default {
                   props: {
                     content: "显示下一级"
                   },
-                  on: {
+                  
+                },
+                [h(
+                  "span",
+                  {
+                    on: {
                     click: async () => {
-                      
-                      
+      
                       let userId = params.row.userId;
                       this.spinShow = true;
                       let level = params.row.level;
@@ -160,8 +164,10 @@ export default {
                       document.documentElement.scrollTop = document.documentElement.scrollHeight
                     }
                   }
-                },
-                params.row.displayName
+                  },
+                  params.row.displayName
+                )]
+                
               );
             } else {
               return h("span", params.row.displayName);
