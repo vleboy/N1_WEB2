@@ -82,7 +82,7 @@
           <span>{{loginAtConfig(row)}}</span>
         </template>
         <template slot-scope="{row, index}" slot="status">
-          <span :style="{color: statusConfig(row, true)}">{{row.status == 1 ? "已启用" : "未启用"}}</span>
+          <Button type="text" size="small" :style="{borderColor: statusConfig(row, true),color:statusConfig(row, true)}">{{row.status == 1 ? "已启用" : "未启用"}}</Button>
         </template>
         <template slot-scope="{row, index}" slot="operate">
           <span
@@ -92,7 +92,7 @@
           <span
             :style="{color:statusConfig(row, false),cursor:'pointer'}"
             @click="operateStatus(row)"
-          >{{row.status == 1 ? "禁用" : "启用"}}</span>
+          >{{row.status == 1 ? "停用" : "启用"}}</span>
           <p style="color:#20a0ff;cursor:pointer;" @click="opertaeGo(row)">前往商户系统</p>
         </template>
       </Table>
@@ -381,7 +381,7 @@ export default {
     //状态
     statusConfig(row, bool) {
       if (bool) {
-        return row.status == 1 ? "#20a0ff" : "#f5141e";
+        return row.status == 1 ? "#b7eb8f" : "#f5141e";
       } else {
         return row.status == 1 ? "#f5141e" : "#20a0ff";
       }
@@ -407,7 +407,7 @@ export default {
     },
     //启用停用
     operateStatus(row) {
-      let text = row.status == 1 ? "禁用" : "启用";
+      let text = row.status == 1 ? "停用" : "启用";
       let status = row.status == 1 ? 0 : 1
       this.$Modal.confirm({
         title: "提示!",
@@ -574,6 +574,17 @@ export default {
 .business {
   min-height: 89vh;
 }
+.business .search {
+  .ivu-btn {
+    background: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  .ivu-btn:hover {
+    background: #000;
+    color: #fff;
+  }
+}
 .row {
   line-height: 32px;
   text-align: center;
@@ -642,13 +653,5 @@ export default {
     border-color: #000;
     background: #fff;
   }
-  .ivu-btn {
-    background: #fff;
-    color: #000;
-    border-color: #000;
-  }
-  .ivu-btn:hover {
-    background: #000;
-    color: #fff;
-  }
+  
 </style>

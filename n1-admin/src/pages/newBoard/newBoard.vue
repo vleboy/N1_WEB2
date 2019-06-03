@@ -2145,37 +2145,32 @@ export default {
     },
     //环比
     compareInit() {
+      this.spinShow = true
       let url = ''
+      let params = {
+        gameType: this.gameCode
+      }
       if (this.cpCode == 0) {
-        url = "/visual/chain/days","map"
+        url = "/visual/chain/days"
         this.columns1[1].title = "昨日"
         this.columns1[2].title = "今日"
       } else if(this.cpCode == 1) {
-        url = "/visual/chain/weeks","map"
+        url = "/visual/chain/weeks"
         this.columns1[1].title = "上周"
         this.columns1[2].title = "本周"
       } else {
-        url = "/visual/chain/months","map"
+        url = "/visual/chain/months"
         this.columns1[1].title = "上月"
         this.columns1[2].title = "本月"
       }
-      httpRequest("get", url).then(res => {
-        /* this.cpBetAmount = res.data.betAmount.allGameTypeSum
-        this.cpBetCount = res.data.betCount.allGameTypeSum
-        this.cpPlayerCount = res.data.playerCount.allGameTypeSum
-        this.cpRefundAmount = res.data.refundAmount.allGameTypeSum
-        this.cpRetAmount = res.data.retAmount.allGameTypeSum
-        this.cpWinloseAmount = res.data.winloseAmount.allGameTypeSum */
+      httpRequest("get", url, params, "map").then(res => {
         this.cpGameBetAmount = res.data.betAmount.gameTypeList
         this.cpGameBetCount = res.data.betCount.gameTypeList
-        
-        
         this.cpGamePlayerCount = res.data.playerCount.gameTypeList
-      
         this.cpGameRefundAmount = res.data.refundAmount.gameTypeList
-    
         this.cpGameRetAmount = res.data.retAmount.gameTypeList
         this.cpGameWinloseAmount = res.data.winloseAmount.gameTypeList
+        this.spinShow = false
       })
     }
   },

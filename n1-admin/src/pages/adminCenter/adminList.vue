@@ -24,7 +24,7 @@
           <span style="margin:0 .3rem">|</span>
           <span style="color: #20a0ff;cursor:pointer;" @click="operateRole(row)">修改角色</span>
           <span style="margin:0 .3rem">|</span>
-          <span :style="{color: statusConfig(row),cursor: 'pointer'}" @click="operateStatus(row)">{{row.status == 1 ? "禁用" : "启用"}}</span>
+          <span :style="{color: statusConfig(row),cursor: 'pointer'}" @click="operateStatus(row)">{{row.status == 1 ? "停用" : "启用"}}</span>
         </template>
       </Table>
     </div>
@@ -188,7 +188,7 @@ export default {
       return row.status == 1 ? "#f5141e" : "#20a0ff"
     },
     operateStatus(row) {
-      let text = row.status == 1 ? "禁用" : "启用"
+      let text = row.status == 1 ? "停用" : "启用"
       let status = row.status == 1 ? 0 : 1
       this.$Modal.confirm({
         title: "提示!",
@@ -208,7 +208,7 @@ export default {
       });
     },         
     changeStatus(val) {
-      this.switchStatus = val == "禁用" ? false : true
+      this.switchStatus = val == "停用" ? false : true
     },
 
     addAdmin() {

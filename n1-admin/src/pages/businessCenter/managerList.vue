@@ -63,7 +63,7 @@
          <span>{{createdAtConfig(row)}}</span>
         </template>
         <template slot-scope="{row, index}" slot="status">
-          <span :style="{color: statusConfig(row, true)}">{{row.status == 1 ? "已启用" : "未启用"}}</span>
+          <Button type="text" size="small" :style="{borderColor:statusConfig(row, true), color: statusConfig(row, true)}">{{row.status == 1 ? "已启用" : "未启用"}}</Button>
         </template>
         <template slot-scope="{row, index}" slot="operate">
           <span
@@ -73,7 +73,7 @@
           <span
             :style="{color:statusConfig(row, false),cursor:'pointer'}"
             @click="operateStatus(row)"
-          >{{row.status == 1 ? "禁用" : "启用"}}</span>
+          >{{row.status == 1 ? "停用" : "启用"}}</span>
           <p style="color:#20a0ff;cursor:pointer;" @click="opertaeGo(row)">前往线路商系统</p>
         </template>
       </Table>
@@ -316,7 +316,7 @@ export default {
     //状态
     statusConfig(row, bool) {
       if (bool) {
-        return row.status == 1 ? "#20a0ff" : "#f5141e";
+        return row.status == 1 ? "#b7eb8f" : "#f5141e";
       } else {
         return row.status == 1 ? "#f5141e" : "#20a0ff";
       }
@@ -341,7 +341,7 @@ export default {
     },
     //启用停用
     operateStatus(row) {
-      let text = row.status == 1 ? "禁用" : "启用";
+      let text = row.status == 1 ? "停用" : "启用";
       let status = row.status == 1 ? 0 : 1
       this.$Modal.confirm({
         title: "提示!",

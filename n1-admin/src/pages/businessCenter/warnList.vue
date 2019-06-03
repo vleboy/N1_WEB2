@@ -179,7 +179,7 @@ export default {
                         margin: "5px 0",
                         backgroundColor: "#e4e8f1",
                         borderRadius: " 4px",
-                        // width: "80%",
+                        lineHeight: "26px",
                         height: "26px"
                       }
                     },
@@ -216,6 +216,7 @@ export default {
                     {
                       style: {
                         textAlign: "center",
+                        lineHeight: "26px",
                         margin: "5px 0",
                         backgroundColor: "#e4e8f1",
                         borderRadius: " 4px",

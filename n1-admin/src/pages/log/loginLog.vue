@@ -29,10 +29,10 @@
           <span>{{lastTimeConfig(row)}}</span>
         </template>
         <template slot-scope="{row, index}" slot="userNameDetail">
-          <span :style="{color:userNameDetailConfig(row)}">{{row.detail}}</span>
+          <Button type="text" size="small" :style="{borderColor:userNameDetailConfig(row),color:userNameDetailConfig(row)}">{{row.detail}}</Button>
         </template>
         <template slot-scope="{row, index}" slot="loginState">
-          <span :style="{color:loginStateConfig(row)}">{{row.ret == "Y" ? "正常" : "异常"}}</span>
+          <Button type="text" size="small" :style="{borderColor:loginStateConfig(row),color:loginStateConfig(row)}">{{row.ret == "Y" ? "正常" : "异常"}}</Button>
         </template>
       </Table>
     </div>

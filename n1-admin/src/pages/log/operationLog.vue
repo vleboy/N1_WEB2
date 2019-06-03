@@ -34,7 +34,7 @@
           <span>{{operateTimeConfig(row)}}</span>
         </template>
         <template slot-scope="{row, index}" slot="operateResult">
-          <span :style="{color:operateResultConfig(row)}">{{row.ret == "Y" ? "成功" : "失败"}}</span>
+          <Button type="text" size="small" :style="{borderColor:operateResultConfig(row),color:operateResultConfig(row)}">{{row.ret == "Y" ? "成功" : "失败"}}</Button>
         </template>
       </Table>
     </div>

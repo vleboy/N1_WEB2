@@ -22,7 +22,7 @@
           <span>{{JSON.stringify(row.inparams)}}</span>
         </template>
         <template slot-scope="{row, index}" slot="state">
-          <span :style="{color: stateConfig(row)}">{{row.ret == "Y" ? "已处理" : "未处理"}}</span>
+          <Button type="text" size=:small :style="{borderColor:stateConfig(row),color: stateConfig(row)}">{{row.ret == "Y" ? "已处理" : "未处理"}}</Button>
         </template>
       </Table>
     </div>
