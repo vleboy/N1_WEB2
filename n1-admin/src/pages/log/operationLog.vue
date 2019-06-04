@@ -26,7 +26,7 @@
       </Row>
     </div>
     <div class="table">
-      <Table :columns="columns1" :data="columns2" size="small">
+      <Table :columns="columns1" :data="dataList" size="small">
         <template slot-scope="{row, index}" slot="operator">
           <span>{{row.operateToken ? row.operateToken.username : row.username}}</span>
         </template>
@@ -38,10 +38,7 @@
         </template>
       </Table>
     </div>
-    <div class="btn">
-      <Button type="primary" :disabled="firstPage" class="lastpage" @click="homePage">首页</Button>
-      <Button type="primary" class="nextpage" @click="nextPage">下一页</Button>
-    </div>
+     <Page :total="totalPage" class="page" :page-size="pageSize" @on-change="changepage"></Page>
     <Spin size="large" fix v-show="spinShow" style="z-index:200;">
       <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
       <div style>加载中...</div>
@@ -55,6 +52,10 @@ import { httpRequest } from "@/service/index";
 export default {
   data() {
     return {
+      totalPage: 100, //数据总量
+      pageSize: 20, //每页显示数据量
+      currentPage: 1, //当前页码
+      showNext: false, //是否显示下100条
       members: [
         {
           role: "1",
@@ -106,7 +107,8 @@ export default {
           slot: "operateResult"
         }
       ],
-      columns2: []
+      columns2: [],
+      dataList: []
     };
   },
   methods: {
@@ -138,6 +140,20 @@ export default {
       this.firstPage = true;
       this.init();
     },
+     //切页
+    changepage(index) {
+
+      //console.log(this.columns2)
+     
+      
+      this.showNext = true
+      if (this.currentPage < index) {
+        this.init()
+      }
+      this.dataList = _.chunk(this.columns2, 20)[index - 1];
+      this.currentPage = index
+    },
+
     init() {
       this.spinShow = true
       let query = {
@@ -150,14 +166,22 @@ export default {
       let params = {
         role: this.role,
         type: type,
-        pageSize: "50",
+        pageSize: "100",
         startKey: this.startKey,
         query: query
       }
       httpRequest("post", "/logList", params).then(res => {
-        this.columns2 = res.payload.Items
+        
         this.startKey = res.payload.LastEvaluatedKey
         this.spinShow = false
+        if (this.showNext) {
+          this.columns2 = this.columns2.concat(res.payload.Items);
+          this.totalPage = this.columns2.length
+        } else {
+          this.columns2 = res.payload.Items;
+          this.totalPage = this.columns2.length
+          this.dataList = _.chunk(this.columns2, 20)[0];
+        }
       })
     },
     search() {
@@ -185,11 +209,9 @@ export default {
     text-align: center;
     padding-bottom: 16px;
   }
-  .btn {
+  .page {
+    margin-top: 1rem;
     text-align: right;
-    .nextpage {
-      margin: 20px;
-    }
   }
 }
 .demo-spin-icon-load {
