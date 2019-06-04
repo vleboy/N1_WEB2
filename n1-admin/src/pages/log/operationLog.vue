@@ -65,6 +65,11 @@ export default {
           role: "10",
           value: "线路商",
           label: "线路商"
+        },
+        {
+          role: "7",
+          value: "系统",
+          label: "系统"
         }
       ],
       role: "1",

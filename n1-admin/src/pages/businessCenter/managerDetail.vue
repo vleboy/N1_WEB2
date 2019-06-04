@@ -800,21 +800,26 @@ export default {
     },
     //启用停用
     mcOperate(row) {
+      console.log(row);
+      
+      let userId = row.userId
       let text = row.status == 1 ? "禁用" : "启用";
-      let status = null;
+      let status =row.status == 1 ? 0 : 1
       let role = row.role;
       this.$Modal.confirm({
         title: "提示!",
-        content: `<p>是否${text}线路商</p>`,
+        content: `<p>是否${text}商户</p>`,
         onOk: () => {
           userChangeStatus({
             role,
             status,
-            userId: params.row.userId
+            userId: userId
           }).then(res => {
             if (res.code == 0) {
               this.$Message.success(`${text}成功`);
-              childList(userId, "100").then(res => {
+              childList(row.parent, "100").then(res => {
+                console.log(res)
+                
                 this.ownedbusiness = res.payload;
               });
             }
@@ -1009,7 +1014,7 @@ export default {
       });
     },
     selectCompany(value) {
-      /* let userId = this.parent;
+      let userId = this.parent;
       let params = { companyIden: value, userId };
       if (userId == "01") {
         delete params.userId;
@@ -1018,8 +1023,8 @@ export default {
         if (res.code == 0) {
           this.gameList = res.payload;
         }
-      }); */
-      this.gameList = GameListEnum()[value]
+      });
+      //this.gameList = GameListEnum()[value]
     },
     selectGame(o) {
       this.selected = true;
@@ -1148,6 +1153,8 @@ export default {
       this.spinShow = true;
       let userId = this.$route.query.userId;
       let parent = this.$route.query.parent;
+      console.log(parent);
+      
       this.parent = parent;
       this.userId = userId;
       this.edit = true;

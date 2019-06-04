@@ -223,6 +223,8 @@ export default {
     /* 点数 */
     // 剩余点数
     balanceCount(row) {
+      console.log(row);
+      
       return thousandFormatter(row.balance.toFixed(2));
     },
     //加点

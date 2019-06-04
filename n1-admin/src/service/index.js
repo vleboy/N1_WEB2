@@ -178,6 +178,10 @@ export async function addUsers(params) {
 export async function companySelect(params) {
   return http(post('/companySelect', params))
 }
+//获取游戏大类
+export async function gameBigType(params) {
+  return http(post('/gameBigType', params))
+}
 //随机msn
 export async function msnRandom() {
   return http(get('/msnRandom'))

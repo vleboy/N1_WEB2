@@ -763,10 +763,10 @@ export default {
         this.basic.skin = merchant.payload.skin || "1"; //skin
         this.gameDetail = merchant.payload.gameList;
       }
-      /* if (company && company.code == 0) {
+      if (company && company.code == 0) {
         this.gameType = company.payload;
-      } */
-      this.gameType = [
+      }
+      /* this.gameType = [
         { company: "NA", companyName: "NA" },
         { company: "KY", companyName: "KY" },
         { company: "MG", companyName: "MG" },
@@ -781,7 +781,7 @@ export default {
         { company: "SA", companyName: "SA" },
         { company: "SB", companyName: "SB" },
         { company: "YSB", companyName: "YSB" }
-      ];
+      ]; */
       oneManagers(parent).then(res => {
         this.parentGameList = res.payload.gameList || [];
       });
