@@ -160,8 +160,8 @@
                     </template>
                     <MenuItem name="loginLog" v-if='permission.includes("登录日志")'>登录日志</MenuItem>
                     <MenuItem name="operationLog" v-if='permission.includes("操作日志")'>操作日志</MenuItem>
-                    <MenuItem name="debugLog" v-if='permission.includes("DEBUG日志")'>DEBUG日志</MenuItem>
-                    <MenuItem name="dataRepair" v-if='permission.includes("DEBUG日志")'>DEBUG修正</MenuItem>
+                    <MenuItem name="debugLog" v-if='permission.includes("DEBUG")'>DEBUG日志</MenuItem>
+                    <!-- <MenuItem name="dataRepair" v-if='permission.includes("DEBUG日志")'>DEBUG修正</MenuItem> -->
                 </Submenu>
                 <MenuItem name="loginLog" v-if='(permission.includes("免转流水") || permission.includes("免转报表")) && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
                   <Icon type="logo-usd" @click="unfold"/>

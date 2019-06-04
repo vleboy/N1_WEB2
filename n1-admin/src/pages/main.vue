@@ -8,6 +8,7 @@
         </div>
         <div class="user-dropdown-menu-con">
           <Row type="flex" justify="end" align="middle" class="user-dropdown-innercon">
+              <Icon v-if="permission.includes('DEBUG')" @click="debug" type="md-bug" size="18" color="#20a0ff" style="margin-right:1rem;cursor:pointer"/>
             <Avatar icon="md-person" size="small" style="background: #619fe7;margin-right: 8px;"></Avatar>
             <Dropdown transfer trigger="click" @on-click="handleClickUserDropdown">
               <a href="javascript:void(0)">
@@ -45,6 +46,9 @@ export default {
     };
   },
   computed: {
+    permission() {
+      return JSON.parse(localStorage.getItem("userInfo")).subRolePermission;
+    },
     pageTagsList() {
       return this.$store.state.home.pageOpenedList; //打开的页面的页面对象
     },
@@ -56,6 +60,9 @@ export default {
     }
   },
   methods: {
+    debug() {
+      this.$router.push({ name: "dataRepair" });
+    },
     init() {
       this.checkTag(this.$route.name);
     },

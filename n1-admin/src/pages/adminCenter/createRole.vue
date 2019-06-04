@@ -308,7 +308,7 @@ export default {
                   title: "操作日志"
                 },
                 {
-                  title: "DEBUG日志"
+                  title: "DEBUG"
                 }
               ]
             },

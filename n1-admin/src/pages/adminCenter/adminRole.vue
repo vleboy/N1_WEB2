@@ -406,7 +406,7 @@ export default {
                   checked: false
                 },
                 {
-                  title: "DEBUG日志",
+                  title: "DEBUG",
                   checked: false
                 }
               ]
