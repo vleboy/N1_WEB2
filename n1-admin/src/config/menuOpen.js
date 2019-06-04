@@ -1,5 +1,7 @@
   export const menuOpen = function (name) {
     let openName = []
+    console.log(name);
+    
     if (name.includes('na') && name != 'managerOpreateLog' && name != 'dayManager' && name != 'gameManager') {
       openName = ['report', 'nareport']
     } else if (name == 'kychess') {
@@ -63,8 +65,6 @@
       openName = ['board']
     } else if (name == 'newBoard') {
       openName = ['newBoard']
-    } else if (name == 'dataRepair') {
-      openName = ['logCenter']
     } else if (name == 'playerReport') {
       openName = ['report']
     } else if (name == 'flow' || name == 'noTransferReport') {
