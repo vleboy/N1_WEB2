@@ -180,15 +180,17 @@ export default {
         query: query
       };
       httpRequest("post", "/logList", params).then(res => {
+          this.startKey = res.payload.LastEvaluatedKey;
+          this.spinShow = false;
         if (this.showNext) {
           this.columns2 = this.columns2.concat(res.payload.Items);
+          this.totalPage = this.columns2.length
         } else {
           this.columns2 = res.payload.Items;
+          this.totalPage = this.columns2.length
+          this.dataList = _.chunk(this.columns2, 20)[0];
         }
-        this.totalPage = this.columns2.length
-        this.startKey = res.payload.LastEvaluatedKey;
-        this.spinShow = false;
-        this.dataList = _.chunk(this.columns2, 20)[0];
+
       });
     },
     search() {
