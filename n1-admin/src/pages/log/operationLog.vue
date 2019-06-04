@@ -146,9 +146,10 @@ export default {
       if (!query.username) {
         delete query.username;
       }
+      let type = this.role == "7" ? "autoControl" : "operate" 
       let params = {
         role: this.role,
-        type: "operate",
+        type: type,
         pageSize: "50",
         startKey: this.startKey,
         query: query
