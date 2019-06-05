@@ -1115,6 +1115,7 @@ export default {
     playerAccount(row) {
       let name = row.userName;
       localStorage.setItem("playerName", name);
+      
       this.$router.push({
         name: "playDetail",
         query: {
@@ -1125,7 +1126,6 @@ export default {
       })
       localStorage.setItem("playDetail", "playDetail");  
     },      
-
 
 
 

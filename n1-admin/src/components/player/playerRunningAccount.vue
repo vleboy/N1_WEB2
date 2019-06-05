@@ -596,35 +596,45 @@ export default {
     }
   },
   watch: {
-    $route: function(_new, _old) {
+    $route: {
       
-      if (
-        _new.name == "playDetail" &&
-        localStorage.playDetail == 'playDetail'
-      ) {
-        this.amountDate = []
+      handler: function(_new, _old) {
+        console.log(0);
+        
+        if (
+          
+          _new.name == "playDetail" &&
+          localStorage.playDetail == 'playDetail'
+        ) {
+          //console.log(1)
+          this.amountDate = []
 
-        this.radioInfo = String(this.$route.query.type)
-        console.log(this.radioInfo);
+          this.radioInfo = String(this.$route.query.type)
+          //console.log(this.radioInfo);
+          
+          if (this.radioInfo != '') {
+            getGameType().map(item => {
+              if (item.code == this.radioInfo) {
+                this.companyInfo =  item.company
+              }
+            })
+          } else {
+            this.companyInfo == "全部厂商"
+          }
+          
         
-        if (this.radioInfo != '') {
-          getGameType().map(item => {
-            if (item.code == this.radioInfo) {
-              this.companyInfo =  item.company
-            }
-          })
-        } else {
-          this.companyInfo == "全部厂商"
+          let st = this.$route.query.time[0]
+          let et = this.$route.query.time[1]
+          this.amountDate = [new Date(st), new Date(et)]
+          //console.log(this.amountDate);
+          
+          this.getPlayerAccount()
         }
-        
-       
-        let st = this.$route.query.time[0]
-        let et = this.$route.query.time[1]
-        this.amountDate = [st, et]
-        this.getPlayerAccount()
-      }
-      localStorage.removeItem("playDetail")
+        localStorage.removeItem("playDetail")
+      },
+      immediate: true,
     }
+    
   },
   filter1s: {
     //过滤器，所有数字保留两位小数
