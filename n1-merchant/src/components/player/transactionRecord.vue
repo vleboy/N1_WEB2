@@ -15,9 +15,9 @@
           </RadioGroup>
         </Col>
       </Row>
-      <Row>
-        <Col span="17">
-          <Input v-model="betId" placeholder="请输入交易号" style="width: 12rem;margin-right:1rem" size="small"></Input>
+
+      <div style="display:flex;justify-content:space-between">
+        <div>
           <DatePicker
             v-model="amountDate"
             :options="options"
@@ -28,11 +28,14 @@
             placeholder="选择日期时间范围"
             size="small"
           ></DatePicker>
-          <Button type="primary" @click="searchAmount" size="small" style="margin:0 .3rem 0 1rem">搜索</Button>
+        </div>
+        <div style="display:flex;">
+          <Input v-model="betId" placeholder="请输入交易号" style="width: 12rem;margin-right:1rem" size="small"></Input>
+          <Button type="primary" @click="searchAmount" size="small" style="margin:0 .3rem 0 0rem">搜索</Button>
           <Button @click="reset" size="small" style="margin-right:.3rem">重置</Button>
           <Button @click="exportData" size="small">导出数据</Button>
-        </Col>
-      </Row>
+        </div>
+      </div>
     </div>
 
     <div class="-p-content">

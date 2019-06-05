@@ -16,33 +16,43 @@ $
 
     <div class="-p-base">
       <Row class="-b-form">
-        <Col class="text-right" style="display:flex;">
-          <div style="margin-right:1rem;width: 12rem;">
-            <Input v-model="sn" placeholder="请输入流水号" size="small"></Input>
+        <Col class="text-right" style="display:flex;justify-content:space-between">
+          <div>
+            <DatePicker
+              :editable="false"
+              :transfer="true"
+              :options="options"
+              v-model="amountDate"
+              type="datetimerange"
+              @on-change="changeDate"
+              placeholder="选择日期范围"
+              style="width: 300px"
+              size="small"
+              @on-ok="getDate"
+            ></DatePicker>
           </div>
-          <div style="margin-right:1rem;width: 12rem;">
-            <Input v-model="betId" placeholder="请输入交易号" size="small"></Input>
+          <div style="display:flex;">
+            <div style="margin-right:1rem;width: 12rem;">
+              <Input v-model="sn" placeholder="请输入流水号" size="small"></Input>
+            </div>
+            <div style="margin-right:1rem;width: 12rem;">
+              <Input v-model="betId" placeholder="请输入交易号" size="small"></Input>
+            </div>
+
+            <Button @click="isShowSearch = !isShowSearch" type="text" size="small">
+              高级筛选
+              <Icon type="arrow-down-b" v-if="!isShowSearch"></Icon>
+              <Icon type="arrow-up-b" v-else></Icon>
+            </Button>
+            <Button
+              @click="searchData(true)"
+              style="margin-right:.3rem"
+              size="small"
+              type="primary"
+            >搜索</Button>
+            <Button @click="reset(true)" style="margin-right:.3rem" size="small">重置</Button>
+            <Button @click="exportData" size="small">导出数据</Button>
           </div>
-          <DatePicker
-            :editable="false"
-            :transfer="true"
-            :options="options"
-            v-model="amountDate"
-            type="datetimerange"
-            @on-change="changeDate"
-            placeholder="选择日期范围"
-            style="width: 300px"
-            size="small"
-            @on-ok="getDate"
-          ></DatePicker>
-          <Button @click="isShowSearch = !isShowSearch" type="text" size="small">
-            高级筛选
-            <Icon type="arrow-down-b" v-if="!isShowSearch"></Icon>
-            <Icon type="arrow-up-b" v-else></Icon>
-          </Button>
-          <Button @click="searchData(true)" style="margin-right:.3rem" size="small" type="primary">搜索</Button>
-          <Button @click="reset(true)" style="margin-right:.3rem" size="small">重置</Button>
-          <Button @click="exportData" size="small">导出数据</Button>
         </Col>
       </Row>
       <Row v-if="isShowSearch">
@@ -60,7 +70,7 @@ $
         </div>
         <div class="from-search">
           资金流向：
-          <RadioGroup v-model="radioMoney" type="button" size="small"> 
+          <RadioGroup v-model="radioMoney" type="button" size="small">
             <Radio label>全部</Radio>
             <Radio label="1">本次发生金额（入）</Radio>
             <Radio label="-1">本次发生金额（出）</Radio>
@@ -90,8 +100,14 @@ $
           <template slot-scope="{row, index}" slot="afterAmount">
             <span>{{afterAmountConfig(row)}}</span>
           </template>
-          <template slot-scope="{row, index}" slot="action" >
-            <Button v-if="actionConfig(row)" type="text" size="small" style="color:#20a0ff;marginRight:5px" @click="record(row)"></Button>
+          <template slot-scope="{row, index}" slot="action">
+            <Button
+              v-if="actionConfig(row)"
+              type="text"
+              size="small"
+              style="color:#20a0ff;marginRight:5px"
+              @click="record(row)"
+            ></Button>
             <span v-else></span>
           </template>
         </Table>
@@ -112,7 +128,7 @@ $
       <SportsModal ref="childMethod" v-if="propChild.gameType =='1130000'" :dataProp="propChild"></SportsModal>
     </Modal>
     <Spin size="large" fix v-if="isFetching">
-      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <Icon type="ios-loading" size="64" class="demo-spin-icon-load"></Icon>
       <div>加载中...</div>
     </Spin>
   </div>
@@ -234,7 +250,14 @@ export default {
         "12": "代理操作",
         "13": "商城"
       },
-      removeArr: ['NA棋牌游戏', 'NA捕鱼游戏', 'NA街机游戏', 'NA真人游戏','NA电子游戏', 'NA真人视讯'],
+      removeArr: [
+        "NA棋牌游戏",
+        "NA捕鱼游戏",
+        "NA街机游戏",
+        "NA真人游戏",
+        "NA电子游戏",
+        "NA真人视讯"
+      ],
       GameNameEnum: {
         "70001": "塔罗之谜",
         "70002": "小厨娘",
@@ -274,7 +297,10 @@ export default {
         "90018": "鲤跃龙门"
       },
 
-      amountDate: [new Date(new Date().getTime() - 3600 * 1000 * 24 * 6), new Date()], // 时间日期选择
+      amountDate: [
+        new Date(new Date().getTime() - 3600 * 1000 * 24 * 6),
+        new Date()
+      ], // 时间日期选择
       playerAccountList: [], // 玩家流水账列表
       playerRecordList: [], // 玩家战绩列表
       playerAccountListStorage: [],
@@ -283,46 +309,46 @@ export default {
         {
           title: "流水号",
           key: "sn",
-          align: 'center',
+          align: "center"
         },
         {
           title: "交易号",
-          align: 'center',
-          key: "businessKey",
+          align: "center",
+          key: "businessKey"
         },
         {
           title: "日期",
-          align: 'center',
+          align: "center",
           slot: "dateTime"
         },
         {
           title: "游戏类型",
-          align: 'center',
+          align: "center",
           key: "gameName"
         },
         {
           title: "游戏ID",
-          align: 'center',
+          align: "center",
           slot: "gameId"
         },
         {
           title: "交易类型",
-          align: 'center',
+          align: "center",
           slot: "msn"
         },
         {
           title: "帐变前余额",
-          align: 'center',
-          slot: "originalAmount",
+          align: "center",
+          slot: "originalAmount"
         },
         {
           title: "帐变金额",
-          align: 'center',
+          align: "center",
           slot: "amount"
         },
         {
           title: "帐变后金额",
-          align: 'center',
+          align: "center",
           slot: "afterAmount"
         },
         {
@@ -339,7 +365,7 @@ export default {
     };
   },
   mounted() {
-    this.getPlayerAccount()
+    this.getPlayerAccount();
   },
   computed: {
     dataList() {
@@ -368,68 +394,69 @@ export default {
         item => {
           return item;
         }
-      )
+      );
 
       for (let i = 0; i < this.removeArr.length; i++) {
         for (let j = 0; j < arr.length; j++) {
           if (this.removeArr[i] == arr[j].name) {
-            arr.splice(j,1)
+            arr.splice(j, 1);
           }
         }
-      }  
+      }
 
-      let gameList = Array.from(new Set(arr.map(item => {return item.company})))
+      let gameList = Array.from(
+        new Set(
+          arr.map(item => {
+            return item.company;
+          })
+        )
+      );
 
-
-      for (let i =0; i<gameList.length; i++) {
-          if (gameList[i] == 'NA') {
-            gameList.splice(i, 1)
-          }
-        }  
-      gameList.unshift('NA')
-      gameList.unshift('全部厂商')
-      return gameList
+      for (let i = 0; i < gameList.length; i++) {
+        if (gameList[i] == "NA") {
+          gameList.splice(i, 1);
+        }
+      }
+      gameList.unshift("NA");
+      gameList.unshift("全部厂商");
+      return gameList;
     },
     gameTypeList() {
-      
-
       let arr = JSON.parse(localStorage.getItem("userInfo")).gameList.map(
         item => {
           return item;
         }
-      ) 
+      );
 
       for (let i = 0; i < this.removeArr.length; i++) {
         for (let j = 0; j < arr.length; j++) {
           if (this.removeArr[i] == arr[j].name) {
-            arr.splice(j,1)
+            arr.splice(j, 1);
           }
         }
-      }  
-
+      }
 
       let gameType = [];
       if (this.sel == "全部厂商") {
         gameType = arr.map(item => {
-          return item.name
-        })
+          return item.name;
+        });
       } else {
-       arr.map(item => {
+        arr.map(item => {
           if (this.sel == item.company) {
             gameType.push(item.name);
           }
         });
       }
 
-
-      for(let i = 0; i < gameType.length; i++) {
-        if (gameType[i] == 'H5电子游戏') {
-          gameType.splice(i, 1)
-          gameType.unshift('H5电子游戏')
+      for (let i = 0; i < gameType.length; i++) {
+        if (gameType[i] == "H5电子游戏") {
+          gameType.splice(i, 1);
+          gameType.unshift("H5电子游戏");
         }
-        if (gameType[i] == 'H5电子-无神秘奖游戏') {
-          gameType.splice(i, 1)
-          gameType.unshift('H5电子-无神秘奖游戏')
+        if (gameType[i] == "H5电子-无神秘奖游戏") {
+          gameType.splice(i, 1);
+          gameType.unshift("H5电子-无神秘奖游戏");
         }
       }
 
@@ -440,59 +467,62 @@ export default {
   methods: {
     //日期
     dateTimeConfig(row) {
-      return dayjs(row.createdAt).format("YYYY-MM-DD HH:mm:ss")
+      return dayjs(row.createdAt).format("YYYY-MM-DD HH:mm:ss");
     },
     //游戏ID
     gameIdConfig(row) {
       if (this.GameNameEnum[row.gameId]) {
-        return `${row.gameId}(${this.GameNameEnum[row.gameId]})`
+        return `${row.gameId}(${this.GameNameEnum[row.gameId]})`;
       } else {
-        return row.gameId
+        return row.gameId;
       }
     },
     //交易类型
     msnConfig(row) {
-      return this.typeList[row.type]
+      return this.typeList[row.type];
     },
     //帐变前余额
     originalAmountConfig(row) {
-      return thousandFormatter(row.originalAmount)
+      return thousandFormatter(row.originalAmount);
     },
     //帐变金额
     amountConfig(row) {
       if (row.amount >= 0) {
-        return {amount: thousandFormatter(row.amount), color: 'green'}
+        return { amount: thousandFormatter(row.amount), color: "green" };
       } else {
-         return {amount: thousandFormatter(row.amount), color: 'red'}
+        return { amount: thousandFormatter(row.amount), color: "red" };
       }
     },
     //账变后余额
     afterAmountConfig(row) {
-      return thousandFormatter(row.balance)
+      return thousandFormatter(row.balance);
     },
     //操作
     actionConfig(row) {
       if (row.type == "3" && row.gameType == "1130000") {
-       return true
+        return true;
       } else {
-        return false
-      }      
+        return false;
+      }
     },
     record(row) {
       if (row.type == "3" && row.gameType == "1130000") {
-        this.openModalBill(row)
+        this.openModalBill(row);
       }
     },
     reset() {
-      this.companyInfo = '全部厂商'
-      this.sel = '全部厂商'
-      this.radioInfo = '全部'
-      this.betId = ''
-      this.sn = ''
-      this.radioType = ''
-      this.radioMoney = ''
-      this.amountDate = [new Date(new Date().getTime() - 3600 * 1000 * 24 * 6), new Date()];
-      this.changeGameType()
+      this.companyInfo = "全部厂商";
+      this.sel = "全部厂商";
+      this.radioInfo = "全部";
+      this.betId = "";
+      this.sn = "";
+      this.radioType = "";
+      this.radioMoney = "";
+      this.amountDate = [
+        new Date(new Date().getTime() - 3600 * 1000 * 24 * 6),
+        new Date()
+      ];
+      this.changeGameType();
     },
     getNowpage(page) {
       this.nowPage = page;
@@ -519,7 +549,7 @@ export default {
         }
       });
       //console.log(this.amountDate);
-      
+
       httpRequest("post", "/player/bill/flow", {
         userName: localStorage.playerName,
         type: this.radioType,
@@ -597,10 +627,9 @@ export default {
       }
     },
     changeGameType(val) {
-      
-      this.radioInfo == undefined ? '全部' : val;
-      this.playerAccountListStartKey = ''
-      
+      this.radioInfo == undefined ? "全部" : val;
+      this.playerAccountListStartKey = "";
+
       this.getPlayerAccount();
     },
     // 月份联动
@@ -646,7 +675,7 @@ export default {
     },
     changeCompany(val) {
       this.sel = val;
-      this.radioInfo = null
+      this.radioInfo = null;
     },
     openModalBill(data) {
       this.propChild = data;
@@ -658,47 +687,41 @@ export default {
   },
   watch: {
     $route: {
-      
       handler: function(_new, _old) {
-        
-        
         if (
-          
           _new.name == "playDetail" &&
-          localStorage.playDetail == 'playDetail'
+          localStorage.playDetail == "playDetail"
         ) {
           //console.log(1)
-          this.amountDate = []
+          this.amountDate = [];
 
-          let gameCode = String(this.$route.query.type)
+          let gameCode = String(this.$route.query.type);
           //console.log(this.radioInfo);
           //console.log(this.radioInfo)
-          
-          if (this.gameCode != '') {
+
+          if (this.gameCode != "") {
             getGameType().map(item => {
               if (item.code == gameCode) {
-                this.companyInfo =  item.company
-                this.radioInfo = item.name
+                this.companyInfo = item.company;
+                this.radioInfo = item.name;
               }
-            })
+            });
           } else {
-            this.companyInfo == "全部厂商"
+            this.companyInfo == "全部厂商";
           }
-          
-        
-          let st = this.$route.query.time[0]
-          let et = this.$route.query.time[1]
-          this.amountDate = [new Date(st), new Date(et)]
+
+          let st = this.$route.query.time[0];
+          let et = this.$route.query.time[1];
+          this.amountDate = [new Date(st), new Date(et)];
           console.log(this.amountDate);
-          console.log('fufk');
-          
-          this.getPlayerAccount()
+          console.log("fufk");
+
+          this.getPlayerAccount();
         }
-        localStorage.removeItem("playDetail")
+        localStorage.removeItem("playDetail");
       },
-      immediate: true,
+      immediate: true
     }
-    
   },
   filter1s: {
     //过滤器，所有数字保留两位小数
@@ -711,12 +734,12 @@ export default {
 
 <style scpoed type="text/less" lang="less">
 /deep/ .ivu-btn-small {
-    color: red;
-  }
-  /deep/.ivu-btn:hover {
-    background: #000 !important;
-    color: #fff !important;
-  }
+  color: red;
+}
+/deep/.ivu-btn:hover {
+  background: #000 !important;
+  color: #fff !important;
+}
 .p-playerAccount {
   .-p-base {
     .-b-form {
@@ -783,8 +806,6 @@ export default {
   }
 }
 .demo-spin-icon-load {
-    animation: ani-demo-spin 1s linear infinite;
-  }
-
-  
+  animation: ani-demo-spin 1s linear infinite;
+}
 </style>
