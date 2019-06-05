@@ -392,6 +392,8 @@ export default {
     };
   },
   mounted() {
+    console.log(233);
+    
     //this.changeTime();
     this.getPlayerAccount()
     /* this.companySelectList(); */
@@ -619,8 +621,8 @@ export default {
         let st = this.$route.query.time[0]
         let et = this.$route.query.time[1]
         this.amountDate = [st, et]
+        this.getPlayerAccount()
       }
-      this.getPlayerAccount()
       localStorage.removeItem("playDetail")
     }
   },
