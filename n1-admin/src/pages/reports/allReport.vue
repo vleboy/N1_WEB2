@@ -411,6 +411,7 @@ import dayjs from "dayjs";
 import { thousandFormatter } from "@/config/format";
 import { getWinloseAmount } from "@/config/getWinloseAmount";
 import { getDefaultTime } from "@/config/getDefaultTime";
+import { getGameType } from "@/config/getGameType";
 export default {
   data() {
     return {
@@ -1117,9 +1118,12 @@ export default {
       this.$router.push({
         name: "playDetail",
         query: {
-          name: name
+          name: name,
+          time: this.changedTime,
+          type: ""
         }
       })
+      localStorage.setItem("playDetail", "playDetail");  
     },      
 
 

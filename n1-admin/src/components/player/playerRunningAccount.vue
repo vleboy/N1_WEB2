@@ -132,12 +132,31 @@
 </template>
 <script type="text/ecmascript-6">
 import { formatUserName, thousandFormatter } from "@/config/format";
-import { getGameListEnum } from "@/config/getGameType";
+import { getGameListEnum, getGameType } from "@/config/getGameType";
 import { httpRequest } from "@/service/index";
 import dayjs from "dayjs";
 import SportsModal from "@/components/record/sportsModal";
 
 export default {
+  beforeRouteEnter(to, from, next) {
+    /* console.log(this, 'beforeRouteEnter'); // undefined
+    console.log(to, '组件独享守卫beforeRouteEnter第一个参数');
+    console.log(from, '组件独享守卫beforeRouteEnter第二个参数');
+    console.log(next, '组件独享守卫beforeRouteEnter第三个参数'); */
+    next(vm => {
+      //因为当钩子执行前，组件实例还没被创建
+      // vm 就是当前组件的实例相当于上面的 this，所以在 next 方法里你就可以把 vm 当 this 来用了。
+      //console.log(vm);//当前组件的实例
+
+      /* if (localStorage.dayPlayer == 'dayPlayer') {
+        vm.isFetching = true
+        vm.getPlayerAccount()
+      } */
+      
+      console.log(123456)
+      
+    });
+  },
   components: { SportsModal },
   data() {
     return {
@@ -287,7 +306,7 @@ export default {
         "90017": "凤舞朝阳",
         "90018": "鲤跃龙门"
       },
-      amountDate: [], // 时间日期选择
+      amountDate: [new Date(new Date().getTime() - 3600 * 1000 * 24 * 6), new Date()],
       playerAccountList: [], // 玩家流水账列表
       playerRecordList: [], // 玩家战绩列表
       playerAccountListStorage: [],
@@ -373,7 +392,7 @@ export default {
     };
   },
   mounted() {
-    this.changeTime();
+    //this.changeTime();
     this.getPlayerAccount()
     /* this.companySelectList(); */
   },
@@ -468,8 +487,11 @@ export default {
       }
     },
     getPlayerAccount() {
+      
       this.playerAccountListStartKey = ''
       this.isFetching = true;
+
+
 
       httpRequest("post", "/player/bill/flow", {
         userName: localStorage.playerName,
@@ -487,8 +509,6 @@ export default {
         .then(result => {
           this.isLastMessage = result.list < this.pageSize;
           this.playerAccountList = result.list;
-          console.log( this.playerAccountList);
-          
           this.playerAccountListStartKey = result.startKey;
           this.playerAccountUserName = result.userName;
           this.playerAccountListStorage.length &&
@@ -500,31 +520,6 @@ export default {
           this.isFetching = false;
         });
     },
-    changeTime() {
-      const end = new Date();
-      const start = new Date();
-      if (this.radioTime) {
-        this.monthDate = "";
-      }
-      switch (+this.radioTime) {
-        case 1:
-          start.setTime(start.getTime() - 3600 * 1000 * 24 * 6);
-          this.amountDate = [start, end];
-          this.changeDate();
-          break;
-        case 2:
-          start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-          this.amountDate = [start, end];
-          this.changeDate();
-          break;
-        case 3:
-          start.setTime(start.getTime() - 3600 * 1000 * 24 * 365);
-          this.amountDate = [start, end];
-          this.changeDate();
-          break;
-      }
-    }, 
-    
     confirms() {
       this.playerAccountListStartKey = "";
       this.getPlayerAccount()
@@ -553,7 +548,7 @@ export default {
     }, 
     //切换游戏种类
     changeGameType(val) {
-      console.log(val)
+      
       
       this.radioInfo = val;
       this.playerAccountListStartKey = ''
@@ -600,13 +595,33 @@ export default {
   },
   watch: {
     $route: function(_new, _old) {
+      
       if (
         _new.name == "playDetail" &&
-        localStorage.playerName != this.playerAccountUserName
+        localStorage.playDetail == 'playDetail'
       ) {
-        this.initData();
-        this.changeGameType();
+        this.amountDate = []
+
+        this.radioInfo = String(this.$route.query.type)
+        console.log(this.radioInfo);
+        
+        if (this.radioInfo != '') {
+          getGameType().map(item => {
+            if (item.code == this.radioInfo) {
+              this.companyInfo =  item.company
+            }
+          })
+        } else {
+          this.companyInfo == "全部厂商"
+        }
+        
+       
+        let st = this.$route.query.time[0]
+        let et = this.$route.query.time[1]
+        this.amountDate = [st, et]
       }
+      this.getPlayerAccount()
+      localStorage.removeItem("playDetail")
     }
   },
   filter1s: {

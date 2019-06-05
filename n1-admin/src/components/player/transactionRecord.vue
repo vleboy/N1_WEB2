@@ -483,7 +483,7 @@ export default {
       let [startTime, endTime] = this.amountDate;
       startTime = new Date(startTime).getTime();
       endTime = new Date(endTime).getTime();
-      console.log(startTime);
+      //console.log(startTime);
       
       httpRequest("post", "/player/bill/detail", {
         userName: name,

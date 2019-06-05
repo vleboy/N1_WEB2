@@ -274,9 +274,12 @@ export default {
       this.$router.push({
         name: "playDetail",
         query: {
-          name: row.userName
+          name: row.userName,
+          type: this.gameTypeList == "" ? "" : this.gameTypeList,
+          time: this.changedTime
         }
       })
+      localStorage.setItem("playDetail", "playDetail")
     },
     //下注金额
     betAmount(row) {

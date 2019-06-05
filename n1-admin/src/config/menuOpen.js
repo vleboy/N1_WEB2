@@ -1,6 +1,6 @@
   export const menuOpen = function (name) {
     let openName = []
-    console.log(name);
+    //console.log(name);
     
     if (name.includes('na') && name != 'managerOpreateLog' && name != 'dayManager' && name != 'gameManager') {
       openName = ['report', 'nareport']

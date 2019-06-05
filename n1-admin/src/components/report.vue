@@ -606,9 +606,12 @@ export default {
       this.$router.push({
         name: "playDetail",
         query: {
-          name: row.userName
+          name: row.userName,
+          time: this.changedTime,
+          type: this.gameType
         }
       })
+      localStorage.setItem("playDetail", "playDetail")
     },
 
 
