@@ -137,7 +137,7 @@
           <Row>
             <Col span="10">
             <Tooltip :content="tipContent">
-              <Input v-model="balance" @on-keyup="checkFloat()" placeholder="0~1,不超过上级洗码比"></Input>
+              <Input v-model.number="balance" @on-keyup="checkFloat()" placeholder="0~1,不超过上级洗码比"></Input>
             </Tooltip>
             </Col>
             <Col span="4">

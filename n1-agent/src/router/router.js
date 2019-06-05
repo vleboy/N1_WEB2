@@ -10,7 +10,6 @@ import agentDetail from '@/pages/agentCenter/agentDetail'
 import dayCompany from '@/pages/day/dayCompany'
 import dayPlayer from '@/pages/day/dayPlayer'
 import ownSpace from '@/pages/ownSpace'
-import board from '@/pages/board/board'
 import allReport from '@/pages/reports/allReport'
 import playerReport from '@/pages/reports/playerReport'
 import agtrue from '@/pages/reports/agTrueGame'
@@ -40,14 +39,7 @@ import pngVideo from '@/pages/reports/pngVideo'
 import natruehfive from '@/pages/reports/naTrueHfive'
 import kyChess from '@/pages/reports/kyChess'
 // import prizeList from '@/pages/opreateCenter/prizeList'
-import operationLog from '@/pages/logCenter/operationLog'
-import loginLog from '@/pages/logCenter/loginLog'
 import agentList from '@/pages/agentCenter/agentList'
-import warnList from '@/pages/agentCenter/warnList'
-import adminLoginLog from '@/pages/logCenter/adminLoginLog'
-import adminOpreateLog from '@/pages/logCenter/adminOpreateLog'
-import agentLoginLog from '@/pages/logCenter/agentLoginLog'
-import agentOpreateLog from '@/pages/logCenter/agentOpreateLog'
 import adminList from '@/pages/adminCenter/adminList'
 import agentRole from '@/pages/adminCenter/agentRole'
 import createRole from '@/pages/adminCenter/createRole'
@@ -97,13 +89,6 @@ export const appRouter = [
         component:main,
         children:[{path:'index',title:'个人中心', name:'ownspace-index',component:ownSpace}]
     },
-    /* {
-      path:'/boards',
-      title:'看板',
-      name:'boards',
-      component:main,
-      children:[{path:'board',title:'看板', name:'board',component:board}]
-    }, */
     {
         path:'/allreport',
         title:'公司输赢总报表',
@@ -255,21 +240,6 @@ export const appRouter = [
         component:main,
         children:[
             {path:'list',title:'代理列表',name:'agentList',component:agentList},
-            {path:'warn',title:'警告列表',name:'warnList',component:warnList}
-        ]
-    },
-    {
-        path:'/log',
-        title:'日志中心',
-        name:'log',
-        component:main,
-        children:[
-            { path: 'loginLog', title: '登录日志', name: 'loginLog', component: loginLog },
-            { path: 'operationLog', title: '操作日志', name: 'operationLog', component: operationLog },
-            /* {path:'adminLogin',title:'管理员登录日志',name:'adminLoginLog',component:adminLoginLog},
-            {path:'agentLogin',title:'代理登录日志',name:'agentLoginLog',component:agentLoginLog},
-            {path:'adminOpreate',title:'管理员操作日志',name:'adminOpreateLog',component:adminOpreateLog},
-            {path:'agentOpreate',title:'代理操作日志',name:'agentOpreateLog',component:agentOpreateLog}, */
         ]
     },
     {
@@ -291,15 +261,6 @@ export const appRouter = [
             {path:'config',title:'包房代理游戏配置',name:'gameConfig',component:gameConfig},
         ]
     },
-    // {
-    //     path:'/opreate',
-    //     title:'运营中心',
-    //     name:'opreate',
-    //     component:main,
-    //     children:[
-    //         {path:'prize',title:'神秘大奖',name:'prizeList',component:prizeList},
-    //     ]
-    // },
     {
       path:'/play',
       title:'玩家列表',

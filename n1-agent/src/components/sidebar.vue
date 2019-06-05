@@ -3,15 +3,10 @@
         <Sider width='256px' collapsible hide-trigger :style="{position: 'fixed', height: '100vh', left: 0, overflow: 'auto'}">
             <img class="logoimg" src="../../static/logo.png" alt="">
             <Menu ref="sideMenu" :active-name="$route.name" :open-names="openName" theme="dark" width="auto" @on-select='selectMenu'>
-                <!-- <MenuItem name="board" v-if='permission.includes("看板") || level!=0'>
-                    <Icon type="stats-bars"></Icon>
-                    <span>看板</span>
-                </MenuItem> -->
                 <MenuItem name="ownspace-index" v-if='permission.includes("个人中心")|| level!=0'>
                     <Icon type="person"></Icon>
                     <span>个人中心</span>
                 </MenuItem>
-
                 <Submenu name="report" v-if="level==0">
                     <template slot="title">
                         <Icon type="ios-paper-outline"></Icon>
@@ -22,15 +17,8 @@
                     <Submenu name='nareport' v-if="str.includes('NA')">
                         <template slot="title">NA游戏报表</template>
                         <MenuItem name="naAll" v-if='permission.includes("NA游戏总报表")'>NA游戏总报表</MenuItem>
-                        <!-- <MenuItem name="navideo" v-if='permission.includes("NA电子游戏报表")'>NA电子游戏报表</MenuItem>
-                        <MenuItem name="nastreet" v-if='permission.includes("NA街机游戏报表")'>NA街机游戏报表</MenuItem>
-                        <MenuItem name="natrue" v-if='permission.includes("NA真人游戏报表")'>NA真人游戏报表</MenuItem> -->
-                        <!-- <MenuItem name="jump" v-if='permission.includes("NA真人游戏报表")'>NA真人游戏报表(跳转)</MenuItem> -->
-                        <!-- <MenuItem name="nacard" v-if='permission.includes("NA棋牌游戏报表")'>NA棋牌游戏报表</MenuItem>
-                        <MenuItem name="nafishing" v-if='permission.includes("NA捕鱼游戏报表")'>NA捕鱼游戏报表</MenuItem> -->
                         <MenuItem name="nahfive" v-if='permission.includes("NA电子H5报表")'>NA电子H5报表</MenuItem>
                         <MenuItem name="nanomsy" v-if='permission.includes("NA电子H5无神秘奖报表")'>NA电子H5无神秘奖报表</MenuItem>
-                        <!-- <MenuItem name="natruehfive" v-if='permission.includes("NA真人h5报表")'>NA真人H5报表</MenuItem> -->
                     </Submenu>
                     <Submenu name='kyreport' v-if='permission.includes("KY棋牌游戏报表")'>
                         <template slot="title">KY游戏报表</template>
@@ -98,15 +86,8 @@
                     <Submenu name='nareport' v-if="gameStr.includes('NA')">
                         <template slot="title">NA游戏报表</template>
                         <MenuItem name="naAll">NA游戏总报表</MenuItem>
-                        <!-- <MenuItem name="navideo" v-if="gameList.includes('NA电子游戏')">NA电子游戏报表</MenuItem>
-                        <MenuItem name="nastreet" v-if="gameList.includes('NA街机游戏')">NA街机游戏报表</MenuItem>
-                        <MenuItem name="natrue" v-if="gameStr.includes('NA真人')">NA真人游戏报表</MenuItem> -->
-                        <!-- <MenuItem name="jump" v-if="gameStr.includes('NA真人')">NA真人游戏报表(跳转)</MenuItem> -->
-                        <!-- <MenuItem name="nacard" v-if="gameList.includes('NA棋牌游戏')">NA棋牌游戏报表</MenuItem> -->
-                       <!--  <MenuItem name="nafishing" v-if="gameList.includes('NA捕鱼游戏')">NA捕鱼游戏报表</MenuItem>-->
                         <MenuItem name="nahfive" v-if='gameStr.includes("H5电子游戏")'>NA电子H5报表</MenuItem> 
                         <MenuItem name="nanomsy" v-if='gameStr.includes("H5无神秘奖报")'>NA电子H5无神秘奖报表</MenuItem>
-                        <!-- <MenuItem name="natruehfive" v-if='gameList.includes("H5真人游戏")'>NA真人H5报表</MenuItem> -->
                     </Submenu>
                     <Submenu name='ttgreport' v-if="gameList.includes('TTG电子游戏')">
                         <template slot="title">TTG游戏报表</template>
@@ -170,17 +151,12 @@
                     <MenuItem name="dayCompany" v-if='permission.includes("代理日报表")'>代理日报表</MenuItem>
                     <MenuItem name="dayPlayer" v-if='permission.includes("玩家日报表")'>玩家日报表</MenuItem>
                 </Submenu>
-               
-
-
-
                 <Submenu name="agentCenter" v-if='level==0'>
                     <template slot="title">
                         <Icon type="model-s"></Icon>
                         代理中心
                     </template>
                     <MenuItem name="agentList" v-if='permission.includes("代理列表")'>代理列表</MenuItem>
-                    <MenuItem name="warnList" v-if='permission.includes("接入商点数警告列表")'>接入商点数警告列表</MenuItem>
                 </Submenu>
                 <Submenu name="agentCenter" v-else>
                     <template slot="title">
@@ -188,10 +164,7 @@
                         代理中心
                     </template>
                     <MenuItem name="agentList">代理列表</MenuItem>
-                    <MenuItem name="warnList">接入商点数警告列表</MenuItem>
                 </Submenu>
-
-
                 <Submenu name="playerCenter" v-if='level==0'>
                     <template slot="title">
                         <Icon type="ios-game-controller-b"></Icon>
@@ -206,11 +179,6 @@
                     </template>
                     <MenuItem name="playList">玩家列表</MenuItem>
                 </Submenu>
-
-
-
-
-
                 <Submenu name="adminCenter" v-if="level==0">
                     <template slot="title">
                         <Icon type="ios-people"></Icon>
@@ -218,41 +186,6 @@
                     </template>
                     <MenuItem name="adminList" v-if='permission.includes("管理员列表")'>管理员列表</MenuItem>
                     <MenuItem name="agentRole" v-if='permission.includes("代理角色列表")'>代理角色列表</MenuItem>
-                </Submenu>
-
-                <!-- <Submenu name="gameCenter" v-if="level==0">
-                    <template slot="title">
-                        <Icon type="gear-b"></Icon>
-                        游戏中心
-                    </template>
-                    <MenuItem name="gameConfig" v-if='permission.includes("包房代理游戏配置")'>包房代理游戏配置</MenuItem>
-                </Submenu> -->
-                  <!-- <Submenu name="opreateCenter" v-if="level==0">
-                    <template slot="title">
-                        <Icon type="social-usd"></Icon>
-                        运营中心
-                    </template>
-                    <MenuItem name="prizeList">神秘大奖</MenuItem>
-                </Submenu> -->
-                <Submenu name="logCenter" v-if="level==0">
-                    <template slot="title">
-                        <Icon type="bug"></Icon>
-                        日志中心
-                    </template>
-                    <MenuItem name="loginLog" v-if='permission.includes("登录日志")'>登录日志</MenuItem>
-                    <MenuItem name="operationLog" v-if='permission.includes("操作日志")'>操作日志</MenuItem>
-                    <!-- <MenuItem name="adminLoginLog" v-if='permission.includes("管理员登录日志")'>管理员登录日志</MenuItem>
-                    <MenuItem name="adminOpreateLog" v-if='permission.includes("管理员操作日志")'>管理员操作日志</MenuItem>
-                    <MenuItem name="agentLoginLog" v-if='permission.includes("代理登录日志")'>代理登录日志</MenuItem>
-                    <MenuItem name="agentOpreateLog" v-if='permission.includes("代理操作日志")'>代理操作日志</MenuItem> -->
-                </Submenu>
-                <Submenu name="logCenter" v-else>
-                    <template slot="title">
-                        <Icon type="bug"></Icon>
-                        日志中心
-                    </template>
-                    <MenuItem name="agentLoginLog">代理登录日志</MenuItem>
-                    <MenuItem name="agentOpreateLog">代理操作日志</MenuItem>
                 </Submenu>
             </Menu>
         </Sider>

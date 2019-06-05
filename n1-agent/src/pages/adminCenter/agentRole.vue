@@ -489,7 +489,7 @@ export default {
           render: (h, params) => {
             return h(
               "span",
-              dayjs(params.row.createdAt).format("YYYY-MM-DD HH:mm:ss")
+              dayjs(params.row.createdAt).format("YYYY-MM-DD")
             );
           }
         },
