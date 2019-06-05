@@ -2154,14 +2154,17 @@ export default {
         url = "/visual/chain/days"
         this.columns1[1].title = "昨日"
         this.columns1[2].title = "今日"
+        this.columns1[3].title = "今日 / 昨日"
       } else if(this.cpCode == 1) {
         url = "/visual/chain/weeks"
         this.columns1[1].title = "上周"
         this.columns1[2].title = "本周"
+        this.columns1[3].title = "本周 / 上周"
       } else {
         url = "/visual/chain/months"
         this.columns1[1].title = "上月"
         this.columns1[2].title = "本月"
+        this.columns1[3].title = "本月 / 上月"
       }
       httpRequest("get", url, params, "map").then(res => {
         this.cpGameBetAmount = res.data.betAmount.gameTypeList
