@@ -333,6 +333,7 @@ export default {
         //localStorage.removeItem('dayCompany')
         //console.log(233);
         vm.spinShow = true
+        vm.showWaterList = []
         vm.init()
     });
   },

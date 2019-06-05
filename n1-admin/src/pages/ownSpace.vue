@@ -389,6 +389,7 @@ export default {
 
   created() {
     this.init();
+    this.columns1 = []
   }
 };
 </script>

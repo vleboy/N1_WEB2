@@ -280,6 +280,7 @@ export default {
       //localStorage.removeItem('dayCompany')
       //console.log(233);
       vm.spinShow = true;
+      vm.showWaterList = []
       vm.init();
     });
   },
@@ -952,6 +953,9 @@ export default {
       let arr = o.split(".");
       return arr;
     } // 截取文件名的后缀
+  },
+  mounted() {
+    
   }
 };
 </script>

@@ -171,13 +171,11 @@
           @click="getWaterfallList"
         >(点击查询)</span>
       </h2>
-      <Table :columns="columns" :data="showData" size="small"></Table>
+      <Table :columns="columns" :data="showWaterList" size="small"></Table>
       <Page
-        :total="total"
+        :total="totalPage"
         class="page"
-        show-elevator
         :page-size="pageSize"
-        show-total
         @on-change="changepage"
       ></Page>
     </div>
@@ -244,12 +242,29 @@ import {
   userChangeStatus,
   agentUpdate,
   addBill,
-  reduceBill
+  reduceBill,
+  httpRequest
 } from "@/service/index";
 import dayjs from "dayjs";
 import { thousandFormatter } from "@/config/format";
 import _ from "lodash";
 export default {
+  beforeRouteEnter(to, from, next) {
+    /* console.log(this, 'beforeRouteEnter'); // undefined
+    console.log(to, '组件独享守卫beforeRouteEnter第一个参数');
+    console.log(from, '组件独享守卫beforeRouteEnter第二个参数');
+    console.log(next, '组件独享守卫beforeRouteEnter第三个参数'); */
+    next(vm => {
+      //因为当钩子执行前，组件实例还没被创建
+      // vm 就是当前组件的实例相当于上面的 this，所以在 next 方法里你就可以把 vm 当 this 来用了。
+      //console.log(vm);//当前组件的实例
+        //localStorage.removeItem('dayCompany')
+        //console.log(233);
+        vm.spinShow = true
+        vm.showWaterList = []
+        vm.init()
+    });
+  },
   data() {
     const validateRate = (rule, value, callback) => {
       if (value == "") {
@@ -264,6 +279,11 @@ export default {
       }
     };
     return {
+      totalPage: 20, //数据总量
+      pageSize: 20, //每页显示数据量
+      currentPage: 1, //当前页码
+      showNext: false, //是否显示下100条
+      showWaterList: [],
       GameListEnum: {
         NA: [
           { company: "NA", code: "70000", name: "H5电子游戏" },
@@ -320,7 +340,6 @@ export default {
       isTest: false,
       role: "",
       mixTip: "",
-      pageSize: 100, //分页
       showData: [], //分页显示的data
       isedit: true,
       spinShow: false,
@@ -747,6 +766,7 @@ export default {
     };
   },
   created() {
+   
     this.init();
   },
   computed: {
@@ -774,19 +794,41 @@ export default {
     }
   },
   methods: {
+    
+    //获取流水列表
     async getWaterfallList() {
+      
       let userId = this.$route.query.userId;
-      let req1 = getWaterfall(userId);
-      this.spinShow = true;
-      let waterfall = await this.axios.all([req1]);
-      this.spinShow = false;
-      /* if (waterfall && waterfall.code == 0) {
-        this.waterfall = waterfall.payload;
-        console.log(this.waterfall);
-      } */
-      //console.log(waterfall[0].payload);
-
-      this.showData = waterfall[0].payload;
+      if (this.showNext) {
+        let params = {
+          createdAt: this.startKey.createdAt,
+          sn: this.startKey.sn,
+          balance: this.showData[this.showData.length - 1].oldBalance
+        };
+        this.spinShow = true;
+        let waterfall = await httpRequest(
+          "get",
+          `/waterfall/${userId}`,
+          params
+        );
+        this.spinShow = false;
+        this.showData = this.showData.concat(waterfall.payload);
+        this.totalPage = this.showData.length;
+        this.startKey = waterfall.startKey;
+      } else {
+        let params = "";
+        this.spinShow = true;
+        let waterfall = await httpRequest(
+          "get",
+          `/waterfall/${userId}`,
+          params
+        );
+        this.spinShow = false;
+        this.showData = waterfall.payload;
+        this.totalPage = this.showData.length;
+        this.startKey = waterfall.startKey;
+        this.showWaterList = _.chunk(this.showData, 20)[0];
+      }
     },
     handlePage() {
       // 初始化显示，小于每页显示条数，全显，大于每页显示条数，取前每页条数显示
@@ -796,12 +838,16 @@ export default {
         this.showData = this.waterfall.slice(0, this.pageSize);
       }
     },
+    //切页
     changepage(index) {
-      let size = this.pageSize;
-      let _start = (index - 1) * size;
-      let _end = index * size;
-      this.showData = this.waterfall.slice(_start, _end);
-      // console.log(this.showData);
+      if (this.showData.length >= 100) {
+          if (index % 5 == 0 && this.showData.length <= index * 20) {
+          this.showNext = true;
+          this.getWaterfallList();
+        }
+      }
+      
+      this.showWaterList = _.chunk(this.showData, 20)[index - 1];
     },
     changeNextAgentPass() {
       let password = this.basic.password;
