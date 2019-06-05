@@ -599,7 +599,7 @@ export default {
     $route: {
       
       handler: function(_new, _old) {
-        console.log(0);
+        
         
         if (
           

@@ -262,9 +262,12 @@ export default {
         this.$router.push({
           name: "playDetail",
           query: {
-            name:name
+            name:name,
+            time: this.changedTime,
+            type: this.gameType
             }
           })
+          localStorage.setItem("playDetail", "playDetail")
     },
     confirm() {
       this.init();

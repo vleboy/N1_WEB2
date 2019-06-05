@@ -2035,7 +2035,6 @@ export default {
       // 先请求2个
       httpRequest("get", "/visual/pie/game", params, "map").then(res => {
         this.gameDtributedData = res.data;
-        this.spinShow = false;
         this.changeGameDtributedDataType();
       });
       httpRequest("get", "/visual/line/day", params, "map").then(res => {
@@ -2045,6 +2044,7 @@ export default {
         httpRequest("get", "/visual/map/china", params, "map").then(res => {
           this.chinaAllData = res.data;
           this.changeChinaDataType();
+          this.spinShow = false;
         });
         httpRequest("get", "/visual/line/player", params, "map").then(res => {
           this.playerCountData = res.data;

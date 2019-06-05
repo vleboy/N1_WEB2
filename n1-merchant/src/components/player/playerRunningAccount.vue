@@ -119,6 +119,7 @@ $
 </template>
 <script type="text/ecmascript-6">
 import { formatUserName, thousandFormatter } from "@/config/format";
+import { getGameType } from "@/config/getGameType";
 import { httpRequest } from "@/service/index";
 import dayjs from "dayjs";
 import SportsModal from "@/components/record/sportsModal";
@@ -273,7 +274,7 @@ export default {
         "90018": "鲤跃龙门"
       },
 
-      amountDate: [], // 时间日期选择
+      amountDate: [new Date(new Date().getTime() - 3600 * 1000 * 24 * 6), new Date()], // 时间日期选择
       playerAccountList: [], // 玩家流水账列表
       playerRecordList: [], // 玩家战绩列表
       playerAccountListStorage: [],
@@ -338,7 +339,7 @@ export default {
     };
   },
   mounted() {
-    this.changeTime()
+    this.getPlayerAccount()
   },
   computed: {
     dataList() {
@@ -546,7 +547,7 @@ export default {
           this.isFetching = false;
         });
     },
-    changeTime() {
+    /* changeTime() {
       const end = new Date();
       const start = new Date();
       if (this.radioTime) {
@@ -569,7 +570,8 @@ export default {
           this.getDate();
           break;
       }
-    }, // 最近的时间快捷选择联动
+    },  */
+    // 最近的时间快捷选择联动
     changeDate() {
       if (this.amountDate) {
         this.startDate = new Date(this.amountDate[0]).getTime();
@@ -655,15 +657,48 @@ export default {
     }
   },
   watch: {
-    $route: function(_new, _old) {
-      if (
-        _new.name == "playDetail" &&
-        localStorage.playerName != this.playerAccountUserName
-      ) {
-        this.initData();
-        this.getPlayerAccount();
-      }
+    $route: {
+      
+      handler: function(_new, _old) {
+        
+        
+        if (
+          
+          _new.name == "playDetail" &&
+          localStorage.playDetail == 'playDetail'
+        ) {
+          //console.log(1)
+          this.amountDate = []
+
+          let gameCode = String(this.$route.query.type)
+          //console.log(this.radioInfo);
+          //console.log(this.radioInfo)
+          
+          if (this.gameCode != '') {
+            getGameType().map(item => {
+              if (item.code == gameCode) {
+                this.companyInfo =  item.company
+                this.radioInfo = item.name
+              }
+            })
+          } else {
+            this.companyInfo == "全部厂商"
+          }
+          
+        
+          let st = this.$route.query.time[0]
+          let et = this.$route.query.time[1]
+          this.amountDate = [new Date(st), new Date(et)]
+          console.log(this.amountDate);
+          console.log('fufk');
+          
+          this.getPlayerAccount()
+        }
+        localStorage.removeItem("playDetail")
+      },
+      immediate: true,
     }
+    
   },
   filter1s: {
     //过滤器，所有数字保留两位小数
