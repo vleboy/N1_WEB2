@@ -17,12 +17,12 @@
         <FormItem label="管理员姓名" prop="adminName">
           <Input v-model="formItem.adminName" placeholder="2~16位,只能输入中英文"></Input>
         </FormItem>
-        <FormItem label="管理员邮箱" prop="adminEmail">
+        <!-- <FormItem label="管理员邮箱" prop="adminEmail">
           <Input v-model="formItem.adminEmail" placeholder="请输入"></Input>
         </FormItem>
         <FormItem label="管理员联系方式" prop="adminContact">
           <Input v-model="formItem.adminContact" placeholder="5~40位,只能输入中英文及数字"></Input>
-        </FormItem>
+        </FormItem> -->
         <FormItem>
           <Button type="primary" @click="addAdmin('addform')">提交</Button>
           <Button type="primary" class="reset" @click="reset('addform')">重置</Button>
@@ -100,8 +100,8 @@ export default {
         username: "",
         password: "",
         adminName: "",
-        adminEmail: "",
-        adminContact: ""
+        /* adminEmail: "",
+        adminContact: "" */
       },
       subRoleList: [],
       ruleValidate: {
@@ -130,7 +130,7 @@ export default {
             trigger: "blur"
           }
         ],
-        adminEmail: [
+        /* adminEmail: [
           {
             validator: validateEmail,
             trigger: "blur"
@@ -141,7 +141,7 @@ export default {
             validator: validateContact,
             trigger: "blur"
           }
-        ]
+        ] */
       }
     };
   },

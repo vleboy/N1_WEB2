@@ -105,7 +105,7 @@ export default {
           sortable:true
         },
         {
-          title: "真实姓名",
+          title: "管理员姓名",
           key: "adminName",
           align: 'center',
           sortable:true
@@ -129,12 +129,12 @@ export default {
           sortable:true,
           minWidth:20
         },
-        {
+        /* {
           title: "邮箱",
           key: "adminEmail",
           align: 'center',
           sortable:true
-        },
+        }, */
         {
           title: "操作",
           slot: "operate",
