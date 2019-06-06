@@ -4,7 +4,7 @@
       <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
       <div style>加载中...</div>
     </Spin>
-    <div class="top">
+    <div class="top" v-show="showTop">
       <Select style="width:200px;" ref="resetSelect" clearable v-model="model1" size="small"> 
         <Option
           v-for="(item, index) in gameType"
@@ -42,6 +42,7 @@
       <TabPane label="商户榜单"></TabPane>
       <TabPane label="玩家榜单"></TabPane>
       <TabPane label="商户环比"></TabPane>
+      <TabPane label="游戏环比"></TabPane>
     </Tabs>
     <div class="echarts" v-if="initNum == 0">
       <Row>
@@ -204,7 +205,7 @@
         </Col>
       </Row>
     </div>
-    <div v-else>
+    <div v-else-if="initNum == 4">
       <div style="margin:0 0 1rem 0">
         <RadioGroup v-model="cpCode" type="button" @on-change="changCompare">
           <Radio label="0">日环比</Radio>
@@ -213,14 +214,16 @@
         </RadioGroup>
       </div>
       <Row>
-        <Col span="12">
+        <Col span="24">
           <Card style="position:relative">
             <h3 slot="title">玩家人数环比</h3>
             <div :style="{height:'550px',width:'100%'}" ref="cpPlayerCount">
             </div>
           </Card>
         </Col>
-        <Col span="12">
+      </Row>
+      <Row>
+        <Col span="24">
           <Card style="position:relative">
             <h3 slot="title">投注次数环比</h3>
             <div :style="{height:'550px',width:'100%'}" ref="cpBetCount">
@@ -229,30 +232,34 @@
         </Col>
       </Row>
       <Row>
-        <Col span="12">
+        <Col span="24">
           <Card style="position:relative">
             <h3 slot="title">投注金额环比</h3>
              <div :style="{height:'550px',width:'100%'}" ref="cpBetAmount">
             </div>
           </Card>
         </Col>
-        <Col span="12">
+      </Row> 
+      <Row>
+        <Col span="24">
           <Card style="position:relative">
             <h3 slot="title">退款金额环比</h3>
              <div :style="{height:'550px',width:'100%'}" ref="cpRefundAmount">
             </div>
           </Card>
         </Col>
-      </Row> 
+      </Row>
       <Row>
-        <Col span="12">
+        <Col span="24">
           <Card style="position:relative">
             <h3 slot="title">返还金额环比</h3>
             <div :style="{height:'550px',width:'100%'}" ref="cpRetAmount">
             </div>
           </Card>
         </Col>
-        <Col span="12">
+      </Row>
+      <Row>
+        <Col span="24">
           <Card style="position:relative">
             <h3 slot="title">输赢金额环比</h3>
             <div :style="{height:'550px',width:'100%'}" ref="cpWinloseAmount">
@@ -260,7 +267,70 @@
           </Card>
         </Col>
       </Row>
-    </div> 
+    </div>
+    <div v-else>
+      <div style="margin:0 0 1rem 0">
+        <RadioGroup v-model="cpGameCode" type="button" @on-change="changGameCompare">
+          <Radio label="0">日环比</Radio>
+          <Radio label="1">周环比</Radio>
+          <Radio label="2">月环比</Radio>
+        </RadioGroup>
+      </div>
+      <Row>
+        <Col span="24">
+          <Card style="position:relative">
+            <h3 slot="title">玩家人数环比</h3>
+            <div :style="{height:'550px',width:'100%'}" ref="cpGamePlayerCount">
+            </div>
+          </Card>
+        </Col>
+      </Row>
+      <Row>
+        <Col span="24">
+          <Card style="position:relative">
+            <h3 slot="title">投注次数环比</h3>
+            <div :style="{height:'550px',width:'100%'}" ref="cpGameBetCount">
+            </div>
+          </Card>
+        </Col>
+      </Row>
+      <Row>
+        <Col span="24">
+          <Card style="position:relative">
+            <h3 slot="title">投注金额环比</h3>
+             <div :style="{height:'550px',width:'100%'}" ref="cpGameBetAmount">
+            </div>
+          </Card>
+        </Col>
+      </Row> 
+      <Row>
+        <Col span="24">
+          <Card style="position:relative">
+            <h3 slot="title">退款金额环比</h3>
+             <div :style="{height:'550px',width:'100%'}" ref="cpGameRefundAmount">
+            </div>
+          </Card>
+        </Col>
+      </Row>
+      <Row>
+        <Col span="24">
+          <Card style="position:relative">
+            <h3 slot="title">返还金额环比</h3>
+            <div :style="{height:'550px',width:'100%'}" ref="cpGameRetAmount">
+            </div>
+          </Card>
+        </Col>
+      </Row>
+      <Row>
+        <Col span="24">
+          <Card style="position:relative">
+            <h3 slot="title">输赢金额环比</h3>
+            <div :style="{height:'550px',width:'100%'}" ref="cpGameWinloseAmount">
+            </div>
+          </Card>
+        </Col>
+      </Row>
+    </div>  
   </div>
 </template>
 
@@ -279,27 +349,23 @@ import dayjs from "dayjs";
 export default {
   data() {
     return {
+      /*  */
+      showPlayerCount: {},
+      /*  */
+      showTop:true,
       showChangeTime: true,
       showTime: true,
       source: "0",
       initNum: 0,
       rankCount: 0,
       cpCode: "0",
-      /* cpBetAmount:[],
-      cpGameBetAmount:[],
-      cpBetCount:[],
-      cpGameBetCount:[],
-      cpPlayerCount:[],
-      cpGamePlayerCount:[],
-      cpRefundAmount:[],
-      cpGameRefundAmount:[],
-      cpWinloseAmount:[],
-      cpGameWinloseAmount:[],
-      cpRetAmount:[],
-      cpGameRetAmount:[], */
+      cpGameCode: "0",
       cpDaysData:[],
       cpWeeksData:[],
       cpmonthsData:[],
+      cpGameDaysData:[],
+      cpGameWeeksData:[],
+      cpGamemonthsData:[],
       columns1: [
         {
           title: "游戏名",
@@ -502,6 +568,10 @@ export default {
       this.cpCode = val
       this.compareInit()
     },
+    changGameCompare(val) {
+      this.cpGameCode = val
+      this.compareGameInit()
+    },
     changeBoard(val) {
       this.initNum = val;
       if (this.initNum == undefined) {
@@ -516,6 +586,11 @@ export default {
          this.showChangeTime = true
          this.showTime = true
        }
+       if (this.initNum == 5) {
+         this.showTop = false
+       } else {
+         this.showTop = true
+       }
        switch (this.initNum) {
           case 0:
             this.init();
@@ -529,8 +604,12 @@ export default {
            case 3:
             this.pyRankInit();
            break; 
+           case 4:
+            this.compareInit();
+           break;
          default:
-            this.compareInit()
+            this.compareGameInit()
+
            break;
        }
       /* if (this.initNum == 0) {
@@ -563,9 +642,12 @@ export default {
             break;
            case 3:
             this.pyRankInit();
+           break;
+           case 4:
+            this.compareInit();
            break; 
          default:
-            this.compareInit()
+            return
            break;
        }
       /* if (this.initNum == 0) {
@@ -909,9 +991,12 @@ export default {
             break;
            case 3:
             this.pyRankInit();
-           break; 
+           break;
+           case 4:
+            this.compareInit();
+           break;  
          default:
-            this.compareInit()
+            this.compareGameInit()
            break;
        }
       /* if (this.initNum == 0) {
@@ -951,8 +1036,11 @@ export default {
            case 3:
             this.pyRankInit();
            break; 
+           case 4:
+            this.compareInit();
+           break;
          default:
-            this.compareInit()
+            this.compareGameInit()
            break;
        }
       /* if (this.initNum == 0) {
@@ -2005,7 +2093,7 @@ export default {
       );
     },
 
-    //环比折线图 
+    //商户环比折线图 
     cpPlayerCountConfig() {
       let myChart = this.$echarts.init(this.$refs.cpPlayerCount)
       myChart.setOption(
@@ -2016,12 +2104,14 @@ export default {
           legend: {
             orient: "vertical",
             data:this.cpDaysData.playerCount.yNames,
+            //data:this.testDemo.playerCount.yNames,
             left: '1%',
             top: '10%',
-            padding: [15,5]
+            padding: [15,5],
+            //selected: this.showPlayerCount
           },
           grid: {
-            left: '20%',
+            left: '15%',
             right: '4%',
             bottom: '3%',
             containLabel: true
@@ -2053,7 +2143,7 @@ export default {
             padding: [15,5]
           },
           grid: {
-            left: '20%',
+            left: '15%',
             right: '4%',
             bottom: '3%',
             containLabel: true
@@ -2085,7 +2175,7 @@ export default {
             padding: [15,5]
           },
           grid: {
-            left: '20%',
+            left: '15%',
             right: '4%',
             bottom: '3%',
             containLabel: true
@@ -2117,7 +2207,7 @@ export default {
             padding: [15,5]
           },
           grid: {
-            left: '20%',
+            left: '15%',
             right: '4%',
             bottom: '3%',
             containLabel: true
@@ -2149,7 +2239,7 @@ export default {
             padding: [15,5]
           },
           grid: {
-            left: '20%',
+            left: '15%',
             right: '4%',
             bottom: '3%',
             containLabel: true
@@ -2181,7 +2271,7 @@ export default {
             padding: [15,5]
           },
           grid: {
-            left: '20%',
+            left: '15%',
             right: '4%',
             bottom: '3%',
             containLabel: true
@@ -2198,6 +2288,201 @@ export default {
         }
       )
     },
+    //玩家环比折线图
+    cpGamePlayerCountConfig() {
+      let myChart = this.$echarts.init(this.$refs.cpGamePlayerCount)
+      myChart.setOption(
+        {
+          tooltip: {
+            trigger: 'axis'
+          },
+          legend: {
+            orient: "vertical",
+            data:this.cpGameDaysData.playerCount.yNames,
+            left: '1%',
+            top: '10%',
+            padding: [15,5]
+          },
+          grid: {
+            left: '15%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: this.cpGameDaysData.playerCount.xNames
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: this.cpGameDaysData.playerCount.series
+        }
+      )
+    },
+    cpGameBetCountConfig() {
+      let myChart = this.$echarts.init(this.$refs.cpGameBetCount)
+      myChart.setOption(
+        {
+          tooltip: {
+            trigger: 'axis'
+          },
+          legend: {
+            orient: "vertical",
+            data:this.cpGameDaysData.betCount.yNames,
+            left: '1%',
+            top: '10%',
+            padding: [15,5]
+          },
+          grid: {
+            left: '15%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: this.cpGameDaysData.betCount.xNames
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: this.cpGameDaysData.betCount.series
+        }
+      )
+    },
+    cpGameBetAmountConfig() {
+      let myChart = this.$echarts.init(this.$refs.cpGameBetAmount)
+      myChart.setOption(
+        {
+          tooltip: {
+            trigger: 'axis'
+          },
+          legend: {
+            orient: "vertical",
+            data:this.cpGameDaysData.betAmount.yNames,
+            left: '1%',
+            top: '10%',
+            padding: [15,5]
+          },
+          grid: {
+            left: '15%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: this.cpGameDaysData.betAmount.xNames
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: this.cpGameDaysData.betAmount.series
+        }
+      )
+    },
+    cpGameRefundAmountConfig() {
+      let myChart = this.$echarts.init(this.$refs.cpGameRefundAmount)
+      myChart.setOption(
+        {
+          tooltip: {
+            trigger: 'axis'
+          },
+          legend: {
+            orient: "vertical",
+            data:this.cpGameDaysData.refundAmount.yNames,
+            left: '1%',
+            top: '10%',
+            padding: [15,5]
+          },
+          grid: {
+            left: '15%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: this.cpGameDaysData.refundAmount.xNames
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: this.cpGameDaysData.refundAmount.series
+        }
+      )
+    },
+    cpGameRetAmountConfig() {
+      let myChart = this.$echarts.init(this.$refs.cpGameRetAmount)
+      myChart.setOption(
+        {
+          tooltip: {
+            trigger: 'axis'
+          },
+          legend: {
+            orient: "vertical",
+            data:this.cpGameDaysData.retAmount.yNames,
+            left: '1%',
+            top: '10%',
+            padding: [15,5]
+          },
+          grid: {
+            left: '15%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: this.cpGameDaysData.retAmount.xNames
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: this.cpGameDaysData.retAmount.series
+        }
+      )
+    },
+    cpGameWinloseAmountConfig() {
+      let myChart = this.$echarts.init(this.$refs.cpGameWinloseAmount)
+      myChart.setOption(
+        {
+          tooltip: {
+            trigger: 'axis'
+          },
+          legend: {
+            orient: "vertical",
+            data:this.cpGameDaysData.winloseAmount.yNames,
+            left: '1%',
+            top: '10%',
+            padding: [15,5]
+          },
+          grid: {
+            left: '15%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: this.cpGameDaysData.winloseAmount.xNames
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: this.cpGameDaysData.winloseAmount.series
+        }
+      )
+    },
+
+
     /* 初始数据 */
     //趋势榜单
     init() {
@@ -2326,12 +2611,13 @@ export default {
       });
       
     },
-    //环比
+    //商户环比
     compareInit() {
       this.spinShow = true
       let url = ''
       let params = {
-        queryType: ''
+        queryType: '',
+        gameType: this.gameCode
       }
       if (this.cpCode == 0) {
         params.queryType = 'days'
@@ -2341,8 +2627,10 @@ export default {
         params.queryType = 'months'
       }
       httpRequest("get", '/visual/chain/merchant', params, "map").then(res => {
-        console.log(res);
+        //console.log(res);
         this.cpDaysData = res.data
+        this.showPlayerCount = res.data.playerCount.selected
+        console.log(this.showPlayerCount);
         this.cpPlayerCountConfig()
         this.cpBetCountConfig()
         this.cpBetAmountConfig()
@@ -2351,12 +2639,42 @@ export default {
         this.cpWinloseAmountConfig()
         this.spinShow = false
       })
+    },
+    //玩家环比
+    compareGameInit() {
+      this.spinShow = true
+      let url = ''
+      let params = {
+        queryType: ''
+      }
+      if (this.cpGameCode == 0) {
+        params.queryType = 'days'
+      } else if(this.cpGameCode == 1) {
+        params.queryType = 'weeks'
+      } else {
+        params.queryType = 'months'
+      }
+      httpRequest("get", '/visual/chain/gameType', params, "map").then(res => {
+        //console.log(res);
+        this.cpGameDaysData = res.data
+        
+        
+        this.cpGamePlayerCountConfig()
+        this.cpGameBetCountConfig()
+        this.cpGameBetAmountConfig()
+        this.cpGameRefundAmountConfig()
+        this.cpGameRetAmountConfig()
+        this.cpGameWinloseAmountConfig()
+        this.spinShow = false
+      })
     }
-
 
     
   },
   computed: {
+    /* testDemo() {
+      return this.cpDaysData
+    }, */
     changedTime() {
       let time = this.defaultTime;
       time = time.map((item, index) => {
