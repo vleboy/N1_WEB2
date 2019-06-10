@@ -213,56 +213,12 @@
           <Radio label="2">月环比</Radio>
         </RadioGroup>
       </div>
-      <Row>
+      <Row v-for="(item, index) in cpList" :key="index">
         <Col span="24">
           <Card style="position:relative">
-            <h3 slot="title">玩家人数环比</h3>
-            <div :style="{height:'550px',width:'100%'}" ref="cpPlayerCount">
-            </div>
-          </Card>
-        </Col>
-      </Row>
-      <Row>
-        <Col span="24">
-          <Card style="position:relative">
-            <h3 slot="title">投注次数环比</h3>
-            <div :style="{height:'550px',width:'100%'}" ref="cpBetCount">
-            </div>
-          </Card>
-        </Col>
-      </Row>
-      <Row>
-        <Col span="24">
-          <Card style="position:relative">
-            <h3 slot="title">投注金额环比</h3>
-             <div :style="{height:'550px',width:'100%'}" ref="cpBetAmount">
-            </div>
-          </Card>
-        </Col>
-      </Row> 
-      <Row>
-        <Col span="24">
-          <Card style="position:relative">
-            <h3 slot="title">退款金额环比</h3>
-             <div :style="{height:'550px',width:'100%'}" ref="cpRefundAmount">
-            </div>
-          </Card>
-        </Col>
-      </Row>
-      <Row>
-        <Col span="24">
-          <Card style="position:relative">
-            <h3 slot="title">返还金额环比</h3>
-            <div :style="{height:'550px',width:'100%'}" ref="cpRetAmount">
-            </div>
-          </Card>
-        </Col>
-      </Row>
-      <Row>
-        <Col span="24">
-          <Card style="position:relative">
-            <h3 slot="title">输赢金额环比</h3>
-            <div :style="{height:'550px',width:'100%'}" ref="cpWinloseAmount">
+            <h3 slot="title">{{item.name}}</h3>
+            <Button @click="cpHide(index)">显示/隐藏</Button>
+            <div :style="{height:'550px',width:'100%'}" :id="item.id">
             </div>
           </Card>
         </Col>
@@ -276,56 +232,12 @@
           <Radio label="2">月环比</Radio>
         </RadioGroup>
       </div>
-      <Row>
+       <Row v-for="(item, index) in cpGameList" :key="index">
         <Col span="24">
           <Card style="position:relative">
-            <h3 slot="title">玩家人数环比</h3>
-            <div :style="{height:'550px',width:'100%'}" ref="cpGamePlayerCount">
-            </div>
-          </Card>
-        </Col>
-      </Row>
-      <Row>
-        <Col span="24">
-          <Card style="position:relative">
-            <h3 slot="title">投注次数环比</h3>
-            <div :style="{height:'550px',width:'100%'}" ref="cpGameBetCount">
-            </div>
-          </Card>
-        </Col>
-      </Row>
-      <Row>
-        <Col span="24">
-          <Card style="position:relative">
-            <h3 slot="title">投注金额环比</h3>
-             <div :style="{height:'550px',width:'100%'}" ref="cpGameBetAmount">
-            </div>
-          </Card>
-        </Col>
-      </Row> 
-      <Row>
-        <Col span="24">
-          <Card style="position:relative">
-            <h3 slot="title">退款金额环比</h3>
-             <div :style="{height:'550px',width:'100%'}" ref="cpGameRefundAmount">
-            </div>
-          </Card>
-        </Col>
-      </Row>
-      <Row>
-        <Col span="24">
-          <Card style="position:relative">
-            <h3 slot="title">返还金额环比</h3>
-            <div :style="{height:'550px',width:'100%'}" ref="cpGameRetAmount">
-            </div>
-          </Card>
-        </Col>
-      </Row>
-      <Row>
-        <Col span="24">
-          <Card style="position:relative">
-            <h3 slot="title">输赢金额环比</h3>
-            <div :style="{height:'550px',width:'100%'}" ref="cpGameWinloseAmount">
+            <h3 slot="title">{{item.name}}</h3>
+            <Button @click="cpGameHide(index)">显示/隐藏</Button>
+            <div :style="{height:'550px',width:'100%'}" :id="item.id">
             </div>
           </Card>
         </Col>
@@ -351,6 +263,74 @@ export default {
     return {
       /*  */
       showPlayerCount: {},
+      /*  */
+      /* 商户环比隐藏 */
+      cpList: [
+        {
+          id: 'cpPlayerCount',
+          name: '玩家人数环比'
+        },
+        {
+          id: 'cpBetCount',
+          name: '投注次数环比'
+        },
+        {
+          id: 'cpBetAmount',
+          name: '投注金额环比'
+        },
+        {
+          id: 'cpRefundAmount',
+          name: '退款金额环比'
+        },
+        {
+          id: 'cpRetAmount',
+          name: '返还金额环比'
+        },
+        {
+          id: 'cpWinloseAmount',
+          name: '输赢金额环比'
+        }
+      ],
+      cpShow0: true,
+      cpShow1: true,
+      cpShow2: true,
+      cpShow3: true,
+      cpShow4: true,
+      cpShow5: true,
+      /*  */
+       /* 商户环比隐藏 */
+      cpGameList: [
+        {
+          id: 'cpGamePlayerCount',
+          name: '玩家人数环比'
+        },
+        {
+          id: 'cpGameBetCount',
+          name: '投注次数环比'
+        },
+        {
+          id: 'cpGameBetAmount',
+          name: '投注金额环比'
+        },
+        {
+          id: 'cpGameRefundAmount',
+          name: '退款金额环比'
+        },
+        {
+          id: 'cpGameRetAmount',
+          name: '返还金额环比'
+        },
+        {
+          id: 'cpGameWinloseAmount',
+          name: '输赢金额环比'
+        }
+      ],
+      cpGameShow0: true,
+      cpGameShow1: true,
+      cpGameShow2: true,
+      cpGameShow3: true,
+      cpGameShow4: true,
+      cpGameShow5: true,
       /*  */
       showTop:true,
       showChangeTime: true,
@@ -550,20 +530,63 @@ export default {
     this.changeDate();
   },
   methods: {
-    //环比增长
-    rateConfig(row) {
-      let color = ''
-      let rate =  row.rate == '-' ? '-' : `${row.rate}%`
-      if (row.rate > 0) {
-        color = 'green'
-      } else if(row.rate < 0) {
-        color = 'red'
-      } else {
-        color = '#000'
+    cpHide(index) {
+      switch (index) {
+        case 0:
+          this.cpShow0 = !this.cpShow0
+          this.cpPlayerCountConfig()
+          break;
+        case 1:
+          this.cpShow1 = !this.cpShow1
+          this.cpBetCountConfig()
+          break;
+        case 2:
+          this.cpShow2 = !this.cpShow2
+          this.cpBetAmountConfig()
+          break;
+        case 3:
+          this.cpShow3 = !this.cpShow3
+          this.cpRefundAmountConfig()
+          break;
+        case 4:
+          this.cpShow4 = !this.cpShow4
+          this.cpRetAmountConfig()
+          break;     
+        default:
+          this.cpShow5 = !this.cpShow5
+          this.cpWinloseAmountConfig()
+          break;
       }
-
-      return {rate, color}
     },
+    cpGameHide(index) {
+      switch (index) {
+        case 0:
+          this.cpGameShow0 = !this.cpGameShow0
+          this.cpGamePlayerCountConfig()
+          break;
+        case 1:
+          this.cpGameShow1 = !this.cpGameShow1
+          this.cpGameBetCountConfig()
+          break;
+        case 2:
+          this.cpGameShow2 = !this.cpGameShow2
+          this.cpGameBetAmountConfig()
+          break;
+        case 3:
+          this.cpGameShow3 = !this.cpGameShow3
+          this.cpGameRefundAmountConfig()
+          break;
+        case 4:
+          this.cpGameShow4 = !this.cpGameShow4
+          this.cpGameRetAmountConfig()
+          break;     
+        default:
+          this.cpGameShow5 = !this.cpGameShow5
+          this.cpGameWinloseAmountConfig()
+          break;
+      }
+    },
+    
     changCompare(val) {
       this.cpCode = val
       this.compareInit()
@@ -2094,8 +2117,9 @@ export default {
     },
 
     //商户环比折线图 
-    cpPlayerCountConfig() {
-      let myChart = this.$echarts.init(this.$refs.cpPlayerCount)
+     cpPlayerCountConfig() {
+      let myChart = this.$echarts.init(document.getElementById('cpPlayerCount'))
+      let selected = this.cpShow0 ? {} : this.cpDaysData.playerCount.selected
       myChart.setOption(
         {
           tooltip: {
@@ -2108,7 +2132,7 @@ export default {
             left: '1%',
             top: '10%',
             padding: [15,5],
-            //selected: this.showPlayerCount
+            selected: selected
           },
           grid: {
             left: '15%',
@@ -2126,10 +2150,11 @@ export default {
           },
           series: this.cpDaysData.playerCount.series
         }
-      )
+        ,true)
     },
     cpBetCountConfig() {
-      let myChart = this.$echarts.init(this.$refs.cpBetCount)
+      let myChart = this.$echarts.init(document.getElementById('cpBetCount'))
+      let selected = this.cpShow1 ? {} : this.cpDaysData.betCount.selected
       myChart.setOption(
         {
           tooltip: {
@@ -2140,7 +2165,8 @@ export default {
             data:this.cpDaysData.betCount.yNames,
             left: '1%',
             top: '10%',
-            padding: [15,5]
+            padding: [15,5],
+            selected: selected
           },
           grid: {
             left: '15%',
@@ -2157,11 +2183,12 @@ export default {
             type: 'value'
           },
           series: this.cpDaysData.betCount.series
-        }
+        },true
       )
     },
     cpBetAmountConfig() {
-      let myChart = this.$echarts.init(this.$refs.cpBetAmount)
+      let myChart = this.$echarts.init(document.getElementById('cpBetAmount'))
+      let selected = this.cpShow2 ? {} : this.cpDaysData.betAmount.selected
       myChart.setOption(
         {
           tooltip: {
@@ -2172,7 +2199,8 @@ export default {
             data:this.cpDaysData.betAmount.yNames,
             left: '1%',
             top: '10%',
-            padding: [15,5]
+            padding: [15,5],
+            selected: selected
           },
           grid: {
             left: '15%',
@@ -2189,11 +2217,13 @@ export default {
             type: 'value'
           },
           series: this.cpDaysData.betAmount.series
-        }
+        },true
       )
     },
     cpRefundAmountConfig() {
-      let myChart = this.$echarts.init(this.$refs.cpRefundAmount)
+      //let myChart = this.$echarts.init(this.$refs.cpRefundAmount)
+      let myChart = this.$echarts.init(document.getElementById('cpRefundAmount'))
+      let selected = this.cpShow3 ? {} : this.cpDaysData.refundAmount.selected
       myChart.setOption(
         {
           tooltip: {
@@ -2204,7 +2234,8 @@ export default {
             data:this.cpDaysData.refundAmount.yNames,
             left: '1%',
             top: '10%',
-            padding: [15,5]
+            padding: [15,5],
+            selected: selected
           },
           grid: {
             left: '15%',
@@ -2221,11 +2252,12 @@ export default {
             type: 'value'
           },
           series: this.cpDaysData.refundAmount.series
-        }
+        },true
       )
     },
     cpRetAmountConfig() {
-      let myChart = this.$echarts.init(this.$refs.cpRetAmount)
+      let myChart = this.$echarts.init(document.getElementById('cpRetAmount'))
+      let selected = this.cpShow4 ? {} : this.cpDaysData.retAmount.selected
       myChart.setOption(
         {
           tooltip: {
@@ -2236,7 +2268,8 @@ export default {
             data:this.cpDaysData.retAmount.yNames,
             left: '1%',
             top: '10%',
-            padding: [15,5]
+            padding: [15,5],
+            selected: selected
           },
           grid: {
             left: '15%',
@@ -2253,11 +2286,12 @@ export default {
             type: 'value'
           },
           series: this.cpDaysData.retAmount.series
-        }
+        },true
       )
     },
     cpWinloseAmountConfig() {
-      let myChart = this.$echarts.init(this.$refs.cpWinloseAmount)
+      let myChart = this.$echarts.init(document.getElementById('cpWinloseAmount'))
+      let selected = this.cpShow5 ? {} : this.cpDaysData.winloseAmount.selected
       myChart.setOption(
         {
           tooltip: {
@@ -2268,7 +2302,8 @@ export default {
             data:this.cpDaysData.winloseAmount.yNames,
             left: '1%',
             top: '10%',
-            padding: [15,5]
+            padding: [15,5],
+            selected: selected
           },
           grid: {
             left: '15%',
@@ -2285,12 +2320,14 @@ export default {
             type: 'value'
           },
           series: this.cpDaysData.winloseAmount.series
-        }
+        },true
       )
     },
+
     //玩家环比折线图
     cpGamePlayerCountConfig() {
-      let myChart = this.$echarts.init(this.$refs.cpGamePlayerCount)
+      let myChart = this.$echarts.init(document.getElementById('cpGamePlayerCount'))
+      let selected = this.cpGameShow0 ? {} : this.cpGameDaysData.playerCount.selected
       myChart.setOption(
         {
           tooltip: {
@@ -2301,7 +2338,8 @@ export default {
             data:this.cpGameDaysData.playerCount.yNames,
             left: '1%',
             top: '10%',
-            padding: [15,5]
+            padding: [15,5],
+            selected: selected
           },
           grid: {
             left: '15%',
@@ -2318,11 +2356,12 @@ export default {
             type: 'value'
           },
           series: this.cpGameDaysData.playerCount.series
-        }
+        },true
       )
     },
     cpGameBetCountConfig() {
-      let myChart = this.$echarts.init(this.$refs.cpGameBetCount)
+      let myChart = this.$echarts.init(document.getElementById('cpGameBetCount'))
+      let selected = this.cpGameShow1 ? {} : this.cpGameDaysData.betCount.selected
       myChart.setOption(
         {
           tooltip: {
@@ -2333,7 +2372,8 @@ export default {
             data:this.cpGameDaysData.betCount.yNames,
             left: '1%',
             top: '10%',
-            padding: [15,5]
+            padding: [15,5],
+            selected: selected
           },
           grid: {
             left: '15%',
@@ -2350,11 +2390,12 @@ export default {
             type: 'value'
           },
           series: this.cpGameDaysData.betCount.series
-        }
+        },true
       )
     },
     cpGameBetAmountConfig() {
-      let myChart = this.$echarts.init(this.$refs.cpGameBetAmount)
+      let myChart = this.$echarts.init(document.getElementById('cpGameBetAmount'))
+      let selected = this.cpGameShow2 ? {} : this.cpGameDaysData.betAmount.selected
       myChart.setOption(
         {
           tooltip: {
@@ -2365,7 +2406,8 @@ export default {
             data:this.cpGameDaysData.betAmount.yNames,
             left: '1%',
             top: '10%',
-            padding: [15,5]
+            padding: [15,5],
+            selected: selected
           },
           grid: {
             left: '15%',
@@ -2382,11 +2424,12 @@ export default {
             type: 'value'
           },
           series: this.cpGameDaysData.betAmount.series
-        }
+        },true
       )
     },
     cpGameRefundAmountConfig() {
-      let myChart = this.$echarts.init(this.$refs.cpGameRefundAmount)
+      let myChart = this.$echarts.init(document.getElementById('cpGameRefundAmount'))
+      let selected = this.cpGameShow3 ? {} : this.cpGameDaysData.refundAmount.selected
       myChart.setOption(
         {
           tooltip: {
@@ -2397,7 +2440,8 @@ export default {
             data:this.cpGameDaysData.refundAmount.yNames,
             left: '1%',
             top: '10%',
-            padding: [15,5]
+            padding: [15,5],
+            selected: selected
           },
           grid: {
             left: '15%',
@@ -2414,11 +2458,12 @@ export default {
             type: 'value'
           },
           series: this.cpGameDaysData.refundAmount.series
-        }
+        },true
       )
     },
     cpGameRetAmountConfig() {
-      let myChart = this.$echarts.init(this.$refs.cpGameRetAmount)
+      let myChart = this.$echarts.init(document.getElementById('cpGameRetAmount'))
+      let selected = this.cpGameShow4 ? {} : this.cpGameDaysData.retAmount.selected
       myChart.setOption(
         {
           tooltip: {
@@ -2429,7 +2474,8 @@ export default {
             data:this.cpGameDaysData.retAmount.yNames,
             left: '1%',
             top: '10%',
-            padding: [15,5]
+            padding: [15,5],
+            selected: selected
           },
           grid: {
             left: '15%',
@@ -2446,11 +2492,12 @@ export default {
             type: 'value'
           },
           series: this.cpGameDaysData.retAmount.series
-        }
+        },true
       )
     },
     cpGameWinloseAmountConfig() {
-      let myChart = this.$echarts.init(this.$refs.cpGameWinloseAmount)
+      let myChart = this.$echarts.init(document.getElementById('cpGameWinloseAmount'))
+      let selected = this.cpGameShow5 ? {} : this.cpGameDaysData.winloseAmount.selected
       myChart.setOption(
         {
           tooltip: {
@@ -2461,7 +2508,8 @@ export default {
             data:this.cpGameDaysData.winloseAmount.yNames,
             left: '1%',
             top: '10%',
-            padding: [15,5]
+            padding: [15,5],
+            selected: selected
           },
           grid: {
             left: '15%',
@@ -2478,7 +2526,7 @@ export default {
             type: 'value'
           },
           series: this.cpGameDaysData.winloseAmount.series
-        }
+        },true
       )
     },
 
@@ -2630,7 +2678,6 @@ export default {
         //console.log(res);
         this.cpDaysData = res.data
         this.showPlayerCount = res.data.playerCount.selected
-        console.log(this.showPlayerCount);
         this.cpPlayerCountConfig()
         this.cpBetCountConfig()
         this.cpBetAmountConfig()
