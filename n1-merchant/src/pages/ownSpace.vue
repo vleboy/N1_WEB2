@@ -414,6 +414,7 @@ export default {
         this.totalPage = this.showData.length;
         this.startKey = waterfall.startKey;
         this.showWaterList = _.chunk(this.showData, 20)[0];
+        console.log(this.showWaterList);
       }
       
     },
