@@ -1934,7 +1934,14 @@ export default {
             {
               type: "bar",
               barWidth: '30%',
-              data: datas
+              data: datas,
+              itemStyle: {
+                normal: {
+                  color: function(params) {
+                    return params.data > 0 ? "green" : "red"
+                  }
+                }
+              }
             }
           ]
         },
@@ -2109,7 +2116,14 @@ export default {
             {
               type: "bar",
               barWidth: '40%',
-              data: datas
+              data: datas,
+              itemStyle: {
+                normal: {
+                  color: function(params) {
+                    return params.data > 0 ? "green" : "red"
+                  }
+                }
+              }
             }
           ]
         },
