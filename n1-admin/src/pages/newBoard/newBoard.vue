@@ -261,9 +261,6 @@ import dayjs from "dayjs";
 export default {
   data() {
     return {
-      /*  */
-      showPlayerCount: {},
-      /*  */
       /* 商户环比隐藏 */
       cpList: [
         {
@@ -291,14 +288,17 @@ export default {
           name: '输赢金额环比'
         }
       ],
+      cpData:[],
+      showChangeTime: true,
+      cpCode: "0",
+      showTime: true,
       cpShow0: true,
       cpShow1: true,
       cpShow2: true,
       cpShow3: true,
       cpShow4: true,
       cpShow5: true,
-      /*  */
-       /* 商户环比隐藏 */
+       /* 游戏环比隐藏 */
       cpGameList: [
         {
           id: 'cpGamePlayerCount',
@@ -325,27 +325,17 @@ export default {
           name: '输赢金额环比'
         }
       ],
+      cpGameData:[],
+      cpGameCode: "0",
       cpGameShow0: true,
       cpGameShow1: true,
       cpGameShow2: true,
       cpGameShow3: true,
       cpGameShow4: true,
       cpGameShow5: true,
-      /*  */
       showTop:true,
-      showChangeTime: true,
-      showTime: true,
-      source: "0",
+      /* 顶部功能 */
       initNum: 0,
-      rankCount: 0,
-      cpCode: "0",
-      cpGameCode: "0",
-      cpDaysData:[],
-      cpWeeksData:[],
-      cpmonthsData:[],
-      cpGameDaysData:[],
-      cpGameWeeksData:[],
-      cpGamemonthsData:[],
       columns1: [
         {
           title: "游戏名",
@@ -466,9 +456,9 @@ export default {
           }
         ]
       },
-     
-      //defaultTime: getDefaultTime(),
       defaultTime: "",
+      spinShow: false,
+      /* 趋势 */
       splitColor: [
         "#E3170D",
         "#FF8000",
@@ -507,16 +497,13 @@ export default {
       gameUnit: "",
       chinaMapUnit: "",
       worldMapUnit: "",
-      spinShow: false,
+      
       model1: "全部游戏",
       gameCode: "",
       dateType: "2",
-      chinaDataType: "0",
-      worldDataType: "0",
-      gameDtributedDataType: "0",
-      realData: [932, 901, 934, 1290, 1330, 1320, 145],
-      xArr: [1, 2, 3, 4, 5, 6, 7],
-      hander: null,
+      chinaDataType: "0",//中国地图数据类型
+      worldDataType: "0",//世界地图数据类型
+      gameDtributedDataType: "0",//游戏占比数据类型
       houreMomentData: [],
       weekMomentData: [],
       monthMomentData: [],
@@ -530,6 +517,7 @@ export default {
     this.changeDate();
   },
   methods: {
+    /* 显示隐藏环比图表 */
     cpHide(index) {
       switch (index) {
         case 0:
@@ -794,16 +782,6 @@ export default {
             
            break;
        }
-      /* if (this.initNum == 0) {
-        this.changeBoard();
-      } else if (this.initNum == 1) {
-        this.distributionInit();
-      } else if (this.initNum == 2) {
-        this.mcRankInit();
-      } else {
-        this.pyRankInit();
-      } */
-      this.rankCount++;
     },
     changeChinaDataType(val) {
       if (val == undefined) {
@@ -1601,31 +1579,37 @@ export default {
             {
               name: "玩家数量",
               type: "bar",
+              barWidth: '80%',
               data: playerCount
             },
             {
               name: "投注次数",
               type: "bar",
+              barWidth: '80%',
               data: betCount
             },
             {
               name: "投注金额",
               type: "bar",
+              barWidth: '80%',
               data: betAmount
             },
             {
               name: "退款金额",
               type: "bar",
+              barWidth: '80%',
               data: refundAmount
             },
             {
               name: "返回金额",
               type: "bar",
+              barWidth: '80%',
               data: retAmount
             },
             {
               name: "输赢金额",
               type: "bar",
+              barWidth: '80%',
               data: winloseAmount
             }
           ]
@@ -1706,31 +1690,37 @@ export default {
             {
               name: "玩家数量",
               type: "bar",
+              barWidth: '30%',
               data: playerCount
             },
             {
               name: "投注次数",
               type: "bar",
+              barWidth: '30%',
               data: betCount
             },
             {
               name: "投注金额",
               type: "bar",
+              barWidth: '30%',
               data: betAmount
             },
             {
               name: "退款金额",
               type: "bar",
+              barWidth: '30%',
               data: refundAmount
             },
             {
               name: "返回金额",
               type: "bar",
+              barWidth: '30%',
               data: retAmount
             },
             {
               name: "输赢金额",
               type: "bar",
+              barWidth: '30%',
               data: winloseAmount
             }
           ]
@@ -1738,6 +1728,7 @@ export default {
         true
       );
     },
+
     //商户排行榜柱状图
     mcPlayerCount() {
       let myChart = this.$echarts.init(this.$refs.merchantPlayerCount);
@@ -1774,6 +1765,7 @@ export default {
           series: [
             {
               type: "bar",
+              barWidth: '30%',
               data: datas
             }
           ]
@@ -1815,6 +1807,7 @@ export default {
           series: [
             {
               type: "bar",
+              barWidth: '30%',
               data: datas
             }
           ]
@@ -1856,6 +1849,7 @@ export default {
           series: [
             {
               type: "bar",
+              barWidth: '30%',
               data: datas
             }
           ]
@@ -1897,6 +1891,7 @@ export default {
           series: [
             {
               type: "bar",
+              barWidth: '30%',
               data: datas
             }
           ]
@@ -1938,6 +1933,7 @@ export default {
           series: [
             {
               type: "bar",
+              barWidth: '30%',
               data: datas
             }
           ]
@@ -1945,6 +1941,7 @@ export default {
         true
       );
     },
+
     //玩家排行榜柱状图
     pyBetCount() {
       let myChart = this.$echarts.init(this.$refs.playerBetCount);
@@ -1981,6 +1978,7 @@ export default {
           series: [
             {
               type: "bar",
+              barWidth: '40%',
               data: datas
             }
           ]
@@ -2023,6 +2021,7 @@ export default {
           series: [
             {
               type: "bar",
+              barWidth: '40%',
               data: datas
             }
           ]
@@ -2065,6 +2064,7 @@ export default {
           series: [
             {
               type: "bar",
+              barWidth: '40%',
               data: datas
             }
           ]
@@ -2108,6 +2108,7 @@ export default {
           series: [
             {
               type: "bar",
+              barWidth: '40%',
               data: datas
             }
           ]
@@ -2119,7 +2120,7 @@ export default {
     //商户环比折线图 
      cpPlayerCountConfig() {
       let myChart = this.$echarts.init(document.getElementById('cpPlayerCount'))
-      let selected = this.cpShow0 ? {} : this.cpDaysData.playerCount.selected
+      let selected = this.cpShow0 ? {} : this.cpData.playerCount.selected
       myChart.setOption(
         {
           tooltip: {
@@ -2127,7 +2128,7 @@ export default {
           },
           legend: {
             orient: "vertical",
-            data:this.cpDaysData.playerCount.yNames,
+            data:this.cpData.playerCount.yNames,
             //data:this.testDemo.playerCount.yNames,
             left: '1%',
             top: '10%',
@@ -2143,18 +2144,18 @@ export default {
           xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: this.cpDaysData.playerCount.xNames
+            data: this.cpData.playerCount.xNames
           },
           yAxis: {
             type: 'value'
           },
-          series: this.cpDaysData.playerCount.series
+          series: this.cpData.playerCount.series
         }
         ,true)
     },
     cpBetCountConfig() {
       let myChart = this.$echarts.init(document.getElementById('cpBetCount'))
-      let selected = this.cpShow1 ? {} : this.cpDaysData.betCount.selected
+      let selected = this.cpShow1 ? {} : this.cpData.betCount.selected
       myChart.setOption(
         {
           tooltip: {
@@ -2162,7 +2163,7 @@ export default {
           },
           legend: {
             orient: "vertical",
-            data:this.cpDaysData.betCount.yNames,
+            data:this.cpData.betCount.yNames,
             left: '1%',
             top: '10%',
             padding: [15,5],
@@ -2177,18 +2178,18 @@ export default {
           xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: this.cpDaysData.betCount.xNames
+            data: this.cpData.betCount.xNames
           },
           yAxis: {
             type: 'value'
           },
-          series: this.cpDaysData.betCount.series
+          series: this.cpData.betCount.series
         },true
       )
     },
     cpBetAmountConfig() {
       let myChart = this.$echarts.init(document.getElementById('cpBetAmount'))
-      let selected = this.cpShow2 ? {} : this.cpDaysData.betAmount.selected
+      let selected = this.cpShow2 ? {} : this.cpData.betAmount.selected
       myChart.setOption(
         {
           tooltip: {
@@ -2196,7 +2197,7 @@ export default {
           },
           legend: {
             orient: "vertical",
-            data:this.cpDaysData.betAmount.yNames,
+            data:this.cpData.betAmount.yNames,
             left: '1%',
             top: '10%',
             padding: [15,5],
@@ -2211,19 +2212,19 @@ export default {
           xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: this.cpDaysData.betAmount.xNames
+            data: this.cpData.betAmount.xNames
           },
           yAxis: {
             type: 'value'
           },
-          series: this.cpDaysData.betAmount.series
+          series: this.cpData.betAmount.series
         },true
       )
     },
     cpRefundAmountConfig() {
       //let myChart = this.$echarts.init(this.$refs.cpRefundAmount)
       let myChart = this.$echarts.init(document.getElementById('cpRefundAmount'))
-      let selected = this.cpShow3 ? {} : this.cpDaysData.refundAmount.selected
+      let selected = this.cpShow3 ? {} : this.cpData.refundAmount.selected
       myChart.setOption(
         {
           tooltip: {
@@ -2231,7 +2232,7 @@ export default {
           },
           legend: {
             orient: "vertical",
-            data:this.cpDaysData.refundAmount.yNames,
+            data:this.cpData.refundAmount.yNames,
             left: '1%',
             top: '10%',
             padding: [15,5],
@@ -2246,18 +2247,18 @@ export default {
           xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: this.cpDaysData.refundAmount.xNames
+            data: this.cpData.refundAmount.xNames
           },
           yAxis: {
             type: 'value'
           },
-          series: this.cpDaysData.refundAmount.series
+          series: this.cpData.refundAmount.series
         },true
       )
     },
     cpRetAmountConfig() {
       let myChart = this.$echarts.init(document.getElementById('cpRetAmount'))
-      let selected = this.cpShow4 ? {} : this.cpDaysData.retAmount.selected
+      let selected = this.cpShow4 ? {} : this.cpData.retAmount.selected
       myChart.setOption(
         {
           tooltip: {
@@ -2265,7 +2266,7 @@ export default {
           },
           legend: {
             orient: "vertical",
-            data:this.cpDaysData.retAmount.yNames,
+            data:this.cpData.retAmount.yNames,
             left: '1%',
             top: '10%',
             padding: [15,5],
@@ -2280,18 +2281,18 @@ export default {
           xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: this.cpDaysData.retAmount.xNames
+            data: this.cpData.retAmount.xNames
           },
           yAxis: {
             type: 'value'
           },
-          series: this.cpDaysData.retAmount.series
+          series: this.cpData.retAmount.series
         },true
       )
     },
     cpWinloseAmountConfig() {
       let myChart = this.$echarts.init(document.getElementById('cpWinloseAmount'))
-      let selected = this.cpShow5 ? {} : this.cpDaysData.winloseAmount.selected
+      let selected = this.cpShow5 ? {} : this.cpData.winloseAmount.selected
       myChart.setOption(
         {
           tooltip: {
@@ -2299,7 +2300,7 @@ export default {
           },
           legend: {
             orient: "vertical",
-            data:this.cpDaysData.winloseAmount.yNames,
+            data:this.cpData.winloseAmount.yNames,
             left: '1%',
             top: '10%',
             padding: [15,5],
@@ -2314,12 +2315,12 @@ export default {
           xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: this.cpDaysData.winloseAmount.xNames
+            data: this.cpData.winloseAmount.xNames
           },
           yAxis: {
             type: 'value'
           },
-          series: this.cpDaysData.winloseAmount.series
+          series: this.cpData.winloseAmount.series
         },true
       )
     },
@@ -2327,7 +2328,7 @@ export default {
     //玩家环比折线图
     cpGamePlayerCountConfig() {
       let myChart = this.$echarts.init(document.getElementById('cpGamePlayerCount'))
-      let selected = this.cpGameShow0 ? {} : this.cpGameDaysData.playerCount.selected
+      let selected = this.cpGameShow0 ? {} : this.cpGameData.playerCount.selected
       myChart.setOption(
         {
           tooltip: {
@@ -2335,7 +2336,7 @@ export default {
           },
           legend: {
             orient: "vertical",
-            data:this.cpGameDaysData.playerCount.yNames,
+            data:this.cpGameData.playerCount.yNames,
             left: '1%',
             top: '10%',
             padding: [15,5],
@@ -2350,18 +2351,18 @@ export default {
           xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: this.cpGameDaysData.playerCount.xNames
+            data: this.cpGameData.playerCount.xNames
           },
           yAxis: {
             type: 'value'
           },
-          series: this.cpGameDaysData.playerCount.series
+          series: this.cpGameData.playerCount.series
         },true
       )
     },
     cpGameBetCountConfig() {
       let myChart = this.$echarts.init(document.getElementById('cpGameBetCount'))
-      let selected = this.cpGameShow1 ? {} : this.cpGameDaysData.betCount.selected
+      let selected = this.cpGameShow1 ? {} : this.cpGameData.betCount.selected
       myChart.setOption(
         {
           tooltip: {
@@ -2369,7 +2370,7 @@ export default {
           },
           legend: {
             orient: "vertical",
-            data:this.cpGameDaysData.betCount.yNames,
+            data:this.cpGameData.betCount.yNames,
             left: '1%',
             top: '10%',
             padding: [15,5],
@@ -2384,18 +2385,18 @@ export default {
           xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: this.cpGameDaysData.betCount.xNames
+            data: this.cpGameData.betCount.xNames
           },
           yAxis: {
             type: 'value'
           },
-          series: this.cpGameDaysData.betCount.series
+          series: this.cpGameData.betCount.series
         },true
       )
     },
     cpGameBetAmountConfig() {
       let myChart = this.$echarts.init(document.getElementById('cpGameBetAmount'))
-      let selected = this.cpGameShow2 ? {} : this.cpGameDaysData.betAmount.selected
+      let selected = this.cpGameShow2 ? {} : this.cpGameData.betAmount.selected
       myChart.setOption(
         {
           tooltip: {
@@ -2403,7 +2404,7 @@ export default {
           },
           legend: {
             orient: "vertical",
-            data:this.cpGameDaysData.betAmount.yNames,
+            data:this.cpGameData.betAmount.yNames,
             left: '1%',
             top: '10%',
             padding: [15,5],
@@ -2418,18 +2419,18 @@ export default {
           xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: this.cpGameDaysData.betAmount.xNames
+            data: this.cpGameData.betAmount.xNames
           },
           yAxis: {
             type: 'value'
           },
-          series: this.cpGameDaysData.betAmount.series
+          series: this.cpGameData.betAmount.series
         },true
       )
     },
     cpGameRefundAmountConfig() {
       let myChart = this.$echarts.init(document.getElementById('cpGameRefundAmount'))
-      let selected = this.cpGameShow3 ? {} : this.cpGameDaysData.refundAmount.selected
+      let selected = this.cpGameShow3 ? {} : this.cpGameData.refundAmount.selected
       myChart.setOption(
         {
           tooltip: {
@@ -2437,7 +2438,7 @@ export default {
           },
           legend: {
             orient: "vertical",
-            data:this.cpGameDaysData.refundAmount.yNames,
+            data:this.cpGameData.refundAmount.yNames,
             left: '1%',
             top: '10%',
             padding: [15,5],
@@ -2452,18 +2453,18 @@ export default {
           xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: this.cpGameDaysData.refundAmount.xNames
+            data: this.cpGameData.refundAmount.xNames
           },
           yAxis: {
             type: 'value'
           },
-          series: this.cpGameDaysData.refundAmount.series
+          series: this.cpGameData.refundAmount.series
         },true
       )
     },
     cpGameRetAmountConfig() {
       let myChart = this.$echarts.init(document.getElementById('cpGameRetAmount'))
-      let selected = this.cpGameShow4 ? {} : this.cpGameDaysData.retAmount.selected
+      let selected = this.cpGameShow4 ? {} : this.cpGameData.retAmount.selected
       myChart.setOption(
         {
           tooltip: {
@@ -2471,7 +2472,7 @@ export default {
           },
           legend: {
             orient: "vertical",
-            data:this.cpGameDaysData.retAmount.yNames,
+            data:this.cpGameData.retAmount.yNames,
             left: '1%',
             top: '10%',
             padding: [15,5],
@@ -2486,18 +2487,18 @@ export default {
           xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: this.cpGameDaysData.retAmount.xNames
+            data: this.cpGameData.retAmount.xNames
           },
           yAxis: {
             type: 'value'
           },
-          series: this.cpGameDaysData.retAmount.series
+          series: this.cpGameData.retAmount.series
         },true
       )
     },
     cpGameWinloseAmountConfig() {
       let myChart = this.$echarts.init(document.getElementById('cpGameWinloseAmount'))
-      let selected = this.cpGameShow5 ? {} : this.cpGameDaysData.winloseAmount.selected
+      let selected = this.cpGameShow5 ? {} : this.cpGameData.winloseAmount.selected
       myChart.setOption(
         {
           tooltip: {
@@ -2505,7 +2506,7 @@ export default {
           },
           legend: {
             orient: "vertical",
-            data:this.cpGameDaysData.winloseAmount.yNames,
+            data:this.cpGameData.winloseAmount.yNames,
             left: '1%',
             top: '10%',
             padding: [15,5],
@@ -2520,12 +2521,12 @@ export default {
           xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: this.cpGameDaysData.winloseAmount.xNames
+            data: this.cpGameData.winloseAmount.xNames
           },
           yAxis: {
             type: 'value'
           },
-          series: this.cpGameDaysData.winloseAmount.series
+          series: this.cpGameData.winloseAmount.series
         },true
       )
     },
@@ -2676,8 +2677,7 @@ export default {
       }
       httpRequest("get", '/visual/chain/merchant', params, "map").then(res => {
         //console.log(res);
-        this.cpDaysData = res.data
-        this.showPlayerCount = res.data.playerCount.selected
+        this.cpData = res.data
         this.cpPlayerCountConfig()
         this.cpBetCountConfig()
         this.cpBetAmountConfig()
@@ -2703,7 +2703,7 @@ export default {
       }
       httpRequest("get", '/visual/chain/gameType', params, "map").then(res => {
         //console.log(res);
-        this.cpGameDaysData = res.data
+        this.cpGameData = res.data
         
         
         this.cpGamePlayerCountConfig()
@@ -2719,9 +2719,6 @@ export default {
     
   },
   computed: {
-    /* testDemo() {
-      return this.cpDaysData
-    }, */
     changedTime() {
       let time = this.defaultTime;
       time = time.map((item, index) => {
