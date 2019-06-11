@@ -256,14 +256,16 @@ export default {
         this.spinShow = false
         res.config.forEach(item => {
           if (item.gameType.indexOf("_") != -1) {
-            this.mysArr.push(item);
+            this.mysArr.push(item);//有神秘大奖系列
+          } else {
+            this.noMysArr.push(item);//无神秘大奖系列
           }
         })
-        res.config.forEach(item => {
+        /* res.config.forEach(item => {
           if (item.gameType.indexOf("_") == -1) {
-            this.noMysArr.push(item);
+            
           }
-        })
+        }) */
       })
     }
 
