@@ -217,7 +217,7 @@
         <Col span="24">
           <Card style="position:relative">
             <h3 slot="title">{{item.name}}</h3>
-            <Button @click="cpHide(index)">显示/隐藏</Button>
+            <Button @click="cpHide(index)">全部显示/隐藏</Button>
             <div :style="{height:'550px',width:'100%'}" :id="item.id">
             </div>
           </Card>
@@ -236,7 +236,7 @@
         <Col span="24">
           <Card style="position:relative">
             <h3 slot="title">{{item.name}}</h3>
-            <Button @click="cpGameHide(index)">显示/隐藏</Button>
+            <Button @click="cpGameHide(index)">全部显示/隐藏</Button>
             <div :style="{height:'550px',width:'100%'}" :id="item.id">
             </div>
           </Card>
