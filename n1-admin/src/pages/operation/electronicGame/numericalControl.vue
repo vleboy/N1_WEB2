@@ -1,23 +1,70 @@
 <template>
-  <div class="dayReport">
-    <div class="nowList">
-      <div>
-    <p>
+  <div class="control">
+    <div style="margin-bottom:1rem">
+      <Select style="width:200px;" ref="resetSelect" clearable v-model="model1" size="small"> 
+        <Option
+          v-for="(item, index) in gameType"
+          :value="item.name"
+          :key="item.name"
+          @click.native="selGame(item.code)"
+        >{{item.name}}</Option>
+      </Select>
+    </div>  
+    <div style="merchant">
+      <Table :columns="columns0" :data="merchantList" size="small">
+        <template
+          slot-scope="{row, index}"
+          slot="parentDisplayName"
+        >{{`${row.parentDisplayName}(${row.parentSuffix})`}}
+        </template>
+        <template slot-scope="{row, index}" slot="operate">
+          <Button type="text" style="color:#20a0ff;cursor:pointer" @click="setGameConfig(row)">设置</Button>
+          <Button type="text" style="color:#20a0ff;cursor:pointer" @click="addGameConfig(row)">新增</Button>
+        </template>
+      </Table>
+    </div>
+
+    
+    <Modal v-model="modal1" :title="merchantId" footer-hide width="65">
+      <div style="height:400px;over-flow:auto">
+        <div>
       <Table :columns="columns1" :data="mysArr" style="margin-bottom: 1rem" size="small">
         <template slot-scope="{row, index}" slot="prizeOperate">
           <span style="cursor:pointer;color:#20a0ff" @click="prizeOperateConfig(row)">修改并启用配置</span>
         </template>
       </Table>
-    </p>
-    <p>
-      <Table :columns="columns2" :data="noMysArr" size="small">
-        <template slot-scope="{row, index}" slot="noOperate">
-          <span style="cursor:pointer;color:#20a0ff" @click="prizeOperateConfig(row)">修改并启用配置</span>
+      </div>
+      <div>
+        <Table :columns="columns2" :data="noMysArr" size="small">
+          <template slot-scope="{row, index}" slot="noOperate">
+            <span style="cursor:pointer;color:#20a0ff" @click="prizeOperateConfig(row)">修改并启用配置</span>
+          </template>
+        </Table>
+      </div>
+      </div>
+    </Modal>
+
+    <!-- <Modal v-model="modal2" :title="merchantId" footer-hide width="65">
+      <div style="height:400px;over-flow:auto">
+        <div>
+      <Table :columns="columns1" :data="mysArr" style="margin-bottom: 1rem" size="small">
+        <template slot-scope="{row, index}" slot="prizeOperate">
+          <span style="cursor:pointer;color:#20a0ff" @click="addPrizeOperateConfig(row)">修改并启用配置</span>
         </template>
       </Table>
-    </p> 
-  </div>
-    </div>
+      </div>
+      <div>
+        <Table :columns="columns2" :data="noMysArr" size="small">
+          <template slot-scope="{row, index}" slot="noOperate">
+            <span style="cursor:pointer;color:#20a0ff" @click="addPrizeOperateConfig(row)">修改并启用配置</span>
+          </template>
+        </Table>
+      </div>
+      </div>
+      
+    </Modal> -->
+
+
     <Spin size="large" fix v-show="spinShow" style="z-index:200;">
       <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
       <div style>加载中...</div>
@@ -27,24 +74,73 @@
 
 <script>
 
-import { httpRequest } from "@/service/index";
+import { httpRequest, getMerchants } from "@/service/index";
+import { numGameList } from "@/config/getGameType";
 export default {
   created() {
-    this.getData();
-    
+    this.getGameList()
+    this.getMerchantList();
   },
   data() {
     return {
+      model1: '全部游戏',
+      gameId: '',
       spinShow: false,
+      modal1: false,
+      merchantId: '',
+      merchantList:[],
+      userId: '',
+      gameType: [],
       dataList: [],
       mysArr: [],
       noMysArr: [],
+      columns0: [
+        {
+          title: "序号",
+          type: "index",
+          align: "center",
+          maxWidth: 80
+        },
+        {
+          title: "商户ID",
+          key: "displayId",
+          sortable: true,
+          align: "center"
+        },
+        {
+          title: "商户标识",
+          key: "sn",
+          sortable: true,
+          align: "center"
+        },
+        {
+          title: "商户昵称",
+          key: "displayName",
+          sortable: true,
+          align: "center"
+        },
+        {
+          title: "上级线路商",
+          slot: "parentDisplayName",
+          sortable: true,
+          align: "center"
+        },
+        {
+          title: "玩家数量",
+          key: "playerCount",
+          align: "center"
+        },
+        {
+          title: "操作",
+          slot: "operate",
+          align: "center"
+        },
+      ],
       columns1: [
         {
           title: "游戏系列-神秘大奖版",
           align: 'center',
           key: "gameType",
-         
         },
         {
           title: "数值配表",
@@ -223,9 +319,9 @@ export default {
   },
   methods: {
     /* 神秘大奖系列 */
-    //操作
+    //修改游戏配置
     prizeOperateConfig(row) {
-      //(row.killRateLevel);
+      console.log(row);
       
       this.$Modal.confirm({
         title: '操作',
@@ -234,8 +330,8 @@ export default {
           httpRequest(
             "post",
             "/setGameConfig",
-            { gameType: row.gameType,config:{killRateLevel:row.killRateLevel}},
-            "prize"
+            { gameId: row.gameId,parent:this.userId,config:{killRateLevel:row.killRateLevel}},
+            "test"
           )
             this.$Message.info('操作成功');
         },
@@ -244,83 +340,126 @@ export default {
         }
       })
     },
+     
 
-    async getData() {
+    addPrizeOperateConfig(row) {
+
+    }, 
+
+     //获取游戏配置
+     getGameData() {
+      console.log(this.gameId);
+       
       this.spinShow = true
+      this.mysArr = []
+      this.noMysArr = []
+      let params = {}
+      if (this.gameId != '') {
+        params = {
+          gameId: this.gameId,
+          //parent: this.userId
+          parent: this.userId
+        }
+      } else {
+        params = {
+          gameType: 'all',
+          parent: this.userId
+        }
+      }
       httpRequest(
         "post",
         "/getGameConfig",
-        { gameType: 'all'},
-        "prize"
+        params,
+        "test"
       ).then(res => {
         this.spinShow = false
-        res.config.forEach(item => {
+        if (res.code == 0) {
+          res.config.forEach(item => {
           if (item.gameType.indexOf("_") != -1) {
             this.mysArr.push(item);//有神秘大奖系列
           } else {
             this.noMysArr.push(item);//无神秘大奖系列
           }
         })
-        /* res.config.forEach(item => {
-          if (item.gameType.indexOf("_") == -1) {
-            
-          }
-        }) */
+        }
       })
-    }
+    },
 
+    //获取游戏配置模板
+    getAllGameData() {
+      this.mysArr = []
+      this.noMysArr = []
+      httpRequest(
+        "post",
+        "/getGameConfig",
+        {gameType: 'all'},
+        "test"
+      ).then(res => {
+        this.spinShow = false
+        if (res.code == 0) {
+          res.config.forEach(item => {
+          if (item.gameType.indexOf("_") != -1) {
+            this.mysArr.push(item);//有神秘大奖系列
+          } else {
+            this.noMysArr.push(item);//无神秘大奖系列
+          }
+        })
+        }
+      })
+    },
+
+
+    /* 商户列表 */
+    getMerchantList() {
+      this.spinShow = false
+      let params = {
+        query: '',
+        isH5: true,
+        isTest: 0,
+        sortkey: "createdAt",
+        sort: "desc"
+      };
+      getMerchants(params).then(res => {
+        this.merchantList = res.payload;
+        this.spinShow = false;
+      });
+    },
+
+    //显示修改游戏配置
+    setGameConfig(row) {
+      this.modal1 = true
+      this.userId = row.userId
+      this.merchantId = row.displayName
+
+      this.getGameData()
+    },
+
+    //显示新增游戏配置
+    addGameConfig(row) {
+       this.modal1 = true
+       this.userId = row.userId
+       this.merchantId = row.displayName
+
+       this.getAllGameData()   
+    },
+
+    //选择游戏
+    selGame(code) {
+      this.gameId = code;
+    },
+    //获取游戏
+    getGameList() {
+      this.gameType = numGameList();
+    },
   },
   computed: {
-    /* getMys() {
-      let mysArr = [];
-      this.dataList.forEach(item => {
-        if (item.gameType.indexOf("_") != -1) {
-          mysArr.push(item);
-        }
-      });
-      
-      return mysArr;
-    },
-    getNoMys() {
-      let mysArr = [];
-      this.dataList.forEach(item => {
-        if (item.gameType.indexOf("_") == -1) {
-          mysArr.push(item);
-        }
-      });
-      return mysArr;
-    } */
+   
   }
 };
 </script>
 
 
 <style lang="less" scoped>
-.dayReport {
-  min-height: 90vh;
-  .title {
-    font-size: 1.2rem;
-    margin: 0.5rem 0 0.5rem;
-    font-weight: 600;
-    display: inline-block;
-  }
-  .top {
-    display: flex;
-    margin-bottom: 1rem;
-    .title {
-      margin: 0;
-    }
-    .right {
-      margin-left: 2rem;
-    }
-  }
-  .demo-spin-icon-load {
-    animation: ani-demo-spin 1s linear infinite;
-  }
-}
-#myChart {
-  width: 100%;
-  height: 300px;
-}
+
 </style>
 
