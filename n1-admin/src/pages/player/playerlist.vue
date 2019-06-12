@@ -289,6 +289,7 @@ export default {
     },
     playDetail(row) {
       localStorage.setItem("playerName", row.userName);
+      localStorage.setItem("playDetail", 'playDetail');
       this.$router.push({
         name: "playDetail",
         query: {

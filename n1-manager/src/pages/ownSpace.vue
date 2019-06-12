@@ -111,15 +111,15 @@ export default {
       showNext: false, //是否显示下100条
       columns: [
         {
+          title: "线路商标识",
+          align: "center",
+          key: "suffix"
+        },
+        {
           title: "线路商ID",
           align: "center",
           maxWidth: 80,
           key: "displayId"
-        },
-        {
-          title: "线路商标识",
-          align: "center",
-          key: "suffix"
         },
         {
           title: "线路商账号",

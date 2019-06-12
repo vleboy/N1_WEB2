@@ -110,7 +110,6 @@
           <Col span="24" class="text-right">
             <Page
               :total="playerAccountList.length"
-              show-elevator
               :page-size="20"
               :current.sync="currentPage"
               @on-change="getNowpage"
@@ -392,10 +391,8 @@ export default {
     };
   },
   mounted() {
-    console.log(233);
-    
     //this.changeTime();
-    this.getPlayerAccount()
+    this.searchData()
     /* this.companySelectList(); */
   },
   computed: {
@@ -490,7 +487,8 @@ export default {
     },
     getPlayerAccount() {
       
-      this.playerAccountListStartKey = ''
+     
+     console.log(this.amountDate);
       this.isFetching = true;
 
 
@@ -558,6 +556,7 @@ export default {
     },
     //搜索
     searchData() {
+      this.playerAccountListStartKey = ''
       this.getPlayerAccount();
       //this.changeGameType();
     },
@@ -597,38 +596,41 @@ export default {
   },
   watch: {
     $route: {
-      
       handler: function(_new, _old) {
-        
-        
         if (
-          
           _new.name == "playDetail" &&
           localStorage.playDetail == 'playDetail'
         ) {
-          //console.log(1)
+
           this.amountDate = []
 
-          this.radioInfo = String(this.$route.query.type)
+          if (String(this.$route.query.type) == undefined) {
+            this.radioInfo = String(this.$route.query.type)
           //console.log(this.radioInfo);
           
-          if (this.radioInfo != '') {
-            getGameType().map(item => {
-              if (item.code == this.radioInfo) {
-                this.companyInfo =  item.company
-              }
-            })
+          
+
+            if (this.radioInfo != '') {
+              getGameType().map(item => {
+                if (item.code == this.radioInfo) {
+                  this.companyInfo =  item.company
+                }
+              })
+            } else {
+              this.companyInfo == "全部厂商"
+            }
+            let st = this.$route.query.time[0]
+            let et = this.$route.query.time[1]
+            this.amountDate = [new Date(st), new Date(et)]
           } else {
-            this.companyInfo == "全部厂商"
+            this.radioInfo = ''
+            this.amountDate = [new Date().getTime() - 3600 * 1000 * 24 * 6, new Date().getTime()]
+            console.log(this.amountDate);
           }
-          
-        
-          let st = this.$route.query.time[0]
-          let et = this.$route.query.time[1]
-          this.amountDate = [new Date(st), new Date(et)]
-          //console.log(this.amountDate);
-          
-          this.getPlayerAccount()
+         
+            
+            
+          this.searchData()
         }
         localStorage.removeItem("playDetail")
       },
