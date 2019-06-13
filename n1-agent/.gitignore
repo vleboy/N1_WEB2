@@ -14,4 +14,4 @@ package-lock.json
 *.njsproj
 *.sln
 .vscode
-dist.rar
+dist.rar.history

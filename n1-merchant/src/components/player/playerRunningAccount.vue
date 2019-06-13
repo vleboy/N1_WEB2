@@ -427,7 +427,7 @@ export default {
           return item;
         }
       );
-
+      
       for (let i = 0; i < this.removeArr.length; i++) {
         for (let j = 0; j < arr.length; j++) {
           if (this.removeArr[i] == arr[j].name) {
@@ -435,7 +435,7 @@ export default {
           }
         }
       }
-
+      this.sel = '全部厂商'
       let gameType = [];
       if (this.sel == "全部厂商") {
         gameType = arr.map(item => {
@@ -461,6 +461,8 @@ export default {
       }
 
       gameType.unshift("全部");
+      this.radioInfo = '全部'
+      
       return gameType;
     }
   },
@@ -538,6 +540,8 @@ export default {
         this.getPlayerAccount();
       }
     },
+
+
     getPlayerAccount() {
       if (this.isFetching) return;
       this.isFetching = true;
@@ -692,31 +696,32 @@ export default {
           _new.name == "playDetail" &&
           localStorage.playDetail == "playDetail"
         ) {
-          //console.log(1)
+          console.log('????');
+          
           this.amountDate = [];
-
-          let gameCode = String(this.$route.query.type);
-          //console.log(this.radioInfo);
-          //console.log(this.radioInfo)
-
-          if (this.gameCode != "") {
-            getGameType().map(item => {
-              if (item.code == gameCode) {
-                this.companyInfo = item.company;
-                this.radioInfo = item.name;
-              }
-            });
+          if (String(this.$route.query.type) == undefined) {
+            this.radioInfo = String(this.$route.query.type);
+            if (this.gameCode != "") {
+              getGameType().map(item => {
+                if (item.code == gameCode) {
+                  this.companyInfo = item.company;
+                  
+                }
+              });
+            } else {
+              this.companyInfo == "全部厂商";
+            }
+            let st = this.$route.query.time[0];
+            let et = this.$route.query.time[1];
+            this.amountDate = [new Date(st), new Date(et)];
           } else {
-            this.companyInfo == "全部厂商";
+            this.amountDate = [
+             new Date(new Date().getTime() - 3600 * 1000 * 24 * 6),
+              new Date()
+            ];
+            
           }
-
-          let st = this.$route.query.time[0];
-          let et = this.$route.query.time[1];
-          this.amountDate = [new Date(st), new Date(et)];
-          console.log(this.amountDate);
-          console.log("fufk");
-
-          this.getPlayerAccount();
+          this.searchData();
         }
         localStorage.removeItem("playDetail");
       },
