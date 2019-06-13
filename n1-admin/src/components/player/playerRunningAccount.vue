@@ -603,15 +603,10 @@ export default {
           _new.name == "playDetail" &&
           localStorage.playDetail == 'playDetail'
         ) {
-
           this.amountDate = []
-
-          if (String(this.$route.query.type) == undefined) {
+          console.log(String(this.$route.query.type) == undefined);
+          if (String(this.$route.query.type) != 'undefined') {
             this.radioInfo = String(this.$route.query.type)
-          //console.log(this.radioInfo);
-          
-          
-
             if (this.radioInfo != '') {
               getGameType().map(item => {
                 if (item.code == this.radioInfo) {
@@ -624,15 +619,12 @@ export default {
             let st = this.$route.query.time[0]
             let et = this.$route.query.time[1]
             this.amountDate = [new Date(st), new Date(et)]
-            
           } else {
+            
+            
             this.radioInfo = ''
             this.amountDate = [new Date(new Date().getTime() - 3600 * 1000 * 24 * 6), new Date()]
-            
-          }
-         
-            
-            
+          }   
           this.searchData()
         }
         localStorage.removeItem("playDetail")

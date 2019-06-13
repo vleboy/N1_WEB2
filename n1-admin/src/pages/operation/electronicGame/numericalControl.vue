@@ -200,8 +200,20 @@ export default {
                 
                 on: {
                   "on-change": val => {
+                    /* console.log(params.row);
+                    console.log(params.index)
+                    console.log(vm._data.configs) */
+
+                    
+
+
                     params.row.killRateLevel = val;
-                    vm._data.configs[params.index] = params.row;
+                    //vm._data.configs[params._index] = params.row;
+                    vm._data.configs.map(item => {
+                      if (params.row.gameId == item.gameId) {
+                        item.killRateLevel = params.row.killRateLevel
+                      }
+                    })
                   },
                 }
               },
@@ -293,7 +305,12 @@ export default {
                 on: {
                   "on-change": val => {
                     params.row.killRateLevel = val;
-                    vm._data.configs[params.index] = params.row;
+                    //vm._data.configs[params.index] = params.row;
+                    vm._data.configs.map(item => {
+                      if (params.row.gameId == item.gameId) {
+                        item.killRateLevel = params.row.killRateLevel
+                      }
+                    })
                   }
                 }
               },
