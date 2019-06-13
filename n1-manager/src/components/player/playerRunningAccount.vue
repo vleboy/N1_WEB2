@@ -38,7 +38,7 @@ $
             <Icon type="arrow-down-b" v-if="!isShowSearch"></Icon>
             <Icon type="arrow-up-b" v-else></Icon>
           </Button>
-           <Button type="primary" @click="searchData(true)" style="margin-right:.3rem" size="small">搜索</Button>
+           <Button type="primary" @click="searchData" style="margin-right:.3rem" size="small">搜索</Button>
            <Button @click="reset(true)" style="margin-right:.3rem" size="small"> 重置</Button>
           <Button type="primary" @click="exportData" size="small">导出数据</Button>
         </Col>
@@ -94,6 +94,7 @@ $
 </template>
 <script type="text/ecmascript-6">
   import {formatUserName, thousandFormatter} from '@/config/format'
+  import { getGameType } from "@/config/getGameType";
   import {httpRequest} from '@/service/index'
   import dayjs from "dayjs";
   import SportsModal from '@/components/record/sportsModal'
@@ -196,7 +197,10 @@ $
           "90017": "凤舞朝阳",
           "90018": "鲤跃龙门",
         },
-        amountDate: [], // 时间日期选择
+        amountDate: [
+        new Date(new Date().getTime() - 3600 * 1000 * 24 * 6),
+        new Date()
+      ], // 时间日期选择
         playerAccountList: [], // 玩家流水账列表
         playerRecordList: [], // 玩家战绩列表
         playerAccountListStorage: [],
@@ -301,7 +305,7 @@ $
       }
     },
     mounted() {
-      this.changeTime()
+      //this.changeTime()
       this.companySelectList()
     },
     computed: {
@@ -439,6 +443,9 @@ $
             return;
           }
         });
+        
+
+     
 
         httpRequest('post', '/player/bill/flow', {
           userName: localStorage.playerName,
@@ -463,30 +470,7 @@ $
           this.isFetching = false
         })
       },
-      changeTime() {
-        const end = new Date();
-        const start = new Date();
-        if (this.radioTime) {
-          this.monthDate = '';
-        }
-        switch (+this.radioTime) {
-          case 1:
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 6);
-            this.amountDate = [start, end];
-            this.changeDate()
-            break;
-          case 2:
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-            this.amountDate = [start, end];
-            this.changeDate()
-            break;
-          case 3:
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 365);
-            this.amountDate = [start, end];
-            this.changeDate()
-            break;
-        }
-      }, // 最近的时间快捷选择联动
+      // 最近的时间快捷选择联动
       changeDate() {
         if (this.amountDate) {
           // this.startDate = new Date(this.amountDate[0].setMonth(this.amountDate[0].getMonth())).setHours(0, 0, 0, 0);
@@ -510,18 +494,12 @@ $
           this.changeDate()
         }
       }, // 月份联动
-      searchData(bool) {
-        if(!bool) {
-          this.companyInfo = '全部厂商'
-          this.radioMoney = ''
-          this.radioType = ''
-          this.sn = ''
-          this.betId = ''
-          this.changeCompany()
-        }
+      searchData() {
+        
         this.playerAccountListStartKey = ''
         this.initData()
-        this.changeGameType()
+        this.getPlayerAccount()
+        
       }, // 重置筛选条件
       initData() {
         this.currentPage = 1;
@@ -566,12 +544,61 @@ $
       },
     },
     watch: {
-      '$route': function (_new, _old) {
-        if((_new.name == 'playDetail') && (localStorage.playerName != this.playerAccountUserName)) {
-          this.initData()
-          this.getPlayerAccount()
+      $route: {
+      handler: function(_new, _old) {
+        if (
+          _new.name == "playDetail" &&
+          localStorage.playDetail == "playDetail"
+        ) {
+          
+          this.amountDate = [];
+          if (this.$route.query.type != undefined) {
+            console.log('fuck');
+            this.radioInfo = String(this.$route.query.type);
+            
+            //console.log(this.radioInfo);
+            
+            if (this.radioInfo != "") {
+              getGameType().map(item => {
+                if (item.code ==  this.radioInfo) {
+                  this.companyInfo = item.company;
+                }
+              });
+            } else {
+              this.companyInfo == "全部厂商";
+              this.radioInfo = '全部'
+            }
+            JSON.parse(localStorage.getItem("userInfo")).gameList.map(item => {
+              if (this.radioInfo == item.code) {
+                this.radioInfo = item.name;
+                return;
+              }
+            })
+            
+            
+            let st = this.$route.query.time[0];
+            let et = this.$route.query.time[1];
+            this.amountDate = [new Date(st), new Date(et)];
+             this.startDate = new Date(this.amountDate[0]).getTime();
+            this.endDate = new Date(this.amountDate[1]).getTime();
+
+            //console.log(this.amountDate);
+            
+          } else {
+            this.amountDate = [
+              new Date(new Date().getTime() - 3600 * 1000 * 24 * 6),
+              new Date()
+            ];
+             this.startDate = new Date(this.amountDate[0]).getTime();
+            this.endDate = new Date(this.amountDate[1]).getTime();
+            
+          }
+          this.searchData();
         }
-      }
+        localStorage.removeItem("playDetail");
+      },
+      immediate: true
+    }
     },
     filter1s: {   //过滤器，所有数字保留两位小数
       currency(value) {
