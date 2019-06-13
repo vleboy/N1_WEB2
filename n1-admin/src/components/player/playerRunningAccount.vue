@@ -490,7 +490,7 @@ export default {
     getPlayerAccount() {
       
      
-     //console.log(this.amountDate);
+     console.log(this.amountDate);
       this.isFetching = true;
 
 
@@ -558,6 +558,7 @@ export default {
     },
     //搜索
     searchData() {
+      
       this.playerAccountListStartKey = ''
       this.getPlayerAccount();
       //this.changeGameType();
@@ -605,7 +606,7 @@ export default {
         ) {
           this.amountDate = []
 
-          console.log(this.$route.query.type == undefined);
+         
 
           if (this.$route.query.type != undefined) {
             this.radioInfo = String(this.$route.query.type)
@@ -621,12 +622,17 @@ export default {
             let st = this.$route.query.time[0]
             let et = this.$route.query.time[1]
             this.amountDate = [new Date(st), new Date(et)]
+            this.startDate = new Date(this.amountDate[0]).getTime();
+            this.endDate = new Date(this.amountDate[1]).getTime();
           } else {
             
             
             this.radioInfo = ''
             this.amountDate = [new Date(new Date().getTime() - 3600 * 1000 * 24 * 6), new Date()]
-          }   
+            this.startDate = new Date(this.amountDate[0]).getTime();
+            this.endDate = new Date(this.amountDate[1]).getTime();
+          }
+          //console.log(this.amountDate);
           this.searchData()
         }
         localStorage.removeItem("playDetail")
