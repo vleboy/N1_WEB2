@@ -1113,6 +1113,8 @@ export default {
     },
     //账号
     playerAccount(row) {
+      console.log(this.changedTime);
+      
       let name = row.userName;
       localStorage.setItem("playerName", name);
       

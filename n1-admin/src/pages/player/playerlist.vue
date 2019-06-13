@@ -199,8 +199,11 @@ export default {
         },
         {
           title: "点数",
-          slot: "balance",
+          key: "balance",
           sortable: true,
+          render: (h, params) => {
+            return h("span", thousandFormatter(params.row.balance));
+          },
           align: "center"
         },
         {

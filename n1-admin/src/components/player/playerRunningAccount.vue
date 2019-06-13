@@ -152,7 +152,7 @@ export default {
         vm.getPlayerAccount()
       } */
       
-      console.log(123456)
+      //console.log(vm)
       
     });
   },
@@ -461,10 +461,12 @@ export default {
     },
 
     reset() {
+      this.playerAccountListStartKey = ''
       this.companyInfo = '全部厂商'
       this.selType = 'All'
       this.betId = ''
       this.sn = ''
+      this.radioInfo = ''
       this.radioType = ''
       this.radioMoney = ''
       this.amountDate = [new Date().getTime() - 3600 * 1000 * 24 * 6, new Date()];
@@ -488,7 +490,7 @@ export default {
     getPlayerAccount() {
       
      
-     console.log(this.amountDate);
+     //console.log(this.amountDate);
       this.isFetching = true;
 
 
@@ -622,10 +624,11 @@ export default {
             let st = this.$route.query.time[0]
             let et = this.$route.query.time[1]
             this.amountDate = [new Date(st), new Date(et)]
+            
           } else {
             this.radioInfo = ''
-            this.amountDate = [new Date().getTime() - 3600 * 1000 * 24 * 6, new Date().getTime()]
-            console.log(this.amountDate);
+            this.amountDate = [new Date(new Date().getTime() - 3600 * 1000 * 24 * 6), new Date()]
+            
           }
          
             
