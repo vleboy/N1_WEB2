@@ -71,6 +71,7 @@
 
 import { httpRequest, getMerchants } from "@/service/index";
 import { numGameList } from "@/config/getGameType";
+import _ from "lodash";
 export default {
   created() {
     this.getGameList()
@@ -203,13 +204,9 @@ export default {
                     /* console.log(params.row);
                     console.log(params.index)
                     console.log(vm._data.configs) */
-
-                    
-
-
                     params.row.killRateLevel = val;
                     //vm._data.configs[params._index] = params.row;
-                    vm._data.configs.map(item => {
+                    vm._data.gameConfigs.map(item => {
                       if (params.row.gameId == item.gameId) {
                         item.killRateLevel = params.row.killRateLevel
                       }
@@ -306,7 +303,7 @@ export default {
                   "on-change": val => {
                     params.row.killRateLevel = val;
                     //vm._data.configs[params.index] = params.row;
-                    vm._data.configs.map(item => {
+                    vm._data.gameConfigs.map(item => {
                       if (params.row.gameId == item.gameId) {
                         item.killRateLevel = params.row.killRateLevel
                       }
@@ -374,6 +371,8 @@ export default {
           }
         },
       ],
+      gameConfigs:[]
+      
     };
   },
   methods: {
@@ -409,7 +408,7 @@ export default {
             killRateLevel:1
 
         },{}]}, */
-        {config: this.configs},
+        {config: this.gameConfigs},
         "test"
       )
         this.$Message.info('操作成功');
@@ -424,7 +423,6 @@ export default {
       if (this.gameId != '') {
         params = {
           gameId: this.gameId,
-          //parent: this.userId
           parent: this.userId
         }
       } else {
@@ -444,7 +442,7 @@ export default {
           if (res.config.length == 0) {
             //第一次数据为空
             this.configs = this.getTemplate(this.userId)
-
+            this.gameConfigs = _.cloneDeep(this.configs)
             this.configs.forEach(item => {
               if (item.gameType.indexOf("_") != -1) {
                 this.mysArr.push(item);//有神秘大奖系列
@@ -454,6 +452,7 @@ export default {
             })
           } else {
             this.configs = res.config
+            this.gameConfigs = _.cloneDeep(this.configs)
             this.configs.forEach(item => {
               if (item.gameType.indexOf("_") != -1) {
                 this.mysArr.push(item);//有神秘大奖系列
@@ -486,6 +485,7 @@ export default {
     setGameConfig(row) {
       this.modal1 = true
       this.userId = row.userId
+      
       this.merchantId = row.displayName
 
       this.getGameData()
