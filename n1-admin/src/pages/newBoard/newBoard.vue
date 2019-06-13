@@ -2563,29 +2563,26 @@ export default {
           gameType: this.gameCode
         };
       }
-      // 先请求2个
       httpRequest("get", "/visual/pie/game", params, "map").then(res => {
         this.gameDtributedData = res.data;
         this.changeGameDtributedDataType();
+        this.spinShow = false;
       });
       httpRequest("get", "/visual/line/day", params, "map").then(res => {
         this.reportData = res.data;
         this.reportConfigure();
-        // 再请求2个
-        httpRequest("get", "/visual/map/china", params, "map").then(res => {
-          this.chinaAllData = res.data;
-          this.changeChinaDataType();
-          this.spinShow = false;
-        });
-        httpRequest("get", "/visual/line/player", params, "map").then(res => {
-          this.playerCountData = res.data;
-          this.playerCountConfigure();
-          // 最后请求1个
-          httpRequest("get", "/visual/map/world", params, "map").then(res => {
-            this.worldAllData = res.data;
-            this.changeWorldDataType();
-          });
-        });
+      });
+      httpRequest("get", "/visual/map/china", params, "map").then(res => {
+        this.chinaAllData = res.data;
+        this.changeChinaDataType();
+      });
+      httpRequest("get", "/visual/line/player", params, "map").then(res => {
+        this.playerCountData = res.data;
+        this.playerCountConfigure();        
+      });
+      httpRequest("get", "/visual/map/world", params, "map").then(res => {
+          this.worldAllData = res.data;
+          this.changeWorldDataType();
       });
     },
     //商户榜单
