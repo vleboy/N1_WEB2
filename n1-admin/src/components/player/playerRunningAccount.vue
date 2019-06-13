@@ -604,8 +604,10 @@ export default {
           localStorage.playDetail == 'playDetail'
         ) {
           this.amountDate = []
-          console.log(String(this.$route.query.type) == undefined);
-          if (String(this.$route.query.type) != 'undefined') {
+
+          console.log(this.$route.query.type == undefined);
+
+          if (this.$route.query.type != undefined) {
             this.radioInfo = String(this.$route.query.type)
             if (this.radioInfo != '') {
               getGameType().map(item => {
