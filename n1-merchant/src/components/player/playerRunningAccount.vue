@@ -45,7 +45,7 @@ $
               <Icon type="arrow-up-b" v-else></Icon>
             </Button>
             <Button
-              @click="searchData(true)"
+              @click="searchData"
               style="margin-right:.3rem"
               size="small"
               type="primary"
@@ -365,7 +365,7 @@ export default {
     };
   },
   mounted() {
-    this.getPlayerAccount();
+    this.searchData();
   },
   computed: {
     dataList() {
@@ -435,7 +435,8 @@ export default {
           }
         }
       }
-      this.sel = '全部厂商'
+      
+      
       let gameType = [];
       if (this.sel == "全部厂商") {
         gameType = arr.map(item => {
@@ -551,7 +552,7 @@ export default {
           code = item.code;
           return;
         }
-      });
+      })
       //console.log(this.amountDate);
 
       httpRequest("post", "/player/bill/flow", {
@@ -581,30 +582,7 @@ export default {
           this.isFetching = false;
         });
     },
-    /* changeTime() {
-      const end = new Date();
-      const start = new Date();
-      if (this.radioTime) {
-        this.monthDate = "";
-      }
-      switch (+this.radioTime) {
-        case 1:
-          start.setTime(start.getTime() - 3600 * 1000 * 24 * 6);
-          this.amountDate = [start, end];
-          this.getDate();
-          break;
-        case 2:
-          start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-          this.amountDate = [start, end];
-          this.getDate();
-          break;
-        case 3:
-          start.setTime(start.getTime() - 3600 * 1000 * 24 * 365);
-          this.amountDate = [start, end];
-          this.getDate();
-          break;
-      }
-    },  */
+    
     // 最近的时间快捷选择联动
     changeDate() {
       if (this.amountDate) {
@@ -631,6 +609,8 @@ export default {
       }
     },
     changeGameType(val) {
+      console.log(val);
+      
       this.radioInfo == undefined ? "全部" : val;
       this.playerAccountListStartKey = "";
 
@@ -645,18 +625,13 @@ export default {
       }
       this.checkFormatNum = thousandFormatter(this.checkFormatNum);
     }, //多选
-    searchData(bool) {
-      if (!bool) {
-        this.companyInfo = "全部厂商";
-        this.radioMoney = "";
-        this.radioType = "";
-        this.sn = "";
-        this.betId = "";
-        this.changeCompany();
-      }
+    searchData() {
+
+      this.playerAccountListStartKey = ''
       this.initData();
-      this.changeGameType();
-    }, // 重置筛选条件
+      this.getPlayerAccount();
+    }, 
+    // 重置筛选条件
     initData() {
       this.currentPage = 1;
       this.nowPage = 1;
@@ -678,6 +653,8 @@ export default {
       );
     },
     changeCompany(val) {
+      console.log(val);
+      
       this.sel = val;
       this.radioInfo = null;
     },
@@ -696,27 +673,34 @@ export default {
           _new.name == "playDetail" &&
           localStorage.playDetail == "playDetail"
         ) {
-          console.log('????');
           
           this.amountDate = [];
-          if (String(this.$route.query.type) == undefined) {
+          if (this.$route.query.type != undefined) {
             this.radioInfo = String(this.$route.query.type);
-            if (this.gameCode != "") {
+            
+            console.log(this.radioInfo);
+            
+            if (this.radioInfo != "") {
               getGameType().map(item => {
-                if (item.code == gameCode) {
+                if (item.code ==  this.radioInfo) {
                   this.companyInfo = item.company;
-                  
                 }
               });
             } else {
               this.companyInfo == "全部厂商";
             }
+            JSON.parse(localStorage.getItem("userInfo")).gameList.map(item => {
+              if (this.radioInfo == item.code) {
+                this.radioInfo = item.name;
+                return;
+              }
+            })
             let st = this.$route.query.time[0];
             let et = this.$route.query.time[1];
             this.amountDate = [new Date(st), new Date(et)];
           } else {
             this.amountDate = [
-             new Date(new Date().getTime() - 3600 * 1000 * 24 * 6),
+              new Date(new Date().getTime() - 3600 * 1000 * 24 * 6),
               new Date()
             ];
             
