@@ -461,6 +461,7 @@ export default {
     },
 
     reset() {
+      this.playerAccountList = ''
       this.playerAccountListStartKey = ''
       this.companyInfo = '全部厂商'
       this.selType = 'All'
