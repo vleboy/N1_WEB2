@@ -1,6 +1,5 @@
 <template>
   <div class="control">
-  
     <div style="merchant">
       <Table :columns="columns0" :data="merchantList" size="small">
         <template
@@ -12,6 +11,10 @@
           <Button type="text" style="color:#20a0ff;cursor:pointer" @click="setGameConfig(row)">设置</Button>
         </template>
       </Table>
+
+
+
+
     </div>
 
     <Modal v-model="modal1" :title="merchantId" width="65" @on-ok="ok">
@@ -427,7 +430,7 @@ export default {
       let params = {
         query: '',
         isH5: true,
-        isTest: 0,
+        //isTest: 0,
         sortkey: "createdAt",
         sort: "desc"
       };
