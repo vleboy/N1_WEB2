@@ -17,8 +17,6 @@ export let URL = type => {
       // return 'http://192.168.3.200:45557'
       case 'map':
         return 'https://test.cncshe.com'
-      case 'test':
-        return 'https://test.alimuban.cn:45557' 
       default:
         return 'https://test.cncshe.com'
     }

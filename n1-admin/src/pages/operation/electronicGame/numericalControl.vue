@@ -23,43 +23,18 @@
       </Table>
     </div>
 
-    
     <Modal v-model="modal1" :title="merchantId" width="65" @on-ok="ok">
       <div style="height:400px;overflow:auto">
         <div>
       <Table :columns="columns1" :data="mysArr" style="margin-bottom: 1rem" size="small">
-        
       </Table>
       </div>
       <div>
         <Table :columns="columns2" :data="noMysArr" size="small">
-          
         </Table>
       </div>
       </div>
     </Modal>
-
-    <!-- <Modal v-model="modal2" :title="merchantId" footer-hide width="65">
-      <div style="height:400px;over-flow:auto">
-        <div>
-      <Table :columns="columns1" :data="mysArr" style="margin-bottom: 1rem" size="small">
-        <template slot-scope="{row, index}" slot="prizeOperate">
-          <span style="cursor:pointer;color:#20a0ff" @click="addPrizeOperateConfig(row)">修改并启用配置</span>
-        </template>
-      </Table>
-      </div>
-      <div>
-        <Table :columns="columns2" :data="noMysArr" size="small">
-          <template slot-scope="{row, index}" slot="noOperate">
-            <span style="cursor:pointer;color:#20a0ff" @click="addPrizeOperateConfig(row)">修改并启用配置</span>
-          </template>
-        </Table>
-      </div>
-      </div>
-      
-    </Modal> -->
-
-
     <Spin size="large" fix v-show="spinShow" style="z-index:200;">
       <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
       <div style>加载中...</div>
@@ -88,9 +63,6 @@ export default {
       merchantList:[],
       mysArr: [],
       noMysArr: [],
-      testGameList: [
-        { displayName: '塔罗之谜-神秘大奖', gameId: '70001', gameType: '243_bonus',killRateLevel: 0},
-      ],
       gameConfigList: [
         { gameId: '70024', ownerId:'NULL!', displayName: '猪年大吉-神秘大奖', gameType: 'tree_bonus', killRateLevel: 0 },
         { gameId: '70022', ownerId:'NULL!', displayName: '年年有余-神秘大奖', gameType: 'tree_bonus', killRateLevel: 0 },
@@ -401,14 +373,6 @@ export default {
       httpRequest(
         "post",
         "/setGameConfig",
-        /* {config:[{
-            gameId: row.gameId,
-            ownerId:this.userId,
-            displayName:'',
-            gameType:'',
-            killRateLevel:1
-
-        },{}]}, */
         {config: this.gameConfigs},
         "test"
       )
@@ -436,7 +400,7 @@ export default {
         "post",
         "/getGameConfig",
         params,
-        "test"
+        "prize"
       ).then(res => {
         this.spinShow = false
         if (res.code == 0) {
@@ -501,26 +465,6 @@ export default {
       this.gameType = numGameList();
     },
   },
-  computed: {
-    /* mysArr() {
-      let mys = [] 
-      this.gameConfigList.forEach(item => {
-        if (item.gameType.indexOf("_") != -1) {
-          mys.push(item)
-        }
-      })
-      return mys
-    },
-    noMysArr() {
-      let noMys = []
-      this.gameConfigList.forEach(item => {
-        if (item.gameType.indexOf("_") == -1) {
-          noMys.push(item)
-        }
-      })
-      return noMys
-    }, */
-  }
 };
 </script>
 
