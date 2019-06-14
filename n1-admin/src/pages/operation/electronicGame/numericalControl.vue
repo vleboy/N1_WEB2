@@ -37,9 +37,9 @@
 </template>
 
 <script>
-
+import dayjs from "dayjs";
 import { httpRequest, getMerchants } from "@/service/index";
-
+import { thousandFormatter } from "@/config/format";
 import _ from "lodash";
 export default {
   created() {
@@ -134,6 +134,16 @@ export default {
           title: "玩家数量",
           key: "playerCount",
           align: "center"
+        },
+        {
+          title: "创建时间",
+          key: "createdAt",
+          align: 'center',
+          sortable: true,
+          sortType:"desc",
+          render: (h, params) => {
+            return h("span", dayjs(params.row.createdAt).format("YYYY-MM-DD"));
+          },
         },
         {
           title: "操作",

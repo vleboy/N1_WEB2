@@ -259,7 +259,7 @@ export default {
         },
         {
           title: "最后登录时间",
-          slot: "loginAt",
+          key: "loginAt",
           sortable: true,
           align: "center",
           render: (h, params) => {
