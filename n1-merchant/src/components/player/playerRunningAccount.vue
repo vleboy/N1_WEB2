@@ -553,7 +553,7 @@ export default {
           return;
         }
       })
-      //console.log(this.amountDate);
+    
 
       httpRequest("post", "/player/bill/flow", {
         userName: localStorage.playerName,

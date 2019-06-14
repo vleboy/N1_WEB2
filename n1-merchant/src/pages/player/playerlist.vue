@@ -51,12 +51,12 @@
         <template slot-scope="{row, index}" slot="gameStateName">
           <Tag type="border" :color="gameStateConfig(row)">{{row.gameStateName}}</Tag>
         </template>
-        <template slot-scope="{row, index}" slot="balance">
+        <!-- <template slot-scope="{row, index}" slot="balance">
           <span>{{balanceConfig(row)}}</span>
-        </template>
-        <template slot-scope="{row, index}" slot="createdAt">
+        </template> -->
+        <!-- <template slot-scope="{row, index}" slot="createdAt">
           <span>{{createAtConfig(row)}}</span>
-        </template>
+        </template> -->
         <template slot-scope="{row, index}" slot="joinTime">
           <span>{{updateAtConfig(row)}}</span>
         </template>
@@ -155,7 +155,6 @@ export default {
         {
           title: "状态",
           slot: "state",
-          sortable: true,
           maxWidth: 90,
           align: "center"
         },
@@ -163,19 +162,24 @@ export default {
           title: "游戏状态",
           align: "center",
           slot: "gameStateName",
-          sortable: true
         },
         {
           title: "点数",
-          slot: "balance",
+          key: "balance",
           sortable: true,
-          align: "center"
+          align: "center",
+          render: (h, params) => {
+            return h("span", thousandFormatter(params.row.balance));
+          },
         },
        {
           title: "注册时间",
           slot: "createdAt",
           align: "center",
-          sortable: true
+          sortable: true,
+          render: (h, params) => {
+            return h("span", dayjs(params.row.createdAt).format("YYYY-MM-DD"));
+          },
         },
         {
           title: "最近登录游戏时间",
@@ -227,13 +231,13 @@ export default {
       }
     },
     //点数
-    balanceConfig(row) {
+    /* balanceConfig(row) {
       return thousandFormatter(row.balance)
-    },
+    }, */
     //注册时间
-    createAtConfig(row) {
+    /* createAtConfig(row) {
       return dayjs(row.createdAt).format("YYYY-MM-DD")
-    },
+    }, */
     //最近游戏登录时间
     updateAtConfig(row) {
       return dayjs(row.joinTime).format("YYYY-MM-DD HH:mm:ss")

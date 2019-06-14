@@ -67,12 +67,12 @@
         <template slot-scope="{row, index}" slot="gameState">
           <Tag type="border" :color="gameStateConfig(row)">{{row.gameStateName}}</Tag>
         </template>
-        <template slot-scope="{row, index}" slot="balance">
+        <!-- <template slot-scope="{row, index}" slot="balance">
           <span>{{balanceConfig(row)}}</span>
         </template>
         <template slot-scope="{row, index}" slot="createdAt">
           <span>{{createdAtConfig(row)}}</span>
-        </template>
+        </template> -->
         <template slot-scope="{row, index}" slot="joinTime">
           <span>{{joinTimeConfig(row)}}</span>
         </template>
@@ -188,13 +188,11 @@ export default {
         {
           title: "状态",
           slot: "state",
-          sortable: true,
           align: "center"
         },
         {
           title: "游戏状态",
           slot: "gameState",
-          sortable: true,
           align: "center"
         },
         {
@@ -208,8 +206,11 @@ export default {
         },
         {
           title: "注册时间",
-          slot: "createdAt",
+          key: "createdAt",
           sortable: true,
+          render: (h, params) => {
+            return h("span", dayjs(params.row.createdAt).format("YYYY-MM-DD"));
+          },
           maxWidth: 120
         },
         {
@@ -261,14 +262,14 @@ export default {
     gameStateConfig(row) {
       return row.gameState == 3 || row.gameState == 2 ? "green" : "";
     },
-    //点数
+    /* //点数
     balanceConfig(row) {
       return thousandFormatter(row.balance);
     },
     //注册时间
     createdAtConfig(row) {
-      return dayjs(row.createdAt).format("YYYY-MM-DD");
-    },
+      return dayjs(row.createdAt).format("YYYY-MM-DD ");
+    }, */
     //最近登录时间
     joinTimeConfig(row) {
       return dayjs(row.joinTime).format("YYYY-MM-DD HH:mm:ss");

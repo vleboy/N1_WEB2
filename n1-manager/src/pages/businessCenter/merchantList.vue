@@ -60,12 +60,12 @@
             </div>
           </Poptip>
         </template>
-         <template slot-scope="{row, index}" slot="createdAt">
+         <!-- <template slot-scope="{row, index}" slot="createdAt">
           <span>{{createAtConfig(row)}}</span>
         </template>
         <template slot-scope="{row, index}" slot="joinTime">
           <span>{{joinTimeConfig(row)}}</span>
-        </template>
+        </template> -->
         <template slot-scope="{row, index}" slot="status">
           <Button type="text" size="small" :style="{borderColor: statusConfig(row, true), color:statusConfig(row, true)}">{{row.status == 1 ? "已启用" : "已停用"}}</Button>
         </template>
@@ -193,20 +193,25 @@ export default {
         },
         {
           title: "创建时间",
-          slot: "createdAt",
+          key: "createdAt",
           sortable: true,
-          align: 'center'
+          align: 'center',
+          render: (h, params) => {
+            return h("span", dayjs(params.row.createdAt).format("YYYY-MM-DD"));
+          },
         },
         {
           title: "最后登录时间",
-          slot: "joinTime",
+          key: "joinTime",
           sortable: true,
-          align: 'center'
+          align: 'center',
+          render: (h, params) => {
+            return h("span", dayjs(params.row.joinTime).format("YYYY-MM-DD"));
+          },
         },
         {
           title: "状态",
           slot: "status",
-          sortable: true,
           align: 'center'
         },
         {
@@ -281,13 +286,13 @@ export default {
           
     },
     //创建时间
-    createAtConfig(row) {
+    /* createAtConfig(row) {
       return dayjs(row.createdAt).format("YYYY-MM-DD") 
-    },
+    }, */
     //最近登录时间
-    joinTimeConfig(row) {
+    /* joinTimeConfig(row) {
       return dayjs(row.loginAt).format("YYYY-MM-DD")
-    },
+    }, */
     //状态
     statusConfig(row,bool) {
       if (bool) { 

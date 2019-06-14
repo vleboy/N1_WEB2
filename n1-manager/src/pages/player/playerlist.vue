@@ -41,12 +41,12 @@
         <template slot-scope="{row, index}" slot="gameState">
           <Tag type="border" :color="gameStateConfig(row).color">{{gameStateConfig(row).gameState}}</Tag> 
         </template>
-        <template slot-scope="{row, index}" slot="balance">
+        <!-- <template slot-scope="{row, index}" slot="balance">
           {{balanceConfig(row)}}
-        </template>
-        <template slot-scope="{row, index}" slot="createdAt">
+        </template> -->
+        <!-- <template slot-scope="{row, index}" slot="createdAt">
           {{createdAtConfig(row)}}
-        </template>
+        </template> -->
         <template slot-scope="{row, index}" slot="joinTime">
           {{joinTimeConfig(row)}}
         </template>
@@ -177,25 +177,29 @@ export default {
           title: "状态",
           align: 'center',
           slot: "state",
-          sortable: true
         },
         {
           title: "游戏状态",
           align: 'center',
           slot: "gameState",
-          sortable: true
         },
         {
           title: "点数",
           align: 'center',
-          slot: "balance",
-          sortable: true
+          key: "balance",
+          sortable: true,
+          render: (h, params) => {
+            return h("span", thousandFormatter(params.row.balance));
+          },
         },
         {
           title: "注册时间",
           align: 'center',
-          slot: "createdAt",
-          sortable: true
+          key: "createdAt",
+          sortable: true,
+           render: (h, params) => {
+            return h("span", dayjs(params.row.createdAt).format("YYYY-MM-DD"));
+          },
         },
         {
           title: "最近登录游戏时间",
@@ -250,13 +254,13 @@ export default {
       return {gameState: row.gameStateName, color} 
     },
     //点数
-    balanceConfig(row) {
+    /* balanceConfig(row) {
       return thousandFormatter(row.balance)
-    },
+    }, */
     //注册时间
-    createdAtConfig(row) {
+    /* createdAtConfig(row) {
       return dayjs(row.createdAt).format("YYYY-MM-DD")
-    },
+    }, */
     //最近登录时间
     joinTimeConfig(row) {
       return row.joinTime ? dayjs(row.joinTime).format("YYYY-MM-DD HH:mm:ss") : ''    

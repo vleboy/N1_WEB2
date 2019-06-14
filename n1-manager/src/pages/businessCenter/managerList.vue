@@ -42,9 +42,9 @@
             </div>
           </Poptip>
         </template>
-         <template slot-scope="{row, index}" slot="createdAt">
+        <!--  <template slot-scope="{row, index}" slot="createdAt">
           <span>{{createAtConfig(row)}}</span>
-        </template>
+        </template> -->
         <template slot-scope="{row, index}" slot="status">
           <Button size="small" type="text" :style="{borderColor:statusConfig(row, true), color:statusConfig(row, true)}">{{row.status == 1 ? "已启用" : "已停用"}}</Button>
         </template>
@@ -158,15 +158,17 @@ export default {
         },
         {
           title: "创建时间",
-          slot: "createdAt",
+          key: "createdAt",
           sortable: true,
-          align: 'center'
+          align: 'center',
+          render: (h, params) => {
+            return h("span", dayjs(params.row.createdAt).format("YYYY-MM-DD"));
+          },
         },
         {
           title: "状态",
           slot: "status",
           align: 'center',
-          sortable: true
         },
         {
           title: "操作",
@@ -235,9 +237,9 @@ export default {
           
     },
     //创建时间
-    createAtConfig(row) {
+    /* createAtConfig(row) {
       return dayjs(row.createdAt).format("YYYY-MM-DD") 
-    },
+    }, */
   
     //状态
     statusConfig(row,bool) {
