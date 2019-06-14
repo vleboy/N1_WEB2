@@ -1,15 +1,6 @@
 <template>
   <div class="control">
-    <div style="margin-bottom:1rem">
-      <Select style="width:200px;" ref="resetSelect" clearable v-model="model1" size="small"> 
-        <Option
-          v-for="(item, index) in gameType"
-          :value="item.displayName"
-          :key="item.displayName"
-          @click.native="selGame(item.gameId)"
-        >{{item.displayName}}</Option>
-      </Select>
-    </div>  
+  
     <div style="merchant">
       <Table :columns="columns0" :data="merchantList" size="small">
         <template
@@ -45,11 +36,11 @@
 <script>
 
 import { httpRequest, getMerchants } from "@/service/index";
-import { numGameList } from "@/config/getGameType";
+
 import _ from "lodash";
 export default {
   created() {
-    this.getGameList()
+    
     this.getMerchantList();
   },
   data() {
@@ -381,7 +372,7 @@ export default {
 
      //获取游戏配置
      getGameData() {
-      this.spinShow = true
+      
       this.mysArr = []
       this.noMysArr = []
       let params = {}
@@ -402,7 +393,7 @@ export default {
         params,
         "prize"
       ).then(res => {
-        this.spinShow = false
+        
         if (res.code == 0) {
           if (res.config.length == 0) {
             //第一次数据为空
@@ -432,7 +423,7 @@ export default {
 
     /* 商户列表 */
     getMerchantList() {
-      this.spinShow = false
+      this.spinShow = true
       let params = {
         query: '',
         isH5: true,
@@ -456,14 +447,7 @@ export default {
       this.getGameData()
     },
 
-    //选择游戏
-    selGame(code) {
-      this.gameId = code;
-    },
-    //获取游戏
-    getGameList() {
-      this.gameType = numGameList();
-    },
+   
   },
 };
 </script>
