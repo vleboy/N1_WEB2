@@ -374,7 +374,7 @@ export default {
         "post",
         "/setGameConfig",
         {config: this.gameConfigs},
-        "test"
+        "prize"
       )
         this.$Message.info('操作成功');
     },
