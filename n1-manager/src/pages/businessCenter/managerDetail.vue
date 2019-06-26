@@ -600,8 +600,6 @@ export default {
     },
     //加点
     maAddBalance(row) {
-      console.log(row);
-      
       let admininfo = JSON.parse(localStorage.getItem("userInfo"));
       let admin = admininfo.displayName
       let name = admininfo.username
@@ -621,7 +619,7 @@ export default {
       if (row.parent != "01") {
         let another = {
           value: row.parent,
-          label: `【线路商】${row.displayName}（${row.username}）`
+          label: `【线路商】${row.parentDisplayName}（${row.parentName}）`
         };
         option.push(another);
       }
@@ -654,7 +652,7 @@ export default {
       if (row.parent != "01") {
         let another = {
           value: row.parent,
-          label: `【线路商】${row.displayName}（${row.username}）`,
+          label: `【线路商】${row.parentDisplayName}（${row.parentName}）`,
           role: row.parentRole,
           userName: row.parentName
         };
@@ -721,8 +719,6 @@ export default {
     },
     //加点
     meAddBalance(row) {
-      console.log(row);
-      
       let admininfo = JSON.parse(localStorage.getItem("userInfo"));
       let admin = admininfo.displayName
       let name = admininfo.username;
@@ -765,7 +761,7 @@ export default {
       let option = [
         {
           value: adminId,
-          label: `【线路商】 ${admin}(${name})`
+          label: `【线路商】 ${admin}（${name}）`
         }
       ];
       if (row.parent != "01") {
