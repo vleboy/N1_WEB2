@@ -101,7 +101,11 @@
                 </FormItem>
               </Col>
               <Col span="8">
-                <FormItem label="商户白名单" v-if="edit">{{merchantDetail.loginWhiteList}}</FormItem>
+                <FormItem label="商户白名单" v-if="edit">
+                  <p style="width:15rem;word-wrap: break-word;word-break: break-all">
+                    {{merchantDetail.loginWhiteList}}
+                  </p>
+                </FormItem>
                 <FormItem label="商户白名单" v-else>
                   <Row>
                     <Col span="10">

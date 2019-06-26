@@ -601,7 +601,8 @@ export default {
     //加点
     maAddBalance(row) {
       let admininfo = JSON.parse(localStorage.getItem("userInfo"));
-      let admin = admininfo.username.substr(9);
+      let admin = admininfo.displayName
+      let name = admininfo.username
       let adminId = admininfo.userId;
       let userName = admininfo.username;
       this.role = "10";
@@ -612,13 +613,13 @@ export default {
       let option = [
         {
           value: adminId,
-          label: "【管理员】" + admin
+          label: `【线路商】${admin}（${name}）`
         }
       ];
       if (row.parent != "01") {
         let another = {
           value: row.parent,
-          label: "【线路商】" + row.parentDisplayName
+          label: `【线路商】${row.parentDisplayName}（${row.parentName}）`
         };
         option.push(another);
       }
@@ -628,8 +629,10 @@ export default {
     },
     //减点
     maReduceBalance(row) {
+      console.log(row)
       let admininfo = JSON.parse(localStorage.getItem("userInfo"));
-      let admin = admininfo.username.substr(9);
+      let admin = admininfo.displayName
+      let name = admininfo.username
       let adminId = admininfo.userId;
       let userName = admininfo.username;
       let userId = this.$route.query.userId;
@@ -641,7 +644,7 @@ export default {
       let option = [
         {
           value: adminId,
-          label: "【管理员】" + admin,
+          label: `【线路商】${admin}（${name}）`,
           role: "1",
           userName: userName
         }
@@ -649,7 +652,7 @@ export default {
       if (row.parent != "01") {
         let another = {
           value: row.parent,
-          label: "【线路商】" + row.parentDisplayName,
+          label: `【线路商】${row.parentDisplayName}（${row.parentName}）`,
           role: row.parentRole,
           userName: row.parentName
         };
@@ -717,7 +720,8 @@ export default {
     //加点
     meAddBalance(row) {
       let admininfo = JSON.parse(localStorage.getItem("userInfo"));
-      let admin = admininfo.username.substr(9);
+      let admin = admininfo.displayName
+      let name = admininfo.username;
       let adminId = admininfo.userId;
       let userName = admininfo.username;
       this.role = "100";
@@ -728,13 +732,13 @@ export default {
       let option = [
         {
           value: adminId,
-          label: "【管理员】" + admin
+          label: `【线路商】${admin}（${name}）`
         }
       ];
       if (row.parent != "01") {
         let another = {
           value: row.parent,
-          label: "【线路商】" + row.parentDisplayName
+          label: `【线路商】${row.parentDisplayName}（${row.parentName}）`
         };
         option.push(another);
       }
@@ -745,7 +749,8 @@ export default {
     //减点
     meReduceBalance(row) {
       let admininfo = JSON.parse(localStorage.getItem("userInfo"));
-      let admin = admininfo.username.substr(9);
+      let admin = admininfo.displayName;
+      let name = admininfo.username
       let adminId = admininfo.userId;
       let userName = admininfo.username;
       this.role = "100";
@@ -756,13 +761,13 @@ export default {
       let option = [
         {
           value: adminId,
-          label: "【管理员】" + admin
+          label: `【线路商】 ${admin}(${name})`
         }
       ];
       if (row.parent != "01") {
         let another = {
           value: row.parent,
-          label: "【线路商】" + row.parentDisplayName
+          label: `【线路商】${row.parentDisplayName}（${row.parentName}）`
         };
         option.push(another);
       }
