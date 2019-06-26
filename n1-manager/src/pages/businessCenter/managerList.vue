@@ -74,7 +74,7 @@
       <Row class-name='modalrow'>
         <Col span="4">起始账户</Col>
         <Col span="16">
-        <p v-if="plus">【线路商】 {{parentAcount}} </p>
+        <p v-if="plus">【线路商】 {{parentAcount}}</p>
         <p v-else>【线路商】 {{uname}}</p>
         </Col>
       </Row>
@@ -186,10 +186,12 @@ export default {
     },
     //加点
     addBalance(row) {
+      console.log(row)
+      
       let adminId = localStorage.loginId;
       this.plus = true;
       this.modal = true;
-      this.uname = row.uname;
+      this.uname = `${row.displayName}（${row.uname}）`
       this.fromUserId = adminId;
       this.toRole = "10";
       this.toUser = row.username;
@@ -202,7 +204,7 @@ export default {
       let userName = JSON.parse(localStorage.userInfo).username;
       this.plus = false;
       this.modal = true;
-      this.uname = row.uname;
+      this.uname = `${row.displayName}（${row.uname}）`
       this.fromUserId = row.userId;
       this.toRole = "10";
       this.toUser = userName;
@@ -380,8 +382,8 @@ export default {
       return this.$store.state.merchants.spinShow;
     },
     parentAcount() {
-      let name = JSON.parse(localStorage.getItem("userInfo")).username;
-      name = name.split("_")[1];
+      let name = JSON.parse(localStorage.getItem("userInfo"));
+      name = `${name.displayName}（${name.username}）`;
       return name;
     },
     isTest() {

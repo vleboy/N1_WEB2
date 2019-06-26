@@ -238,7 +238,7 @@ export default {
       let adminId = localStorage.loginId
       this.plus = true;
       this.modal = true;
-      this.uname = row.uname;
+      this.uname = `${row.displayName}（${row.uname}）`
       this.fromUserId = adminId;
       this.toUser = row.username;
       this.toRole = "100";
@@ -251,7 +251,7 @@ export default {
       let userName = JSON.parse(localStorage.userInfo).username;
       this.plus = false;
       this.modal = true;
-      this.uname = row.uname;
+      this.uname = `${row.displayName}（${row.uname}）`
       this.toRole = "10";
       this.toUser = userName;
       this.fromUserId = row.userId;
@@ -438,8 +438,8 @@ export default {
       return this.$store.state.merchants.spinShow;
     },
     parentAcount() {
-      let name = JSON.parse(localStorage.getItem("userInfo")).username;
-      name = name.split("_")[1];
+      let name = JSON.parse(localStorage.getItem("userInfo"));
+      name = `${name.displayName}（${name.username}）`;
       return name;
     },
     isTest() {
