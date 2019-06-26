@@ -238,7 +238,7 @@ export default {
       let adminId = localStorage.loginId
       this.plus = true;
       this.modal = true;
-      this.uname = `${row.displayName}（${row.uname}）`
+      this.uname = `${row.displayName}（${row.username}）`
       this.fromUserId = adminId;
       this.toUser = row.username;
       this.toRole = "100";
@@ -251,7 +251,7 @@ export default {
       let userName = JSON.parse(localStorage.userInfo).username;
       this.plus = false;
       this.modal = true;
-      this.uname = `${row.displayName}（${row.uname}）`
+      this.uname = `${row.displayName}（${row.username}）`
       this.toRole = "10";
       this.toUser = userName;
       this.fromUserId = row.userId;
