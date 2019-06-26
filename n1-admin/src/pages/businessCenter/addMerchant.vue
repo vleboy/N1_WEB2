@@ -130,7 +130,7 @@ import {
 } from "@/service/index";
 import _ from "lodash";
 import {passwordLevel} from '@/config/getDefaultTime'
-import {GameListEnum} from '@/config/getGameType'
+import {GameListEnum, getGameType} from '@/config/getGameType'
 export default {
   data() {
     const validateNickname = (rule, value, callback) => {
@@ -326,6 +326,7 @@ export default {
         password: "",
         remark: ""
       },
+      gameListArr:[],
       disabled: true,
       parentBalance: "",
       gameType: [],
@@ -433,8 +434,15 @@ export default {
         this.disabled = false;
         let params = { parent: id };
         oneManagers(id).then(res => {
+          console.log(res);
+          
           if (res.code == 0) {
             this.gameType = res.payload.companyArr;
+            if (res.payload.level == 0) {
+              this.gameListArr = getGameType()
+            } else {
+              this.gameListArr = res.payload.gameList
+            }
             this.parentGameList = res.payload.gameList || [];
             this.parentBalance = res.payload.balance;
             this.$store.commit("updateLoading", { params: false });
@@ -448,19 +456,22 @@ export default {
       this.tooltip = "当前所属上级余额:" + this.parentBalance;
     },
     selectCompany(value) {
-      /* let userId = this.parentId;
-      let params = { companyIden: value, userId };
-      if (userId == "01") {
-        delete params.userId;
-      }
-      gameBigType(params).then(res => {
-        if (res.code == 0) {
-          this.gameList = res.payload;
-        }
-      }); */
       
+      this.gameList = []
       this.$refs.resetSelect.clearSingleSelect()
-      this.gameList = GameListEnum()[value]
+      let list = _.cloneDeep(this.gameListArr)
+      
+      for (let i = 0; i < list.length; i++) {
+        
+        if (list[i].company == value) {
+         
+          this.gameList.push(list[i])
+        }
+      }
+      
+      //console.log(this.gameList);
+      
+      /* this.gameList = GameListEnum()[value] */
     },
     selectGame(o) {
       if (o != undefined) {

@@ -114,7 +114,7 @@
 <script>
 import { checkExit, gameBigType, oneManagers } from "@/service/index";
 import {passwordLevel} from '@/config/getDefaultTime'
-import {GameListEnum} from '@/config/getGameType'
+import {GameListEnum, getGameType} from '@/config/getGameType'
 import _ from "lodash";
 export default {
   data() {
@@ -211,6 +211,7 @@ export default {
     };
     return {
       regFlg: true,
+      gameListArr: [],
       basic: {
         suffix: "",
         displayName: "",
@@ -357,6 +358,11 @@ export default {
         oneManagers(id).then(res => {
           if (res.code == 0) {
             this.gameType = res.payload.companyArr;
+            if (res.payload.level == 0) {
+              this.gameListArr = getGameType()
+            } else {
+              this.gameListArr = res.payload.gameList
+            }
             this.parentGameList = res.payload.gameList || [];
             this.parentBalance = res.payload.balance;
             this.$store.commit("updateLoading", { params: false });
@@ -369,18 +375,17 @@ export default {
       this.tooltip = "当前所属上级余额:" + this.parentBalance;
     },
     selectCompany(value) {
-      /* let userId = this.parentId;
-      let params = { companyIden: value, userId };
-      if (userId == "01") {
-        delete params.userId;
-      }
-      gameBigType(params).then(res => {
-        if (res.code == 0) {
-          this.gameList = res.payload;
-        }
-      }); */
+      this.gameList = []
       this.$refs.resetSelect.clearSingleSelect()
-      this.gameList = GameListEnum()[value]
+      let list = _.cloneDeep(this.gameListArr)
+      
+      for (let i = 0; i < list.length; i++) {
+        
+        if (list[i].company == value) {
+         
+          this.gameList.push(list[i])
+        }
+      }
     },
     selectGame(o) {
       if (o != undefined) {
