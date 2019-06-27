@@ -348,12 +348,6 @@ export default {
             title: "玩家中心",
             expand: true,
             checked: false,
-            children: [
-              {
-                title: "玩家列表",
-                checked: false
-              }
-            ]
           },
           /* {
             title: "游戏中心",

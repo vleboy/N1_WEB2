@@ -151,7 +151,7 @@
                     <MenuItem name="dayCompany" v-if='permission.includes("代理日报表")'>代理日报表</MenuItem>
                     <MenuItem name="dayPlayer" v-if='permission.includes("玩家日报表")'>玩家日报表</MenuItem>
                 </Submenu>
-                <Submenu name="agentCenter" v-if='level==0'>
+                <!-- <Submenu name="agentCenter" v-if='level==0'>
                     <template slot="title">
                         <Icon type="model-s"></Icon>
                         代理中心
@@ -164,8 +164,17 @@
                         代理中心
                     </template>
                     <MenuItem name="agentList">代理列表</MenuItem>
-                </Submenu>
-                <Submenu name="playerCenter" v-if='level==0'>
+                </Submenu> -->
+
+                <MenuItem name="agentList" v-if='level==0 || permission.includes("代理中心")'>
+                    <Icon type="model-s"></Icon>
+                    <span>代理中心</span>
+                </MenuItem>
+                <MenuItem name="agentList" v-else>
+                    <Icon type="model-s"></Icon>
+                    <span>代理中心</span>
+                </MenuItem>
+                <!-- <Submenu name="playerCenter" v-if='level==0'>
                     <template slot="title">
                         <Icon type="ios-game-controller-b"></Icon>
                         玩家中心
@@ -178,7 +187,15 @@
                         玩家中心
                     </template>
                     <MenuItem name="playList">玩家列表</MenuItem>
-                </Submenu>
+                </Submenu> -->
+                <MenuItem name="playList" v-if='level==0 || permission.includes("玩家中心")'>
+                    <Icon type="ios-game-controller-b"></Icon>
+                    <span>玩家中心</span>
+                </MenuItem>
+                <MenuItem name="playList" v-else>
+                    <Icon type="ios-game-controller-b"></Icon>
+                    <span>玩家中心</span>
+                </MenuItem>
                 <Submenu name="adminCenter" v-if="level==0">
                     <template slot="title">
                         <Icon type="ios-people"></Icon>

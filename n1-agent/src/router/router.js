@@ -235,11 +235,11 @@ export const appRouter = [
     },
     {
         path:'/agent',
-        title:'代理列表',
+        title:'代理中心',
         name:'agent',
         component:main,
         children:[
-            {path:'list',title:'代理列表',name:'agentList',component:agentList},
+            {path:'list',title:'代理中心',name:'agentList',component:agentList},
         ]
     },
     {
@@ -263,11 +263,11 @@ export const appRouter = [
     },
     {
       path:'/play',
-      title:'玩家列表',
+      title:'玩家中心',
       name:'play',
       component:main,
       children:[
-        {path:'list',title:'玩家列表',name:'playList',component:playerList}
+        {path:'list',title:'玩家中心',name:'playList',component:playerList}
       ]
     }
 

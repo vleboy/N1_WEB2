@@ -260,11 +260,6 @@ export default {
             {
               title: "玩家中心",
               expand: true,
-              children: [
-                {
-                  title: "玩家列表"
-                }
-              ]
             },
             //  {
             //   title: "运营中心",
