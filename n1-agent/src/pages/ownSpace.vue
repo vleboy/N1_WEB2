@@ -31,7 +31,7 @@
             <span>上次登录IP : {{agentDetail.lastIP}}</span>
           </td>
           <td>
-            <span>代理创建时间 : {{ dayjs(agentDetail.createdAt).format('YYYY-MM-DD HH:mm:ss') }}</span>
+            <span>代理创建时间 : {{ dayjs(agentDetail.createdAt).format('YYYY-MM-DD') }}</span>
           </td>
           <td>
             <span>上次登录时间 : {{dayjs(agentDetail.loginAt).format('YYYY-MM-DD HH:mm:ss')}}</span>
