@@ -270,7 +270,7 @@ import {
 import dayjs from "dayjs";
 import _ from "lodash";
 import { thousandFormatter } from "@/config/format";
-import { GameListEnum } from "@/config/getGameType";
+import { GameListEnum, getGameType } from "@/config/getGameType";
 export default {
   beforeRouteEnter(to, from, next) {
     /* console.log(this, 'beforeRouteEnter'); // undefined
@@ -302,6 +302,7 @@ export default {
       }
     };
     return {
+      gameListArr: [],
       showWaterList: [],
       totalPage: 20, //数据总量
       pageSize: 20, //每页显示数据量
@@ -588,7 +589,18 @@ export default {
       });
     },
     selectCompany(value) {
-      this.gameList = GameListEnum()[value]
+     
+      this.gameList = []
+     
+      let list = _.cloneDeep(this.gameListArr)
+      
+      for (let i = 0; i < list.length; i++) {
+        
+        if (list[i].company == value) {
+         
+          this.gameList.push(list[i])
+        }
+      }
     },
     selectGame(o) {
       this.selected = true;
@@ -761,6 +773,8 @@ export default {
       let req3 = companySelect({ parent });
       let [merchant, company] = await this.axios.all([req2, req3]);
       this.spinShow = false;
+     
+      
       if (merchant && merchant.code == 0) {
         this.merchantDetail = merchant.payload;
         this.defaultBrower = merchant.payload.isOpenBrowser == 1 ? true : false; //brower
@@ -771,24 +785,15 @@ export default {
       if (company && company.code == 0) {
         this.gameType = company.payload;
       }
-      /* this.gameType = [
-        { company: "NA", companyName: "NA" },
-        { company: "KY", companyName: "KY" },
-        { company: "MG", companyName: "MG" },
-        { company: "DT", companyName: "DT" },
-        { company: "RTG", companyName: "RTG" },
-        { company: "PP", companyName: "PP" },
-        { company: "PG", companyName: "PG" },
-        { company: "PNG", companyName: "PNG" },
-        { company: "TTG", companyName: "TTG" },
-        { company: "HABA", companyName: "HABA" },
-        { company: "AG", companyName: "AG" },
-        { company: "SA", companyName: "SA" },
-        { company: "SB", companyName: "SB" },
-        { company: "YSB", companyName: "YSB" }
-      ]; */
+
+      //游戏选择
       oneManagers(parent).then(res => {
         this.parentGameList = res.payload.gameList || [];
+        if (res.payload.level == 0) {
+            this.gameListArr = getGameType()
+          } else {
+            this.gameListArr = res.payload.gameList
+          }
       });
     },
     uploadAliLogo() {

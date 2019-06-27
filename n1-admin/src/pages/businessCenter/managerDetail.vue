@@ -318,7 +318,7 @@ import {
 } from "@/service/index";
 import dayjs from "dayjs";
 import { thousandFormatter } from "@/config/format";
-import { GameListEnum } from "@/config/getGameType";
+import { GameListEnum, getGameType } from "@/config/getGameType";
 import _ from "lodash";
 export default {
   beforeRouteEnter(to, from, next) {
@@ -351,6 +351,7 @@ export default {
       }
     };
     return {
+      gameListArr: [],
       showWaterList:[],
       totalPage: 20, //数据总量
       pageSize: 20, //每页显示数据量
@@ -1015,17 +1016,17 @@ export default {
       });
     },
     selectCompany(value) {
-      let userId = this.parent;
-      let params = { companyIden: value, userId };
-      if (userId == "01") {
-        delete params.userId;
-      }
-      gameBigType(params).then(res => {
-        if (res.code == 0) {
-          this.gameList = res.payload;
+      this.gameList = []
+     
+      let list = _.cloneDeep(this.gameListArr)
+      
+      for (let i = 0; i < list.length; i++) {
+        
+        if (list[i].company == value) {
+         
+          this.gameList.push(list[i])
         }
-      });
-      //this.gameList = GameListEnum()[value]
+      }
     },
     selectGame(o) {
       this.selected = true;
@@ -1176,6 +1177,18 @@ export default {
         this.isTest = managers.payload.isTest == 1 ? true : false;
         this.gameDetail = managers.payload.gameList;
       }
+
+
+      oneManagers(parent).then(res => {
+        if (res.payload.level == 0) {
+          this.gameListArr = getGameType()
+        } else {
+          this.gameListArr = res.payload.gameList
+        }
+      })
+      
+
+      
       if (company && company.code == 0) {
         this.gameType = company.payload;
       }
