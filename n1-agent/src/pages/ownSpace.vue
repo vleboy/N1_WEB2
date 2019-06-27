@@ -51,7 +51,7 @@
         <span style="color:#20a0ff;cursor:pointer;fontSize:1rem" @click="getWaterfallList">(点击查询)</span>
       </h2>
       <Table :columns="columns1" :data="showWaterList" size="small"></Table>
-      <Page :total="totalPage" class="page" :page-size='pageSize' @on-change="changepage"></Page>
+      <Page :total="totalPage" class="page" :page-size='pageSize' @on-change="changepage" style="margin-top:1rem"></Page>
     </div>
     <Modal v-model="modal" title="修改密码" :width='350' @on-ok="ok" @on-cancel='cancel'>
       <p class="modal_input">
