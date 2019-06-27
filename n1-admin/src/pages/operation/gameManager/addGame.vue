@@ -356,9 +356,9 @@ export default {
         .then(res => {
           this.$Message.success('上传亚马逊成功')
           
-          this.managerInfo.gameImg = (process.env.NODE_ENV == 'development') ? dev : prod
+          this.managerInfo.gameImg = (window.location.hostname == 'gl.na12345.com') ? prod : dev
           
-          console.log(this.managerInfo.gameImg);
+          //console.log(this.managerInfo.gameImg);
          
       
         }).finally(()=>{
@@ -368,11 +368,11 @@ export default {
 
     beforeUpload (file) {
 
-      console.log(parseInt(this.managerInfo.gameType));
+      //console.log(parseInt(this.managerInfo.gameType));
       
 
       let regName = `${this.companyIden}_${parseInt(this.managerInfo.gameType) + parseInt(this.managerInfo.kindId)}.${file.name.slice(file.name.indexOf('.')+1)}`
-      console.log(regName)
+      //console.log(regName)
       let fileName = this.suffixFun(file.name)
       const isLt1M = file.size / 1024 / 1024 < 2
       const suffix = fileName[1].toLowerCase()
@@ -380,7 +380,7 @@ export default {
       this.imgFile = file
       //this.imgFile.fileName = `${fileName[0]+new Date().getTime()}.${fileName[1]}`
       this.imgFile.fileName = regName
-      console.log(this.imgFile);
+      //console.log(this.imgFile);
       if (!(fileType.indexOf(suffix) > -1)) {
         return this.$Message.error('上传图片只能是 JPG或者PNG 格式!')
       } else if (!isLt1M) {
