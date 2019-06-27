@@ -29,14 +29,17 @@
         <Input v-model="managerInfo.gameLink" placeholder="请输入网页游戏地址"></Input>
       </FormItem>
       <FormItem label="游戏LOGO" prop="gameImg" class="is-required">
-        <Upload
-          ref="upload"
-          :action="url"
-          :max-size="2048"
-          :show-file-list="false"
-          :before-upload="beforeUpload">
-          <Button icon="ios-cloud-upload-outline" :loading="dialogLoading">请选择需要上传文件</Button>
-        </Upload>
+        <div style="display:flex">
+          <Upload
+            ref="upload"
+            :action="url"
+            :max-size="2048"
+            :show-file-list="false"
+            :before-upload="beforeUpload">
+            <Button icon="ios-cloud-upload-outline" :loading="dialogLoading">请选择需要上传文件</Button>
+          </Upload>
+          <div style="color:red;margin-left:1rem">图片名称：NA_70000</div>
+        </div>
         <div style="padding: 16px 0">只能上传一张jpg/png文件，且不超过1M</div>
         <div style="overflow: hidden"><img style="width: 80%" :src="managerInfo.gameImg"></div>
       </FormItem>
@@ -103,7 +106,7 @@ export default {
     } // 游戏简介
     var validateKindId = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入KindId'))
+        callback(new Error('请输入游戏ID'))
         this.isfinish.kindId = false
       } else if (!pattern.positiveInteger.exec(value) || value > 99999) {
         callback(new Error('必须为正整数，范围在1-99999之间'))
@@ -361,18 +364,30 @@ export default {
     },
 
     beforeUpload (file) {
+
+      console.log(parseInt(this.managerInfo.gameType));
+      
+
+      let regName = `${this.companyIden}_${parseInt(this.managerInfo.gameType) + parseInt(this.managerInfo.kindId)}.${file.name.slice(file.name.indexOf('.')+1)}`
+      console.log(regName)
       let fileName = this.suffixFun(file.name)
       const isLt1M = file.size / 1024 / 1024 < 2
       const suffix = fileName[1].toLowerCase()
       const fileType = ['png', 'jpg']
       this.imgFile = file
-      this.imgFile.fileName = `${fileName[0]+new Date().getTime()}.${fileName[1]}`
+      //this.imgFile.fileName = `${fileName[0]+new Date().getTime()}.${fileName[1]}`
+      this.imgFile.fileName = regName
+      console.log(this.imgFile);
       if (!(fileType.indexOf(suffix) > -1)) {
         return this.$Message.error('上传图片只能是 JPG或者PNG 格式!')
       } else if (!isLt1M) {
         return this.$Message.error('大小不能超过 2MB!')
       }
       return new Promise((resolve, reject) =>{
+        if (this.imgFile.name != this.imgFile.fileName) {
+          this.$Message.error('图片名格式不正确!')
+          return reject(false)
+        }
         this.dialogLoading = true
         httpRequest('post','/upload', {
           contentType: 'image',
@@ -382,12 +397,13 @@ export default {
           this.actionUrl = res.payload[0].aws
           this.uploadAws()
           this.uploadAli()
-          resolve(true)
+          return resolve(true)
         }).catch(err => {
-          reject(false)
+          return reject(false)
         })
       })
-    }, // 上传前的检验
+    }, 
+    // 上传前的检验
     suffixFun (o) {
       let arr = o.split('.')
       return arr
