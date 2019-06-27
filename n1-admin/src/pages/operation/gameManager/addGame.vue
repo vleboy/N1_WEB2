@@ -38,7 +38,7 @@
             :before-upload="beforeUpload">
             <Button icon="ios-cloud-upload-outline" :loading="dialogLoading">请选择需要上传文件</Button>
           </Upload>
-          <div style="color:red;margin-left:1rem">图片名称：NA_70000</div>
+          <div style="color:red;margin-left:1rem">图片名称：{{`${companyIden}_${parseInt(managerInfo.gameType) + parseInt(managerInfo.kindId)}`}}</div>
         </div>
         <div style="padding: 16px 0">只能上传一张jpg/png文件，且不超过1M</div>
         <div style="overflow: hidden"><img style="width: 80%" :src="managerInfo.gameImg"></div>
@@ -348,16 +348,19 @@ export default {
       });
     },
     uploadAws () {
+
       const dev = `https://s3-ap-southeast-1.amazonaws.com/image-na-dev/${this.imgFile.fileName}` //测试环境
       this.managerInfo.gameImgAli =  `https://app.risheng3d.com/image/${this.imgFile.fileName}`
       const prod = `https://img.na77.com/${this.imgFile.fileName}` //正式环境
       httpRequest('put',`${this.uploadAction[0].aws}`, this.imgFile)
         .then(res => {
           this.$Message.success('上传亚马逊成功')
+          
           this.managerInfo.gameImg = (process.env.NODE_ENV == 'development') ? dev : prod
           
-          //(this.managerInfo.gameImg)
-          
+          console.log(this.managerInfo.gameImg);
+         
+      
         }).finally(()=>{
         this.dialogLoading = false
       })
