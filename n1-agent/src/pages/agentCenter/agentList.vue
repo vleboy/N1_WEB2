@@ -206,6 +206,7 @@ import {
   frozen
 } from "@/service/index";
 import { thousandFormatter } from "@/config/format";
+import { getGameType } from "@/config/getGameType";
 export default {
   data() {
     const validatePlayerName = (rule, value, callback) => {
@@ -1003,7 +1004,21 @@ export default {
                         this.selected = false;
                         this.rateContent = "上级代理成数为:" + params.row.rate;
 
-  
+                        agentOne(params.row.userId).then(res => {
+                          console.log(res);
+                          
+                          if (res.code == 0) {
+                            this.gameType = res.payload.companyArr;
+                            if (res.payload.level == 0) {
+                              this.gameListArr = getGameType()
+                            } else {
+                              this.gameListArr = res.payload.gameList
+                            }
+                        
+                          }
+                          
+                          
+                        });
                       }
                     }
                   },
@@ -1142,7 +1157,8 @@ export default {
                       
                         
                         agentOne(params.row.userId).then(res => {
-                         
+                          console.log(res);
+                          
                           if (res.code == 0) {
                             this.gameType = res.payload.companyArr;
                             if (res.payload.level == 0) {
