@@ -199,7 +199,7 @@
         <Col span="4" v-else>减少点数</Col>
         <Col span="16">
           <Tooltip :content="tooltip" placement="top">
-            <Input v-model="point" placeholder="请输入点数"></Input>
+            <Input v-model="point" placeholder="请输入点数" :on-blur="checkPoint()"></Input>
           </Tooltip>
         </Col>
       </Row>
@@ -1061,6 +1061,12 @@ export default {
         }
       }); */
       this.gameList = this.GameListEnum[value]
+    },
+    checkPoint() {
+      if (this.point % 1 != 0) {
+        this.point = "";
+        return this.$Message.warning("点数为整数");
+      }
     },
     selectGame(value) {
       this.selected = true;
