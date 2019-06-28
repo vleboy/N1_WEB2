@@ -144,7 +144,7 @@
           <Row>
             <Col span="10">
             <Tooltip :content="tipContent">
-              <Input v-model.number="balance" @on-keyup="checkFloat()" placeholder="0~1,不超过上级洗码比"></Input>
+              <Input v-model.number="balance" placeholder="0~1,不超过上级洗码比"></Input>
             </Tooltip>
             </Col>
             <Col span="4">
@@ -314,7 +314,7 @@ export default {
       } else {
         let testReg = /^[0-9]\d*$/;
         if (!testReg.test(value)) {
-          callback(new Error("点数需为数字"));
+          callback(new Error("点数需为整数"));
         } else {
           if (value > this.parentBalance) {
             callback(new Error("点数超过了上级余额"));
@@ -330,7 +330,7 @@ export default {
       } else {
         let testReg = /^\d*$/;
         if (!testReg.test(value)) {
-          callback(new Error("成数需为数字"));
+          callback(new Error("成数需为整数"));
         } else {
           if (value > this.parentRate) {
             callback(new Error("成数超过了上级成数"));
@@ -1573,9 +1573,9 @@ export default {
         }
       }
     },
-    checkFloat(){
+    /* checkFloat(){
       this.balance = this.balance.replace(/^(\-)*(\d+)\.(\d\d).*$/, "$1$2.$3"); 
-    },
+    }, */
     addGame() {
       let gamelist = this.gameList;
       let gameName = this.game;
@@ -1592,6 +1592,16 @@ export default {
       } else {
         maxMix = 1;
       }
+      if (balance.toString().split(".").length > 1) {
+        if (balance.toString().split(".")[1].length > 2) {
+          this.$Message.warning({
+          content: "最多两位小数",
+          duration: 2.5
+          });
+          return;
+        }
+      }
+     
       if (balance > maxMix && maxMix != null) {
         this.$Message.warning({
           content: "不能超过上级洗码比",
