@@ -1717,6 +1717,12 @@ export default {
         this.point = "";
         return this.$Message.warning("输入点数超出,请重新输入");
       }
+
+      if (this.point % 1 != 0) {
+        this.point = "";
+        return this.$Message.warning("点数为整数");
+      }
+
       let parent = this.level == 0 ? "01" : localStorage.userId;
       let params = {
         parent,
