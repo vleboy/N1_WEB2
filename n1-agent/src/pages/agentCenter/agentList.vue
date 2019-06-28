@@ -61,12 +61,12 @@
       <Form :label-width="100">
         <FormItem label="存入点数" v-if="plus">
           <Tooltip :content="maxBalance">
-            <Input type="text" v-model="point" placeholder="请输入点数" style="width: 280px"> </Input>
+            <Input type="text" v-model="point" :on-blur="checkCode()" placeholder="请输入点数" style="width: 280px"> </Input>
           </Tooltip>
         </FormItem>
         <FormItem label="减少点数" v-else>
           <Tooltip :content="maxBalance">
-            <Input type="text" v-model="point" placeholder="请输入点数" style="width: 280px"> </Input>
+            <Input type="text" v-model="point" :on-blur="checkCode()" placeholder="请输入点数" style="width: 280px"> </Input>
           </Tooltip>
         </FormItem>
         <div v-if="plus">
@@ -430,6 +430,7 @@ export default {
       parentBalace: 0,
       parentRate: 0,
       parentGameList: [],
+      gameListArr: [],
       typeList: [
         {
           label: "与上级相同",
@@ -1001,6 +1002,8 @@ export default {
                         this.parentRate = params.row.rate;
                         this.selected = false;
                         this.rateContent = "上级代理成数为:" + params.row.rate;
+
+  
                       }
                     }
                   },
@@ -1133,6 +1136,28 @@ export default {
                           this.parentRate = params.row.rate;
                           this.rateContent =
                             "上级代理成数为:" + params.row.rate;
+
+
+
+                      
+                        
+                        agentOne(params.row.userId).then(res => {
+                         
+                          if (res.code == 0) {
+                            this.gameType = res.payload.companyArr;
+                            if (res.payload.level == 0) {
+                              this.gameListArr = getGameType()
+                            } else {
+                              this.gameListArr = res.payload.gameList
+                            }
+                        
+                          }
+                          
+                          
+                        });
+
+
+
                         }
                       }
                     },
@@ -1540,20 +1565,17 @@ export default {
       }
     },
     selectCompany(value) {
-      /* let userId = this.agent.parent;
-      if (value) {
-        let params = { companyIden: value, userId };
-        if (userId == "01") {
-          delete params.userId;
-        }
-        gameBigType(params).then(res => {
-          if (res.code == 0) {
-            this.gameList = res.payload;
-          }
-        });
-      } */
+      this.gameList = []
       this.$refs.resetSelect.clearSingleSelect()
-      this.gameList = this.GameListEnum[value]
+      let list = _.cloneDeep(this.gameListArr)
+      
+      for (let i = 0; i < list.length; i++) {
+        
+        if (list[i].company == value) {
+         
+          this.gameList.push(list[i])
+        }
+      }
     },
     selectGame(o) {
       let parentGameList = this.parentGameList;
@@ -1712,16 +1734,17 @@ export default {
       this.admin = false;
       this.agent.remark = ""; 
     },
+    checkCode() {
+      if (this.point % 1 != 0) {
+        this.point = "";
+        return this.$Message.warning("点数为整数");
+      }
+    },
     ok() {
       //bill
       if (+this.point > +this.topBalance) {
         this.point = "";
         return this.$Message.warning("输入点数超出,请重新输入");
-      }
-
-      if (this.point % 1 != 0) {
-        this.point = "";
-        return this.$Message.warning("点数为整数");
       }
 
       let parent = this.level == 0 ? "01" : localStorage.userId;
