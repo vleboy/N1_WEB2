@@ -168,7 +168,7 @@
           <Input v-model="player.userName" placeholder="6~16位,只能包含英文或数字"></Input>
         </FormItem>
         <FormItem label="密码" prop='userPwd'>
-          <Input v-model="player.userPwd" placeholder="密码由6-16位字母和数字至少两种组成"></Input>
+          <Input v-model="player.userPwd" placeholder="密码6-16位"></Input>
         </FormItem>
         <FormItem label="直属上级" :required='true'>
           <Select v-model="player.parentId" placeholder="请选择" @on-change='selectPlayerParent'>
@@ -227,9 +227,9 @@ export default {
       if (value == "") {
         callback(new Error("密码不能为空"));
       } else {
-        let nameReg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$$/;
+        let nameReg = /^[0-9A-Za-z]{6,16}$/;
         if (!nameReg.test(value)) {
-          callback(new Error("密码由6-16位字母和数字组成"));
+          callback(new Error("密码由6-16位"));
         } else {
           callback();
         }
@@ -558,10 +558,10 @@ export default {
               on: {
                 "on-change": value => {
                   if (value.toString().split(".").length > 1) {
-                    if (value.toString().split(".")[1].length > 1) {
+                    if (value.toString().split(".")[1].length > 2) {
                       params.row.mix = 0
                       this.$Message.warning({
-                      content: "最多1位小数",
+                      content: "最多2位小数",
                       duration: 2.5
                       });
                       return;
@@ -972,7 +972,7 @@ export default {
                       color: "red"
                     }
                   },
-                  "锁定"
+                  "停用"
                 );
               }
             }
@@ -1074,7 +1074,7 @@ export default {
               let text = "";
               let status = null;
               if (params.row.status == 1) {
-                text = "锁定";
+                text = "停用";
                 color = "#f30";
                 status = 0;
                 return h("div", [
@@ -1224,7 +1224,7 @@ export default {
                   )
                 ]);
               } else {
-                text = "解锁";
+                text = "启用";
                 color = "#19be6b";
                 status = 1;
                 return h("div", [
@@ -1449,7 +1449,7 @@ export default {
                     color: "red"
                   }
                 },
-                "锁定"
+                "停用"
               );
             }
           }
@@ -1463,11 +1463,11 @@ export default {
             let text = "";
             let state = null;
             if (params.row.state == 1) {
-              text = "锁定";
+              text = "停用";
               color = "#f30";
               state = 0;
             } else {
-              text = "解锁";
+              text = "启用";
               color = "#19be6b";
               state = 1;
             }
