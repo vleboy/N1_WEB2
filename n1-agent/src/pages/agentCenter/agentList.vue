@@ -559,20 +559,21 @@ export default {
                 "on-change": value => {
                   if (value.toString().split(".").length > 1) {
                     if (value.toString().split(".")[1].length > 2) {
-                      params.row.mix = 0
+                     
                       this.$Message.warning({
                       content: "最多2位小数",
                       duration: 2.5
-                      });
+                      })
+                  
                       return;
                     }
                   }
-                  
                   let playerMix = _.cloneDeep(this.playerMix);
+                  
                   let index = params.row._index;
                   playerMix[index].mix = value;
                   this.playerMixClone = playerMix;
-                }
+                },
               }
             });
           }
