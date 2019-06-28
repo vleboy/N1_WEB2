@@ -125,6 +125,7 @@
             <Input v-model="agent.rate" placeholder="0~100,不超过上级成数"></Input>
           </Tooltip>
         </FormItem>
+
         <FormItem label="代理游戏" :required='true'>
           <Row>
             <Col span="10">
@@ -139,6 +140,7 @@
             </Col>
           </Row>
         </FormItem>
+
         <FormItem v-if="selected" prop='balance' :required='true'>
           <label for="" slot="label">{{game}}洗码比(%)</label>
           <Row>
@@ -985,6 +987,7 @@ export default {
                     },
                     on: {
                       click: async () => {
+                        
                         //代理管理员
                         this.agent.parent = "";
                         this.admin = true;
@@ -1005,10 +1008,11 @@ export default {
                         this.rateContent = "上级代理成数为:" + params.row.rate;
 
                         agentOne(params.row.userId).then(res => {
-                          console.log(res);
+                          
                           
                           if (res.code == 0) {
-                            this.gameType = res.payload.companyArr;
+                            /* this.gameType = res.payload.companyArr;
+                            console.log(this.gameType); */
                             if (res.payload.level == 0) {
                               this.gameListArr = getGameType()
                             } else {
@@ -1019,6 +1023,7 @@ export default {
                           
                           
                         });
+                        this.agentModal = true;
                       }
                     }
                   },
@@ -1137,9 +1142,10 @@ export default {
                       },
                       on: {
                         click: async () => {
+                          
                           this.defaultSn = true
                           this.agent.parent = "";
-                          this.agentModal = true;
+                  
                           this.parentSn = params.row.sn || "NA369";
                           let userId = params.row.userId;
                           let res = await availableAgents({ parent: userId });
@@ -1157,10 +1163,10 @@ export default {
                       
                         
                         agentOne(params.row.userId).then(res => {
-                          console.log(res);
+                         
                           
                           if (res.code == 0) {
-                            this.gameType = res.payload.companyArr;
+                           
                             if (res.payload.level == 0) {
                               this.gameListArr = getGameType()
                             } else {
@@ -1171,7 +1177,7 @@ export default {
                           
                           
                         });
-
+                         this.agentModal = true;
 
 
                         }
