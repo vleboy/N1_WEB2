@@ -1119,6 +1119,7 @@ export default {
                       },
                       on: {
                         click: async () => {
+                          this.defaultSn = true
                           this.agent.parent = "";
                           this.agentModal = true;
                           this.parentSn = params.row.sn || "NA369";
