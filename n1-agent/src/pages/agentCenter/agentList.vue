@@ -229,7 +229,7 @@ export default {
       } else {
         let nameReg = /^[0-9A-Za-z]{6,16}$/;
         if (!nameReg.test(value)) {
-          callback(new Error("密码由6-16位"));
+          callback(new Error("密码6-16位"));
         } else {
           callback();
         }
