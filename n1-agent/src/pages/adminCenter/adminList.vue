@@ -38,7 +38,7 @@
         </Row>
       </p>
     </Modal>
-    <Modal v-model="adminModal" title="添加管理员" :width='400' @on-ok="add" @on-cancel='addcancel'>
+    <Modal v-model="adminModal" title="添加代理管理员" :width='400' @on-ok="add" @on-cancel='addcancel'>
       <Form ref='addform' :model="adminInfo" label-position='left' :label-width="90" :rules="ruleValidate">
         <FormItem label="管理员账号" prop="username">
           <Input v-model="adminInfo.username" placeholder="请输入"></Input>

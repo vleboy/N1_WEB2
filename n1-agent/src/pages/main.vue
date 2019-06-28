@@ -11,7 +11,7 @@
             <Avatar icon="person" size="small" style="background: #619fe7;margin-right: 8px;"></Avatar>
             <Dropdown transfer trigger="click" @on-click="handleClickUserDropdown">
               <a href="javascript:void(0)">
-                <span class="main-user-name">{{ userName }}</span>
+                <span class="main-user-name">{{ `${userName}(${account})` }}</span>
                 <Icon type="arrow-down-b"></Icon>
               </a>
               <DropdownMenu slot="list">
@@ -43,6 +43,7 @@ export default {
     return {
       // avatorPath: "",
       userName: localStorage.getItem("displayName"),
+      account: JSON.parse(localStorage.getItem("userInfo")).username,
       openName: []
     };
   },

@@ -86,7 +86,7 @@
           </FormItem>
         </div>
         <FormItem label="备注">
-          <Input v-model="remark" type="textarea" :rows="4" placeholder="注明备注,如没有可不填" style="width: 280px"></Input>
+          <Input v-model="remark" type="textarea" :rows="4" style="width: 280px"></Input>
         </FormItem>
       </Form>
     </Modal>
@@ -104,7 +104,7 @@
         </FormItem>
         <FormItem label="代理标识" prop='sn'>
           <p v-if='defaultSn'>{{parentSn}}</p>
-          <Input v-else v-model="agent.sn" placeholder="3~5位,只能包含中英文、数字、@、_"></Input>
+          <Input v-else v-model="agent.sn" placeholder="3~6位,只能包含英文、数字"></Input>
         </FormItem>
         <FormItem label="代理账号" prop='username'>
           <Input v-model="agent.username" placeholder="5~16位,只能包含英文或数字"></Input>
@@ -115,10 +115,17 @@
         <FormItem label="代理昵称" prop='displayName'>
           <Input v-model="agent.displayName" placeholder="2~10位,只能包含中文、英文或数字"></Input>
         </FormItem>
-        <FormItem label="备注">
-          <textarea v-model="agent.remark" id="textRow" placeholder="注明备注,如没有可不填" rows="2" autocomplete="off" maxlength="2000"></textarea>
+        <FormItem label="代理点数" prop='points'>
+          <Tooltip :content="pointContent">
+            <Input v-model="agent.points" placeholder="请输入点数,不超过上级点数"></Input>
+          </Tooltip>
         </FormItem>
-        <FormItem label="代理拥有的游戏" :required='true'>
+        <FormItem label="代理成数" prop='rate'>
+          <Tooltip :content="rateContent">
+            <Input v-model="agent.rate" placeholder="0~100,不超过上级成数"></Input>
+          </Tooltip>
+        </FormItem>
+        <FormItem label="代理游戏" :required='true'>
           <Row>
             <Col span="10">
             <Select :disabled='disabled' v-model="agent.select" placeholder="请选择" @on-change="selectCompany">
@@ -145,16 +152,10 @@
             </Col>
           </Row>
         </FormItem>
-        <Table :columns="columns" :data="gameDetail" class="table" size="small"></Table>
-        <FormItem label="代理点数" prop='points'>
-          <Tooltip :content="pointContent">
-            <Input v-model="agent.points" placeholder="请输入点数,不超过上级点数"></Input>
-          </Tooltip>
-        </FormItem>
-        <FormItem label="代理成数" prop='rate'>
-          <Tooltip :content="rateContent">
-            <Input v-model="agent.rate" placeholder="0~100,不超过上级成数"></Input>
-          </Tooltip>
+        <Table :columns="columns" :data="gameDetail" class="table" size="small" style="margin-bottom:1rem"></Table>
+
+        <FormItem label="备注">
+          <textarea v-model="agent.remark" id="textRow" rows="2" autocomplete="off" maxlength="2000"></textarea>
         </FormItem>
       </Form>
     </Modal>
@@ -182,7 +183,7 @@
           </Tooltip>
         </FormItem>
         <FormItem label="备注">
-          <Input v-model="player.remark" type="textarea" :rows="4" placeholder="注明备注,如没有可不填"></Input>
+          <Input v-model="player.remark" type="textarea" :rows="4" ></Input>
         </FormItem>
       </Form>
     </Modal>
@@ -236,9 +237,9 @@ export default {
         if (value == "") {
           callback(new Error("标识不能为空"));
         } else {
-          let nameReg = /^[\u4e00-\u9fa5A-Za-z0-9@_]{3,5}$/;
+          let nameReg = /^[A-Za-z0-9]{3,6}$/;
           if (!nameReg.test(value)) {
-            callback(new Error("3~5位,只能包含中英文、数字、@、_"));
+            callback(new Error("3~6位,只能包含英文、数字"));
           } else {
             callback();
             // checkExit({ nick: { role: "10", displayName: value } }).then(res => {
