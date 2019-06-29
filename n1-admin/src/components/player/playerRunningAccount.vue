@@ -109,7 +109,7 @@
         <Row style="padding: 20px 0">
           <Col span="24" class="text-right">
             <Page
-              :total="playerAccountList.length"
+              :total="totalPageLength"
               :page-size="20"
               :current.sync="currentPage"
               @on-change="getNowpage"
@@ -396,6 +396,11 @@ export default {
     /* this.companySelectList(); */
   },
   computed: {
+    totalPageLength() {
+      console.log(this.playerAccountList.length);
+      
+      return this.playerAccountList.length
+    },
     dataList() {
       if (this.nowPage === 1) {
         
@@ -461,7 +466,8 @@ export default {
     },
 
     reset() {
-      this.playerAccountList = ''
+      this.playerAccountListStorage = []
+      this.playerAccountList = []
       this.playerAccountListStartKey = ''
       this.companyInfo = '全部厂商'
       this.selType = 'All'
@@ -470,7 +476,9 @@ export default {
       this.radioInfo = ''
       this.radioType = ''
       this.radioMoney = ''
-      this.amountDate = [new Date().getTime() - 3600 * 1000 * 24 * 6, new Date()];
+      this.amountDate = [new Date().getTime() - 3600 * 1000 * 24 * 6, new Date().getTime()];
+      console.log(this.amountDate);
+      
       this.changeDate()
       this.getPlayerAccount()
     },
@@ -491,10 +499,7 @@ export default {
     getPlayerAccount() {
       
      
-     console.log(this.amountDate);
-      this.isFetching = true;
-
-
+     console.log("fuck");
 
       httpRequest("post", "/player/bill/flow", {
         userName: localStorage.playerName,
@@ -512,18 +517,20 @@ export default {
         .then(result => {
           this.isLastMessage = result.list < this.pageSize;
           this.playerAccountList = result.list;
+          
+          
           this.playerAccountListStartKey = result.startKey;
           this.playerAccountUserName = result.userName;
-          this.playerAccountListStorage.length &&
-            (this.playerAccountList = this.playerAccountListStorage.concat(
-              this.playerAccountList
-            ));
+          this.playerAccountListStorage.length && (this.playerAccountList = this.playerAccountListStorage.concat(this.playerAccountList));
+          console.log(this.playerAccountList.length);
+          
         })
         .finally(() => {
           this.isFetching = false;
         });
     },
     confirms() {
+      this.initData()
       this.playerAccountListStartKey = "";
       this.getPlayerAccount()
     },
@@ -555,12 +562,14 @@ export default {
       
       this.radioInfo = val;
       this.playerAccountListStartKey = ''
+      
       this.getPlayerAccount();
     },
     //搜索
     searchData() {
       
       this.playerAccountListStartKey = ''
+      this.changeDate()
       this.getPlayerAccount();
       //this.changeGameType();
     },
