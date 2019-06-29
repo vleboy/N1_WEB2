@@ -69,7 +69,7 @@
         </div>
         </Col>
         <Col span="12" style="text-align: right;font-size: 12px">
-        <Page :total="playerDetailList.length" show-elevator :page-size="20" :current.sync="currentPage" @on-change="getNowpage"></Page>
+        <Page :total="playerDetailList.length" :page-size="20" :current.sync="currentPage" @on-change="getNowpage"></Page>
         </Col>
       </Row>
     </div>
@@ -403,11 +403,15 @@ export default {
     },
     getNowpage(page) {
       this.nowPage = page;
+      console.log(this.playerDetailList.length);
+      console.log(this.playerDetailList.length / this.nowSize);
+      
       if (
         page == Math.ceil(this.playerDetailList.length / this.nowSize) &&
         !this.isFetching &&
         page != 1 &&
         !this.isLastMessage
+        && this.playerDetailList.length >=100
       ) {
         this.playerDetailListStorage = JSON.parse(
           JSON.stringify(this.playerDetailList)
@@ -479,7 +483,7 @@ export default {
       },500)
     },
     getTransactionRecord() {
-      this.playerDetailStartKey = ''
+      
       
       if (this.isFetching) return;
       this.isFetching = true;
