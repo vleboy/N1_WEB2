@@ -506,6 +506,7 @@ export default {
       this.betId = ''
       this.radioInfo = '全部'
       this.amountDate = [new Date().getTime() - 3600 * 1000 * 24 * 6, new Date()]
+      this.initData()
       this.changeRadio()
     },
     getNowpage(page) {
@@ -514,7 +515,8 @@ export default {
         page == Math.ceil(this.playerDetailList.length / this.nowSize) &&
         !this.isFetching &&
         page != 1 &&
-        !this.isLastMessage
+        !this.isLastMessage &&
+        this.playerDetailList.length >=100
       ) {
         this.playerDetailListStorage = JSON.parse(
           JSON.stringify(this.playerDetailList)
@@ -588,7 +590,7 @@ export default {
     },
     changeRadio(val) {
       this.radioInfo == undefined ? '全部' : val;
-      this.playerDetailStartKey = ''
+      this.initData()
       this.getTransactionRecord();
     },
     getTransactionRecord() {
@@ -631,10 +633,11 @@ export default {
     changeCompany(val) {
       this.radioInfo = null
       this.sel = val;
+      this.initData()
     },
     searchAmount() {
       this.initData();
-      this.changeRadio();
+      this.getTransactionRecord()
     },
     initTime() {
       const start = this.amountDate[0]

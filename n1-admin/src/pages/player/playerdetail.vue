@@ -58,7 +58,8 @@ export default {
       columns: [
         {
           title: "商户ID",
-          key: "buId"
+          key: "buId",
+          maxWidth: 80
         },
         {
           title: "所属商户",

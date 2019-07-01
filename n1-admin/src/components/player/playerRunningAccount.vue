@@ -457,7 +457,8 @@ export default {
         page == Math.ceil(this.playerAccountList.length / this.nowSize) &&
         !this.isFetching &&
         page != 1 &&
-        !this.isLastMessage
+        !this.isLastMessage &&
+        this.playerAccountList.length >=100
       ) {
         this.playerAccountListStorage = JSON.parse(
           JSON.stringify(this.playerAccountList)
@@ -496,7 +497,6 @@ export default {
     },
     confirms() {
       this.initData()
-      this.playerAccountListStartKey = "";
       this.getPlayerAccount()
     },
     // 最近的时间快捷选择联动

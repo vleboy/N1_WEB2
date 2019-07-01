@@ -388,7 +388,7 @@ export default {
       }
       return thousandFormatter(this.allAmount);
     },
-
+    //获取游戏厂商
     getCompanyList() {
       let arr = JSON.parse(localStorage.getItem("userInfo")).gameList.map(
         item => {
@@ -421,6 +421,7 @@ export default {
       gameList.unshift("全部厂商");
       return gameList;
     },
+    //获取游戏列表
     gameTypeList() {
       let arr = JSON.parse(localStorage.getItem("userInfo")).gameList.map(
         item => {
@@ -462,7 +463,7 @@ export default {
       }
 
       gameType.unshift("全部");
-      this.radioInfo = '全部'
+      //this.radioInfo = '全部'
       
       return gameType;
     }
@@ -525,7 +526,8 @@ export default {
         new Date(new Date().getTime() - 3600 * 1000 * 24 * 6),
         new Date()
       ];
-      this.changeGameType();
+      this.initData()
+      this.getPlayerAccount();
     },
     getNowpage(page) {
       this.nowPage = page;
@@ -533,7 +535,8 @@ export default {
         page == Math.ceil(this.playerAccountList.length / this.nowSize) &&
         !this.isFetching &&
         page != 1 &&
-        !this.isLastMessage
+        !this.isLastMessage && 
+        this.playerAccountList.length >=100
       ) {
         this.playerAccountListStorage = JSON.parse(
           JSON.stringify(this.playerAccountList)
@@ -541,8 +544,6 @@ export default {
         this.getPlayerAccount();
       }
     },
-
-
     getPlayerAccount() {
       if (this.isFetching) return;
       this.isFetching = true;
@@ -582,7 +583,6 @@ export default {
           this.isFetching = false;
         });
     },
-    
     // 最近的时间快捷选择联动
     changeDate() {
       if (this.amountDate) {
@@ -593,10 +593,11 @@ export default {
         this.monthDate = "";
       }
       /*  */
-    }, //日期改变联动
+    }, 
+    //日期改变联动
     getDate() {
       this.initData();
-      this.changeGameType();
+      this.getPlayerAccount();
     },
     changeMonth(date) {
       if (date && this.monthDate) {
@@ -612,9 +613,8 @@ export default {
       console.log(val);
       
       this.radioInfo == undefined ? "全部" : val;
-      this.playerAccountListStartKey = "";
-
-      this.getPlayerAccount();
+      this.initData()
+      this.getPlayerAccount()
     },
     // 月份联动
     selectionChange(val) {
@@ -624,10 +624,9 @@ export default {
         this.checkFormatNum += Number(item.amount);
       }
       this.checkFormatNum = thousandFormatter(this.checkFormatNum);
-    }, //多选
+    }, 
+    //多选
     searchData() {
-
-      this.playerAccountListStartKey = ''
       this.initData();
       this.getPlayerAccount();
     }, 
@@ -653,10 +652,9 @@ export default {
       );
     },
     changeCompany(val) {
-      console.log(val);
-      
       this.sel = val;
-      this.radioInfo = null;
+      this.radioInfo = '';
+      this.initData()
     },
     openModalBill(data) {
       this.propChild = data;
@@ -677,9 +675,7 @@ export default {
           this.amountDate = [];
           if (this.$route.query.type != undefined) {
             this.radioInfo = String(this.$route.query.type);
-            
-            console.log(this.radioInfo);
-            
+           
             if (this.radioInfo != "") {
               getGameType().map(item => {
                 if (item.code ==  this.radioInfo) {
