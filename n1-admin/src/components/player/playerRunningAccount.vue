@@ -109,7 +109,7 @@
         <Row style="padding: 20px 0">
           <Col span="24" class="text-right">
             <Page
-              :total="playerAccountList.length"
+              :total="totalPageLength"
               :page-size="20"
               :current.sync="currentPage"
               @on-change="getNowpage"
@@ -137,25 +137,6 @@ import dayjs from "dayjs";
 import SportsModal from "@/components/record/sportsModal";
 
 export default {
-  beforeRouteEnter(to, from, next) {
-    /* console.log(this, 'beforeRouteEnter'); // undefined
-    console.log(to, '组件独享守卫beforeRouteEnter第一个参数');
-    console.log(from, '组件独享守卫beforeRouteEnter第二个参数');
-    console.log(next, '组件独享守卫beforeRouteEnter第三个参数'); */
-    next(vm => {
-      //因为当钩子执行前，组件实例还没被创建
-      // vm 就是当前组件的实例相当于上面的 this，所以在 next 方法里你就可以把 vm 当 this 来用了。
-      //console.log(vm);//当前组件的实例
-
-      /* if (localStorage.dayPlayer == 'dayPlayer') {
-        vm.isFetching = true
-        vm.getPlayerAccount()
-      } */
-      
-      //console.log(vm)
-      
-    });
-  },
   components: { SportsModal },
   data() {
     return {
@@ -238,9 +219,9 @@ export default {
           }
         ]
       },
-      nowSize: 20,
-      nowPage: 1,
-      pageSize: 100,
+      nowSize: 20,//每页显示数量
+      nowPage: 1,//当前页码
+      pageSize: 100,//总数据
       radioTime: "1",
       radioMoney: "",
       currentPage: 1,
@@ -266,7 +247,6 @@ export default {
       },
       gameListItem: [],
       selType: "全部厂商",
-      
       GameNameEnum: {
         "70001": "塔罗之谜",
         "70002": "小厨娘",
@@ -391,17 +371,16 @@ export default {
     };
   },
   mounted() {
-    //this.changeTime();
     this.searchData()
-    /* this.companySelectList(); */
   },
   computed: {
+    totalPageLength() {
+      return this.playerAccountList.length
+    },
     dataList() {
       if (this.nowPage === 1) {
-        
         return this.playerAccountList.slice(0, this.nowSize);
       } else {
-        
         return this.playerAccountList.slice(
           (this.nowPage - 1) * this.nowSize,
           this.nowSize * this.nowPage
@@ -419,8 +398,6 @@ export default {
       return thousandFormatter(this.allAmount);
     },
     getGameTypeList() {
-     
-      
       return getGameListEnum()[
         this.selType == "全部厂商" ? "All" : this.selType
       ];
@@ -461,8 +438,6 @@ export default {
     },
 
     reset() {
-      this.playerAccountList = ''
-      this.playerAccountListStartKey = ''
       this.companyInfo = '全部厂商'
       this.selType = 'All'
       this.betId = ''
@@ -470,10 +445,12 @@ export default {
       this.radioInfo = ''
       this.radioType = ''
       this.radioMoney = ''
-      this.amountDate = [new Date().getTime() - 3600 * 1000 * 24 * 6, new Date()];
+      this.amountDate = [new Date().getTime() - 3600 * 1000 * 24 * 6, new Date().getTime()];
+      this.initData()
       this.changeDate()
       this.getPlayerAccount()
     },
+
     getNowpage(page) {
       this.nowPage = page;
       if (
@@ -488,14 +465,9 @@ export default {
         this.getPlayerAccount();
       }
     },
+
     getPlayerAccount() {
-      
-     
-     console.log(this.amountDate);
-      this.isFetching = true;
-
-
-
+      this.isFetching = true
       httpRequest("post", "/player/bill/flow", {
         userName: localStorage.playerName,
         type: this.radioType,
@@ -514,16 +486,14 @@ export default {
           this.playerAccountList = result.list;
           this.playerAccountListStartKey = result.startKey;
           this.playerAccountUserName = result.userName;
-          this.playerAccountListStorage.length &&
-            (this.playerAccountList = this.playerAccountListStorage.concat(
-              this.playerAccountList
-            ));
+          this.playerAccountListStorage.length && (this.playerAccountList = this.playerAccountListStorage.concat(this.playerAccountList));
         })
         .finally(() => {
           this.isFetching = false;
         });
     },
     confirms() {
+      this.initData()
       this.playerAccountListStartKey = "";
       this.getPlayerAccount()
     },
@@ -551,20 +521,18 @@ export default {
     }, 
     //切换游戏种类
     changeGameType(val) {
-      
-      
       this.radioInfo = val;
-      this.playerAccountListStartKey = ''
+      this.initData()
       this.getPlayerAccount();
     },
     //搜索
     searchData() {
-      
-      this.playerAccountListStartKey = ''
+      this.initData()
+      this.changeDate()
       this.getPlayerAccount();
       //this.changeGameType();
     },
-     // 重置
+     // 重置分页,切换搜索条件必须调用
     initData() {
       this.currentPage = 1;
       this.nowPage = 1;
@@ -589,6 +557,7 @@ export default {
     changeCompany(val) {
       this.selType = val;
       this.radioInfo = null
+      this.initData()
     },
     openModalBill(data) {
       this.propChild = data;
@@ -626,14 +595,11 @@ export default {
             this.startDate = new Date(this.amountDate[0]).getTime();
             this.endDate = new Date(this.amountDate[1]).getTime();
           } else {
-            
-            
             this.radioInfo = ''
             this.amountDate = [new Date(new Date().getTime() - 3600 * 1000 * 24 * 6), new Date()]
             this.startDate = new Date(this.amountDate[0]).getTime();
             this.endDate = new Date(this.amountDate[1]).getTime();
           }
-          //console.log(this.amountDate);
           this.searchData()
         }
         localStorage.removeItem("playDetail")

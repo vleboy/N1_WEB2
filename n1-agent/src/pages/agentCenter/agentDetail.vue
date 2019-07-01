@@ -171,7 +171,7 @@
           @click="getWaterfallList"
         >(点击查询)</span>
       </h2>
-      <Table :columns="columns" :data="showWaterList" size="small"></Table>
+      <Table :columns="columns" :data="showWaterList" size="small" style="margin-bottom:1rem"></Table>
       <Page
         :total="totalPage"
         class="page"

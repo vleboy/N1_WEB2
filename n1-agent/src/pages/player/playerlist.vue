@@ -431,7 +431,7 @@
           name: 'agentDetail',
           query:{
             userId : row.parent,
-            username : row.merchantName,
+            displayName : row.merchantName,
             parent : row.parent
           }
         })

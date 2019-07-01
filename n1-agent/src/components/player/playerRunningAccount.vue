@@ -3,6 +3,18 @@ $
   <div class="p-playerAccount">
     <div class="-p-base">
       <Row class="-b-form">
+        <div class="from-search">
+          厂商：
+          <RadioGroup v-model="companyInfo" type="button" @on-change="changeCompany">
+            <Radio v-for="(value,index) of companyList" :key="index" :label="value">{{value}}</Radio>
+          </RadioGroup>
+        </div>
+        <div class="from-search">
+          游戏：
+          <RadioGroup v-model="radioInfo" type="button">
+            <Radio v-for="(item,index) of gameTypeList" :key="index" :label="item.code">{{item.name}}</Radio>
+          </RadioGroup>
+        </div>
         <Col span="17">
           <DatePicker
             :editable='false'
@@ -45,18 +57,6 @@ $
           <div class="-search-input">
             交易号：<Input v-model="betId" placeholder="请输入交易号" style="width: 70%;"></Input>
           </div>
-        </div>
-        <div class="from-search">
-          厂商：
-          <RadioGroup v-model="companyInfo" type="button" @on-change="changeCompany">
-            <Radio v-for="(item,index) of companyList" :key="index" :label="item.company">{{item.company}}</Radio>
-          </RadioGroup>
-        </div>
-        <div class="from-search">
-          游戏：
-          <RadioGroup v-model="radioInfo" type="button">
-            <Radio v-for="(item,index) of gameTypeList" :key="index" :label="item.code">{{item.name}}</Radio>
-          </RadioGroup>
         </div>
         <div class="from-search">
           类型：
@@ -112,14 +112,16 @@ $
 </template>
 <script type="text/ecmascript-6">
   import {formatUserName, thousandFormatter} from '@/config/format'
-  import {httpRequest} from '@/service/index'
+  import {httpRequest, agentOne} from '@/service/index'
   import dayjs from "dayjs";
   import SportsModal from '@/components/player/sportsModal'
 
   export default {
     components: {SportsModal},
+    props: ['parentId'],
     data() {
       return {
+        gameListArr: [],
         options: {
         shortcuts: [
           {
@@ -310,7 +312,6 @@ $
             }
           }
         ],
-        companyList: [],
         gameTypeList: [],
         radioInfo: '',
         companyInfo: '全部厂商',
@@ -323,6 +324,26 @@ $
       this.companySelectList()
     },
     computed: {
+      companyList() {
+        
+        if (this.gameListArr.length > 0) {
+          
+          let arr = this.gameListArr.companyArr
+          let company = arr.map(
+            item => {
+              return item.company;
+              }
+          );
+          company.unshift("NA");
+          company.unshift("全部厂商");
+          console.log("fuck");
+          console.log(company);
+          
+          return company;
+        }
+      return []
+      
+      },
       dataList() {
         if (this.nowPage === 1) {
           return this.playerAccountList.slice(0, this.nowSize)
@@ -447,17 +468,10 @@ $
         window.open(`${url}/player/bill/flow/download?userName=${localStorage.playerName}&type=${this.radioType}&action=${this.radioMoney}&startTime=${this.amountDate ? this.startDate : ''}&endTime=${this.amountDate ? this.endDate : ''}`)
       },
       companySelectList () {
-        httpRequest('post','/companySelect',{
-          parent: localStorage.loginRole == 1 ? '' : localStorage.loginId
-        }).then(
-          result => {
-            this.companyList = result.payload || []
-            this.companyList.unshift({
-              company: '全部厂商',
-            })
-            this.changeCompany()
-          }
-        )
+        agentOne(this.parentId).then(res => {
+          this.gameListArr = res.payload
+          //console.log(this.gameListArr);
+        })
       }, //获取运营商列表
       changeCompany () {
         httpRequest('post','/gameBigType',{

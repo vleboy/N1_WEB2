@@ -53,7 +53,7 @@
         <Radio label="2">交易记录</Radio>
       </RadioGroup>
       <div class="-c-info">
-        <playerRunningAccount ref="childMethod" v-if="reportType==1"></playerRunningAccount>
+        <playerRunningAccount ref="childMethod" v-if="reportType==1" :parentId="parent1"></playerRunningAccount>
         <transactionRecord :dataProp="playerDetailInfo" @updateBalance="getPlayerDetail"  v-else></transactionRecord>
       </div>
     </div>
@@ -78,6 +78,7 @@ export default {
   },
   data () {
     return {
+      parent1:'',
       password: '',
       editPassword: false,
       isOpenModal: false,
@@ -121,6 +122,8 @@ export default {
         userName: name
       }).then(
         result => {
+          //console.log(result);
+          this.parent1 = result.userInfo.parent
           this.playerDetailInfo = result.userInfo
           this.reportType = '1'
         }

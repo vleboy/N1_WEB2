@@ -69,7 +69,7 @@
         </div>
         </Col>
         <Col span="12" style="text-align: right;font-size: 12px">
-        <Page :total="playerDetailList.length" show-elevator :page-size="20" :current.sync="currentPage" @on-change="getNowpage"></Page>
+        <Page :total="playerDetailList.length" :page-size="20" :current.sync="currentPage" @on-change="getNowpage"></Page>
         </Col>
       </Row>
     </div>
@@ -128,18 +128,21 @@ export default {
           {
             text: "本周",
             value() {
+             
               return [new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().endOf('second').valueOf())]
             }
           },
           {
             text: "本月",
             value() {
+              
               return [new Date(dayjs().startOf('month').valueOf()), new Date(dayjs().endOf('second').valueOf())]
             }
           },
           {
             text: "上周",
             value() {
+             
               return [new Date(dayjs().add(-1, 'week').startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000 - 1)]
             }
           },
@@ -147,6 +150,7 @@ export default {
             text: "上月",
             value() {
               //-1 上月
+              
               return [new Date(dayjs().add(-1, 'month').startOf('month').valueOf()), new Date(dayjs().startOf('month').valueOf() - 1)]
             }
           }
@@ -377,14 +381,6 @@ export default {
     operateWater(row) {
       this.openModalRunning(row);
     },
-    
-
-
-
-
-
-
-
     reset() {
       this.companyInfo = '全部厂商'
       this.selType = 'All'
@@ -394,6 +390,7 @@ export default {
       this.radioMoney = ''
       this.playerDetailStartKey = ''
       this.amountDate = [new Date().getTime() - 3600 * 1000 * 24 * 6, new Date()]
+      this.initData()
       this.getTransactionRecord()
     },
     getNowpage(page) {
@@ -403,6 +400,7 @@ export default {
         !this.isFetching &&
         page != 1 &&
         !this.isLastMessage
+        && this.playerDetailList.length >=100
       ) {
         this.playerDetailListStorage = JSON.parse(
           JSON.stringify(this.playerDetailList)
@@ -411,8 +409,6 @@ export default {
       }
     },
     async openModalBill(data) {
-      //(data);
-      
       this.propChild = data;
       if (this.isRealLife) {
         this.isOpenModalBill = true;
@@ -445,8 +441,8 @@ export default {
       this.runningDetail = data;
     },
     changeRadio(val) {
-     this.playerDetailStartKey = ''
      this.radioInfo = val
+     this.initData()
      this.getTransactionRecord()
     },
     getHfiveData(betId){
@@ -474,8 +470,6 @@ export default {
       },500)
     },
     getTransactionRecord() {
-      this.playerDetailStartKey = ''
-      
       if (this.isFetching) return;
       this.isFetching = true;
       this.initTime();
@@ -483,8 +477,6 @@ export default {
       let [startTime, endTime] = this.amountDate;
       startTime = new Date(startTime).getTime();
       endTime = new Date(endTime).getTime();
-      //console.log(startTime);
-      
       httpRequest("post", "/player/bill/detail", {
         userName: name,
         company: this.companyInfo == "全部厂商" ? "-1" : this.companyInfo,
@@ -497,7 +489,6 @@ export default {
       }).then(result => {
         this.isLastMessage = result.list < this.pageSize;
         this.playerDetailList = result.list;
-        // this.balance = result.balance
         this.playerDetailStartKey = result.startKey;
         this.playerDetailListStorage.length &&
           (this.playerDetailList = this.playerDetailListStorage.concat(
@@ -506,34 +497,19 @@ export default {
         this.isFetching = false;
       });
     },
-    companySelectList() {
-      /* httpRequest(
-        "post",
-        "/companySelect",
-        {
-          parent: localStorage.loginRole == 1 ? "" : localStorage.loginId
-        },
-        "game"
-      ).then(result => {
-        this.companyList = result.payload || [];
-        this.companyList.unshift({
-          company: "全部厂商"
-        });
-        this.changeCompany();
-        // this.$store.commit('closeLoading')
-      }); */
-    }, //获取运营商列表
+    //获取运营商列表
     changeCompany(val) {
-      
       this.selType = val
       this.radioInfo = null
+      this.initData()
     },
     confirms() {
+      this.initData()
       this.playerAccountListStartKey = "";
       this.getTransactionRecord()
     },
     searchAmount() {
-      
+      this.initData()
       this.getTransactionRecord()
     },
     initTime() {

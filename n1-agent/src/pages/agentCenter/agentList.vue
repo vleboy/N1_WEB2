@@ -557,9 +557,10 @@ export default {
               },
               on: {
                 "on-change": value => {
+                  
                   if (value.toString().split(".").length > 1) {
                     if (value.toString().split(".")[1].length > 2) {
-                     
+                      this.mixCheck = false
                       this.$Message.warning({
                       content: "最多2位小数",
                       duration: 2.5
@@ -568,6 +569,7 @@ export default {
                       return;
                     }
                   }
+                  this.mixCheck = true
                   let playerMix = _.cloneDeep(this.playerMix);
                   
                   let index = params.row._index;
@@ -580,6 +582,7 @@ export default {
         }
       ],
       playerMix: [],
+      mixCheck: true,
       playerMixClone: [],
       parentNameChild: "",
       columns: [
@@ -2004,23 +2007,28 @@ export default {
     addPlayerConfirm() {
       this.$refs["playerForm"].validate(valid => {
         if (valid) {
-          creatPlayer({
+          if(this.mixCheck) {
+            creatPlayer({
             ...this.player,
             gameList: this.playerMixClone
-          }).then(res => {
-            if (res.code == 0) {
-              this.$Message.success("创建成功");
-              this.$refs["playerForm"].resetFields();
-              this.playerMix = [];
-              if (this.newPlayer) {
-                let userId = localStorage.userId;
-                this.$store.dispatch("getAgentPlayer", {
-                  fromUserId: userId
-                });
-                this.newPlayer = false;
+            }).then(res => {
+              if (res.code == 0) {
+                this.$Message.success("创建成功");
+                this.$refs["playerForm"].resetFields();
+                this.playerMix = [];
+                if (this.newPlayer) {
+                  let userId = localStorage.userId;
+                  this.$store.dispatch("getAgentPlayer", {
+                    fromUserId: userId
+                  });
+                  this.newPlayer = false;
+                }
               }
-            }
-          });
+            });
+          } else {
+            return this.$Message.warning("玩家洗码最多两位")
+          }
+          
         } else {
           return this.$Message.warning("请填写完整信息");
         }
