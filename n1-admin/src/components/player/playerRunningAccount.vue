@@ -484,6 +484,8 @@ export default {
         .then(result => {
           this.isLastMessage = result.list < this.pageSize;
           this.playerAccountList = result.list;
+          
+          
           this.playerAccountListStartKey = result.startKey;
           this.playerAccountUserName = result.userName;
           this.playerAccountListStorage.length && (this.playerAccountList = this.playerAccountListStorage.concat(this.playerAccountList));

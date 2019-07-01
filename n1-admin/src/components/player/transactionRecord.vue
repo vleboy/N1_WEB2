@@ -395,6 +395,9 @@ export default {
     },
     getNowpage(page) {
       this.nowPage = page;
+      console.log(this.playerDetailList.length);
+      console.log(this.playerDetailList.length / this.nowSize);
+      
       if (
         page == Math.ceil(this.playerDetailList.length / this.nowSize) &&
         !this.isFetching &&
