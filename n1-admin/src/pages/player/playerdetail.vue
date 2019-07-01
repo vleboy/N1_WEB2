@@ -76,6 +76,11 @@ export default {
           key: "userId"
         },
         {
+          title: "玩家账号",
+           align: "center",
+          key: "userName"
+        },
+        {
           title: "游戏状态",
            align: "center",
           slot: "gameState"
