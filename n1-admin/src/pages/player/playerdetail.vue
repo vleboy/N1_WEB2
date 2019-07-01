@@ -84,7 +84,8 @@ export default {
         {
           title: "游戏状态",
            align: "center",
-          slot: "gameState"
+          slot: "gameState",
+           maxWidth: 90
         },
         {
           title: "余额",

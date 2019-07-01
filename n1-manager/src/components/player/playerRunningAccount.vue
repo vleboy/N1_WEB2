@@ -306,6 +306,8 @@ $
     },
     mounted() {
       //this.changeTime()
+      console.log(new Date(1556640000000));
+      console.log(new Date(1559232000000));
       this.companySelectList()
     },
     computed: {

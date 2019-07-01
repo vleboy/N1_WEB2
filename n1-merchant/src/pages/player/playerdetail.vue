@@ -47,6 +47,22 @@ export default {
       },
       columns: [
         {
+          title: "商户ID",
+          align: "center",
+          key: "buId",
+          maxWidth: 90
+        },
+         {
+          title: "所属商户",
+          align: "center",
+          key: "merchantName"
+        },
+        {
+          title: "商户标识",
+          align: "center",
+          key: "sn"
+        },
+        {
           title: "玩家ID",
           align: "center",
           key: "userId"
@@ -59,7 +75,8 @@ export default {
         {
           title: "游戏状态",
           align: "center",
-          slot: "gameState"
+          slot: "gameState",
+          maxWidth: 90
         },
          
         {
@@ -72,22 +89,6 @@ export default {
           align: "center",
           slot: "joinTime"
         },
-        {
-          title: "所属商户ID",
-          align: "center",
-          key: "buId"
-        },
-        {
-          title: "所属商户昵称",
-          align: "center",
-          key: "merchantName"
-        },
-        {
-          title: "所属商户标识",
-          align: "center",
-          key: "sn"
-        },
-        
       ]
     }
   },
