@@ -42,7 +42,7 @@
         </div>
         </Col>
         <Col span="12" style="text-align: right;font-size: 12px">
-        <Page :total="playerDetailList.length" show-elevator :page-size="20" :current.sync="currentPage" @on-change="getNowpage"></Page>
+        <Page :total="playerDetailList.length" :page-size="20" :current.sync="currentPage" @on-change="getNowpage"></Page>
         </Col>
       </Row>
     </div>

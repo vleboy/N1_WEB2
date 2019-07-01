@@ -72,14 +72,14 @@ export default {
           key: "sn"
         },
         {
-          title: "线路号：",
-          align: "center",
-          key: "msn"
-        },
-        {
           title: "玩家ID",
           align: "center",
           key: "userId"
+        },
+        {
+          title: "玩家账号",
+          align: "center",
+          key: "userName"
         },
         {
           title: "游戏状态",
