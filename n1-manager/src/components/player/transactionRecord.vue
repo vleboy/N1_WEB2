@@ -16,10 +16,12 @@
         </Col>
       </Row>
       <Row>
-        <Col span="17" style="float: right; text-align: right">
-        <Input v-model="betId" placeholder="请输入交易号" style="width: 30%;" size="small"></Input>
-        <DatePicker size="small" v-model="amountDate" :options="options" type="datetimerange" :transfer='true' style="width: 300px;margin:0 1rem" @on-ok="searchAmount" placeholder="选择日期时间范围">
+        <Col span="12">
+          <DatePicker size="small" v-model="amountDate" :options="options" type="datetimerange" :transfer='true' style="width: 300px;" @on-ok="searchAmount" placeholder="选择日期时间范围">
         </DatePicker>
+        </Col>
+        <Col span="12" style="float: right; text-align: right">
+        <Input v-model="betId" placeholder="请输入交易号" style="width: 30%;margin-right:1rem" size="small"></Input>
         <Button type="primary" @click="searchAmount" size="small">搜索</Button>
         <Button @click="reset" size="small" style="margin:0 .3rem">重置</Button>
         <Button type="primary" @click="exportData" size="small">导出数据</Button>
@@ -59,10 +61,11 @@
       <oneRunningAccount :dataProp="runningDetail"></oneRunningAccount>
     </Modal>
 
-    <Spin size="large" fix v-if="isFetching">
-      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+    <Spin size="large" fix v-show="isFetching" style="z-index:200;">
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <div style>加载中...</div>
     </Spin>
+    
   </div>
 </template>
 
@@ -430,10 +433,7 @@ export default {
       }
   },
   mounted() {
-    // this.getTransactionRecord()
-    this.getTransactionRecord()
-    
-    this.companySelectList();
+    this.searchAmount()
   },
   methods: {
     reset() {
@@ -443,6 +443,7 @@ export default {
       this.betId = ''
       this.radioInfo = '全部'
       this.amountDate = [new Date().getTime() - 3600 * 1000 * 24 * 6, new Date()]
+      this.initData()
       this.changeRadio()
     },
     getNowpage(page) {
@@ -451,7 +452,8 @@ export default {
         page == Math.ceil(this.playerDetailList.length / this.nowSize) &&
         !this.isFetching &&
         page != 1 &&
-        !this.isLastMessage
+        !this.isLastMessage &&
+        this.playerDetailList.length >= 100
       ) {
         this.playerDetailListStorage = JSON.parse(
           JSON.stringify(this.playerDetailList)
@@ -525,7 +527,7 @@ export default {
     },
     changeRadio(val) {
       this.radioInfo == undefined ? '全部' : val;
-      this.playerDetailStartKey = ''
+      this.initData()
       this.getTransactionRecord()
     },
     getTransactionRecord() {
@@ -567,30 +569,14 @@ export default {
         this.isFetching = false;
       });
     },
-    companySelectList() {
-      /* httpRequest(
-        "post",
-        "/companySelect",
-        {
-          parent: localStorage.loginRole == 1 ? "" : localStorage.loginId
-        },
-        "game"
-      ).then(result => {
-        this.companyList = result.payload || [];
-        this.companyList.unshift({
-          company: "全部厂商"
-        });
-        this.changeCompany();
-        // this.$store.commit('closeLoading')
-      }); */
-    }, //获取运营商列表
+     //获取运营商列表
     changeCompany(val) {
       
       this.radioInfo = ''
       this.sel = val;
+      this.initData()
     },
     searchAmount() {
-      this.playerDetailStartKey = ''
       this.initData();
       this.changeRadio();
     },

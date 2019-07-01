@@ -21,6 +21,7 @@ $
             type="datetimerange"
             :options="options"
             @on-change="changeDate"
+            @on-ok="searchData"
             placeholder="选择日期范围" 
             style="width: 300px"
             size="small"
@@ -86,9 +87,9 @@ $
       <SportsModal ref="childMethod" v-if="propChild.gameType =='1130000'" :dataProp="propChild"></SportsModal>
     </Modal>
 
-    <Spin size="large" fix v-if="isFetching">
-      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+    <Spin size="large" fix v-show="isFetching" style="z-index:200;">
+      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <div style>加载中...</div>
     </Spin>
   </div>
 </template>
@@ -305,10 +306,8 @@ $
       }
     },
     mounted() {
-      //this.changeTime()
-      console.log(new Date(1556640000000));
-      console.log(new Date(1559232000000));
-      this.companySelectList()
+      this.searchData()
+      //this.companySelectList()
     },
     computed: {
       dataList() {
@@ -425,11 +424,12 @@ $
         this.radioType = ''
         this.radioMoney = ''
         this.amountDate = [new Date().getTime() - 3600 * 1000 * 24 * 6, new Date()];
+        this.initData()
         this.changeGameType()
       },
       getNowpage(page) {
         this.nowPage = page
-        if (page == Math.ceil(this.playerAccountList.length / this.nowSize) && !this.isFetching && page != 1 && !this.isLastMessage) {
+        if (page == Math.ceil(this.playerAccountList.length / this.nowSize) && !this.isFetching && page != 1 && !this.isLastMessage && this.playerAccountList.length >= 100) {
           this.playerAccountListStorage = JSON.parse(JSON.stringify(this.playerAccountList))
           this.getPlayerAccount()
         }
@@ -484,7 +484,6 @@ $
           this.monthDate = '';
         }
         this.initData()
-        this.changeGameType()
       }, //日期改变联动
       changeMonth(date) {
         if (date && this.monthDate) {
@@ -497,8 +496,6 @@ $
         }
       }, // 月份联动
       searchData() {
-        
-        this.playerAccountListStartKey = ''
         this.initData()
         this.getPlayerAccount()
         
@@ -514,27 +511,16 @@ $
         let url = process.env.NODE_ENV == 'production' ? 'https://n1admin.na12345.com' : 'https://d3rqtlfdd4m9wd.cloudfront.net'
         window.open(`${url}/player/bill/flow/download?userName=${localStorage.playerName}&type=${this.radioType}&action=${this.radioMoney}&startTime=${this.amountDate ? this.startDate : ''}&endTime=${this.amountDate ? this.endDate : ''}`)
       },
-      companySelectList () {
-        /* httpRequest('post','/companySelect',{
-          parent: localStorage.loginRole == 1 ? '' : localStorage.loginId
-        },'game').then(
-          result => {
-            this.companyList = result.payload || []
-            this.companyList.unshift({
-              company: '全部厂商',
-            })
-            this.changeCompany()
-          }
-        ) */
-      }, //获取运营商列表
+      
       changeCompany (val) {
-        
+        this.initData()
         this.radioInfo = ''
         this.sel = val;
       },
       changeGameType(val) {
         this.radioInfo == undefined ? '全部' : val;
         this.playerAccountListStartKey = ''
+        this.initData()
         this.getPlayerAccount();
       },
       openModalBill (data) {

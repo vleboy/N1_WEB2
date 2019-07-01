@@ -58,7 +58,8 @@ export default {
         {
           title: "商户ID",
           align: "center",
-          key: "buId"
+          key: "buId",
+          maxWidth:80
         },
         {
           title: "所属商户",
@@ -83,7 +84,8 @@ export default {
         {
           title: "游戏状态",
           align: "center",
-          slot: "gameStatus"
+          slot: "gameStatus",
+          maxWidth:90
         },
         {
           title: "余额",

@@ -1,6 +1,6 @@
 <template>
   <div class="p-detail">
-    <Table :columns="columns" :data="dataList" style="margin:1rem 0" size="small">
+    <Table :columns="columns" :data="dataList" style="margin:0 0 1rem 0" size="small">
       <template slot-scope="{row, index}" slot="gameState">
         {{gameStateConfig(row)}}
       </template>
