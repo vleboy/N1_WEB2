@@ -205,10 +205,12 @@ export default {
         },
          {
           title: "游戏类型",
+          align: 'center',
           key: "typeName"
         },
         {
           title: "游戏ID",
+          align: 'center',
           key: "gameId",
            render: (h, params) => {
             return h('span', this.GameNameEnum[params.row.gameId] ? `${params.row.gameId}(${this.GameNameEnum[params.row.gameId]})`: params.row.gameId)
@@ -216,6 +218,7 @@ export default {
         },
         {
           title: "结算前余额",
+          align: 'center',
           key: "",
           width: 140,
           render: (h, params) => {
@@ -224,6 +227,7 @@ export default {
         },
         {
           title: "操作金额",
+          align: 'center',
           key: "",
           render: (h, params) => {
             return h("span", thousandFormatter(params.row.betAmount));
@@ -231,6 +235,7 @@ export default {
         },
         {
           title: "返还金额",
+          align: 'center',
           key: "",
           render: (h, params) => {
             return h("span", thousandFormatter(params.row.retAmount));
@@ -238,6 +243,7 @@ export default {
         },
         {
           title: "净利润",
+          align: 'center',
           key: "",
           render: (h, params) => {
             return h(
@@ -254,6 +260,7 @@ export default {
         },
         {
           title: "成数",
+          align: 'center',
           key: "",
           render: (h, params) => {
             return h("span", `${params.row.rate}%`);
@@ -261,6 +268,7 @@ export default {
         },
         {
           title: "洗码比",
+          align: 'center',
           key: "",
           render: (h, params) => {
             return h("span", `${params.row.mix}%`);

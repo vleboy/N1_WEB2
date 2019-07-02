@@ -215,6 +215,7 @@ $
           },
           {
             title: '日期',
+            align: 'center',
             key: '',
             width: 155,
             render: (h, params) => {
@@ -223,10 +224,12 @@ $
           },
           {
             title: '游戏类型',
+            align: 'center',
             key: 'gameName'
           },
            {
             title: "游戏ID",
+            align: 'center',
             key: "gameId",
             render: (h, params) => {
             return h('span', this.GameNameEnum[params.row.gameId] ? `${params.row.gameId}(${this.GameNameEnum[params.row.gameId]})`: params.row.gameId)
@@ -234,6 +237,7 @@ $
           },
           {
             title: '交易类型',
+            align: 'center',
             key: 'msn',
             render: (h, params) => {
               return h('span', this.typeList[params.row.type])
@@ -241,6 +245,7 @@ $
           },
           {
             title: '帐变前余额',
+            align: 'center',
             key: 'originalAmount',
             render: (h, params) => {
               return h('span', thousandFormatter(params.row.originalAmount))
@@ -248,6 +253,7 @@ $
           },
           {
             title: '帐变金额',
+            align: 'center',
             key: '',
             render: (h, params) => {
               return h('span', {
@@ -260,6 +266,7 @@ $
           },
           {
             title: '帐变后金额',
+            align: 'center',
             key: '',
             render: (h, params) => {
               return h('span', thousandFormatter(params.row.balance))
@@ -267,6 +274,7 @@ $
           },
           {
             title: '操作',
+            align: 'center',
             key: 'action',
             width: 90,
             align: 'center',
