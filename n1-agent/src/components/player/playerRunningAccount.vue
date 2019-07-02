@@ -205,11 +205,13 @@ $
         columns: [
           {
             title: '流水号',
+            align: 'center',
             key: 'sn',
             width: 140
           },
           {
             title: '交易号',
+            align: 'center',
             key: 'businessKey',
             width: 130
           },

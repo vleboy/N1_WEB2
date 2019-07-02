@@ -189,11 +189,13 @@ export default {
       columns: [
         {
           title: "交易号",
+          align: 'center',
           key: "businessKey",
           width: 200
         },
         {
           title: "交易时间",
+          align: 'center',
           key: "",
           width: 160,
           render: (h, params) => {
