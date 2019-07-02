@@ -706,7 +706,8 @@ export default {
         localStorage.removeItem("playDetail");
       },
       immediate: true
-    }
+    },
+    
   },
   filter1s: {
     //过滤器，所有数字保留两位小数

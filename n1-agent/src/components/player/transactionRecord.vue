@@ -1,7 +1,7 @@
 <template>
   <div class="p-transaction">
     <div class="-p-header">
-      <div class="from-search" style="margin-top:1rem">
+      <div class="from-search" style="margin:.5rem 0">
           <RadioGroup v-model="companyInfo" type="button" size="small" @on-change="changeCompany">
             <Radio v-for="(item,index) of getCompanyList" :key="index" :label="item.company">{{item.company}}</Radio>
           </RadioGroup>

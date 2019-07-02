@@ -274,7 +274,7 @@
                     size: 'small'
                   },
                   style: {
-                    color:'#20a0ff'
+                    color: params.row.state ? 'red' : 'green'
                   },
                   on: {
                     click: () => {

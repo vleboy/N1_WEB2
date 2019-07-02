@@ -229,9 +229,13 @@ export default {
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
 .logoimg {
+  display: block;
+    width: 5rem;
+    height: 50px;
   max-width: 180px;
   position: relative;
   left: 50%;
   transform: translateX(-50%);
 }
+
 </style>
