@@ -1,60 +1,14 @@
 <template>
   <div class="p-detail">
-    <div class="-d-title">
-      <h2>{{detailInfo.userName}}</h2>
-    </div>
-     <Collapse v-model="panel1" :style="{marginBottom:'15px'}">
-      <Panel name="1">
-      基本信息  所属代理：: {{detailInfo.merchantName}} 
-        <div slot="content">
-          <div class="-d-base">
-            <div class="-b-form">
-              <Row>
-                <Col span="6"><span class="-span-base">代理ID：{{detailInfo.buId}}</span></Col>
-                <Col span="6"><span class="-span-base">所属代理：{{detailInfo.merchantName}}</span></Col>
-                <Col span="6"><span class="-span-base">代理标识：{{detailInfo.sn}}</span></Col>
-                <Col span="6">
-                <span class="-span-base">
-                    <div class="-player-title" >
-                      密码：
-                      <span v-if="!editPassword">{{detailInfo.password}}</span>
-                      <Input v-model="password" placeholder="请输入密码" type="text" v-else style="width: 50%"></Input>
-                      <Button type="text" @click="openPwdInput" v-if="!editPassword" class="-p-edit">修改</Button>
-                      <span v-else style="margin-left: 0.5rem;color:#20a0ff ">
-                        <Button size="small" type="primary" @click="updatePwd">确认</Button>
-                        <Button size="small" type="primary" @click="editPassword = !editPassword">取消</Button>
-                      </span>
-                    </div>
-                  </span>
-                </Col>
-              </Row>
-              <Row>
-                <Col span="6"><span class="-span-base">玩家ID：{{detailInfo.userId}}</span></Col>
-                <Col span="6"><span class="-span-base">玩家昵称：{{detailInfo.nickname === 'NULL!' ? '无' : detailInfo.nickname}}</span></Col>
-                <Col span="6"><span class="-span-base">游戏状态：{{gameStatus[detailInfo.gameState]}}</span></Col>
-                <Col span="6"><span class="-span-base">余额: {{detailInfo.balance}}</span></Col>
-              </Row>
-              <Row>
-                <Col span="6"><span class="-span-base">最近登录游戏：{{lastTime}}</span></Col>
-              </Row>
-              <Row>
-                <Col span="4" v-for="(item,index) of detailInfo.gameList" :key="index">
-                <span class="-span-base">{{item.name+'洗码比'}}：{{item.mix}}%</span>
-                </Col>
-              </Row>
-            </div>
-          </div>
-        </div>
-      </Panel>
-     </Collapse>
+     <Table :columns="columns" :data="dataList" style="margin:0 0 1rem 0" size="small"></Table>
     <div class="-d-content">
       <RadioGroup v-model="reportType" type="button" :style="{paddingBottom:'10px'}">
         <Radio label="1">流水报表</Radio>
         <Radio label="2">交易记录</Radio>
       </RadioGroup>
       <div class="-c-info">
-        <playerRunningAccount ref="childMethod" v-if="reportType==1" :parentId="parent1"></playerRunningAccount>
-        <transactionRecord :dataProp="playerDetailInfo" @updateBalance="getPlayerDetail"  v-else></transactionRecord>
+        <playerRunningAccount ref="childMethod" v-if="reportType==1 && parent1!=''" :parentId="parent1"></playerRunningAccount>
+        <transactionRecord :parentId="parent1" @updateBalance="getPlayerDetail" v-if="reportType==2 && parent1!=''"></transactionRecord>
       </div>
     </div>
     <Spin size="large" fix v-if="isFetching">
@@ -78,6 +32,7 @@ export default {
   },
   data () {
     return {
+      dataList: [],
       parent1:'',
       password: '',
       editPassword: false,
@@ -91,7 +46,66 @@ export default {
         '1': '离线',
         '2': '在线',
         '3': '游戏中'
-      }
+      },
+      columns: [
+        {
+          title: "商户ID",
+          align: "center",
+          key: "buId",
+          maxWidth: 90
+        },
+         {
+          title: "所属商户",
+          align: "center",
+          key: "merchantName"
+        },
+        {
+          title: "商户标识",
+          align: "center",
+          key: "sn"
+        },
+        {
+          title: "玩家ID",
+          align: "center",
+          key: "userId"
+        },
+        {
+          title: "玩家账号",
+          align: "center",
+          key: "userName"
+        },
+        {
+          title: "游戏状态",
+          align: "center",
+          key: "gameState",
+          maxWidth: 90,
+          render: (h, params) => {
+            return h(
+              'span',
+              {},
+              this.gameStatus[params.row.gameState]
+            )
+          }
+        },
+         
+        {
+          title: "余额",
+          align: "center",
+          key: "balance"
+        },
+        {
+          title: "最近登录游戏",
+          align: "center",
+          key: "joinTime",
+          render: (h, params)=> {
+            return h(
+              'span',
+              {},
+              dayjs(params.row.joinTime).format("YYYY-MM-DD HH:mm:ss")
+            )
+          }
+        },
+      ]
     }
   },
   computed: {
@@ -114,6 +128,7 @@ export default {
   },
   methods: {
     getPlayerDetail () {
+      this.dataList = []
       if(this.isFetching) return
       this.isFetching = true
       let name = localStorage.playerName
@@ -125,6 +140,7 @@ export default {
           //console.log(result);
           this.parent1 = result.userInfo.parent
           this.playerDetailInfo = result.userInfo
+          this.dataList.push(this.playerDetailInfo)
           this.reportType = '1'
         }
       ).finally(()=>{

@@ -4,18 +4,16 @@ $
     <div class="-p-base">
       <Row class="-b-form">
         <div class="from-search">
-          厂商：
-          <RadioGroup v-model="companyInfo" type="button" @on-change="changeCompany">
-            <Radio v-for="(value,index) of companyList" :key="index" :label="value">{{value}}</Radio>
+          <RadioGroup v-model="companyInfo" type="button" size="small" @on-change="changeCompany">
+            <Radio v-for="(item,index) of getCompanyList" :key="index" :label="item.company">{{item.company}}</Radio>
           </RadioGroup>
         </div>
         <div class="from-search">
-          游戏：
-          <RadioGroup v-model="radioInfo" type="button">
-            <Radio v-for="(item,index) of gameTypeList" :key="index" :label="item.code">{{item.name}}</Radio>
-          </RadioGroup>
+          <RadioGroup v-model="radioInfo" type="button" size="small" @on-change="changeGameType">
+            <Radio v-for="(item,index) of gameTypeList" :key="index" :label="item.name">{{item.name}}</Radio>
+          </RadioGroup> 
         </div>
-        <Col span="17">
+        <Col span="7" style="margin-top:1rem">
           <DatePicker
             :editable='false'
             :transfer='true'
@@ -23,41 +21,27 @@ $
             :options="options"
             type="datetimerange"
             @on-change="changeDate"
+            @on-ok="searchData"
             placeholder="选择日期范围" style="width: 300px">
           </DatePicker>
-          <DatePicker
-            v-model="monthDate"
-            :transfer='true'
-            type="month"
-            @on-change="changeMonth"
-            placeholder="按月选择" style="width:100px">
-          </DatePicker>
-          最近：
-          <RadioGroup v-model="radioTime" @on-change="changeTime()" type="button">
-            <Radio label="1">1周</Radio>
-            <Radio label="2">1个月</Radio>
-            <Radio label="3">1年</Radio>
-          </RadioGroup>
         </Col>
-        <Col span="7" class="text-right">
+        <Col span="17" class="text-right" style="display:flex;justify-content:flex-end;align-items:center;">
+          <div style="margin-right:1rem;width: 15rem;">
+            <Input v-model="sn" placeholder="请输入流水号" size="small"></Input>
+          </div>
+          <div style="margin-right:.5rem;width: 15rem;">
+            <Input v-model="betId" placeholder="请输入交易号" size="small"></Input>
+          </div>
           <Button @click="isShowSearch = !isShowSearch" type="text">高级筛选
             <Icon type="arrow-down-b" v-if="!isShowSearch"></Icon>
             <Icon type="arrow-up-b" v-else></Icon>
           </Button>
+          <Button type="primary" size="large" @click="searchData">搜索</Button>
+          <Button type="ghost" size="large" @click="reset" style="margin:0 .3rem">重置</Button>
           <Button type="primary" @click="exportData">导出数据</Button>
         </Col>
       </Row>
       <Row v-if="isShowSearch">
-        <div class="from-search">
-          <div class="-search-input">
-            流水号：<Input v-model="sn" placeholder="请输入流水号" style="width: 70%;"></Input>
-          </div>
-        </div>
-        <div class="from-search">
-          <div class="-search-input">
-            交易号：<Input v-model="betId" placeholder="请输入交易号" style="width: 70%;"></Input>
-          </div>
-        </div>
         <div class="from-search">
           类型：
           <RadioGroup v-model="radioType" type="button">
@@ -78,10 +62,6 @@ $
             <Radio label="-1">本次发生金额（出）</Radio>
           </RadioGroup>
         </div>
-        <div class="form-button">
-          <Button type="primary" size="large" @click="searchData(true)">筛选</Button>
-          <Button type="ghost" size="large" @click="searchData(false)">重置</Button>
-        </div>
       </Row>
     </div>
 
@@ -91,7 +71,6 @@ $
         <Row style="padding: 20px 0">
         <Col span="24" class="text-right">
           <Page :total="playerAccountList.length"
-                show-elevator
                 :page-size="20"
                 :current.sync="currentPage"
                 @on-change="getNowpage"></Page>
@@ -115,13 +94,12 @@ $
   import {httpRequest, agentOne} from '@/service/index'
   import dayjs from "dayjs";
   import SportsModal from '@/components/player/sportsModal'
-
+  import {getGameType, getGameListEnum} from '@/config/getGameType'
   export default {
     components: {SportsModal},
     props: ['parentId'],
     data() {
       return {
-        gameListArr: [],
         options: {
         shortcuts: [
           {
@@ -312,37 +290,46 @@ $
             }
           }
         ],
-        gameTypeList: [],
-        radioInfo: '',
+        radioInfo: '全部',
         companyInfo: '全部厂商',
         propChild: {},
-        isOpenModalBill: false
+        isOpenModalBill: false,
+        gameCompanyArr: [],
+        gameTypeArr: []
       }
     },
     mounted() {
-      this.changeTime()
       this.companySelectList()
+      this.changeTime()
+      this.searchData()
     },
     computed: {
-      companyList() {
+      getCompanyList() {
+        this.gameCompanyArr.unshift({company: '全部厂商'})
+        return this.gameCompanyArr
+      },
+      gameTypeList() {
+        let gameType = [];
         
-        if (this.gameListArr.length > 0) {
-          
-          let arr = this.gameListArr.companyArr
-          let company = arr.map(
-            item => {
-              return item.company;
-              }
-          );
-          company.unshift("NA");
-          company.unshift("全部厂商");
-          console.log("fuck");
-          console.log(company);
-          
-          return company;
+        
+        if (this.companyInfo == "全部厂商") {
+          gameType = this.gameTypeArr.map(item => {
+            return item;
+          });
+        } else {
+          gameType = this.gameTypeArr.map(item => {
+            if (this.companyInfo == item.company) {
+              return item;
+            }
+          });
         }
-      return []
-      
+        gameType.unshift({name: '全部', code: ''});
+
+       //console.log(gameType);
+       
+        
+
+        return gameType
       },
       dataList() {
         if (this.nowPage === 1) {
@@ -365,7 +352,7 @@ $
     methods: {
       getNowpage(page) {
         this.nowPage = page
-        if (page == Math.ceil(this.playerAccountList.length / this.nowSize) && !this.isFetching && page != 1 && !this.isLastMessage) {
+        if (page == Math.ceil(this.playerAccountList.length / this.nowSize) && !this.isFetching && page != 1 && !this.isLastMessage && this.playerAccountList.length >= 100) {
           this.playerAccountListStorage = JSON.parse(JSON.stringify(this.playerAccountList))
           this.getPlayerAccount()
         }
@@ -373,15 +360,24 @@ $
       getPlayerAccount() {
         if (this.isFetching) return
         this.isFetching = true
-
+        let code = ''
+        for (var val of this.gameTypeArr) {
+          if (this.radioInfo == val.name) {
+            code = val.code
+          }
+          if (this.radioInfo == '全部') {
+            code = ''
+          }
+        }
+      
         httpRequest('post', '/player/bill/flow', {
           userName: localStorage.playerName,
           type: this.radioType,
           action: this.radioMoney,
           company: this.companyInfo == '全部厂商' ? '-1' : this.companyInfo,
-          gameType: this.radioInfo,
-          startTime: this.amountDate ? this.startDate : '',
-          endTime: this.amountDate ? this.endDate : '',
+          gameType: code,
+          startTime: this.amountDate[0].getTime(),
+          endTime: this.amountDate[1].getTime(),
           startKey: this.playerAccountListStartKey,
           pageSize: this.pageSize,
           sn: this.sn,
@@ -431,8 +427,8 @@ $
           this.radioTime = '';
           this.monthDate = '';
         }
-        this.initData()
-        this.getPlayerAccount()
+        //this.initData()
+        //this.getPlayerAccount()
       }, //日期改变联动
       changeMonth(date) {
         if (date && this.monthDate) {
@@ -444,18 +440,25 @@ $
           this.changeDate()
         }
       }, // 月份联动
-      searchData(bool) {
-        if(!bool) {
-          this.companyInfo = '全部厂商'
-          this.radioMoney = ''
-          this.radioType = ''
-          this.sn = ''
-          this.betId = ''
-          this.changeCompany()
-        }
+      searchData() {
         this.initData()
         this.getPlayerAccount()
-      }, // 重置筛选条件
+      },
+      reset() {
+        this.companyInfo = "全部厂商";
+        this.radioInfo = "全部";
+        this.betId = "";
+        this.sn = "";
+        this.radioType = "";
+        this.radioMoney = "";
+        this.amountDate = [
+          new Date(new Date().getTime() - 3600 * 1000 * 24 * 6),
+          new Date()
+        ];
+        this.initData()
+        this.getPlayerAccount();
+      },
+       // 重置筛选条件
       initData() {
         this.currentPage = 1;
         this.nowPage = 1;
@@ -467,25 +470,31 @@ $
         let url = process.env.NODE_ENV == 'production' ? 'https://n1admin.na12345.com' : 'https://d3prd6rbitzqm3.cloudfront.net'
         window.open(`${url}/player/bill/flow/download?userName=${localStorage.playerName}&type=${this.radioType}&action=${this.radioMoney}&startTime=${this.amountDate ? this.startDate : ''}&endTime=${this.amountDate ? this.endDate : ''}`)
       },
-      companySelectList () {
-        agentOne(this.parentId).then(res => {
-          this.gameListArr = res.payload
-          //console.log(this.gameListArr);
-        })
-      }, //获取运营商列表
-      changeCompany () {
-        httpRequest('post','/gameBigType',{
-          companyIden: this.companyInfo == '全部厂商' ? '-1' : this.companyInfo
-        },'game').then(
-          result => {
-            this.gameTypeList = result.payload
-            this.gameTypeList.unshift({
-              code: '',
-              name: '全部'
-            })
-            this.radioInfo = ''
+      companySelectList() {
+        
+        agentOne(this.parentId).then(res => {      
+          if (res.code == 0) {
+            if (res.payload.level == 0) {
+              this.gameCompanyArr = getGameType()
+              this.gameTypeArr = getGameListEnum()
+            } else {
+              this.gameCompanyArr = res.payload.companyArr
+              this.gameTypeArr = res.payload.gameList
+            }
           }
-        )
+        });
+      },
+       //获取运营商列表
+      changeCompany (val) {
+        this.companyInfo = val;
+        this.radioInfo = '';
+        this.initData()
+      },
+      changeGameType(val) {
+        //console.log(val);
+        this.radioInfo == undefined ? "全部" : val;
+        this.initData()
+        this.getPlayerAccount()
       },
       openModalBill (data) {
         this.propChild = data;
@@ -525,11 +534,6 @@ $
         font-size: 0.8rem;
         margin-top: 10px;
         overflow: hidden;
-      }
-
-      .-search-input{
-        display: inline-block;
-        width: 50%;
       }
 
       .form-button {

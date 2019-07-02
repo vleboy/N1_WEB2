@@ -1,34 +1,26 @@
 <template>
   <div class="p-transaction">
     <div class="-p-header">
+      <div class="from-search">
+          <RadioGroup v-model="companyInfo" type="button" size="small" @on-change="changeCompany">
+            <Radio v-for="(item,index) of getCompanyList" :key="index" :label="item.company">{{item.company}}</Radio>
+          </RadioGroup>
+        </div>
+        <div class="from-search">
+          <RadioGroup v-model="radioInfo" type="button" size="small" @on-change="changeGameType">
+            <Radio v-for="(item,index) of gameTypeList" :key="index" :label="item.name">{{item.name}}</Radio>
+          </RadioGroup> 
+        </div>
       <Row>
-        <Col class="-p-h-bottom">
-        <RadioGroup v-model="companyInfo" @on-change="changeCompany" type="button">
-          <Radio v-for="(item,index) of companyList" :key="index" :label="item.company">{{item.company}}</Radio>
-        </RadioGroup>
+        <Col span="8" style="margin-top:1rem">
+          <DatePicker v-model="amountDate" :options="options" type="datetimerange" :transfer='true' style="width: 300px" @on-ok="searchAmount" placeholder="选择日期时间范围">
+        </DatePicker>
         </Col>
-      </Row>
-      <Row>
-        <Col class="-p-h-bottom">
-        <RadioGroup v-model="radioInfo" @on-change="changeRadio" type="button">
-          <Radio v-for="(item,index) of gameTypeList" :key="index" :label="item.code">{{item.name}}</Radio>
-        </RadioGroup>
-        </Col>
-      </Row>
-      <Row>
         <Col span="16" style="float: right; text-align: right">
         <Input v-model="betId" placeholder="请输入交易号" style="width: 30%;"></Input>
-        <DatePicker v-model="amountDate" :options="options" type="datetimerange" :transfer='true' style="width: 300px" @on-ok="searchAmount" placeholder="选择日期时间范围">
-        </DatePicker>
         <Button type="primary" @click="searchAmount">搜索</Button>
         <Button type="ghost" @click="reset">重置</Button>
         <Button type="primary" @click="exportData">导出数据</Button>
-        </Col>
-        <Col span="8">
-        <!-- <span class="justfy2">当前剩余点数：<span style="color: #F7BA2A">{{formatPoints(balance)}}</span></span> -->
-        <Button class="-color" type="text" @click="resultGetPlayerDetail">刷新</Button>
-        <Button class="-color" type="text" @click="openModal(0)">存点</Button>
-        <Button class="-color" type="text" @click="openModal(1)">提点</Button>
         </Col>
       </Row>
     </div>
@@ -44,7 +36,7 @@
         </div>
         </Col>
         <Col span="12" style="text-align: right;font-size: 12px">
-        <Page :total="playerDetailList.length" show-elevator :page-size="20" :current.sync="currentPage" @on-change="getNowpage"></Page>
+        <Page :total="playerDetailList.length" :page-size="20" :current.sync="currentPage" @on-change="getNowpage"></Page>
         </Col>
       </Row>
     </div>
@@ -73,10 +65,10 @@
 <script type="text/ecmascript-6">
 import { thousandFormatter } from "@/config/format";
 import dayjs from "dayjs";
-import { httpRequest } from "@/service/index";
+import { httpRequest, agentOne } from "@/service/index";
 import HfiveModal from "@/components/player/HfiveModal";
 import SecreatModal from '@/components/player/SecreatModal'
-
+import {getGameType, getGameListEnum} from '@/config/getGameType'
 // import api from '@/api/api'
 // import ArcadeModal from '@/components/record/arcadeModal'
 import RealLifeModal from "@/components/player/realLifeModal";
@@ -87,7 +79,7 @@ import playerRecharge from "@/components/player/playerRecharge";
 export default {
   components: { oneRunningAccount, playerRecharge, RealLifeModal, SportsModal,HfiveModal,SecreatModal },
   name: "transactionRecord",
-  props: ["dataProp"],
+  props: ["parentId"],
   data() {
     return {
       options: {
@@ -145,10 +137,9 @@ export default {
       isOpenModalBill: false,
       isOpenModal: false,
       isOpenModalRunning: false,
-      radioInfo: "",
+      radioInfo: "全部",
       amountDate: [],
       companyList: [],
-      gameTypeList: [],
       companyInfo: "全部厂商",
       playerDetailList: [],
       playerDetailListStorage: [],
@@ -333,10 +324,35 @@ export default {
         }
       ],
       balanceInfo: {},
+      gameCompanyArr: [],
+      gameTypeArr: [],
       realTypeIds: ["30000", "1050000", "1060000"]
     };
   },
   computed: {
+    getCompanyList() {
+        this.gameCompanyArr.unshift({company: '全部厂商'})
+        return this.gameCompanyArr
+      },
+      gameTypeList() {
+        let gameType = [];
+        
+        
+        if (this.companyInfo == "全部厂商") {
+          gameType = this.gameTypeArr.map(item => {
+            return item;
+          });
+        } else {
+          gameType = this.gameTypeArr.map(item => {
+            if (this.companyInfo == item.company) {
+              return item;
+            }
+          });
+        }
+        gameType.unshift({name: '全部', code: ''});
+
+        return gameType
+      },
     isRealLife() {
       let array = this.realTypeIds.some(item => {
         return item == this.propChild.gameType;
@@ -365,18 +381,17 @@ export default {
     }
   },
   mounted() {
-    // this.getTransactionRecord()
-    this.companySelectList();
+    this.companySelectList()
+    this.searchAmount()
   },
   methods: {
-    
     reset() {
-      this.companyInfo = ''
-      this.getTransactionRecord()
       this.companyInfo = '全部厂商'
+      this.radioInfo = "全部";
       this.betId = ''
       this.amountDate = [new Date().getTime() - 3600 * 1000 * 24 * 6, new Date()]
-      this.companySelectList()
+      this.initData()
+      this.getTransactionRecord()
     },
     getNowpage(page) {
       this.nowPage = page;
@@ -384,7 +399,8 @@ export default {
         page == Math.ceil(this.playerDetailList.length / this.nowSize) &&
         !this.isFetching &&
         page != 1 &&
-        !this.isLastMessage
+        !this.isLastMessage 
+        && this.playerDetailList.length >= 100
       ) {
         this.playerDetailListStorage = JSON.parse(
           JSON.stringify(this.playerDetailList)
@@ -479,10 +495,7 @@ export default {
       this.isOpenModalRunning = true;
       this.runningDetail = data;
     },
-    changeRadio() {
-      this.initData();
-      this.getTransactionRecord();
-    },
+    
     getTransactionRecord() {
       this.isFetching = true;
       this.initTime();
@@ -490,11 +503,19 @@ export default {
       let [startTime, endTime] = this.amountDate;
       startTime = new Date(startTime).getTime();
       endTime = new Date(endTime).getTime();
-
+      let code = ''
+        for (var val of this.gameTypeArr) {
+          if (this.radioInfo == val.name) {
+            code = val.code
+          }
+          if (this.radioInfo == '全部') {
+            code = ''
+          }
+        }
       httpRequest("post", "/player/bill/detail", {
         userName: name,
         company: this.companyInfo == "全部厂商" ? "-1" : this.companyInfo,
-        gameType: this.radioInfo,
+        gameType: code,
         startTime: startTime,
         endTime: endTime,
         startKey: this.playerDetailStartKey,
@@ -513,41 +534,27 @@ export default {
       });
     },
     companySelectList() {
-      this.isFetching = true;
-      httpRequest(
-        "post",
-        "/companySelect",
-        {
-          parent: localStorage.loginRole == 1 ? "" : localStorage.loginId
+      agentOne(this.parentId).then(res => {      
+        if (res.code == 0) {
+          if (res.payload.level == 0) {
+            this.gameCompanyArr = getGameType()
+            this.gameTypeArr = getGameListEnum()
+          } else {
+            this.gameCompanyArr = res.payload.companyArr
+            this.gameTypeArr = res.payload.gameList
+          }
         }
-      ).then(result => {
-        this.companyList = result.payload || [];
-        this.companyList.unshift({
-          company: "全部厂商"
-        });
-        this.changeCompany();
-        // this.$store.commit('closeLoading')
       });
     }, //获取运营商列表
-    changeCompany() {
-      httpRequest(
-        "post",
-        "/gameBigType",
-        {
-          companyIden: this.companyInfo == "全部厂商" ? "-1" : this.companyInfo
-        }
-      ).then(result => {
-        this.gameTypeList = result.payload;
-        if (this.radioInfo == "") {
-          this.initData();
-          this.getTransactionRecord();
-        }
-        this.gameTypeList.unshift({
-          code: "",
-          name: "全部"
-        });
-        this.radioInfo = "";
-      });
+    changeCompany(val) {
+      this.companyInfo = val;
+      this.radioInfo = '';
+      this.initData()
+    },
+    changeGameType(val) {
+      this.radioInfo == undefined ? "全部" : val;
+      this.initData()
+      this.getTransactionRecord()
     },
     searchAmount() {
       this.initData();
