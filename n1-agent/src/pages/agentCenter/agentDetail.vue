@@ -1081,7 +1081,10 @@ export default {
           this.gameList = res.payload;
         }
       }); */
-      this.gameList = this.GameListEnum[value]
+      agentOne(this.parent).then(res => {
+        this.gameList = res.payload.gameList
+      })
+      
     },
     checkPoint() {
       if (this.point % 1 != 0) {
