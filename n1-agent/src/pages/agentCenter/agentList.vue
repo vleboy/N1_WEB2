@@ -33,7 +33,7 @@
         ({{item.childItem.length > 0 && item.childItem[0].parentDisplayName ? item.childItem[0].parentDisplayName : parentNameChild}}) 下级代理列表
         <span :style="{paddingLeft:'10px',fontWeight:'normal',fontSize:'16px'}">H5接线</span>
         <i-switch v-model="item.isH5" @on-change="changeChildType(item)"></i-switch>
-        <RadioGroup v-model="item.isTest" v-if="level==0" class="radioGroup" type="button" @on-change='changeChildType(item)'>
+        <RadioGroup v-model="item.isTest" v-if="level==0" class="radioGroup" type="button" @on-change='changeChildType(item)' size="small">
           <Radio label="0">正式</Radio>
           <Radio label="1">测试</Radio>
           <Radio label="2">全部</Radio>
@@ -44,7 +44,10 @@
     <div class="playerList" id="playerList">
       <div class="top">
         <span class="title left">
-          所属玩家列表
+          <span v-if="tousername != ''">
+          {{`(${tousername})`}}
+        </span>
+        所属玩家列表
         </span>
       </div>
       <div class="table">
@@ -391,6 +394,7 @@ export default {
           { company: "PP", code: "1160000", name: "PP电子游戏" }
         ]
       },
+      tousername: '',
       plus: null,
       userInfo: [],
       modal: false,
@@ -631,6 +635,7 @@ export default {
           align: 'center',
           sortable: true,
           render: (h, params) => {
+           
             let currentId = localStorage.userId;
             if (params.row.userId == currentId) {
               return h(
@@ -658,6 +663,7 @@ export default {
                   },
                   on: {
                     click: async () => {
+                      this.tousername = params.row.displayName
                       this.$store.commit("changePlayer", {
                         params: []
                       });
@@ -668,7 +674,8 @@ export default {
                       let showList = await this.getNextAgent(
                         this.agentChild,
                         userId
-                      );
+                      )
+                      
                       //去空数组
                       showList = _.filter(showList, function(o) {
                         return o.childItem.length;
@@ -1353,6 +1360,7 @@ export default {
                     },
                     on: {
                       click: () => {
+                        this.currentDisplayName = `【玩家】${params.row.userName}`
                         this.modal = true;
                         let id =
                           params.row.parent == "01"
@@ -1384,6 +1392,7 @@ export default {
                     },
                     on: {
                       click: () => {
+                        this.currentDisplayName = `【玩家】${params.row.userName}`                
                         this.modal = true;
                         this.playerPoint = true;
                         let id =
