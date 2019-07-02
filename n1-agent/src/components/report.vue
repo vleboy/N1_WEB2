@@ -101,10 +101,12 @@ export default {
         {
           title: "序号",
           type: "index",
+          align: 'center',
           maxWidth: 70
         },
         {
           title: "类型",
+          align: 'center',
           key: "role",
           render: (h, params) => {
             //console.log(params);
@@ -114,6 +116,7 @@ export default {
         },
         {
           title: "昵称",
+          align: 'center',
           key: "displayName",
           render: (h, params) => {
            
@@ -135,6 +138,7 @@ export default {
         },
         {
           title: "管理员账号",
+          align: 'center',
           key: "username",
           render: (h, params) => {
             return h(
@@ -232,6 +236,7 @@ export default {
         },
         {
           title: "交易次数",
+          align: 'center',
           key: "betCount",
           render: (h, params) => {
             let arr = this.child;
@@ -248,6 +253,7 @@ export default {
         },
         {
           title: "投注金额",
+          align: 'center',
           key: "betAmount",
           render: (h, params) => {
             let arr = this.child;
@@ -264,6 +270,7 @@ export default {
         },
         {
           title: "输赢金额",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let arr = this.child;
@@ -299,6 +306,7 @@ export default {
         },
         {
           title: "洗码量",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             let arr = this.child;
@@ -315,6 +323,7 @@ export default {
         },
         {
           title: "返水比例",
+          align: 'center',
           key: "",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -333,6 +342,7 @@ export default {
         },
         {
           title: "佣金",
+          align: 'center',
           key: "",
           render: (h, params) => {
             let arr = this.child;
@@ -352,6 +362,7 @@ export default {
         },
         {
           title: "代理总金额",
+          align: 'center',
           key: "",
           render: (h, params) => {
             let arr = this.child;
@@ -371,6 +382,7 @@ export default {
         },
         {
           title: "代理占成",
+          align: 'center',
           key: "",
           render: (h, params) => {
             let rate = params.row.rate + "%";
@@ -379,6 +391,7 @@ export default {
         },
         {
           title: "代理交公司",
+          align: 'center',
           key: "submitAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -390,6 +403,7 @@ export default {
         },
         {
           title: "获利比例",
+          align: 'center',
           key: "rate",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -421,10 +435,12 @@ export default {
       columns2: [
         {
           title: "序号",
+          align: 'center',
           type: "index"
         },
         {
           title: "昵称",
+          align: 'center',
           key: "nickname",
           render: (h, params) => {
            
@@ -447,6 +463,7 @@ export default {
         },
         {
           title: "账号",
+          align: 'center',
           key: "userName",
           render: (h, params) => {
             let name = params.row.userName;
@@ -476,10 +493,12 @@ export default {
         
         {
           title: "交易次数",
+          align: 'center',
           key: "betCount"
         },
         {
           title: "投注金额",
+          align: 'center',
           key: "betAmount",
           render: (h, params) => {
             return h("span", thousandFormatter(params.row.betAmount));
@@ -487,6 +506,7 @@ export default {
         },
         {
           title: "输赢金额",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let color = params.row.winloseAmount < 0 ? "#f30" : "#0c0";
@@ -503,6 +523,7 @@ export default {
         },
         {
           title: "洗码量",
+          align: 'center',
           key: "mixAmount"
         }
       ]

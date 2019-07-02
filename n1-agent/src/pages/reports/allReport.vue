@@ -174,11 +174,13 @@ export default {
       columns1: [
         {
           title: "序号",
+          align: 'center',
           type: "index",
           maxWidth: 60
         },
         {
           title: "类型",
+          align: 'center',
           key: "role",
           render: (h, params) => {
             //console.log(params);
@@ -188,6 +190,7 @@ export default {
         },
         {
           title: "昵称",
+          align: 'center',
           key: "displayName",
           render: (h, params) => {
             //console.log(params)
@@ -232,6 +235,7 @@ export default {
         },
         {
           title: "管理员账号",
+          align: 'center',
           key: "username",
           render: (h, params) => {
             return h(
@@ -340,6 +344,7 @@ export default {
         },
         {
           title: "交易次数",
+          align: 'center',
           key: "betCount",
           render: (h, params) => {
             let arr = this.child;
@@ -356,6 +361,7 @@ export default {
         },
         {
           title: "总游戏输赢金额",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let arr = this.child;
@@ -391,6 +397,7 @@ export default {
         },
         {
           title: "总游戏交公司",
+          align: 'center',
           key: "submitAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -409,6 +416,7 @@ export default {
         },
         {
           title: "总游戏洗码量",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -425,6 +433,7 @@ export default {
         },
         {
           title: "NA游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let arr = this.child;
@@ -471,6 +480,7 @@ export default {
         },
         {
           title: "NA游戏(商家交公司)",
+          align: 'center',
           key: "submitAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -489,6 +499,7 @@ export default {
         },
         {
           title: "NA游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -516,6 +527,7 @@ export default {
         },
         {
           title: "TTG游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let arr = this.child;
@@ -562,6 +574,7 @@ export default {
         },
         {
           title: "TTG游戏(商家交公司)",
+          align: 'center',
           key: "submitAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -580,6 +593,7 @@ export default {
         },
         {
           title: "TTG游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -607,6 +621,7 @@ export default {
         },
         {
           title: "SA游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let arr = this.child;
@@ -653,6 +668,7 @@ export default {
         },
         {
           title: "SA游戏(商家交公司)",
+          align: 'center',
           key: "submitAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -671,6 +687,7 @@ export default {
         },
         {
           title: "SA游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -698,6 +715,7 @@ export default {
         },
         {
           title: "SB游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let arr = this.child;
@@ -744,6 +762,7 @@ export default {
         },
         {
           title: "SB游戏(商家交公司)",
+          align: 'center',
           key: "submitAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -762,6 +781,7 @@ export default {
         },
         {
           title: "SB游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -789,6 +809,7 @@ export default {
         },
         {
           title: "MG游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let arr = this.child;
@@ -835,6 +856,7 @@ export default {
         },
         {
           title: "MG游戏(商家交公司)",
+          align: 'center',
           key: "submitAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -853,6 +875,7 @@ export default {
         },
         {
           title: "MG游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -880,6 +903,7 @@ export default {
         },
         {
           title: "AG游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let arr = this.child;
@@ -926,6 +950,7 @@ export default {
         },
         {
           title: "AG游戏(商家交公司)",
+          align: 'center',
           key: "submitAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -944,6 +969,7 @@ export default {
         },
         {
           title: "AG游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -971,6 +997,7 @@ export default {
         },
         {
           title: "RTG游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let arr = this.child;
@@ -1017,6 +1044,7 @@ export default {
         },
         {
           title: "RTG游戏(商家交公司)",
+          align: 'center',
           key: "submitAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -1035,6 +1063,7 @@ export default {
         },
         {
           title: "RTG游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -1062,6 +1091,7 @@ export default {
         },
         {
           title: "DT游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let arr = this.child;
@@ -1108,6 +1138,7 @@ export default {
         },
         {
           title: "DT游戏(商家交公司)",
+          align: 'center',
           key: "submitAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -1126,6 +1157,7 @@ export default {
         },
         {
           title: "DT游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -1153,6 +1185,7 @@ export default {
         },
         {
           title: "PP游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let arr = this.child;
@@ -1217,6 +1250,7 @@ export default {
         },
         {
           title: "PP游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -1244,6 +1278,7 @@ export default {
         },
         {
           title: "YSB游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let arr = this.child;
@@ -1290,6 +1325,7 @@ export default {
         },
         {
           title: "YSB游戏(商家交公司)",
+          align: 'center',
           key: "submitAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -1308,6 +1344,7 @@ export default {
         },
         {
           title: "YSB游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -1335,6 +1372,7 @@ export default {
         },
         {
           title: "PG游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let arr = this.child;
@@ -1381,6 +1419,7 @@ export default {
         },
         {
           title: "PG游戏(商家交公司)",
+          align: 'center',
           key: "submitAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -1399,6 +1438,7 @@ export default {
         },
         {
           title: "PG游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -1426,6 +1466,7 @@ export default {
         },
         {
           title: "HABA游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let arr = this.child;
@@ -1472,6 +1513,7 @@ export default {
         },
         {
           title: "HABA游戏(商家交公司)",
+          align: 'center',
           key: "submitAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -1490,6 +1532,7 @@ export default {
         },
         {
           title: "HABA游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -1517,6 +1560,7 @@ export default {
         },
         {
           title: "PNG游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let arr = this.child;
@@ -1563,6 +1607,7 @@ export default {
         },
         {
           title: "PNG游戏(商家交公司)",
+          align: 'center',
           key: "submitAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -1581,6 +1626,7 @@ export default {
         },
         {
           title: "PNG游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -1608,6 +1654,7 @@ export default {
         },
         {
           title: "KY游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let arr = this.child;
@@ -1654,6 +1701,7 @@ export default {
         },
         {
           title: "KY游戏(商家交公司)",
+          align: 'center',
           key: "submitAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -1672,6 +1720,7 @@ export default {
         },
         {
           title: "KY游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             if (params.row.level == 0) {
@@ -1701,10 +1750,12 @@ export default {
       columns2: [
         {
           title: "序号",
+          align: 'center',
           type: "index"
         },
         {
           title: "昵称",
+          align: 'center',
           key: "nickname",
           render: (h, params) => {
             return h(
@@ -1745,6 +1796,7 @@ export default {
         },
         {
           title: "账号",
+          align: 'center',
           key: "userName",
           render: (h, params) => {
             let name = params.row.userName;
@@ -1785,10 +1837,12 @@ export default {
 
         {
           title: "交易次数",
+          align: 'center',
           key: "betCount"
         },
         {
           title: "总游戏输赢金额",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let color = params.row.winloseAmount < 0 ? "#f30" : "#0c0";
@@ -1805,6 +1859,7 @@ export default {
         },
         {
           title: "总游戏洗码量",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             return h("span", thousandFormatter(params.row.mixAmount));
@@ -1812,6 +1867,7 @@ export default {
         },
         {
           title: "NA游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -1835,6 +1891,7 @@ export default {
         },
         {
           title: "NA游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -1849,6 +1906,7 @@ export default {
         },
         {
           title: "TTG游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -1872,6 +1930,7 @@ export default {
         },
         {
           title: "TTG游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -1886,6 +1945,7 @@ export default {
         },
         {
           title: "SA游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -1909,6 +1969,7 @@ export default {
         },
         {
           title: "SA游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -1923,6 +1984,7 @@ export default {
         },
         {
           title: "SB游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -1946,6 +2008,7 @@ export default {
         },
         {
           title: "SB游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -1960,6 +2023,7 @@ export default {
         },
         {
           title: "MG游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -1983,6 +2047,7 @@ export default {
         },
         {
           title: "MG游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -1997,6 +2062,7 @@ export default {
         },
         {
           title: "AG游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -2020,6 +2086,7 @@ export default {
         },
         {
           title: "AG游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -2034,6 +2101,7 @@ export default {
         },
         {
           title: "RTG游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -2057,6 +2125,7 @@ export default {
         },
         {
           title: "RTG游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -2071,6 +2140,7 @@ export default {
         },
         {
           title: "DT游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -2094,6 +2164,7 @@ export default {
         },
         {
           title: "DT游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -2108,6 +2179,7 @@ export default {
         },
         {
           title: "PP游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -2131,6 +2203,7 @@ export default {
         },
         {
           title: "PP游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -2145,6 +2218,7 @@ export default {
         },
         {
           title: "YSB游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -2168,6 +2242,7 @@ export default {
         },
         {
           title: "YSB游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -2182,6 +2257,7 @@ export default {
         },
         {
           title: "PG游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -2205,6 +2281,7 @@ export default {
         },
         {
           title: "PG游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -2219,6 +2296,7 @@ export default {
         },
         {
           title: "HABA游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -2242,6 +2320,7 @@ export default {
         },
         {
           title: "HABA游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -2256,6 +2335,7 @@ export default {
         },
         {
           title: "PNG游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -2279,6 +2359,7 @@ export default {
         },
         {
           title: "PNG游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -2293,6 +2374,7 @@ export default {
         },
         {
           title: "KY游戏(输赢金额)",
+          align: 'center',
           key: "winloseAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;
@@ -2316,6 +2398,7 @@ export default {
         },
         {
           title: "KY游戏(洗码量)",
+          align: 'center',
           key: "mixAmount",
           render: (h, params) => {
             let obj = params.row.gameTypeMap;

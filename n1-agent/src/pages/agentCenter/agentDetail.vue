@@ -380,14 +380,17 @@ export default {
         {
           title: "序号",
           type: "index",
+          align: 'center',
           maxWidth: 80
         },
         {
           title: "代理昵称",
+          align: 'center',
           key: "displayName"
         },
         {
           title: "剩余点数",
+          align: 'center',
           key: "balance",
           render: (h, params) => {
             return h("span", thousandFormatter(params.row.balance));
@@ -395,6 +398,7 @@ export default {
         },
         {
           title: "创建时间",
+          align: 'center',
           key: "",
           render: (h, params) => {
             let time = params.row.createdAt;
@@ -403,6 +407,7 @@ export default {
         },
         {
           title: "备注",
+          align: 'center',
           key: "remark",
           render: (h, params) => {
             if (params.row.remark == "NULL!" || params.row.remark == null) {
@@ -429,6 +434,7 @@ export default {
         },
         {
           title: "操作(对旗下代理操作)",
+          align: 'center',
           key: "",
           render: (h, params) => {
             let userId = this.$route.query.userId;
@@ -534,15 +540,18 @@ export default {
       columns3: [
         {
           title: "序号",
+          align: 'center',
           type: "index",
           maxWidth: 80
         },
         {
           title: "用户名",
+          align: 'center',
           key: "userName"
         },
         {
           title: "玩家昵称",
+          align: 'center',
           key: "nickname",
           render: (h, params) => {
             let nick = params.row.nickname;
@@ -551,6 +560,7 @@ export default {
         },
         {
           title: "剩余点数",
+          align: 'center',
           key: "balance",
           render: (h, params) => {
             return h("span", thousandFormatter(params.row.balance));
@@ -558,6 +568,7 @@ export default {
         },
         {
           title: "创建时间",
+          align: 'center',
           key: "",
           render: (h, params) => {
             let time = params.row.createdAt;
@@ -566,6 +577,7 @@ export default {
         },
         {
           title: "操作(对直属玩家操作)",
+          align: 'center',
           key: "",
           render: (h, params) => {
             return h("div", [
@@ -659,11 +671,13 @@ export default {
         {
           title: "序号",
           type: "index",
+          align: 'center',
           maxWidth: 80
         },
         {
           title: "交易时间",
           key: "createdAt",
+          align: 'center',
           minWidth: 100,
           render: (h, params) => {
             return h(
@@ -675,6 +689,7 @@ export default {
         {
           title: "交易对象",
           key: "toUser",
+          align: 'center',
           minWidth: 120,
           render: (h, params) => {
             let row = params.row;
@@ -693,6 +708,7 @@ export default {
         },
         {
           title: "交易类型",
+          align: 'center',
           key: "action",
           render: (h, params) => {
             let row = params.row;
@@ -705,10 +721,12 @@ export default {
         },
         {
           title: "交易前余额",
+          align: 'center',
           key: "oldBalance"
         },
         {
           title: "交易点数",
+          align: 'center',
           key: "amount",
           render: (h, params) => {
             let color = params.row.amount < 0 ? "#f30" : "#0c0";
@@ -725,10 +743,12 @@ export default {
         },
         {
           title: "交易后余额",
+          align: 'center',
           key: "balance"
         },
         {
           title: "操作人",
+          align: 'center',
           key: "operator",
           render: (h, params) => {
             return h("span", params.row.operator);
@@ -737,6 +757,7 @@ export default {
         {
           title: "备注",
           key: "remark",
+          align: 'center',
           maxWidth: 80,
           render: (h, params) => {
             if (params.row.remark == "NULL!" || params.row.remark == null) {
