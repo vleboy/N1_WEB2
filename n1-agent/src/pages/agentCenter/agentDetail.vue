@@ -3,10 +3,10 @@
     <div class="userName">
       <span>{{$route.query.displayName }}</span>
       <span class="btns">
-        <Button type="primary" class="edit" @click="reload">刷新</Button>
+        <Button type="primary" class="edit" @click="reload" size="small">刷新</Button>
         <span v-if="permission.includes('编辑代理')">
-          <Button type="primary" class="edit" @click.stop="editBtn" v-if="isedit">编辑</Button>
-          <Button type="primary" class="edit" @click.stop="save" v-else>提交修改</Button>
+          <Button type="primary" class="edit" @click.stop="editBtn" v-if="isedit" size="small">编辑</Button>
+          <Button type="primary" class="edit" @click.stop="save" v-else size="small">提交修改</Button>
         </span>
       </span>
     </div>

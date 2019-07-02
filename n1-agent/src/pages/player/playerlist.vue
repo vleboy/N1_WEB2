@@ -5,25 +5,25 @@
         
         <Col span="2" :offset="level ? '2' : '4'">玩家ID</Col>
         <Col span="4">
-        <Input v-model="searchInfo.userId" placeholder="请输入"></Input>
+        <Input v-model="searchInfo.userId" placeholder="请输入" size="small"></Input>
         </Col>
 
         <Col span="2" >玩家账号</Col>
         <Col span="4">
-        <Input v-model="searchInfo.userName" placeholder="请输入"></Input>
+        <Input v-model="searchInfo.userName" placeholder="请输入" size="small"></Input>
         </Col>
 
         <Col span="2" v-if="level">游戏状态</Col>
         <Col span="4" v-if="level" >
-        <Select v-model="searchInfo.gameId" clearable placeholder="请选择游戏状态" style="text-align: left">
+        <Select v-model="searchInfo.gameId" clearable placeholder="请选择游戏状态" style="text-align: left" size="small">
           <Option v-for="(item, index) in gameTypeList" :value="item.code" :key="index">{{ item.name }}</Option>
         </Select>
         </Col>
 
         <Col span="4">
         <div class="btns">
-          <Button type="primary" @click="getSearch(true)">搜索</Button>
-          <Button type="ghost" @click="getSearch(false)">重置</Button>
+          <Button type="primary" @click="getSearch(true)" size="small">搜索</Button>
+          <Button type="ghost" @click="getSearch(false)" size="small">重置</Button>
         </div>
         </Col>
 
@@ -31,14 +31,14 @@
       <Row class="row " v-if="!level">
         <Col span="2" offset="4">游戏状态</Col>
         <Col span="4">
-        <Select v-model="searchInfo.gameId" clearable placeholder="请选择游戏状态" style="text-align: left">
+        <Select v-model="searchInfo.gameId" clearable placeholder="请选择游戏状态" style="text-align: left" size="small">
           <Option v-for="(item, index) in gameTypeList" :value="item.code" :key="index">{{ item.name }}</Option>
         </Select>
         </Col>
 
         <Col span="2">所属代理</Col>
         <Col span="4">
-          <Input v-model="searchInfo.merchantName" placeholder="请输入代理昵称"></Input>
+          <Input v-model="searchInfo.merchantName" placeholder="请输入代理昵称" size="small"></Input>
         </Col>
 
       </Row>
@@ -57,7 +57,6 @@
       <Table :columns="columns" :data="getItems"></Table>
       <div style="text-align: right;margin:2rem 0">
         <Page :total="playerList.length"
-              show-elevator
               :page-size="20"
               :current.sync="currentPage"
               @on-change="getNowpage"></Page>
@@ -312,7 +311,8 @@
                   }
                 },'提点'),
               ]);
-            }
+            },
+            minWidth: 80
           }
         ],
         level: +localStorage.level

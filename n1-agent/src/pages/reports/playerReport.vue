@@ -9,11 +9,12 @@
         placeholder="选择日期时间范围(默认最近一周)"
         style="width: 300px"
         @on-ok="search"
+        size="small"
       ></DatePicker>
       <span class="searchLabel">所属用户:</span>
-      <Input v-model.trim="parent" placeholder="所属用户" style="width: 200px"></Input>
-      <span class="searchLabel">请选择游戏:</span>
-      <Select style="width:200px" @on-change="search" v-model="game">
+      <Input v-model.trim="parent" placeholder="所属用户" style="width: 200px" size="small"></Input>
+      <span class="searchLabel" >请选择游戏:</span>
+      <Select style="width:200px" @on-change="search" v-model="game" size="small">
         <Option v-for="(item,index) in selectOption" :value="item.code" :key="index">{{ item.name }}</Option>
       </Select>
       <Checkbox
@@ -22,8 +23,8 @@
         @on-change="search"
       >隐藏测试</Checkbox>
       <span class="btn">
-        <Button type="primary" @click="search">搜索</Button>
-        <Button type="ghost" @click="reset">重置</Button>
+        <Button type="primary" @click="search" size="small">搜索</Button>
+        <Button type="ghost" @click="reset" size="small">重置</Button>
       </span>
     </div>
     <Table :columns="columns1" :data="player" size="small" ref="table"></Table>
@@ -50,6 +51,7 @@
 <script>
 import { httpRequest } from "@/service/index";
 import { thousandFormatter } from "@/config/format";
+import { getGameType } from "@/config/getGameType";
 import dayjs from "dayjs";
 import { getDefaultTime } from "@/config/getDefaultTime";
 export default {
@@ -379,7 +381,7 @@ export default {
         });
     },
     getGames() {
-      httpRequest("post", "/gameType", {}, "game").then(res => {
+      /* httpRequest("post", "/gameType", {}, "game").then(res => {
         if (res.code == 0) {
           this.selectOption = res.payload;
           this.selectOption.unshift({
@@ -387,7 +389,8 @@ export default {
             code: "-1"
           });
         }
-      });
+      }); */
+      this.selectOption = getGameType()
     },
     getAllCount(list) {
       this.allBetCount = 0;

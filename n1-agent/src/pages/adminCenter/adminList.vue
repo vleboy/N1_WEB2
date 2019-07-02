@@ -2,8 +2,8 @@
   <div class="adminList">
     <div class="option">
       <p class="create">
-        <Button type="primary" @click="addAdmin">创建管理员</Button>
-        <Button type="primary" class="searchbtn" @click="reset">刷新</Button>
+        <Button type="primary" @click="addAdmin" size="small">创建管理员</Button>
+        <Button type="primary" class="searchbtn" @click="reset" size="small">刷新</Button>
       </p>
     </div>
     <div class="table">

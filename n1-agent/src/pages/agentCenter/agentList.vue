@@ -12,16 +12,16 @@
           下级代理列表
           <span :style="{paddingLeft:'10px',fontWeight:'normal',fontSize:'16px'}">H5接线</span>
           <i-switch v-model="isH5" @on-change="searchAgent"></i-switch>
-          <RadioGroup v-model="source" v-if="level==0" class="radioGroup" type="button" @on-change='changeSource'>
+          <RadioGroup v-model="source" v-if="level==0" class="radioGroup" type="button" @on-change='changeSource' size="small">
             <Radio label="0" v-if="permission.includes('正式数据')">正式</Radio>
             <Radio label="1">测试</Radio>
             <Radio label="2" v-if="permission.includes('正式数据')">全部</Radio>
           </RadioGroup>
         </span>
         <div class="search">
-          <Input v-model.trim="userName" placeholder="请输入代理账号" style="width: 150px"></Input>
-          <Button type="primary" @click="searchAgent">搜索</Button>
-          <Button type="ghost" @click="reset">重置</Button>
+          <Input v-model.trim="userName" placeholder="请输入代理账号" style="width: 150px" size="small"></Input>
+          <Button type="primary" @click="searchAgent" size="small">搜索</Button>
+          <Button type="ghost" @click="reset" size="small">重置</Button>
         </div>
       </div>
       <div class="table">

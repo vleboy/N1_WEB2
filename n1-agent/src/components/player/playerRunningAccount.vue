@@ -13,7 +13,9 @@ $
             <Radio v-for="(item,index) of gameTypeList" :key="index" :label="item.name">{{item.name}}</Radio>
           </RadioGroup> 
         </div>
-        <Col span="7" style="margin-top:1rem">
+      </Row>
+      <Row style="display:flex;align-items:center;"> 
+        <Col span="7" >
           <DatePicker
             :editable='false'
             :transfer='true'
@@ -22,7 +24,9 @@ $
             type="datetimerange"
             @on-change="changeDate"
             @on-ok="searchData"
-            placeholder="选择日期范围" style="width: 300px">
+            placeholder="选择日期范围" style="width: 300px"
+            size="small"
+            >
           </DatePicker>
         </Col>
         <Col span="17" class="text-right" style="display:flex;justify-content:flex-end;align-items:center;">
@@ -36,11 +40,11 @@ $
             <Icon type="arrow-down-b" v-if="!isShowSearch"></Icon>
             <Icon type="arrow-up-b" v-else></Icon>
           </Button>
-          <Button type="primary" size="large" @click="searchData">搜索</Button>
-          <Button type="ghost" size="large" @click="reset" style="margin:0 .3rem">重置</Button>
-          <Button type="primary" @click="exportData">导出数据</Button>
-        </Col>
-      </Row>
+          <Button type="primary" size="small" @click="searchData">搜索</Button>
+          <Button type="ghost" size="small" @click="reset" style="margin:0 .3rem">重置</Button>
+          <Button type="primary" @click="exportData" size="small">导出数据</Button>
+        </Col>  
+      </Row> 
       <Row v-if="isShowSearch">
         <div class="from-search">
           类型：

@@ -1,7 +1,7 @@
 <template>
   <div class="p-transaction">
     <div class="-p-header">
-      <div class="from-search">
+      <div class="from-search" style="margin-top:1rem">
           <RadioGroup v-model="companyInfo" type="button" size="small" @on-change="changeCompany">
             <Radio v-for="(item,index) of getCompanyList" :key="index" :label="item.company">{{item.company}}</Radio>
           </RadioGroup>
@@ -11,16 +11,16 @@
             <Radio v-for="(item,index) of gameTypeList" :key="index" :label="item.name">{{item.name}}</Radio>
           </RadioGroup> 
         </div>
-      <Row>
-        <Col span="8" style="margin-top:1rem">
-          <DatePicker v-model="amountDate" :options="options" type="datetimerange" :transfer='true' style="width: 300px" @on-ok="searchAmount" placeholder="选择日期时间范围">
+      <Row style="display:flex;align-items:center;margin-top:1rem">
+        <Col span="8">
+          <DatePicker size="small" v-model="amountDate" :options="options" type="datetimerange" :transfer='true' style="width: 300px" @on-ok="searchAmount" placeholder="选择日期时间范围">
         </DatePicker>
         </Col>
         <Col span="16" style="float: right; text-align: right">
-        <Input v-model="betId" placeholder="请输入交易号" style="width: 30%;"></Input>
-        <Button type="primary" @click="searchAmount">搜索</Button>
-        <Button type="ghost" @click="reset">重置</Button>
-        <Button type="primary" @click="exportData">导出数据</Button>
+        <Input v-model="betId" placeholder="请输入交易号" style="width: 30%;" size="small"></Input>
+        <Button type="primary" @click="searchAmount" size="small">搜索</Button>
+        <Button type="ghost" @click="reset" size="small">重置</Button>
+        <Button type="primary" @click="exportData" size="small">导出数据</Button>
         </Col>
       </Row>
     </div>

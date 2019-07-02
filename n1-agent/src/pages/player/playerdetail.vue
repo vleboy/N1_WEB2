@@ -2,7 +2,7 @@
   <div class="p-detail">
      <Table :columns="columns" :data="dataList" style="margin:0 0 1rem 0" size="small"></Table>
     <div class="-d-content">
-      <RadioGroup v-model="reportType" type="button" :style="{paddingBottom:'10px'}">
+      <RadioGroup v-model="reportType" type="button" size="small">
         <Radio label="1">流水报表</Radio>
         <Radio label="2">交易记录</Radio>
       </RadioGroup>
@@ -55,12 +55,12 @@ export default {
           maxWidth: 90
         },
          {
-          title: "所属商户",
+          title: "所属代理",
           align: "center",
           key: "merchantName"
         },
         {
-          title: "商户标识",
+          title: "代理标识",
           align: "center",
           key: "sn"
         },

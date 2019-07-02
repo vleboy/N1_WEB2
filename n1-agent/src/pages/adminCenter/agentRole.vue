@@ -1,8 +1,8 @@
 <template>
   <div class="adminrole">
     <p class="create">
-      <Button type="primary" @click="addRole">创建新角色</Button>
-      <Button type="primary" class="searchbtn" @click="reset">刷新</Button>
+      <Button type="primary" @click="addRole" size="small">创建新角色</Button>
+      <Button type="primary" class="searchbtn" @click="reset" size="small">刷新</Button>
     </p>
     <Table :columns="columns" :data="subRoleList" size="small"></Table>
     <Modal v-model="modal" :width='600' @on-ok="ok" :scrollable='true'>

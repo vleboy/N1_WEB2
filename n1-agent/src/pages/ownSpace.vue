@@ -2,7 +2,7 @@
   <div class="personalcenter">
     <div class="manangeinfo">
       <div class="reload">
-        <Button type="primary" class="searchbtn" @click="reset">刷新</Button>
+        <Button type="primary" class="searchbtn" @click="reset" size="small">刷新</Button>
       </div>
       <table cellspacing="0">
         <tr>
