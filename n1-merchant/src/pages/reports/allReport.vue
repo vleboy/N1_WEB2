@@ -4,7 +4,7 @@
       <div class="top">
         <p class="title">
           当前用户列表
-          <Button @click="exportdata('table_0')" size="small">导出数据</Button>
+          <!-- <Button @click="exportdata('table_0')" size="small">导出数据</Button> -->
         </p>
         <div class="right">
           <DatePicker
@@ -155,7 +155,7 @@
     <div class="playerList" id="playerList" style="margin-top:1rem">
       <p class="title">
         所属玩家列表
-        <Button @click="exportdata('table_1')" size="small">导出数据</Button>
+        <!-- <Button @click="exportdata('table_1')" size="small">导出数据</Button> -->
       </p>
       <Table :columns="columns22" :data="playerList" size="small" ref="table_1">
         <template slot-scope="{row, index}" slot="playerName">

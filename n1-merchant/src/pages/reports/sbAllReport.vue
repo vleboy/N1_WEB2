@@ -4,7 +4,7 @@
       <div class="top">
         <p class="title">
           当前用户列表
-          <Button @click="exportdata('table_0')" size="small">导出数据</Button>
+          <!-- <Button @click="exportdata('table_0')" size="small">导出数据</Button> -->
         </p>
         <div class="right">
           <DatePicker size="small" type="datetimerange" :options="options" :editable='false' v-model="defaultTime" placeholder="选择日期时间范围(默认最近一周)" style="width: 300px" @on-ok="confirm"></DatePicker>
@@ -43,7 +43,7 @@
     <div class="playerList" id="playerList" style="margin-top:1rem">
       <p class="title">
         所属玩家列表
-        <Button @click="exportdata('table_1')" size="small">导出数据</Button>
+        <!-- <Button @click="exportdata('table_1')" size="small">导出数据</Button> -->
       </p>
       <Table :columns="columns2" :data="playerList" size="small" ref='table_1'>
         <template slot-scope="{row, index}" slot="playerName">

@@ -9,7 +9,7 @@
             <Radio label="1">测试</Radio>
             <Radio label="2" v-if="permission.includes('正式数据')">全部</Radio>
           </RadioGroup>
-          <Button  @click="exportdata('table_0')" size="small" style="margin-right:1rem">导出数据</Button>
+          <!-- <Button  @click="exportdata('table_0')" size="small" style="margin-right:1rem">导出数据</Button> -->
         </p>
           <DatePicker
             type="datetimerange"
@@ -64,7 +64,7 @@
     <div class="childList">
       <p class="title">
         直属下级列表
-        <Button  @click="exportdata('table_1')" size="small">导出数据</Button>
+        <!-- <Button  @click="exportdata('table_1')" size="small">导出数据</Button> -->
       </p>
       <Table :columns="columns1" :data="child" size="small" ref="table_1">
         <template slot-scope="{row, inedx}" slot="role">
@@ -103,7 +103,7 @@
     <div class="childList" v-for="(item,index) in reportChild" :key="index">
       <p class="title">
         ({{item.length > 0 && item[0].parentDisplayName ? item[0].parentDisplayName : ''}}) 直属下级列表
-        <Button  @click="exportdata(index)">导出数据</Button>
+        <!-- <Button  @click="exportdata(index)">导出数据</Button> -->
       </p>
       <Table :columns="columns1" :data="item" size="small" :ref="'table'+index">
         <template slot-scope="{row, inedx}" slot="role">
@@ -142,7 +142,7 @@
     <div class="playerList" id="playerList">
       <p class="title">
         <span v-show="showName">({{ userName }})</span>所属玩家列表
-        <Button  @click="exportdata('table_2')" size="small">导出数据</Button>
+        <!-- <Button  @click="exportdata('table_2')" size="small">导出数据</Button> -->
       </p>
       <Table :columns="columns2" :data="playerList" size="small" ref="table_2">
         <template slot-scope="{row, inedx}" slot="playerNickname">
