@@ -15,7 +15,7 @@
           <FormItem label="商户昵称" prop="displayName">
             <Row>
               <Col span="20">
-              <Input v-model="basic.displayName" placeholder="2~10位,只能输入中英文及数字"></Input>
+              <Input v-model="basic.displayName" placeholder="2~10位,只能输入中英文、数字"></Input>
               </Col>
             </Row>
           </FormItem>
@@ -139,7 +139,7 @@ export default {
       } else {
         let nameReg = /^[\u4E00-\u9FA5A-Za-z0-9]{2,10}$/;
         if (!nameReg.test(value)) {
-          callback(new Error("2~10位,只能输入中英文及数字"));
+          callback(new Error("2~10位,只能输入中英文、数字"));
         } else {
           checkExit({ nick: { role: "100", displayName: value } }).then(res => {
             if (res.payload == true) {

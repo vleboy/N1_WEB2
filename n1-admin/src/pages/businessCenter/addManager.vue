@@ -8,14 +8,14 @@
           <FormItem label="线路商标识" prop="suffix">
             <Row>
               <Col span="20">
-              <Input v-model="basic.suffix" placeholder="3~6 位,只能输入英文和数字(以字母开头)"></Input>
+              <Input v-model="basic.suffix" placeholder="3~6位,只能输入英文、数字(以字母开头)"></Input>
               </Col>
             </Row>
           </FormItem>
           <FormItem label="线路商昵称" prop="displayName">
             <Row>
               <Col span="20">
-              <Input v-model="basic.displayName" placeholder="2~10位,只能输入中英文及数字"></Input>
+              <Input v-model="basic.displayName" placeholder="2~10位,只能输入中英文、数字"></Input>
               </Col>
             </Row>
           </FormItem>
@@ -124,7 +124,7 @@ export default {
       } else {
         let nameReg = /^[\u4e00-\u9fa5A-Za-z0-9]{2,10}$/;
         if (!nameReg.test(value)) {
-          callback(new Error("2~10位,只能输入中英文及数字"));
+          callback(new Error("2~10位,只能输入中英文、数字"));
         } else {
           checkExit({ nick: { role: "10", displayName: value } }).then(res => {
             if (res.payload == true) {
@@ -189,7 +189,7 @@ export default {
       } else {
         let testReg = /^[a-zA-Z0-9]{5,16}$/;
         if (!testReg.test(value)) {
-          callback(new Error("5-16位,限英文和数字"));
+          callback(new Error("5-16位,限英文、数字"));
         } else {
           callback();
         }

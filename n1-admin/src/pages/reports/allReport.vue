@@ -1128,123 +1128,6 @@ export default {
       })
       localStorage.setItem("playDetail", "playDetail");  
     },      
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     confirm() {
       this.reportChild = [];
       this.playerList = [];
@@ -1252,8 +1135,10 @@ export default {
       this.init();
     },
     exportdata(table) {
-      if (table == "table_0") {
-        this.$refs.table_0.exportCsv({ filename: "current" });
+      console.log(this.$refs.table_0);
+      
+      /* if (table == "table_0") {
+        this.$refs.table_0.exportCsv({ filename: "current"});
       } else if (table == "table_1") {
         this.$refs.table_1.exportCsv({ filename: "next" });
       } else if (table == "table_2") {
@@ -1270,7 +1155,7 @@ export default {
         title: "温馨提示:",
         desc:
           "因导出报表含中文字符,导出后请进行转码操作,方法是：1、先用记事本打开；2、点击文件-另存为-设置编码为ASNI-保存覆盖"
-      });
+      }); */
     },
     changeSource() {
       this.init();
