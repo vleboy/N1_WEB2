@@ -11,7 +11,7 @@
         <span class="title left">
           下级代理列表
           <span :style="{paddingLeft:'10px',fontWeight:'normal',fontSize:'16px'}">H5接线</span>
-          <i-switch v-model="isH5" @on-change="searchAgent"></i-switch>
+          <i-switch v-model="isH5" @on-change="searchAgent" ></i-switch>
           <RadioGroup v-model="source" v-if="level==0" class="radioGroup" type="button" @on-change='changeSource' size="small">
             <Radio label="0" v-if="permission.includes('正式数据')">正式</Radio>
             <Radio label="1">测试</Radio>
@@ -110,13 +110,13 @@
           <Input v-else v-model="agent.sn" placeholder="3~6位,只能包含英文、数字"></Input>
         </FormItem>
         <FormItem label="代理账号" prop='username'>
-          <Input v-model="agent.username" placeholder="5~16位,只能包含英文或数字"></Input>
+          <Input v-model="agent.username" placeholder="5~16位,只能包含英文、数字"></Input>
         </FormItem>
         <FormItem label="代理密码" prop='password'>
-          <Input v-model="agent.password" placeholder="6~16位,必须包含英文、数字和符号任意两种组合"></Input>
+          <Input v-model="agent.password" placeholder="6~16位,必须包含英文、数字、符号任意两种组合"></Input>
         </FormItem>
         <FormItem label="代理昵称" prop='displayName'>
-          <Input v-model="agent.displayName" placeholder="2~10位,只能包含中文、英文或数字"></Input>
+          <Input v-model="agent.displayName" placeholder="2~10位,只能包含中文、英文、数字"></Input>
         </FormItem>
         <FormItem label="代理点数" prop='points'>
           <Tooltip :content="pointContent">
@@ -168,7 +168,7 @@
       <Form :label-width="80" ref="playerForm" :model="player" :rules='playerValidate'>
         <FormItem label="用户名" prop='userName'>
           <!-- 6-16位中英文或者数字 -->
-          <Input v-model="player.userName" placeholder="6~16位,只能包含英文或数字"></Input>
+          <Input v-model="player.userName" placeholder="6~16位,只能包含英文、数字"></Input>
         </FormItem>
         <FormItem label="密码" prop='userPwd'>
           <Input v-model="player.userPwd" placeholder="密码6-16位"></Input>
@@ -220,7 +220,7 @@ export default {
       } else {
         let nameReg = /^[A-Za-z0-9]{6,16}$/;
         if (!nameReg.test(value)) {
-          callback(new Error("6~16位,只能包含英文或数字"));
+          callback(new Error("6~16位,只能包含英文、数字"));
         } else {
           callback();
         }
@@ -267,7 +267,7 @@ export default {
       } else {
         let nameReg = /^[A-Za-z0-9]{5,16}$/;
         if (!nameReg.test(value)) {
-          callback(new Error("5~16位,只能包含英文或数字"));
+          callback(new Error("5~16位,只能包含英文、数字"));
         } else {
           checkExit({
             user: { role: "1000", suffix: "", username: value }
@@ -287,7 +287,7 @@ export default {
       } else {
         let nameReg = /^[\u4e00-\u9fa5A-Za-z0-9]{2,10}$/;
         if (!nameReg.test(value)) {
-          callback(new Error("2~10位,只能输入中英文及数字"));
+          callback(new Error("2~10位,只能输入中英文、数字"));
         } else {
           checkExit({ nick: { role: "1000", displayName: value } }).then(
             res => {

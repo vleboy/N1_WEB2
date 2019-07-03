@@ -49,7 +49,7 @@ export default {
       },
       columns: [
         {
-          title: "商户ID",
+          title: "代理ID",
           align: "center",
           key: "buId",
           maxWidth: 90
