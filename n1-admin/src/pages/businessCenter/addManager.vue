@@ -45,14 +45,14 @@
           <FormItem label="管理员账号" prop="username">
             <Row>
               <Col span="20">
-              <Input v-model="admin.username" placeholder="5~16位,只能输入英文及数字"></Input>
+              <Input v-model="admin.username" placeholder="5~16位,只能输入英文、数字"></Input>
               </Col>
             </Row>
           </FormItem>
           <FormItem label="管理员密码" prop="password">
             <Row>
               <Col span="20">
-              <Input v-model="admin.password" placeholder="6~16位,包含字母、数字及符号中任意三种组合"></Input>
+              <Input v-model="admin.password" placeholder="6~16位,包含字母、数字、符号中任意三种组合"></Input>
               </Col>
             </Row>
           </FormItem>
