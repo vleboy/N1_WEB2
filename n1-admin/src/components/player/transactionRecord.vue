@@ -587,6 +587,9 @@ export default {
     },
    
     initData() {
+      this.playerBetAmount = 0
+      this.playerMixAmount = 0
+      this.playerWinloseAmount = 0
       this.currentPage = 1;
       this.nowPage = 1;
       this.playerDetailList = [];
