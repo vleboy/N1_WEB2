@@ -60,13 +60,42 @@
         </template>
       </Table>
 
-      <Row style="padding: 20px 0">
+      <Row style="padding: 20px 0;font-size:1rem">
         <Col span="12" class="g-text-right">
-        <div style="margin-bottom: 10px;font-size: 15px;" v-if='radioInfo!=-1'>本页输赢总计:
-          <span :class="{'-p-green':this.allAmount>0,'-p-red':this.allAmount<0}">
-            {{formatPoints(allAmountFun)}}
-          </span>
-        </div>
+          <Row type="flex"> 
+            <Col style="margin-right:1rem">
+              本页投注:
+              <span>
+                {{formatPoints(allBetAmountFun)}}
+              </span>
+            </Col>
+            <Col>
+              本页输赢:
+              <span :class="{'-p-green':this.allAmount>0,'-p-red':this.allAmount<0}">
+                {{formatPoints(allAmountFun)}}
+              </span>
+            </Col>
+          </Row>
+          <Row type="flex">
+            <Col style="margin-right:1rem">
+              总计投注:
+              <span>
+                {{formatPoints(playerBetAmount)}}
+              </span>
+            </Col>
+            <Col style="margin-right:1rem">
+              有效投注:
+              <span>
+                {{formatPoints(playerMixAmount)}}
+              </span>
+            </Col>
+            <Col>
+              总计输赢:
+              <span :class="{'-p-green':this.playerWinloseAmount>0,'-p-red':this.playerWinloseAmount<0}">
+                {{formatPoints(playerWinloseAmount)}}
+              </span>
+            </Col>
+          </Row>
         </Col>
         <Col span="12" style="text-align: right;font-size: 12px">
         <Page :total="playerDetailList.length" :page-size="20" :current.sync="currentPage" @on-change="getNowpage"></Page>
@@ -208,11 +237,15 @@ export default {
           winGrid:[],
         }
       },
+      playerBetAmount: '',
+      playerMixAmount: '',
+      playerWinloseAmount: '',
       nowSize: 20,
       nowPage: 1,
       pageSize: 100,
       currentPage: 1,
       allAmount: 0,
+      allBetAmount: 0,
       naHfive: false,
       isFetching: false,
       isLastMessage: false, // 主要判断是否是后台返回最后一次信息
@@ -327,6 +360,15 @@ export default {
         }
       }
       return this.allAmount;
+    },
+    allBetAmountFun() {
+      this.allBetAmount = 0;
+      for (let item of this.dataList) {
+        if (item.gameType != "2") {
+          this.allBetAmount = item.betAmount + this.allBetAmount;
+        }
+      }
+      return this.allBetAmount;
     },
     getGameTypeList() {
      
@@ -499,6 +541,23 @@ export default {
           ));
         this.isFetching = false;
       });
+
+      httpRequest("post", "/querySinglePlayerStat",{
+        userName: name,
+        company: this.companyInfo == "全部厂商" ? "-1" : this.companyInfo,
+        gameType: this.radioInfo,
+        startTime: startTime,
+        endTime: endTime,
+      }).then(res => {
+       
+        this.playerBetAmount = res.payload[0].betAmount
+        this.playerMixAmount = res.payload[0].mixAmount
+        this.playerWinloseAmount = res.payload[0].winloseAmount
+
+      })
+
+     ;
+      
     },
     //获取运营商列表
     changeCompany(val) {
