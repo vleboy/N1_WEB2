@@ -3,7 +3,7 @@
     <div class="nowList">
       <div class="top">
         <p class="title">
-          当前用户列表
+          {{$t('allReport.currentUser')}}
           <!-- <Button @click="exportdata('table_0')" size="small">导出数据</Button> -->
         </p>
         <div class="right">
@@ -17,13 +17,13 @@
             @on-ok="confirm"
             size="small"
           ></DatePicker>
-          <Button size="small" type="primary" @click="search" style="margin-left:1rem;margin-right:.3rem">搜索</Button>
-          <Button size="small" @click="reset">重置</Button>
+          <Button size="small" type="primary" @click="search" style="margin-left:1rem;margin-right:.3rem">{{$t('allReport.search')}}</Button>
+          <Button size="small" @click="reset">{{$t('allReport.reset')}}</Button>
         </div>
       </div>
       <Table :columns="columns11" :data="user" size="small" ref="table_0">
         <template slot-scope="{row, index}" slot="userDisplayName">
-          <Tooltip content="前往日报表" placement="right">
+          <Tooltip :content="$t('allReport.toDayReport')" placement="right">
             <span
               style="cursor:pointer;color:#20a0ff"
               @click="userDisplayNameConfig(row)"
@@ -154,12 +154,12 @@
     </div>
     <div class="playerList" id="playerList" style="margin-top:1rem">
       <p class="title">
-        所属玩家列表
+        {{$t('allReport.PlayerList')}}
         <!-- <Button @click="exportdata('table_1')" size="small">导出数据</Button> -->
       </p>
       <Table :columns="columns22" :data="playerList" size="small" ref="table_1">
         <template slot-scope="{row, index}" slot="playerName">
-          <Tooltip content="前往玩家详情" placement="right">
+          <Tooltip :content="$t('allReport.toPlayerDetail')" placement="right">
             <span
               style="cursor:pointer;color:#20a0ff"
               @click="playerNameConfig(row)"
@@ -248,7 +248,7 @@
     </div>
     <Spin size="large" fix v-if="spinShow">
       <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+      <div>{{$t('allReport.loading')}}</div>
     </Spin>
   </div>
 </template>
@@ -271,7 +271,7 @@ export default {
       options: {
         shortcuts: [
           {
-            text: "本周",
+            text: this.$store.state.language == 'zh' ? '本周' : 'This week',
             value() {
               return [
                 new Date(
@@ -289,7 +289,7 @@ export default {
             }
           },
           {
-            text: "本月",
+            text: this.$store.state.language == 'zh' ? '本月' : 'This month',
             value() {
               return [
                 new Date(
@@ -306,7 +306,7 @@ export default {
             }
           },
           {
-            text: "上周",
+            text: this.$store.state.language == 'zh' ? '本月' : 'This month',
             value() {
               return [
                 new Date(
@@ -327,7 +327,7 @@ export default {
             }
           },
           {
-            text: "上月",
+            text: this.$store.state.language == 'zh' ? '上月' : 'Last month',
             value() {
               //-1 上月
               return [
@@ -376,265 +376,574 @@ export default {
           title: "序号",
           type: "index",
           align: 'center',
-          maxWidth: 60,
-          
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '序号' : 'Serial number'
+            )
+          }
         },
         {
           title: "昵称",
           align: 'center',
-          slot: "userDisplayName"
+          slot: "userDisplayName",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '昵称' : 'Nickname'
+            )
+          }
         },
         {
           title: "交易次数",
           align: 'center',
-          key: "betCount"
+          key: "betCount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易次数' : 'Transactions count'
+            )
+          }
         },
         {
           title: "总游戏输赢金额",
           align: 'center',
-          slot: "userWinloseAmount"
+          slot: "userWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '总游戏输赢金额' : 'Total game win/lose amount'
+            )
+          }
         },
         {
           title: "总游戏交公司",
           align: 'center',
-          slot: "userSubmitAmount"
+          slot: "userSubmitAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '总游戏交公司' : 'General game delivery company'
+            )
+          }
         },
         {
           title: "NA游戏(输赢金额)",
           align: 'center',
-          slot: "uNaWinloseAmount"
+          slot: "uNaWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'NA游戏(输赢金额)' : 'NA game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "NA游戏(商家交公司)",
           align: 'center',
-          slot: "uNaSubmitAmount"
+          slot: "uNaSubmitAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'NA游戏(商家交公司)' : 'NA game(Business Exchange Company)'
+            )
+          }
         },
         {
           title: "TTG游戏(输赢金额)",
           align: 'center',
-          slot: "uTtgWinloseAmount"
+          slot: "uTtgWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'TTG游戏(商家交公司)' : 'TTG game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "TTG游戏(商家交公司)",
-          slot: "uTtgSubmitAmount"
+          slot: "uTtgSubmitAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'TTG游戏(商家交公司)' : 'TTG game(Business Exchange Company)'
+            )
+          }
         },
         {
           title: "SA游戏(输赢金额)",
           align: 'center',
-          slot: "uSaWinloseAmount"
+          slot: "uSaWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'SA游戏(商家交公司)' : 'SA game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "SA游戏(商家交公司)",
           align: 'center',
-          slot: "uSaSubmitAmount"
+          slot: "uSaSubmitAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'SA游戏(商家交公司)' : 'SA game(Business Exchange Company)'
+            )
+          }
         },
         {
           title: "SB游戏(输赢金额)",
           align: 'center',
-          slot: "uSbWinloseAmount"
+          slot: "uSbWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'SB游戏(商家交公司)' : 'SB game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "SB游戏(商家交公司)",
           align: 'center',
-          slot: "uSbSubmitAmount"
+          slot: "uSbSubmitAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'SB游戏(商家交公司)' : 'SB game(Business Exchange Company)'
+            )
+          }
         },
         {
           title: "MG游戏(输赢金额)",
           align: 'center',
-          slot: "uMgWinloseAmount"
+          slot: "uMgWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'MG游戏(商家交公司)' : 'MG game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "MG游戏(商家交公司)",
           align: 'center',
-          slot: "uMgSubmitAmount"
+          slot: "uMgSubmitAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'MG游戏(商家交公司)' : 'MG game(Business Exchange Company)'
+            )
+          }
         },
         {
           title: "AG游戏(输赢金额)",
           align: 'center',
-          slot: "uAgWinloseAmount"
+          slot: "uAgWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'AG游戏(商家交公司)' : 'AG game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "AG游戏(商家交公司)",
           align: 'center',
-          slot: "uAgSubmitAmount"
+          slot: "uAgSubmitAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'AG游戏(商家交公司)' : 'AG game(Business Exchange Company)'
+            )
+          }
         },
         {
           title: "RTG游戏(输赢金额)",
           align: 'center',
-          slot: "uRtgWinloseAmount"
+          slot: "uRtgWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'RTG游戏(商家交公司)' : 'RTG game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "RTG游戏(商家交公司)",
           align: 'center',
-          slot: "uRtgSubmitAmount"
+          slot: "uRtgSubmitAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'RTG游戏(商家交公司)' : 'RTG game(Business Exchange Company)'
+            )
+          }
         },
         {
           title: "DT游戏(输赢金额)",
           align: 'center',
-          slot: "uDtWinloseAmount"
+          slot: "uDtWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'DT游戏(商家交公司)' : 'DT game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "DT游戏(商家交公司)",
           align: 'center',
-          slot: "uDtSubmitAmount"
+          slot: "uDtSubmitAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'DT游戏(商家交公司)' : 'DT game(Business Exchange Company)'
+            )
+          }
         },
         {
           title: "PP游戏(输赢金额)",
           align: 'center',
-          slot: "uPpWinloseAmount"
+          slot: "uPpWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'PP游戏(商家交公司)' : 'PP game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "PP游戏(商家交公司)",
           align: 'center',
-          slot: "uPpSubmitAmount"
+          slot: "uPpSubmitAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'PP游戏(商家交公司)' : 'PP game(Business Exchange Company)'
+            )
+          }
         },
         {
           title: "YSB游戏(输赢金额)",
           align: 'center',
-          slot: "uYsbWinloseAmount"
+          slot: "uYsbWinloseAmount",
+          rrenderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'YSB游戏(商家交公司)' : 'YSB game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "YSB游戏(商家交公司)",
           align: 'center',
-          slot: "uYsbSubmitAmount"
+          slot: "uYsbSubmitAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'YSB游戏(商家交公司)' : 'YSB game(Business Exchange Company)'
+            )
+          }
         },
         {
           title: "PG游戏(输赢金额)",
           align: 'center',
-          slot: "uPgWinloseAmount"
+          slot: "uPgWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'PG游戏(商家交公司)' : 'PG game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "PG游戏(商家交公司)",
           align: 'center',
-          slot: "uPgSubmitAmount"
+          slot: "uPgSubmitAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'PG游戏(商家交公司)' : 'PG game(Business Exchange Company)'
+            )
+          }
         },
         {
           title: "HABA游戏(输赢金额)",
           align: 'center',
-          slot: "uHabaWinloseAmount"
+          slot: "uHabaWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'HABA游戏(商家交公司)' : 'HABA game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "HABA游戏(商家交公司)",
           align: 'center',
-          slot: "uHabaSubmitAmount"
+          slot: "uHabaSubmitAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'HABA游戏(商家交公司)' : 'HABA game(Business Exchange Company)'
+            )
+          }
         },
         {
           title: "PNG游戏(输赢金额)",
           align: 'center',
-          slot: "uPngWinloseAmount"
+          slot: "uPngWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'PNG游戏(商家交公司)' : 'PNG game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "PNG游戏(商家交公司)",
           align: 'center',
-          slot: "uPngSubmitAmount"
+          slot: "uPngSubmitAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'PNG游戏(商家交公司)' : 'PNG game(Business Exchange Company)'
+            )
+          }
         },
         {
           title: "KY游戏(输赢金额)",
           align: 'center',
-          slot: "uKyWinloseAmount"
+          slot: "uKyWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'KY游戏(商家交公司)' : 'KY game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "KY游戏(商家交公司)",
           align: 'center',
-          slot: "uKySubmitAmount"
+          slot: "uKySubmitAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'KY游戏(商家交公司)' : 'KY game(Business Exchange Company)'
+            )
+          }
         }
       ],
       columns2: [
         {
           title: "序号",
           align: 'center',
-          maxWidth: 60,
-          type: "index"
+          type: "index",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '序号' : 'Serial number'
+            )
+          }
         },
         {
           title: "账号",
           align: 'center',
-          slot: "playerName"
+          slot: "playerName",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '账号' : 'Account'
+            )
+          }
         },
         {
           title: "昵称",
           align: 'center',
-          slot: "nickname"
+          slot: "nickname",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '昵称' : 'Nicname'
+            )
+          }
         },
         {
           title: "交易次数",
           align: 'center',
-          key: "betCount"
+          key: "betCount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易次数' : 'Transaction count'
+            )
+          }
         },
         {
           title: "总游戏输赢金额",
           align: 'center',
-          slot: "playerWinloseAmount"
+          slot: "playerWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '总游戏输赢金额' : 'Total game Win/Lose amount'
+            )
+          }
         },
         {
           title: "NA游戏(输赢金额)",
           align: 'center',
-          slot: "pNaWinloseAmount"
+          slot: "pNaWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'NA游戏(输赢金额)' : 'NA game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "TTG游戏(输赢金额)",
           align: 'center',
-          slot: "pTtgWinloseAmount"
+          slot: "pTtgWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'TTG游戏(输赢金额)' : 'TTG game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "SA游戏(输赢金额)",
           align: 'center',
-          slot: "pSaWinloseAmount"
+          slot: "pSaWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'SA游戏(输赢金额)' : 'SA game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "SB游戏(输赢金额)",
           align: 'center',
-          slot: "pSbWinloseAmount"
+          slot: "pSbWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'SB游戏(输赢金额)' : 'SB game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "MG游戏(输赢金额)",
           align: 'center',
-          slot: "pMgWinloseAmount"
+          slot: "pMgWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'MG游戏(输赢金额)' : 'MG game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "AG游戏(输赢金额)",
           align: 'center',
-          slot: "pAgWinloseAmount"
+          slot: "pAgWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'AG游戏(输赢金额)' : 'AG game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "RTG游戏(输赢金额)",
           align: 'center',
-          slot: "pRtgWinloseAmount"
+          slot: "pRtgWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'RTG游戏(输赢金额)' : 'RTG game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "DT游戏(输赢金额)",
           align: 'center',
-          slot: "pDtWinloseAmount"
+          slot: "pDtWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'DT游戏(输赢金额)' : 'DT game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "PP游戏(输赢金额)",
           align: 'center',
-          slot: "pPpWinloseAmount"
+          slot: "pPpWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'PP游戏(输赢金额)' : 'PP game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "YSB游戏(输赢金额)",
           align: 'center',
-          slot: "pYsbWinloseAmount"
+          slot: "pYsbWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'YSB游戏(输赢金额)' : 'YSB game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "PG游戏(输赢金额)",
           align: 'center',
-          slot: "pPgWinloseAmount"
+          slot: "pPgWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'PG游戏(输赢金额)' : 'PG game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "HABA游戏(输赢金额)",
           align: 'center',
-          slot: "pHabaWinloseAmount"
+          slot: "pHabaWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'HABA游戏(输赢金额)' : 'HABA game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "PNG游戏(输赢金额)",
           align: 'center',
-          slot: "pPngWinloseAmount"
+          slot: "pPngWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'PNG游戏(输赢金额)' : 'PNG game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "KY游戏(输赢金额)",
           align: 'center',
-          slot: "pKyWinloseAmount"
+          slot: "pKyWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'KY游戏(输赢金额)' : 'KY game(Win/Lose Amount)'
+            )
+          }
         }
       ],
       columns11: [],
@@ -920,6 +1229,9 @@ export default {
   /deep/ .ivu-input {
     border-color: #000;
     background: #fff;
+  }
+  /deep/ .ivu-picker-panel-shortcut {
+    padding: 6px 5px;
   }
 }
 </style>

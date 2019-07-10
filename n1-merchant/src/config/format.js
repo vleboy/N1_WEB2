@@ -43,13 +43,21 @@ export const hourFormatBarData = function (data) {
   }
 }
 export const formatBarData = function (data) {
-  if (data[0].seriesName == '玩家数量' || data[0].seriesName == '每日注册人数' || data[0].seriesName == '累计注册人数') {
+  if (data[0].seriesName == '玩家数量') {
     return `${data[0].seriesName}<br/>${data[0].name}<br/>${data[0].value} 人`
+  } else if (data[0].seriesName == 'Player Number') {
+    return `${data[0].seriesName}<br/>${data[0].name}<br/>${data[0].value} person`
   } else if (data[0].seriesName == '投注次数') {
     return `${data[0].seriesName}<br/>${data[0].name}<br/>${data[0].value} 万次`
+  } else if (data[0].seriesName == 'Bet Count') {
+    return `${data[0].seriesName}<br/>${data[0].name}<br/>${data[0].value} ten thounds times`
+  } else if (data[0].seriesName == 'Bet Amount' || data[0].seriesName == 'Refund Amount' || data[0].seriesName == 'Return Amount' || data[0].seriesName == 'Return Win/Lose') {
+    return `${data[0].seriesName}<br/>${data[0].name}<br/>${data[0].value} ten thounds yuan`
   } else {
     return `${data[0].seriesName}<br/>${data[0].name}<br/>${data[0].value} 万元`
   }
+
+  
 }
 
 export const formatMapData = function (data) {

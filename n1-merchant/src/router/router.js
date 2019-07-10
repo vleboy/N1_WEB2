@@ -64,66 +64,67 @@ export const otherRouter = {
     component: main,
     children: [
         { path: 'home', name: 'home',title:'首页', component: home},
-        { path: 'detail', name:'playDetail', title:'玩家详情',  meta: {keepAlive: true}, component:playerDetail},
+      { path: 'detail', name: 'playDetail', title:'sideBar.playerDetail',  meta: {keepAlive: true}, component:playerDetail},
     ]
 };
 // 作为main组件的子页面展示并且在左侧菜单显示的路由写在appRouter里
+//title需要配置中英文
 export const appRouter = [
          {
            path: '/ownspace',
            title: '个人中心',
            name: 'ownspace',
            component: main,
-           children: [{ path: 'index', title: '个人中心', name: 'ownspace-index', component: ownSpace }]
+           children: [{ path: 'index', title: 'sideBar.ownSpace', name: 'ownspace-index', component: ownSpace }]
          },
          {
            path: '/newBoard',
            title: '数据看板',
            name: 'newBoard',
            component: main,
-           children: [{ path: 'newBoard', title: '数据看板', name: 'newBoard', component: newBoard }]
+           children: [{ path: 'newBoard', title: 'sideBar.newBoard', name: 'newBoard', component: newBoard }]
          },
          {
            path: '/allreport',
            title: '输赢总报表',
            name: 'all',
            component: main,
-           children: [{ path: 'all', title: '输赢总报表', name: 'allreport', component: allReport }]
+           children: [{ path: 'all', title: 'sideBar.allReport', name: 'allreport', component: allReport }]
          },
          {
            path: '/aggame',
            title: 'AG游戏报表',
            name: 'aggame',
            component: main,
-           children: [{ path: 'true', title: 'AG真人游戏报表', name: 'agtrue', component: agtrue }]
+           children: [{ path: 'true', title: 'sideBar.saTrue', name: 'agtrue', component: agtrue }]
          },
          {
            path: '/mggame',
            title: 'MG游戏报表',
            name: 'mggame',
            component: main,
-           children: [{ path: 'video', title: 'MG电子游戏报表', name: 'mgvideo', component: mgvideo }]
+           children: [{ path: 'video', title: 'sideBar.mgVideo', name: 'mgvideo', component: mgvideo }]
          },
          {
            path: '/png',
            title: 'PNG电子游戏报表',
            name: 'png',
            component: main,
-           children: [{ path: 'video', title: 'PNG电子游戏报表', name: 'pngGame', component: pngVideo }]
+           children: [{ path: 'video', title: 'sideBar.pngGame', name: 'pngGame', component: pngVideo }]
          },
          {
            path: '/pg',
            title: 'PG电子游戏报表',
            name: 'pg',
            component: main,
-           children: [{ path: 'video', title: 'PG电子游戏报表', name: 'pgGame', component: pgVideo }]
+           children: [{ path: 'video', title: 'sideBar.pgGame', name: 'pgGame', component: pgVideo }]
          },
          {
            path: '/haba',
            title: 'HABA电子游戏报表',
            name: 'haba',
            component: main,
-           children: [{ path: 'video', title: 'HABA电子游戏报表', name: 'habaGame', component: habaVideo }]
+           children: [{ path: 'video', title: 'sideBar.habaGame', name: 'habaGame', component: habaVideo }]
          },
          {
            path: '/nagame',
@@ -131,9 +132,9 @@ export const appRouter = [
            name: 'nagame',
            component: main,
            children: [
-             { path: 'hfive', title: 'NA电子H5报表', name: 'nahfive', component: nahfive },
-             { path: 'nanomsy', title: 'NA电子H5无神秘奖报表', name: 'nanomsy', component: nanomsy },
-             { path: 'all', title: 'NA游戏总报表', name: 'naAll', component: naAll },
+             { path: 'hfive', title: 'sideBar.naHFive', name: 'nahfive', component: nahfive },
+             { path: 'nanomsy', title: 'sideBar.nanomsy', name: 'nanomsy', component: nanomsy },
+             { path: 'all', title: 'sideBar.naAll', name: 'naAll', component: naAll },
            ]
          },
          {
@@ -142,9 +143,9 @@ export const appRouter = [
            name: 'sagame',
            component: main,
            children: [
-             { path: 'all', title: 'SA游戏总报表', name: 'saAll', component: saAll },
-             { path: 'fishing', title: 'SA捕鱼游戏报表', name: 'safishing', component: safishing },
-             { path: 'true', title: 'SA真人游戏报表', name: 'satrue', component: satrue }
+             { path: 'all', title: 'sideBar.saAll', name: 'saAll', component: saAll },
+             { path: 'fishing', title: 'sideBar.saFish', name: 'safishing', component: safishing },
+             { path: 'true', title: 'sideBar.saTrue', name: 'satrue', component: satrue }
            ]
          },
          {
@@ -153,9 +154,9 @@ export const appRouter = [
            name: 'sbgame',
            component: main,
            children: [
-             { path: 'all', title: 'SB游戏总报表', name: 'sbAll', component: sbAll },
-             { path: 'video', title: 'SB电子游戏报表', name: 'sbvideo', component: sbvideo },
-             { path: 'true', title: 'SB真人游戏报表', name: 'sbtrue', component: sbtrue }
+             { path: 'all', title: 'sideBar.sbAll', name: 'sbAll', component: sbAll },
+             { path: 'video', title: 'sideBar.sbVideo', name: 'sbvideo', component: sbvideo },
+             { path: 'true', title: 'sideBar.sbTrue', name: 'sbtrue', component: sbtrue }
            ]
          },
          {
@@ -163,51 +164,51 @@ export const appRouter = [
            title: 'TTG游戏报表',
            name: 'ttggame',
            component: main,
-           children: [{ path: 'video', title: 'TTG电子游戏报表', name: 'ttgvideo', component: ttgvideo }]
+           children: [{ path: 'video', title: 'sideBar.ttgVideo', name: 'ttgvideo', component: ttgvideo }]
          },
          {
            path: '/kygame',
            title: 'KY棋牌游戏报表',
            name: 'kygame',
            component: main,
-           children: [{ path: 'chess', title: 'KY棋牌游戏报表', name: 'kychess', component: kyChess }]
+           children: [{ path: 'chess', title: 'sideBar.kyChess', name: 'kychess', component: kyChess }]
          },
          {
            path: '/rtg',
            title: 'RTG游戏',
            name: 'rtg',
            component: main,
-           children: [{ path: 'game', title: 'RTG电子游戏报表', name: 'rtgGame', component: rtgGame }]
+           children: [{ path: 'game', title: 'sideBar.rtgGame', name: 'rtgGame', component: rtgGame }]
          },
          {
            path: '/dt',
            title: 'dt',
            name: 'dt',
            component: main,
-           children: [{ path: 'video', title: 'DT电子游戏报表', name: 'dtGame', component: dtGame }]
+           children: [{ path: 'video', title: 'sideBar.dtGame', name: 'dtGame', component: dtGame }]
          },
          {
            path: '/pp',
            title: 'pp',
            name: 'pp',
            component: main,
-           children: [{ path: 'video', title: 'PP电子游戏报表', name: 'ppGame', component: ppGame }]
+           children: [{ path: 'video', title: 'sideBar.ppGame', name: 'ppGame', component: ppGame }]
          },
          {
            path: '/ysb',
            title: 'YSB体育游戏',
            name: 'ysb',
            component: main,
-           children: [{ path: 'sport', title: 'YSB体育游戏报表', name: 'ysbSport', component: ysbSport }]
+           children: [{ path: 'sport', title: 'sideBar.ysbGame', name: 'ysbSport', component: ysbSport }]
          },
          {
            path: '/dayMerchant',
            title: '日报表',
            name: 'day',
            component: main,
-           children: [{ path: 'index', title: '日报表', name: 'dayMerchant', component: dayMerchant }]
+           children: [{ path: 'index', title: 'sideBar.dayMerchant', name: 'dayMerchant', component: dayMerchant }]
          },
-         {
+         /* {
            path: '/transfer',
            title: '',
            name: 'transfer',
@@ -216,13 +217,13 @@ export const appRouter = [
              { path: 'flow', title: '流水交易', name: 'flow', component: flow },
              { path: 'report', title: '输赢报表', name: 'noTransferReport', component: noTransferReport }
            ]
-         },
+         }, */
          {
            path: '/play',
            title: '玩家列表',
            name: 'play',
            component: main,
-           children: [{ path: 'index', title: '玩家列表', name: 'playList', component: playerlist }]
+           children: [{ path: 'index', title: 'sideBar.player', name: 'playList', component: playerlist }]
          },
          {
            path: '/prizeList',
@@ -230,7 +231,7 @@ export const appRouter = [
            name: 'prizeList',
            component: main,
            children: [
-             { path: 'index', title: '神秘奖记录', name: 'prizeList', component: prizeList }
+             { path: 'index', title: 'sideBar.prizeList', name: 'prizeList', component: prizeList }
            ]
          }
        ]

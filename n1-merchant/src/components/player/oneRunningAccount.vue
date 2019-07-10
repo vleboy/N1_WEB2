@@ -1,14 +1,14 @@
 <template>
   <div>
     <Row class="g-text-left" style="margin-bottom: 15px">
-      <Col span="6">交易时间：{{formatterTime(dataProp.createdAt)}}</Col>
-      <Col span="6">交易类型：{{dataProp.typeName}}</Col>
+      <Col span="8">{{$t('playerDetail.transactionTime')}}：{{formatterTime(dataProp.createdAt)}}</Col>
+      <Col span="8">{{$t('playerDetail.transactionType')}}：{{dataProp.typeName}}</Col>
     </Row>
     <Row class="g-text-left" style="margin-bottom: 15px">
-      <Col span="6">结算前余额：{{formatPoints(dataProp.originalAmount)}}</Col>
-      <Col span="4">操作金额：{{formatPoints(dataProp.betAmount)}}</Col>
-      <Col span="4">返还金额：{{formatPoints(dataProp.retAmount)}}</Col>
-      <Col span="4">净利润：
+      <Col span="8">{{$t('playerDetail.preBalance')}}：{{formatPoints(dataProp.originalAmount)}}</Col>
+      <Col span="6">{{$t('playerDetail.operateAccount')}}：{{formatPoints(dataProp.betAmount)}}</Col>
+      <Col span="6">{{$t('playerDetail.returnAccount')}}：{{formatPoints(dataProp.retAmount)}}</Col>
+      <Col span="4">{{$t('playerDetail.netProfit')}}：
         <span :class="{'-p-green':dataProp.profitAmount>0,'-p-red':dataProp.profitAmount<0}">{{formatPoints(dataProp.profitAmount)}}</span>
       </Col>
 
@@ -42,45 +42,73 @@
     props:['dataProp'],
     data () {
       return {
-        typeList: {
-          '3': '下注',
-          '4': '返奖',
-          '5': '返还',
-          '10': '系统升级原账结余',
-          '11': '中心钱包',
-          '12': '代理操作',
-          '13': '商城'
-        },
+        
         columns: [
           {
             title: '流水号',
             align: 'center',
-            key: 'sn'
+            key: 'sn',
+            renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '流水号' : 'Pipeline number'
+            )
+          }
           },
           {
             title: '交易时间',
             align: 'center',
-            slot: 'dateTime'
+            slot: 'dateTime',
+            renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易时间' : 'Transaction time'
+            )
+          }
           },
           {
             title: '交易类型',
             align: 'center',
-            slot: 'type'
+            slot: 'type',
+            renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易类型' : 'transaction Type'
+            )
+          }
           },
           {
             title: '帐变前余额',
             align: 'center',
-            slot: 'beforeAmount'
+            slot: 'beforeAmount',
+            renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '帐变前余额' : 'Pre-account balance'
+            )
+          }
           },
           {
             title: '帐变金额',
             align: 'center',
-            slot: 'amount'
+            slot: 'amount',
+            renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '操作' : 'Account variable amount'
+            )
+          }
           },
           {
             title: '帐变后金额',
             align: 'center',
-            slot: 'afterAmount'
+            slot: 'afterAmount',
+            renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '帐变后金额' : 'Amount after Account Change'
+            )
+          }
           }
         ],
       }
@@ -97,7 +125,29 @@
       },
       //交易类型
       typeConfig(row) {
-        return this.typeList[row.type]
+        let typeList = {}
+        if (this.$store.state.language == 'zh') {
+          typeList =  {
+            '3': '下注',
+            '4': '返奖',
+            '5': '返还',
+            '10': '系统升级原账结余',
+            '11': '中心钱包',
+            '12': '代理操作',
+            '13': '商城'
+          }
+        } else {
+          typeList =  {
+            '3': 'Bets',
+            '4': 'Return prize',
+            '5': 'Return',
+            '10': 'System Upgrade Original Account Balance',
+            '11': 'Central wallet',
+            '12': 'Proxy operation',
+            '13': 'Shopping mall'
+          }
+        }
+        return typeList[row.type]
       },
       //账变前余额
       beforeAmountConfig(row) {

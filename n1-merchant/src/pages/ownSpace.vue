@@ -5,25 +5,25 @@
         <template slot-scope="{row, index}" slot="password">
           <span v-if="showPass">{{row.password}}</span>
           <span v-else>******</span>
-          <span v-if="showPass" @click="showPass = !showPass" style="color:#20a0ff;cursor:pointer;margin:0 .3rem;">隐藏</span>
-          <span v-else @click="showPass = !showPass" style="color:#20a0ff;cursor:pointer;margin:0 .3rem;">显示</span>
-          <span class="newPassword" @click="newPassword">修改密码</span>
+          <span v-if="showPass" @click="showPass = !showPass" style="color:#20a0ff;cursor:pointer;margin:0 .3rem;">{{$t('ownSpace.hide')}}</span>
+          <span v-else @click="showPass = !showPass" style="color:#20a0ff;cursor:pointer;margin:0 .3rem;">{{$t('ownSpace.show')}}</span>
+          <span class="newPassword" @click="newPassword">{{$t('ownSpace.changePwd')}}</span>
         </template>
         <template slot-scope="{row, index}" slot="apiKey">
           <span v-if="showKey">{{row.apiKey}}</span>
           <span v-else>******</span>
-          <span  @click="showKey=!showKey" v-if="showKey" style="color:#20a0ff;cursor:pointer;margin:0 .3rem;">隐藏</span>
-          <span  @click="showKey=!showKey" v-else style="color:#20a0ff;cursor:pointer;margin:0 .3rem;">显示</span>
+          <span  @click="showKey=!showKey" v-if="showKey" style="color:#20a0ff;cursor:pointer;margin:0 .3rem;">{{$t('ownSpace.hide')}}</span>
+          <span  @click="showKey=!showKey" v-else style="color:#20a0ff;cursor:pointer;margin:0 .3rem;">{{$t('ownSpace.show')}}</span>
         </template>
         <template slot-scope="{row, index}" slot="operate">
-          <span @click="refresh" style="color:#20a0ff;cursor:pointer">刷新</span>
+          <span @click="refresh" style="color:#20a0ff;cursor:pointer">{{$t('ownSpace.refresh')}}</span>
         </template>
       </Table>
 
     </div>
     <div class="financial">
-      <h2>财务信息
-        <span style="color:#20a0ff;cursor:pointer;fontSize:1rem" @click="getWaterfallList">(点击查询)</span>
+      <h2>{{$t('ownSpace.infomation')}}
+        <span style="color:#20a0ff;cursor:pointer;fontSize:1rem" @click="getWaterfallList">{{$t('ownSpace.query')}}</span>
       </h2>
       <Table :columns="columns1" :data="showWaterList" size="small">
         <template slot-scope="{ row, index }" slot="createdAt">
@@ -56,27 +56,28 @@
       </Table>
       <Page :total="totalPage" class="page" :page-size='pageSize' @on-change="changepage"></Page>
     </div>
-    <Modal v-model="modal" title="修改密码" :width='350' @on-ok="ok" @on-cancel='cancel'>
+    <Modal v-model="modal" :title="$t('ownSpace.changePwd')" :width='350' @on-ok="ok" @on-cancel='cancel'>
       <p class="modal_input">
         <Row>
-          <Col span="6" class="label">新密码</Col>
+          <Col span="10" class="label">{{$t('ownSpace.newPWd')}}</Col>
           <Col span="14">
-          <Input v-model="password" placeholder="6-16位密码,包含英文数字"></Input>
+          <Input v-model="password" :placeholder="$t('ownSpace.regPwd')"></Input>
           </Col>
         </Row>
       </p>
       <p class="modal_input">
         <Row>
-          <Col span="6" class="label">重复新密码</Col>
+          <Col span="10" class="label">{{$t('ownSpace.rePwd')}}</Col>
           <Col span="14">
           <Input v-model="repassword"></Input>
           </Col>
         </Row>
+       
       </p>
     </Modal>
     <Spin size="large" fix v-if="spinShow">
       <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+      <div>{{$t('ownSpace.loading')}}</div>
     </Spin>
   </div>
 </template>
@@ -106,92 +107,189 @@ export default {
           title: "序号",
           type: "index",
           align: 'center',
-          maxWidth: 60
+          maxWidth: 90,
+          minWidth: 50,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '序号' : 'Serial number'
+            )
+          }
         },
         {
           title: "交易时间",
           slot: "createdAt",
           sortable: true,
+          minWidth: 60,
           align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易时间' : 'Trading time'
+            )
+          }
         },
         {
           title: "交易对象",
           slot: "toUser",
           align: 'center',
-          minWidth:50
+          minWidth:30,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易对象' : 'Transactors'
+            )
+          }
         },
         {
           title: "交易类型",
           slot: "amountType",
           align: 'center',
-          maxWidth: 120,
-          sortable: true
+          maxWidth: 140,
+          minWidth: 100,
+          sortable: true,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易类型' : 'Type of transaction'
+            )
+          }
         },
          {
           title: "交易前余额",
           slot: "oldBalance",
           align: 'center',
-          sortable: true
+          sortable: true,
+          minWidth: 100,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易前余额' : 'Pre-transaction balance'
+            )
+          }
         },
         {
           title: "交易点数",
           slot: "amountCode",
           align: 'center',
           maxWidth: 200,
-          sortable: true
+          minWidth: 20,
+          sortable: true,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易点数' : 'Trading Points'
+            )
+          }
         },
         {
           title: "交易后余额",
           slot: "balance",
           align: 'center',
           sortable: true,
+          minWidth: 100,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易后余额' : 'Post-transaction balance'
+            )
+          }
         },
         {
           title: "操作人",
           slot: "operator",
           align: 'center',
-          sortable: true
+          sortable: true,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '操作人' : 'Operator'
+            )
+          }
         },
         {
           title: "备注",
           slot: "remark",
           maxWidth: 60,
-          align: 'center'
+          align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '操作人' : 'Remarks'
+            )
+          }
         }
       ],
       columns2: [
         {
           title: "商户标识",
           key: "sn",
-          align: "center"
+          align: "center",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '商户标识' : 'Business logo'
+            )
+          }
         },
         { 
           title: "商户ID",
           align: 'center',
           key: "displayId",
-          maxWidth: 60
+          minWidth: 30,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '商户标识' : 'Business ID'
+            )
+          }
         },
         {
           title: "管理员账号",
           key: "uname",
-          align: "center"
+          align: "center",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '商户标识' : 'Administrator account'
+            )
+          }
         },
         {
           title: "管理员密码",
           slot: "password",
-          align: "center"
+          minWidth: 100,
+          align: "center",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '管理员密码' : 'Administrator password'
+            )
+          }
         },
         
         {
           title: "商户API密钥",
-          minWidth: 100,
+          minWidth: 110,
           slot: "apiKey",
-          align: "center"
+          align: "center",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '商户API密钥' : 'Merchant API Key'
+            )
+          }
         },
         {
           title: "操作",
           slot: "operate",
-          maxWidth: 60
+          minWidth: 30,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '操作' : 'Operation'
+            )
+          }
         }
       ],
       showWaterList:[],
@@ -221,17 +319,33 @@ export default {
     },
     //财务信息交易类型
     amountConfig1(row) {
-      if(row.fromDisplayName == row.toDisplayName){
-        if(row.amount<0){
-          return '玩家充值'
+      if (this.$store.state.language == 'zh') {
+        if(row.fromDisplayName == row.toDisplayName){
+          if(row.amount<0){
+            return '玩家充值'
+          }else{
+            return '玩家提现'
+          }
         }else{
-          return '玩家提现'
+          if (row.fromLevel > row.toLevel) {
+            return "减点"
+          } else {
+            return "加点"
+          }
         }
-      }else{
-        if (row.fromLevel > row.toLevel) {
-          return "减点"
-        } else {
-          return "加点"
+      } else {
+        if(row.fromDisplayName == row.toDisplayName){
+          if(row.amount<0){
+            return 'Player recharge'
+          }else{
+            return 'Player withdrawal'
+          }
+        }else{
+          if (row.fromLevel > row.toLevel) {
+            return "Reduce point"
+          } else {
+            return "Add point"
+          }
         }
       }
     },
@@ -414,7 +528,7 @@ export default {
         this.totalPage = this.showData.length;
         this.startKey = waterfall.startKey;
         this.showWaterList = _.chunk(this.showData, 20)[0];
-        console.log(this.showWaterList);
+        //console.log(this.showWaterList);
       }
       
     },

@@ -29,8 +29,8 @@
             @on-change="handle"
             size="small"
           ></DatePicker>
-          <Button type="primary" @click="search" size="small" style="margin-left:1rem;margin-right:.3rem">搜索</Button>
-          <Button @click="reset" size="small">重置</Button>
+          <Button type="primary" @click="search" size="small" style="margin-left:1rem;margin-right:.3rem">{{$t('dayMerchant.search')}}</Button>
+          <Button @click="reset" size="small">{{$t('dayMerchant.reset')}}</Button>
         </div>
       </div>
     </div>
@@ -77,7 +77,7 @@ export default {
       options: {
         shortcuts: [
           {
-            text: "本周",
+            text: this.$store.state.language == 'zh' ? '本周' : 'This week',
             value() {
               return [
                 new Date(
@@ -95,7 +95,7 @@ export default {
             }
           },
           {
-            text: "本月",
+            text: this.$store.state.language == 'zh' ? '本月' : 'This month',
             value() {
               return [
                 new Date(
@@ -112,7 +112,7 @@ export default {
             }
           },
           {
-            text: "上周",
+            text: this.$store.state.language == 'zh' ? '上周' : 'Last week',
             value() {
               return [
                 new Date(
@@ -133,7 +133,7 @@ export default {
             }
           },
           {
-            text: "上月",
+            text: this.$store.state.language == 'zh' ? '上月' : 'Last month',
             value() {
               //-1 上月
               return [
@@ -165,32 +165,68 @@ export default {
         {
           title: "日期",
           align: "center",
-          key: "createdDate"
+          key: "createdDate",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '日期' : 'Date'
+            )
+          }
         },
         {
           title: "投注次数",
           align: "center",
-          key: "betCount"
+          key: "betCount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '投注次数' : 'Bet Count'
+            )
+          }
         },
         {
           title: "投注金额",
           align: "center",
-          key: "betAmount"
+          key: "betAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '投注金额' : 'Bet Amount'
+            )
+          }
         },
         {
           title: "返还金额",
           align: "center",
-          key: "retAmount"
+          key: "retAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '返还金额' : 'Return Amount'
+            )
+          }
         },
         {
           title: "退款金额",
           align: "center",
-          key: "refundAmount"
+          key: "refundAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '退款金额' : 'Refund Amount'
+            )
+          }
         },
         {
           title: "输赢金额",
           align: "center",
-          slot: "winloseAmount"
+          slot: "winloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '输赢金额' : 'Win/Lose Amount'
+            )
+          }
         }
       ],
       gameType: [],
@@ -247,24 +283,12 @@ export default {
       let xArr = _this.dayStatList.map(item => {
         return item.createdDate;
       });
+      let data = []
+      let series = []
 
-      // 绘制图表
-      myChart.setOption({
-        xAxis: {
-          type: "category",
-          data: xArr
-        },
-        tooltip: {
-          trigger: "axis"
-        },
-        yAxis: {
-          type: "value"
-        },
-        legend: {
-          data: ["投注次数", "投注金额", "返还金额", "退款金额", "输赢金额"],
-          selectedMode: "single"
-        },
-        series: [
+      if (this.$store.state.language == 'zh') {
+        data = ["投注次数", "投注金额", "返还金额", "退款金额", "输赢金额"]
+        series = [
           {
             name: "投注次数",
             data: betCountArr,
@@ -291,6 +315,53 @@ export default {
             type: "line"
           }
         ]
+      } else {
+        data = ["Bet Count", "Bet Amount", "Return Amount", "Refund Amount", "Win/Lose Amount"]
+        series = [
+          {
+            name: "Bet Count",
+            data: betCountArr,
+            type: "line"
+          },
+          {
+            name: "Bet Amount",
+            data: betAmountArr,
+            type: "line"
+          },
+          {
+            name: "Return Amount",
+            data: retAmountArr,
+            type: "line"
+          },
+          {
+            name: "Refund Amount",
+            data: refundAmountArr,
+            type: "line"
+          },
+          {
+            name: "Win/Lose Amount",
+            data: winloseAmountArr,
+            type: "line"
+          }
+        ]
+      }
+      // 绘制图表
+      myChart.setOption({
+        xAxis: {
+          type: "category",
+          data: xArr
+        },
+        tooltip: {
+          trigger: "axis"
+        },
+        yAxis: {
+          type: "value"
+        },
+        legend: {
+          data: data,
+          selectedMode: "single"
+        },
+        series: series
       });
     },
     confirms() {
@@ -433,5 +504,8 @@ export default {
   width: 100%;
   height: 300px;
 }
+/deep/ .ivu-picker-panel-shortcut {
+    padding: 6px 5px;
+  }
 </style>
 

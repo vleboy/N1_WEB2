@@ -3,13 +3,13 @@
     <div class="nowList">
       <div class="top">
         <p class="title">
-          当前用户列表
+          {{$t('allReport.currentUser')}}
           <!-- <Button @click="exportdata('table_0')" size="small">导出数据</Button> -->
         </p>
         <div class="right">
           <DatePicker size="small" type="datetimerange" :options="options" :editable='false' v-model="defaultTime" placeholder="选择日期时间范围(默认最近一周)" style="width: 300px" @on-ok="confirm"></DatePicker>
-          <Button type="primary" @click="search" size="small" style="margin:0 .3rem 0 1rem">搜索</Button>
-          <Button @click="reset" size="small">重置</Button>
+          <Button type="primary" @click="search" size="small" style="margin:0 .3rem 0 1rem">{{$t('allReport.search')}}</Button>
+          <Button @click="reset" size="small">{{$t('allReport.reset')}}</Button>
         </div>
       </div>
       <Table :columns="columns1" :data="user" size="small" ref='table_0'>
@@ -42,12 +42,12 @@
     </div>
     <div class="playerList" id="playerList" style="margin-top:1rem">
       <p class="title">
-        所属玩家列表
+        {{$t('allReport.PlayerList')}}
         <!-- <Button @click="exportdata('table_1')" size="small">导出数据</Button> -->
       </p>
       <Table :columns="columns2" :data="playerList" size="small" ref='table_1'>
         <template slot-scope="{row, index}" slot="playerName">
-          <Tooltip content="前往玩家详情" placement="right">
+          <Tooltip :content="$t('allReport.toPlayerDetail')" placement="right">
             <span
               style="cursor:pointer;color:#20a0ff"
               @click="playerNameConfig(row)"
@@ -76,7 +76,7 @@
     </div>
     <Spin size="large" fix v-if="spinShow">
       <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+      <div>{{$t('allReport.loading')}}</div>
     </Spin>
   </div>
 </template>
@@ -96,25 +96,25 @@ export default {
       options: {
         shortcuts: [
           {
-            text: "本周",
+            text: this.$store.state.language == 'zh' ? '本周' : 'This week',
             value() {
               return [new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().endOf('second').valueOf())]
             }
           },
           {
-            text: "本月",
+            text: this.$store.state.language == 'zh' ? '本月' : 'This month',
             value() {
               return [new Date(dayjs().startOf('month').valueOf()), new Date(dayjs().endOf('second').valueOf())]
             }
           },
           {
-            text: "上周",
+            text: this.$store.state.language == 'zh' ? '上周' : 'Last week',
             value() {
               return [new Date(dayjs().add(-1, 'week').startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000 - 1)]
             }
           },
           {
-            text: "上月",
+            text: this.$store.state.language == 'zh' ? '上月' : 'Last month',
             value() {
               //-1 上月
               return [new Date(dayjs().add(-1, 'month').startOf('month').valueOf()), new Date(dayjs().startOf('month').valueOf() - 1)]
@@ -132,49 +132,103 @@ export default {
           title: "序号",
           align: 'center',
           maxWidthL: 60,
-          type: "index"
+          type: "index",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '序号' : 'Serial number'
+            )
+          }
         },
        
         {
           title: "昵称",
           align: 'center',
-          key: "displayName"
+          key: "displayName",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '昵称' : 'Nickname'
+            )
+          }
         },
         
         {
           title: "交易次数",
           align: 'center',
-          key: "betCount"
+          key: "betCount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易次数' : 'Transactions count'
+            )
+          }
         },
         {
           title: "总游戏输赢金额",
           align: 'center',
-          slot: "userWinloseAmount"
+          slot: "userWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '总游戏输赢金额' : 'Total game win/lose amount'
+            )
+          }
         },
         {
           title: "总游戏交公司",
           align: 'center',
-          slot: "userSubmitAmount"
+          slot: "userSubmitAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '总游戏交公司' : 'General game delivery company'
+            )
+          }
         },
         {
           title: "SB真人游戏(输赢金额)",
           align: 'center',
-          slot: "uTrueWinloseAmount"
+          slot: "uTrueWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'SB真人游戏(输赢金额)' : 'SB Live Game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "SB真人游戏(商家交公司)",
           align: 'center',
-          slot: "uTrueSubmitAmount"
+          slot: "uTrueSubmitAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'SB真人游戏(商家交公司)' : 'SB Live Game(Business Exchange Company)'
+            )
+          }
         },
         {
           title: "SB电子游戏(输赢金额)",
           align: 'center',
-          slot: "uElWinloseAmount"
+          slot: "uElWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'SB电子游戏(输赢金额)' : 'SB Video Game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "SB电子游戏(商家交公司)",
           align: 'center',
-          slot: "uElSubmitAmount"
+          slot: "uElSubmitAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'SB电子游戏(商家交公司)' : 'SB Video Game(Business Exchange Company)'
+            )
+          }
         }
       ],
       columns2: [
@@ -182,37 +236,79 @@ export default {
           title: "序号",
           align: 'center',
           maxWidthL: 60,
-          type: "index"
+          type: "index",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '序号' : 'Serial number'
+            )
+          }
         },
         {
           title: "用户名",
           align: 'center',
-          slot: "playerName"
+          slot: "playerName",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '账号' : 'Username'
+            )
+          }
         },
         {
           title: "昵称",
           align: 'center',
-          slot: "nickname"
+          slot: "nickname",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '昵称' : 'Nickname'
+            )
+          }
         },
         {
           title: "交易次数",
           align: 'center',
-          key: "betCount"
+          key: "betCount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易次数' : 'Transactions count'
+            )
+          }
         },
         {
           title: "总游戏输赢金额",
           align: 'center',
-          key: "playerWinloseAmount"
+          key: "playerWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '总游戏输赢金额' : 'Total game win/lose amount'
+            )
+          }
         },
         {
           title: "SB真人游戏(输赢金额)",
           align: 'center',
-          slot: "pTrueWinloseAmount"
+          slot: "pTrueWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'SB真人游戏(输赢金额)' : 'SB Live Game(Win/Lose Amount)'
+            )
+          }
         },
         {
           title: "SB电子游戏(输赢金额)",
           align: 'center',
-          slot: "pElWinloseAmount"
+          slot: "pElWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? 'SB电子游戏(输赢金额)' : 'SB Video Game(Win/Lose Amount)'
+            )
+          }
         }
       ]
     };
@@ -389,6 +485,9 @@ export default {
   /deep/ .ivu-input {
     border-color: #000;
     background: #fff;
+  }
+  /deep/ .ivu-picker-panel-shortcut {
+    padding: 6px 5px;
   }
 }
 </style>

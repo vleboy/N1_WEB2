@@ -10,6 +10,16 @@
         </div>
         <div class="user-dropdown-menu-con">
           <Row type="flex" justify="end" align="middle" class="user-dropdown-innercon">
+            <Dropdown transfer trigger="click" @on-click="changeLanguage" placement="bottom" style="margin-right:1rem">
+              <a href="javascript:void(0)">
+                {{$t('index.language')}}
+                <Icon type="ios-arrow-down"></Icon>
+              </a>
+              <DropdownMenu slot="list">
+                <DropdownItem name="zh">中文简体</DropdownItem>
+                <DropdownItem name="en">English</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
             <Avatar icon="md-person" size="small" style="background: #619fe7;margin-right: 10px;"></Avatar>
             <Dropdown transfer trigger="click" @on-click="handleClickUserDropdown" placement="bottom-start">
               <a href="javascript:void(0)">
@@ -17,7 +27,7 @@
                 <Icon type="ios-arrow-down"></Icon>
               </a>
               <DropdownMenu slot="list">
-                <DropdownItem name="loginout" >退出登录</DropdownItem>
+                <DropdownItem name="loginout" >{{$t('index.exit')}}</DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </Row>
@@ -75,9 +85,10 @@ export default {
       }
     },
     handleClickUserDropdown(name) {
+     
       this.$Modal.confirm({
-        title: "提示",
-        content: "<p>是否确认退出</p>",
+        title: localStorage.language == 'zh' ? "提示" : 'Hint',
+        content: localStorage.language == 'zh' ? "<p>是否确认退出</p>" : '<p>Confirm exit</p>',
         onOk: () => {
           localStorage.clear();
           this.$store.commit('clearAllTag')
@@ -85,11 +96,22 @@ export default {
           this.$store.commit('changeLoading',{params:false});
         }
       });
+      
+    },
+    changeLanguage(name) {
+      let title = name == "zh" ? 'NA商户后台' : 'NA MERCHANT SYSTEM'
+      this.$i18n.locale = name
+      document.title = title
+      this.$store.commit('changeLanguage', name)
+      localStorage.setItem('language', name)
+      localStorage.setItem('title', title)
     }
   },
   components: { sidebar, tagClose },
   mounted() {
     this.init();
+    //console.log(this);
+    
   },
   created() {
     // 显示打开的页面的列表

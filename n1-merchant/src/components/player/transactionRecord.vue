@@ -30,10 +30,10 @@
           ></DatePicker>
         </div>
         <div style="display:flex;">
-          <Input v-model="betId" placeholder="请输入交易号" style="width: 12rem;margin-right:1rem" size="small"></Input>
-          <Button type="primary" @click="searchAmount" size="small" style="margin:0 .3rem 0 0rem">搜索</Button>
-          <Button @click="reset" size="small" style="margin-right:.3rem">重置</Button>
-          <Button @click="exportData" size="small">导出数据</Button>
+          <Input v-model="betId" :placeholder="$t('playerDetail.trade')" style="width: 12rem;margin-right:1rem" size="small"></Input>
+          <Button type="primary" @click="searchAmount" size="small" style="margin:0 .3rem 0 0rem">{{$t('playerDetail.search')}}</Button>
+          <Button @click="reset" size="small" style="margin-right:.3rem">{{$t('playerDetail.reset')}}</Button>
+          <Button @click="exportData" size="small">{{$t('playerDetail.exportData')}}</Button>
         </div>
       </div>
     </div>
@@ -59,15 +59,15 @@
           <span :style="{color:profitConfig(row).color}">{{profitConfig(row).amount}}</span>
         </template>
         <template slot-scope="{row, index}" slot="action">
-          <Button v-if="actionConfig(row)" type="text" size="small" style="color:#20a0ff;" @click="record(row)">查看战绩</Button>
-          <Button v-if="actionConfig(row)" type="text" size="small" style="color:#20a0ff;" @click="waterDetaill(row)">流水详情</Button>
+          <Button v-if="actionConfig(row)" type="text" size="small" style="color:#20a0ff;" @click="record(row)">{{$t('playerDetail.look')}}</Button>
+          <Button v-if="actionConfig(row)" type="text" size="small" style="color:#20a0ff;" @click="waterDetaill(row)">{{$t('playerDetail.running')}}</Button>
         </template>
       </Table>
 
       <Row style="padding: 20px 0">
         <Col span="12" class="g-text-right">
           <div style="margin-bottom: 10px;font-size: 15px;" v-if="radioInfo!=-1">
-            本页输赢总计:
+            {{$t('playerDetail.total')}}:
             <span
               :class="{'-p-green':this.allAmount>0,'-p-red':this.allAmount<0}"
             >{{formatPoints(allAmountFun)}}</span>
@@ -84,23 +84,23 @@
       </Row>
     </div>
 
-    <Modal title="战绩详细" v-model="isOpenModalBill" class="g-text-center" width="940" cancel-text>
+    <Modal :title="$t('playerDetail.recordDetail')" v-model="isOpenModalBill" class="g-text-center" width="940" cancel-text>
       <!--<OneArmBanditModal ref="childMethod" v-if="propChild.gameType =='40000'" :dataProp="propChild"></OneArmBanditModal>-->
       <RealLifeModal ref="childMethod" v-if="isRealLife" :dataProp="propChild"></RealLifeModal>
       <!--<ArcadeModal ref="childMethod" v-if="propChild.gameType =='50000'" :dataProp="propChild"></ArcadeModal>-->
       <sportsModal ref="childMethod" v-if="propChild.gameType =='1130000'" :dataProp="propChild"></sportsModal>
     </Modal>
-    <Modal title="h5战绩详细" v-model="naHfive" class="g-text-center" width="500">
+    <Modal :title="$t('playerDetail.h5RecordDetail')" v-model="naHfive" class="g-text-center" width="500">
       <secreat-modal v-if="mystical" :hProp="hProp" v-on:loading="Load" :fudai="fudai"/>
       <hfive-modal v-if="nomalType" v-on:loading="Load" :dataProp="hProp"/>
     </Modal>
-    <Modal title="流水详情" v-model="isOpenModalRunning" class="g-text-center" width="800" cancel-text>
+    <Modal :title="$t('playerDetail.running')" v-model="isOpenModalRunning" class="g-text-center" width="800" cancel-text>
       <oneRunningAccount :dataProp="runningDetail"></oneRunningAccount>
     </Modal>
 
     <Spin size="large" fix v-if="isFetching">
       <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+      <div>{{$t('playerDetail.loading')}}</div>
     </Spin>
   </div>
 </template>
@@ -131,7 +131,7 @@ export default {
       options: {
         shortcuts: [
           {
-            text: "本周",
+            text: this.$store.state.language == 'zh' ? '本周' : 'This week',
             value() {
               return [
                 new Date(
@@ -149,7 +149,7 @@ export default {
             }
           },
           {
-            text: "本月",
+            text: this.$store.state.language == 'zh' ? '本月' : 'This month',
             value() {
               return [
                 new Date(
@@ -166,7 +166,7 @@ export default {
             }
           },
           {
-            text: "上周",
+            text: this.$store.state.language == 'zh' ? '上周' : 'Last week',
             value() {
               return [
                 new Date(
@@ -187,7 +187,7 @@ export default {
             }
           },
           {
-            text: "上月",
+            text: this.$store.state.language == 'zh' ? '上月' : 'Last month',
             value() {
               //-1 上月
               return [
@@ -287,46 +287,100 @@ export default {
           title: "交易号",
           key: "businessKey",
           align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易号' : 'Trading number'
+            )
+          }
         },
         {
           title: "交易时间",
           slot: "dateTime",
           width: 160,
-          align: 'center'
+          align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易时间' : 'Trading time'
+            )
+          }
         },
         {
           title: "游戏类型",
           align: 'center',
-          key: "typeName"
+          key: "typeName",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '游戏类型' : 'Game type'
+            )
+          }
         },
         {
           title: "游戏ID",
           align: 'center',
-          slot: "gameId"
+          slot: "gameId",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '游戏ID' : 'Game ID'
+            )
+          }
         },
         {
           title: "结算前余额",
           slot: "beSettleMoney",
-          align: 'center'
+          align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '结算前余额' : 'Pre-settlement balance'
+            )
+          }
         },
         {
           title: "操作金额",
           slot: "operateMoney",
-          align: 'center'
+          align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '操作金额' : 'Operating amountate'
+            )
+          }
         },
         {
           title: "返还金额",
           slot: "retMoney",
-          align: 'center'
+          align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '返还金额' : 'Return amount'
+            )
+          }
         },
         {
           title: "净利润",
-          slot: "profit"
+          slot: "profit",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '净利润' : 'Net profit'
+            )
+          }
         },
         {
           title: "操作",
           slot: "action",
-          align: "center"
+          align: "center",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '操作' : 'Operation'
+            )
+          }
         }
       ],
       realTypeIds: ["30000", "1050000", "1060000"]
@@ -703,5 +757,8 @@ export default {
 }
 .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
+  }
+  /deep/ .ivu-picker-panel-shortcut {
+    padding: 6px 5px;
   }
 </style>

@@ -11,12 +11,12 @@
         @on-ok="init"
         size="small"
       ></DatePicker>
-      <Button @click="init" style="margin-right:.3rem" size="small">搜索</Button>
-      <Button @click="reset" size="small">重置</Button>
+      <Button @click="init" style="margin-right:.3rem" size="small">{{$t('prizeList.search')}}</Button>
+      <Button @click="reset" size="small">{{$t('prizeList.reset')}}</Button>
     </div>
     <Table :columns="columns1" :data="prizeList" size="small">
       <template slot-scope="{ row, index }" slot="userName">
-        <Tooltip content="跳转到玩家详情">
+        <Tooltip :content="$t('prizeList.jump')">
           <span style="color: rgb(32, 160, 255);cursor: pointer" @click="userNameConfig()">{{row.userName}}</span>
         </Tooltip>
       </template>
@@ -29,7 +29,7 @@
     </Table>
     <Spin size="large" fix v-if="spinShow">
       <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+      <div>{{$t('prizeList.loading')}}</div>
     </Spin>
   </div>
 </template>
@@ -44,7 +44,7 @@ export default {
       options: {
         shortcuts: [
           {
-            text: "本周",
+            text: this.$store.state.language == 'zh' ? '本周' : 'This week',
             value() {
               return [
                 new Date(
@@ -62,7 +62,7 @@ export default {
             }
           },
           {
-            text: "本月",
+            text: this.$store.state.language == 'zh' ? '本月' : 'This month',
             value() {
               return [
                 new Date(
@@ -79,7 +79,7 @@ export default {
             }
           },
           {
-            text: "上周",
+            text: this.$store.state.language == 'zh' ? '上周' : 'Last week',
             value() {
               return [
                 new Date(
@@ -100,7 +100,7 @@ export default {
             }
           },
           {
-            text: "上月",
+            text: this.$store.state.language == 'zh' ? '上月' : 'Last month',
             value() {
               //-1 上月
               return [
@@ -129,38 +129,80 @@ export default {
           key: "userId",
           maxWidth:130,
           align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '玩家ID' : 'Player ID'
+            )
+          }
         },
         {
           title: "玩家账号",
           maxWidth:130,
           slot: "userName",
           align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '玩家账号' : 'Player account'
+            )
+          }
         },
         {
           title: "交易号",
           key: "betId",
           minWidth:100,
           align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易号' : 'Trading Number'
+            )
+          }
         },
         {
           title: "日期",
           slot: "dateTime",
-          align: 'center'
+          align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '商户标识' : 'Date'
+            )
+          }
         },
         {
           title: "游戏类型",
           key: "gameTypeName",
           align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '商户标识' : 'Game type'
+            )
+          }
         },
         {
           title: "游戏ID",
           key: "gameId",
           align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '商户标识' : 'Game ID'
+            )
+          }
         },
         {
           title: "中奖金额",
           slot: "winAmount",
-          align: 'center'
+          align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '商户标识' : 'Medium bonus'
+            )
+          }
         }
       ],
       prizeList: []
@@ -244,4 +286,8 @@ export default {
     border-color: #000;
     background: #fff;
   }
+  /deep/ .ivu-picker-panel-shortcut {
+    padding: 6px 5px;
+  }
+  
 </style>

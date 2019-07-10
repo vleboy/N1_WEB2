@@ -6,7 +6,10 @@
 
 <script>
 export default {
-  name: "App"
+  name: "App",
+  mounted() {
+    this.$store.commit('changeLanguage', localStorage.language)
+  }
 };
 </script>
 <style lang="less" scoped>

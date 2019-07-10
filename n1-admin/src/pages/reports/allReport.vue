@@ -1342,7 +1342,7 @@ export default {
 <style lang="less" scoped>
 .allreport {
   min-height: 87vh;
-
+  overflow-x: scroll;
   .title {
     font-size: 1.2rem;
     font-weight: 600;

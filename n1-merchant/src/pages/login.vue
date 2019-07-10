@@ -9,7 +9,7 @@
 
     <div class="page-wrapper">
       <div class="login-left">
-        <p class="title-big">NA商户后台</p>
+        <p class="title-big">{{$t('login.system')}}</p>
       </div>
       <div class="login-center"></div>
       <div class="login-right">
@@ -17,31 +17,30 @@
           label-position="left"
           :label-width="80"
           :model="formValidate"
-          :rules="ruleValidate"
           ref="formValidate"
         >
-          <FormItem label="账号" prop="username">
+          <FormItem :label="$t('login.account')" prop="username">
             <Row>
               <Col span="10">
                 <Input v-model="formValidate.username" :maxlength="16"></Input>
               </Col>
             </Row>
           </FormItem>
-          <FormItem label="密码" prop="password">
+          <FormItem :label="$t('login.password')" prop="password">
             <Row>
               <Col span="10">
                 <Input v-model="formValidate.password" type="password" :maxlength="16"></Input>
               </Col>
             </Row>
           </FormItem>
-          <FormItem label="标识" prop="sn">
+          <FormItem :label="$t('login.sign')" prop="sn">
             <Row>
               <Col span="10">
                 <Input v-model="formValidate.sn"></Input>
               </Col>
             </Row>
           </FormItem>
-          <FormItem label="验证">
+          <FormItem :label="$t('login.validation')">
             <Row>
               <Col span="10" style="background:grey;display:flex;justify-content:space-between;">
                 <Input v-model="validateCode" style="width: 80px;" :maxlength="4"></Input>
@@ -49,14 +48,14 @@
                   class="getCode"
                   v-if="showCode"
                   @click="getCode"
-                  style="margin-right:1rem;padding-left:0"
-                >点击显示验证码</span>
+                  style="margin-right:1rem;padding-left:0;cursor:pointer;"
+                >{{$t('login.click')}}</span>
                 <img
                   class="validateImg"
                   v-else
                   :src="codeSrc"
                   @click="getCode"
-                  style="margin-right:1rem"
+                  style="margin-right:1rem;cursor:pointer;"
                 >
                 <Spin fix v-if="loadImg"></Spin>
               </Col>
@@ -66,7 +65,7 @@
             <Row>
               <Col span="10">
                 <Button class="loginbtn" :loading="isLoading" @click="login">
-                  <span v-if="!isLoading">登录</span>
+                  <span v-if="!isLoading">{{$t('login.login')}}</span>
                   <span v-else>Loading...</span>
                 </Button>
               </Col>

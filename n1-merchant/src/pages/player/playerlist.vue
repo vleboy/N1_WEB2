@@ -2,19 +2,19 @@
   <div class="p-playerlist">
     <div class="propList-search">
       <Row class="row -search-row">
-        <Col span="1" style="margin-right:1rem">玩家ID</Col>
+        <Col span="1" style="margin-right:1rem">{{$t('playerList.playerID')}}</Col>
         <Col span="3" style="margin-right:0rem">
           <Input v-model="searchInfo.userId" placeholder="请输入" size="small"></Input>
         </Col>
-        <Col span="2">玩家账号</Col>
+        <Col span="2">{{$t('playerList.playerID')}}</Col>
         <Col span="3" style="margin-right:0rem">
           <Input v-model="searchInfo.userName" placeholder="请输入" size="small"></Input>
         </Col>
-        <Col span="2">玩家昵称</Col>
+        <Col span="2">{{$t('playerList.PlayerNickname')}}</Col>
         <Col span="3" style="margin-right:0rem">
           <Input v-model="searchInfo.nickname" placeholder="请输入" size="small"></Input>
         </Col>
-        <Col span="2">游戏状态</Col>
+        <Col span="2">{{$t('playerList.gameStatus')}}</Col>
         <Col span="3" style="margin-right:1rem">
           <Select
             v-model="defaultStatus"
@@ -32,10 +32,10 @@
             >{{ item.name }}</Option>
           </Select>
         </Col>
-        <Col span="2">
+        <Col span="4">
           <div class="btns">
-            <Button type="primary" @click="getSearch(true)" style="margin-right:.3rem" size="small">搜索</Button>
-            <Button @click="getSearch(false)" size="small">重置</Button>
+            <Button type="primary" @click="getSearch(true)" style="margin-right:.3rem" size="small">{{$t('playerList.search')}}</Button>
+            <Button @click="getSearch(false)" size="small">{{$t('playerList.reset')}}</Button>
           </div>
         </Col>
       </Row>
@@ -46,7 +46,7 @@
           <span>{{row.nickname === "NULL!" ? "-" : row.nickname}}</span>
         </template>
         <template slot-scope="{row, index}" slot="state">
-          <Tag type="border" :color="stateConfig(row ,true)">{{playerStatus[row.state]}}</Tag>
+          <Tag type="border" :color="stateConfig(row ,true)">{{playerStatusConfig(row)}}</Tag>
         </template>
         <template slot-scope="{row, index}" slot="gameStateName">
           <Tag type="border" :color="gameStateConfig(row)">{{row.gameStateName}}</Tag>
@@ -61,14 +61,14 @@
           <span>{{updateAtConfig(row)}}</span>
         </template>
        <template slot-scope="{row, index}" slot="action">
-          <Button type="text" size="small" style="color:#20a0ff" @click="playDetail(row)">查看</Button>
-          <Button type="text" size="small" :style="{color:stateConfig(row, false)}" @click="changeStatus(row)">{{row.state ? "停用" : "开启"}}</Button>
+          <Button type="text" size="small" style="color:#20a0ff" @click="playDetail(row)">{{$t('playerList.see')}}</Button>
+          <Button type="text" size="small" :style="{color:stateConfig(row, false)}" @click="changeStatus(row)">{{row.state ? $t('playerList.stop') : $t('playerList.open')}}</Button>
         </template>
       </Table>
 
       <Spin size="large" fix v-if="isFetching">
        <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
-        <div>加载中...</div>
+        <div>{{$t('playerList.loading')}}</div>
       </Spin>
       <div style="text-align: right;margin:2rem 0">
         <Page
@@ -106,7 +106,6 @@ export default {
       playerList: [],
       playerListStorage: [],
       playerListStartKey: "",
-      playerStatus: ["已停用", "正常"],
       checkedArray: [],
       names: [],
       searchInfo: {
@@ -124,44 +123,82 @@ export default {
           key: "userId",
           align: "center",
           maxWidth: 90,
-          
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '玩家ID' : 'Player ID'
+            )
+          }
         },
          {
           title: "玩家账号",
           align: "center",
           key: "userName",
-          
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '玩家账号' : 'Player Account'
+            )
+          }
         },
         {
           title: "玩家昵称",
           slot: "nickname",
-         
-          align: "center"
+          align: "center",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '玩家昵称' : 'Player Nickname'
+            )
+          }
         },
         {
           title: "所属商户ID",
           key: "buId",
           align: "center",
-         
+          minWidth: 80,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '所属商户ID' : 'Subordinate merchants ID'
+            )
+          }
         },
         {
           title: "所属商户",
           align: "center",
           minWidth: 50,
           key: "merchantName",
-          
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '所属商户' : 'Subordinate merchants'
+            )
+          }
         },
         
         {
           title: "状态",
           slot: "state",
           maxWidth: 90,
-          align: "center"
+          align: "center",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '状态' : 'State'
+            )
+          }
         },
         {
           title: "游戏状态",
           align: "center",
           slot: "gameStateName",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '游戏状态' : 'Game status'
+            )
+          }
         },
         {
           title: "点数",
@@ -171,6 +208,12 @@ export default {
           render: (h, params) => {
             return h("span", thousandFormatter(params.row.balance));
           },
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '点数' : 'Point'
+            )
+          }
         },
        {
           title: "注册时间",
@@ -180,18 +223,36 @@ export default {
           render: (h, params) => {
             return h("span", dayjs(params.row.createdAt).format("YYYY-MM-DD"));
           },
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '注册时间' : 'Registration time'
+            )
+          }
         },
         {
           title: "最近登录游戏时间",
           align: "center",
           slot: "joinTime",
           sortable: true,
-          minWidth: 55
+          minWidth: 55,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '投注金额' : 'Latest login game time'
+            )
+          }
         },
         {
           title: "操作",
           slot: "action",
-          align: "center"
+          align: "center",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '操作' : 'Operation'
+            )
+          }
         }
       ]
     };
@@ -214,8 +275,19 @@ export default {
     }
   },
   methods: {
+    //玩家状态
+    playerStatusConfig(row) {
+      let playerStatus = []
+      if (this.$store.state.language == 'zh') {
+        playerStatus = ["已停用", "正常"]
+      } else {
+        playerStatus = ["Deactivated", "Normal"]
+      }
+      return playerStatus[row.state]
+    },
     //状态
     stateConfig(row, bool) {
+      
       if (bool) {
         return row.state ? 'green' : 'red'
       } else {
@@ -288,8 +360,8 @@ export default {
    
     changeStatus(row) {
       this.$Modal.confirm({
-        title: "提示!",
-        content: `<p>是否${row.state ? "停用" : "启用"}该玩家？</p>`,
+        title: this.$store.state.language == 'zh' ? "提示!" : "Tips!",
+        content: this.$store.state.language == 'zh' ? `<p>是否${row.state ? "停用" : "启用"}该玩家？</p>` : `<p>Is ${row.state ? "Stop" : "Open"} the player?</p>` ,
         onOk: () => {
           httpRequest("post", "/player/forzen", {
             userName: row.userName,

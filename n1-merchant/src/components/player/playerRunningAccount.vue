@@ -33,14 +33,14 @@ $
           </div>
           <div style="display:flex;">
             <div style="margin-right:1rem;width: 12rem;">
-              <Input v-model="sn" placeholder="请输入流水号" size="small"></Input>
+              <Input v-model="sn" :placeholder="$t('playerDetail.flow')" size="small"></Input>
             </div>
             <div style="margin-right:1rem;width: 12rem;">
-              <Input v-model="betId" placeholder="请输入交易号" size="small"></Input>
+              <Input v-model="betId" :placeholder="$t('playerDetail.trade')" size="small"></Input>
             </div>
 
             <Button @click="isShowSearch = !isShowSearch" type="text" size="small">
-              高级筛选
+              {{$t('playerDetail.screening')}}
               <Icon type="arrow-down-b" v-if="!isShowSearch"></Icon>
               <Icon type="arrow-up-b" v-else></Icon>
             </Button>
@@ -49,31 +49,31 @@ $
               style="margin-right:.3rem"
               size="small"
               type="primary"
-            >搜索</Button>
-            <Button @click="reset(true)" style="margin-right:.3rem" size="small">重置</Button>
-            <Button @click="exportData" size="small">导出数据</Button>
+            >{{$t('playerDetail.search')}}</Button>
+            <Button @click="reset(true)" style="margin-right:.3rem" size="small">{{$t('playerDetail.reset')}}</Button>
+            <Button @click="exportData" size="small">{{$t('playerDetail.exportData')}}</Button>
           </div>
         </Col>
       </Row>
       <Row v-if="isShowSearch">
         <div class="from-search">
-          类型：
+          {{$t('playerDetail.type')}}
           <RadioGroup v-model="radioType" type="button" size="small">
-            <Radio label>全部</Radio>
-            <Radio label="3">下注</Radio>
-            <Radio label="11">中心钱包</Radio>
-            <Radio label="4">返奖</Radio>
-            <Radio label="5">返还</Radio>
-            <Radio label="6">冻结</Radio>
-            <Radio label="13">商城</Radio>
+            <Radio label>{{$t('playerDetail.all')}}</Radio>
+            <Radio label="3">{{$t('playerDetail.bets')}}</Radio>
+            <Radio label="11">{{$t('playerDetail.centralWallet')}}</Radio>
+            <Radio label="4">{{$t('playerDetail.returnPrize')}}</Radio>
+            <Radio label="5">{{$t('playerDetail.return')}}</Radio>
+            <Radio label="6">{{$t('playerDetail.frozen')}}</Radio>
+            <Radio label="13">{{$t('playerDetail.shoppingMall')}}</Radio>
           </RadioGroup>
         </div>
         <div class="from-search">
-          资金流向：
+          {{$t('playerDetail.moneyFlow')}}
           <RadioGroup v-model="radioMoney" type="button" size="small">
-            <Radio label>全部</Radio>
-            <Radio label="1">本次发生金额（入）</Radio>
-            <Radio label="-1">本次发生金额（出）</Radio>
+            <Radio label>{{$t('playerDetail.all')}}</Radio>
+            <Radio label="1">{{$t('playerDetail.thisEnter')}}</Radio>
+            <Radio label="-1">{{$t('playerDetail.thisout')}}</Radio>
           </RadioGroup>
         </div>
       </Row>
@@ -148,7 +148,7 @@ export default {
       options: {
         shortcuts: [
           {
-            text: "本周",
+            text: this.$store.state.language == 'zh' ? '本周' : 'This week',
             value() {
               return [
                 new Date(
@@ -166,7 +166,7 @@ export default {
             }
           },
           {
-            text: "本月",
+            text: this.$store.state.language == 'zh' ? '本月' : 'This month',
             value() {
               return [
                 new Date(
@@ -183,7 +183,7 @@ export default {
             }
           },
           {
-            text: "上周",
+            text: this.$store.state.language == 'zh' ? '本周' : 'Last week',
             value() {
               return [
                 new Date(
@@ -204,7 +204,7 @@ export default {
             }
           },
           {
-            text: "上月",
+            text: this.$store.state.language == 'zh' ? '上月' : 'Last month',
             value() {
               //-1 上月
               return [
@@ -258,44 +258,7 @@ export default {
         "NA电子游戏",
         "NA真人视讯"
       ],
-      GameNameEnum: {
-        "70001": "塔罗之谜",
-        "70002": "小厨娘",
-        "70003": "降龙献瑞",
-        "70004": "四方神兽",
-        "70005": "财神进宝",
-        "70006": "福运亨通",
-        "70007": "熊猫传奇",
-        "70010": "财源广进",
-        "70011": "珠光宝气",
-        "70012": "锦鲤",
-        "70013": "金狮送福",
-        "70014": "幸运钱庄",
-        "70022": "年年有余",
-        "70024": "猪年大吉",
-        "70026": "财神到",
-        "70028": "老寿星",
-        "70030": "凤舞朝阳",
-        "70032": "鲤跃龙门",
-        "90001": "塔罗之谜",
-        "90002": "小厨娘",
-        "90003": "祥龙献瑞",
-        "90004": "四方神兽",
-        "90005": "财神进宝",
-        "90006": "福运亨通",
-        "90007": "熊猫传奇",
-        "90008": "财源广进",
-        "90009": "珠光宝气",
-        "90010": "锦鲤",
-        "90011": "金狮送福",
-        "90012": "幸运钱庄",
-        "90013": "年年有余",
-        "90014": "猪年大吉",
-        "90015": "财神到",
-        "90016": "老寿星",
-        "90017": "凤舞朝阳",
-        "90018": "鲤跃龙门"
-      },
+      
 
       amountDate: [
         new Date(new Date().getTime() - 3600 * 1000 * 24 * 6),
@@ -309,52 +272,112 @@ export default {
         {
           title: "流水号",
           key: "sn",
-          align: "center"
+          align: "center",
+           renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '流水号' : 'Pipeline number'
+            )
+          }
         },
         {
           title: "交易号",
           align: "center",
-          key: "businessKey"
+          key: "businessKey",
+           renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易号' : 'Trading number'
+            )
+          }
         },
         {
           title: "日期",
           align: "center",
-          slot: "dateTime"
+          slot: "dateTime",
+           renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '日期' : 'Date'
+            )
+          }
         },
         {
           title: "游戏类型",
           align: "center",
-          key: "gameName"
+          key: "gameName",
+           renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '游戏类型' : 'Game type'
+            )
+          }
         },
         {
           title: "游戏ID",
           align: "center",
-          slot: "gameId"
+          slot: "gameId",
+           renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '游戏ID' : 'Game ID'
+            )
+          }
         },
         {
           title: "交易类型",
           align: "center",
-          slot: "msn"
+          slot: "msn",
+           renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易类型' : 'Trading type'
+            )
+          }
         },
         {
           title: "帐变前余额",
           align: "center",
-          slot: "originalAmount"
+          slot: "originalAmount",
+           renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '帐变前余额' : 'Pre-account balance'
+            )
+          }
         },
         {
           title: "帐变金额",
           align: "center",
-          slot: "amount"
+          slot: "amount",
+           renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '帐变金额' : 'Account balance'
+            )
+          }
         },
         {
           title: "帐变后金额",
           align: "center",
-          slot: "afterAmount"
+          slot: "afterAmount",
+           renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '帐变后金额' : 'After account Change'
+            )
+          }
         },
         {
           title: "操作",
           slot: "action",
-          align: "center"
+          align: "center",
+           renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '操作' : 'Operate'
+            )
+          }
         }
       ],
       radioInfo: "全部",
@@ -475,8 +498,46 @@ export default {
     },
     //游戏ID
     gameIdConfig(row) {
+      let GameNameEnum = {
+        "70001": "塔罗之谜",
+        "70002": "小厨娘",
+        "70003": "降龙献瑞",
+        "70004": "四方神兽",
+        "70005": "财神进宝",
+        "70006": "福运亨通",
+        "70007": "熊猫传奇",
+        "70010": "财源广进",
+        "70011": "珠光宝气",
+        "70012": "锦鲤",
+        "70013": "金狮送福",
+        "70014": "幸运钱庄",
+        "70022": "年年有余",
+        "70024": "猪年大吉",
+        "70026": "财神到",
+        "70028": "老寿星",
+        "70030": "凤舞朝阳",
+        "70032": "鲤跃龙门",
+        "90001": "塔罗之谜",
+        "90002": "小厨娘",
+        "90003": "祥龙献瑞",
+        "90004": "四方神兽",
+        "90005": "财神进宝",
+        "90006": "福运亨通",
+        "90007": "熊猫传奇",
+        "90008": "财源广进",
+        "90009": "珠光宝气",
+        "90010": "锦鲤",
+        "90011": "金狮送福",
+        "90012": "幸运钱庄",
+        "90013": "年年有余",
+        "90014": "猪年大吉",
+        "90015": "财神到",
+        "90016": "老寿星",
+        "90017": "凤舞朝阳",
+        "90018": "鲤跃龙门"
+      }
       if (this.GameNameEnum[row.gameId]) {
-        return `${row.gameId}(${this.GameNameEnum[row.gameId]})`;
+        return `${row.gameId}(${GameNameEnum[row.gameId]})`;
       } else {
         return row.gameId;
       }
@@ -610,7 +671,7 @@ export default {
       }
     },
     changeGameType(val) {
-      console.log(val);
+      //(val);
       
       this.radioInfo == undefined ? "全部" : val;
       this.initData()
@@ -794,4 +855,7 @@ export default {
 .demo-spin-icon-load {
   animation: ani-demo-spin 1s linear infinite;
 }
+/deep/ .ivu-picker-panel-shortcut {
+    padding: 6px 5px;
+  }
 </style>

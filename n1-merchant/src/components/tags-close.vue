@@ -14,7 +14,7 @@
             @click.native="linkTo(item)"
             :closable="true"
             :color="item.children?(item.children[0].name===currentPageName?'#000':'default'):(item.name===currentPageName?'#000':'default')"
-          >{{ item.title }}</Tag>
+          >{{ $t(item.title) }}</Tag>
         </transition-group>
       </div>
     </div>
@@ -45,6 +45,8 @@ export default {
         this.pageTagsList.shift()
         //console.log("1"+this.pageTagsList.length);
       } 
+      //(this.pageTagsList);
+      
         return this.pageTagsList
       
     },
@@ -54,6 +56,8 @@ export default {
   },
   methods: {
     closePage(event, name) {
+      //(name);
+      
       let pageOpenedList = this.$store.state.home.pageOpenedList;
       let lastPageObj = pageOpenedList[0];
       if (this.currentPageName === name) {

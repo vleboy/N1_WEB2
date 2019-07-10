@@ -15,11 +15,11 @@
       </Select>
       <div class="right">
         <RadioGroup v-model="dateType" @on-change="changeDate" type="button" size="small">
-          <Radio label="0">昨日</Radio>
-          <Radio label="4">今日</Radio>
-          <Radio label="1">近一周</Radio>
-          <Radio label="2">近一个月</Radio>
-          <Radio label="3">近三个月</Radio>
+          <Radio label="0">{{$t('newBoard.yesterday')}}</Radio>
+          <Radio label="4">{{$t('newBoard.today')}}</Radio>
+          <Radio label="1">{{$t('newBoard.week')}}</Radio>
+          <Radio label="2">{{$t('newBoard.month')}}</Radio>
+          <Radio label="3">{{$t('newBoard.threeMonth')}}</Radio>
         </RadioGroup>
         <DatePicker
           type="datetimerange"
@@ -31,14 +31,15 @@
           @on-ok="confirm"
           size="small"
         ></DatePicker>
-        <Button @click="search" style="margin-right:.3rem"  class="searchBtn" type="primary" size="small">搜索</Button>
-        <Button @click="reset" size="small">重置</Button>
+        {{checkLanguage}}
+        <Button @click="search" style="margin-right:.3rem"  class="searchBtn" type="primary" size="small">{{$t('newBoard.search')}}</Button>
+        <Button @click="reset" size="small">{{$t('newBoard.reset')}}</Button>
       </div>
     </div>
 
     <Tabs type="card" @on-click="changeBoard">
-      <TabPane label="趋势"></TabPane>
-      <TabPane label="玩家榜单"></TabPane>
+      <TabPane :label="$t('newBoard.trend')"></TabPane>
+      <TabPane :label="$t('newBoard.playerList')"></TabPane>
     </Tabs>
 
     <!-- 趋势 -->
@@ -46,13 +47,13 @@
       <Row>
         <Col span="12">
           <Card>
-            <h3 slot="title">每日趋势</h3>
+            <h3 slot="title">{{$t('newBoard.dailyTrend')}}</h3>
             <div :style="{height:'550px',width:'100%'}" ref="report"></div>
           </Card>
         </Col>
         <Col span="12">
           <Card style="position:relative">
-            <h3 slot="title">玩家注册趋势</h3>
+            <h3 slot="title">{{$t('newBoard.playerTrend')}}</h3>
             <div :style="{height:'550px',width:'100%'}" ref="playerCount"></div>
           </Card>
         </Col>
@@ -64,13 +65,13 @@
       <Row>
         <Col span="12">
           <Card style="position:relative">
-            <h3 slot="title">玩家投注次数榜(TOP10)</h3>
+            <h3 slot="title">{{$t('newBoard.playerBetCount')}}</h3>
             <div :style="{height:'550px',width:'100%'}" ref="playerBetCount"></div>
           </Card>
         </Col>
         <Col span="12">
           <Card style="position:relative">
-            <h3 slot="title">玩家投注金额榜(TOP10)</h3>
+            <h3 slot="title">{{$t('newBoard.playerBetAmount')}}</h3>
             <div :style="{height:'550px',width:'100%'}" ref="playerBetAmount"></div>
           </Card>
         </Col>
@@ -78,13 +79,13 @@
       <Row>
         <Col span="12">
           <Card style="position:relative">
-            <h3 slot="title">玩家返还金额榜(TOP10)</h3>
+            <h3 slot="title">{{$t('newBoard.playerRetAmount')}}</h3>
             <div :style="{height:'550px',width:'100%'}" ref="playerRetAmount"></div>
           </Card>
         </Col>
         <Col span="12">
           <Card style="position:relative">
-            <h3 slot="title">玩家输赢金额榜(TOP10 & LAST10)</h3>
+            <h3 slot="title">{{$t('newBoard.playerWinLoseAmount')}}</h3>
             <div :style="{height:'550px',width:'100%'}" ref="playerWinloseAmount"></div>
           </Card>
         </Col>
@@ -110,7 +111,7 @@ export default {
       options: {
         shortcuts: [
           {
-            text: "本周",
+            text: this.$store.state.language == 'zh' ? '本周' : 'This week',
             value() {
               return [
                 new Date(
@@ -128,7 +129,7 @@ export default {
             }
           },
           {
-            text: "本月",
+            text: this.$store.state.language == 'zh' ? '本月' : 'This month',
             value() {
               return [
                 new Date(
@@ -145,7 +146,7 @@ export default {
             }
           },
           {
-            text: "上周",
+            text: this.$store.state.language == 'zh' ? '上周' : 'Last week',
             value() {
               return [
                 new Date(
@@ -166,7 +167,7 @@ export default {
             }
           },
           {
-            text: "上月",
+            text: this.$store.state.language == 'zh' ? '上月' : 'Last month',
             value() {
               //-1 上月
               return [
@@ -338,6 +339,7 @@ export default {
       }
     },
     search() {
+      console.log(this.$store.state.language); 
       if (this.initNum == 0) {
         this.init();
       } else {
@@ -391,36 +393,19 @@ export default {
       });
 
       let myChart = echarts.init(this.$refs.report);
-      // 绘制图表
-      myChart.setOption(
-        {
-          xAxis: {
-            name: "单位\n日期",
-            type: "category",
-            data: reportArr
-          },
-          tooltip: {
-            trigger: "axis",
-            formatter: formatBarData
-          },
-          yAxis: {
-            type: "value"
-          },
-          grid: {
-            bottom: "6%"
-          },
-          legend: {
-            data: [
+
+      let data = []
+      let series = []
+      if (this.$store.state.language == 'zh') {
+        data = [
               "玩家数量",
               "投注次数",
               "投注金额",
               "退款金额",
               "返回金额",
               "输赢金额"
-            ],
-            selectedMode: "single"
-          },
-          series: [
+            ]
+        series = [
             {
               name: "玩家数量",
               type: "line",
@@ -451,7 +436,72 @@ export default {
               type: "line",
               data: winloseAmount
             }
-          ]
+          ]    
+      }else {
+        data = [
+              "Player Number",
+              "Bet Count",
+              "Bet Amount",
+              "Refund Amount",
+              "Return Amount",
+              "Win/Lose Amount"
+            ]
+        series = [
+            {
+              name: "Player Number",
+              type: "line",
+              data: playerCount
+            },
+            {
+              name: "Bet Count",
+              type: "line",
+              data: betCount
+            },
+            {
+              name: "Bet Amount",
+              type: "line",
+              data: betAmount
+            },
+            {
+              name: "Refund Amount",
+              type: "line",
+              data: refundAmount
+            },
+            {
+              name: "Return Amount",
+              type: "line",
+              data: retAmount
+            },
+            {
+              name: "Win/Lose Amount",
+              type: "line",
+              data: winloseAmount
+            }
+          ]     
+      }
+      // 绘制图表
+      myChart.setOption(
+        {
+          xAxis: {
+            name: this.$store.state.language == 'zh' ? "单位\n日期" : 'unit \n date',
+            type: "category",
+            data: reportArr
+          },
+          tooltip: {
+            trigger: "axis",
+            formatter: formatBarData
+          },
+          yAxis: {
+            type: "value"
+          },
+          grid: {
+            bottom: "6%"
+          },
+          legend: {
+            data: data,
+            selectedMode: "single"
+          },
+          series: series
         },
         true
       );
@@ -459,39 +509,11 @@ export default {
     //玩家注册趋势
     playerCountConfigure() {
       let myChart = echarts.init(this.$refs.playerCount);
-      myChart.setOption(
-        {
-          tooltip: {
-            trigger: "axis",
-
-            axisPointer: {
-              animation: false
-            }
-          },
-          xAxis: {
-            type: "time",
-            splitLine: {
-              show: false
-            },
-            name: "单位\n日期"
-          },
-          yAxis: {
-            type: "value",
-            splitLine: {
-              show: false
-            }
-          },
-          grid: {
-            bottom: "6%"
-          },
-          legend: {
-            //orient: 'vertical',
-            top: "top",
-            data: ["每日注册人数", "累计注册人数"],
-            selectedMode: "single",
-            padding: 10
-          },
-          series: [
+      let data = []
+      let series = []
+      if (this.$store.state.language == 'zh') {
+        data = ["每日注册人数", "累计注册人数"]
+        series = [
             {
               name: "每日注册人数",
               type: "line",
@@ -511,6 +533,62 @@ export default {
               data: this.playerCountData.sumDay
             }
           ]
+      } else {
+        data = ["Daily enrollment", "Cumulative number of registrations"]
+        series = [
+            {
+              name: "Daily enrollment",
+              type: "line",
+              showSymbol: false,
+              hoverAnimation: false,
+              smooth: true,
+              symbolSize: 3,
+              data: this.playerCountData.everyDay
+            },
+            {
+              name: "Cumulative number of registrations",
+              type: "line",
+              showSymbol: false,
+              hoverAnimation: false,
+              smooth: true,
+              symbolSize: 3,
+              data: this.playerCountData.sumDay
+            }
+          ]
+      }
+      myChart.setOption(
+        {
+          tooltip: {
+            trigger: "axis",
+            
+            axisPointer: {
+              animation: false
+            }
+          },
+          xAxis: {
+            type: "time",
+            splitLine: {
+              show: false
+            },
+            name: this.$store.state.language == 'zh' ? "单位\n日期" : 'unit \n date'
+          },
+          yAxis: {
+            type: "value",
+            splitLine: {
+              show: false
+            }
+          },
+          grid: {
+            bottom: "6%"
+          },
+          legend: {
+            //orient: 'vertical',
+            top: "top",
+            data: data,
+            selectedMode: "single",
+            padding: 10
+          },
+          series: series
         },
         true
       );
@@ -533,10 +611,10 @@ export default {
             axisPointer: {
               type: "shadow"
             },
-            formatter: "{b0}</br>{c0} 万次"
+            formatter: this.$store.state.language == 'zh' ? "{b0}</br>{c0} 万次" : "{b0}</br>{c0} ten thousand time"
           },
           xAxis: {
-            name: "单位\n万次",
+            name: this.$store.state.language == 'zh' ? "单位\n日期" : 'unit \n ten thousand time',
             type: "value"
           },
           yAxis: {
@@ -546,13 +624,14 @@ export default {
           },
           grid: {
             left: "25%",
-            right: "12%",
+            right: "22%",
             top: "0",
             bottom: "5%"
           },
           series: [
             {
               type: "bar",
+              barWidth : 20,
               data: datas
             }
           ]
@@ -576,10 +655,10 @@ export default {
             axisPointer: {
               type: "shadow"
             },
-            formatter: "{b0}</br>{c0} 万元"
+            formatter: this.$store.state.language == 'zh' ? "{b0}</br>{c0} 万次" : "{b0}</br>{c0} ten thousand time"
           },
           xAxis: {
-            name: "单位\n万元",
+            name: this.$store.state.language == 'zh' ? "单位\n日期" : 'unit \n ten thousand yuan',
             type: "value"
           },
           yAxis: {
@@ -589,13 +668,14 @@ export default {
           },
           grid: {
             left: "25%",
-            right: "12%",
+            right: "22%",
             top: "0",
             bottom: "5%"
           },
           series: [
             {
               type: "bar",
+              barWidth : 20,
               data: datas
             }
           ]
@@ -619,10 +699,10 @@ export default {
             axisPointer: {
               type: "shadow"
             },
-            formatter: "{b0}</br>{c0} 万元"
+            formatter: this.$store.state.language == 'zh' ? "{b0}</br>{c0} 万次" : "{b0}</br>{c0} ten thousand time"
           },
           xAxis: {
-            name: "单位\n万元",
+            name: this.$store.state.language == 'zh' ? "单位\n日期" : 'unit \n ten thousand yuan',
             type: "value"
           },
           yAxis: {
@@ -632,13 +712,14 @@ export default {
           },
           grid: {
             left: "25%",
-            right: "12%",
+            right: "22%",
             top: "0",
             bottom: "5%"
           },
           series: [
             {
               type: "bar",
+              barWidth : 20,
               data: datas
             }
           ]
@@ -663,15 +744,15 @@ export default {
             axisPointer: {
               type: "shadow"
             },
-            formatter: "{b0}</br>{c0} 万元"
+            formatter: this.$store.state.language == 'zh' ? "{b0}</br>{c0} 万次" : "{b0}</br>{c0} ten thousand time"
           },
           xAxis: {
-            name: "单位\n万元",
+            name: this.$store.state.language == 'zh' ? "单位\n日期" : 'unit \n ten thousand yuan',
             type: "value"
           },
           grid: {
             left: "25%",
-            right: "12%",
+            right: "22%",
             top: "0",
             bottom: "5%"
           },
@@ -683,6 +764,7 @@ export default {
           series: [
             {
               type: "bar",
+              barWidth : 20,
               data: datas
             }
           ]
@@ -749,8 +831,31 @@ export default {
       });
       this.defaultTime = [new Date(time[0]), new Date(time[1])];
       return time;
+    },
+    checkLanguage() {
+      //
+      /* if (this.$store.state.language) {
+        this.reportConfigure()
+      } else {
+        return 0
+      } */
     }
-  }
+  },
+  watch: {
+      '$store.state.language': function() {
+        if(this.$route.name == 'newBoard') {
+          if (this.initNum == 0) {
+            this.reportConfigure()
+            this.playerCountConfigure()
+          } else {
+            this.pyBetCount()
+            this.pyBetAmount()
+            this.pyRetAmount()
+            this.pyWinloseAmount()
+          }
+        }
+      }
+    }
 };
 </script>
 
@@ -847,6 +952,9 @@ export default {
   .ivu-btn:hover {
     background: #000;
     color: #fff;
+  }
+  /deep/ .ivu-picker-panel-shortcut {
+    padding: 6px 5px;
   }
 }
 </style>

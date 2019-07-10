@@ -3,13 +3,13 @@
     <div class="nowList">
       <div class="top">
         <p class="title">
-          当前用户列表
+          {{$t('allReport.currentUser')}}
           <!-- <Button @click="exportdata('table_0')" size="small">导出数据</Button> -->
         </p>
         <div class="right">
           <DatePicker size="small" type="datetimerange" :options="options" :editable='false' v-model="defaultTime" placeholder="选择日期时间范围(默认最近一周)" style="width: 300px" @on-ok="confirm"></DatePicker>
-          <Button type="primary" @click="search" size="small" style="margin:0 .3rem 0 1rem">搜索</Button>
-          <Button  @click="reset" size="small">重置</Button>
+          <Button type="primary" @click="search" size="small" style="margin:0 .3rem 0 1rem">{{$t('allReport.search')}}</Button>
+          <Button  @click="reset" size="small">{{$t('allReport.reset')}}</Button>
         </div>
       </div>
       <Table :columns="columns1" :data="user" size="small" ref='table_0'>
@@ -42,7 +42,7 @@
     </div>
     <div class="playerList" id="playerList" style="margin-top:1rem">
       <p class="title">
-        所属玩家列表
+        {{$t('allReport.PlayerList')}}
         <!-- <Button @click="exportdata('table_1')" size="small">导出数据</Button> -->
       </p>
       <Table :columns="columns2" :data="playerList" size="small" ref='table_1'>
@@ -82,25 +82,25 @@ export default {
        options: {
         shortcuts: [
           {
-            text: "本周",
+            text: this.$store.state.language == 'zh' ? '本周' : 'This week',
             value() {
               return [new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().endOf('second').valueOf())]
             }
           },
           {
-            text: "本月",
+            text: this.$store.state.language == 'zh' ? '本月' : 'This month',
             value() {
               return [new Date(dayjs().startOf('month').valueOf()), new Date(dayjs().endOf('second').valueOf())]
             }
           },
           {
-            text: "上周",
+            text: this.$store.state.language == 'zh' ? '上周' : 'Last week',
             value() {
               return [new Date(dayjs().add(-1, 'week').startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000 - 1)]
             }
           },
           {
-            text: "上月",
+            text: this.$store.state.language == 'zh' ? '上月' : 'Last month',
             value() {
               //-1 上月
               return [new Date(dayjs().add(-1, 'month').startOf('month').valueOf()), new Date(dayjs().startOf('month').valueOf() - 1)]
@@ -116,83 +116,171 @@ export default {
         {
           title: "序号",
           align: 'center',
-          maxWidth: 60,
-          type: "index"
+          type: "index",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '序号' : 'Serial number'
+            )
+          }
         },
         
         {
           title: "昵称",
            align: 'center',
-          slot: "uDisplayName"
+          slot: "uDisplayName",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '昵称' : 'Nickname'
+            )
+          }
         },
         
         {
           title: "交易次数",
            align: 'center',
-          key: "betCount"
+          key: "betCount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易次数' : 'Transactions count'
+            )
+          }
         },
         {
           title: "投注金额",
            align: 'center',
-          slot: "userBetAmount"
+          slot: "userBetAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '投注金额' : 'Bet amount'
+            )
+          }
         },
         {
           title: "输赢金额",
            align: 'center',
-          slot: "userWinloseAmount"
+          slot: "userWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '输赢金额' : 'Win/Lose amount'
+            )
+          }
         },
         {
           title: "商家占成",
            align: 'center',
-          slot: "userRate"
+          slot: "userRate",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '商家占成' : 'Merchant occupies'
+            )
+          }
         },
         {
           title: "商家交公司",
            align: 'center',
-          slot: "userSubmitAmount"
+          slot: "userSubmitAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '商家交公司' : 'Merchant exchange company'
+            )
+          }
         },
         {
           title: "获利比例",
            align: 'center',
-          slot: "userProfit"
+          slot: "userProfit",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '获利比例' : 'Profit ratio'
+            )
+          }
         }
       ],
       columns2: [
         {
           title: "序号",
            align: 'center',
-          maxWidth: 60,
-          type: "index"
+          type: "index",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '序号' : 'Serial number'
+            )
+          }
         },
         {
           title: "账号",
            align: 'center',
-          slot: "playerName"
+          slot: "playerName",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '账号' : 'Account'
+            )
+          }
         },
         {
           title: "昵称",
           align: 'center',
-          slot: "nickname"
+          slot: "nickname",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '昵称' : 'Nickname'
+            )
+          }
         },
         {
           title: "交易次数",
            align: 'center',
-          key: "betCount"
+          key: "betCount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易次数' : 'Transactions count'
+            )
+          }
         },
         {
           title: "投注金额",
            align: 'center',
-          slot: "playerBetAmount"
+          slot: "playerBetAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易次数' : 'Bet amount'
+            )
+          }
         },
         {
           title: "输赢金额",
            align: 'center',
-          slot: "playerWinloseAmount"
+          slot: "playerWinloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易次数' : 'Win/Lose amount'
+            )
+          }
         },
         {
           title: "洗码量",
            align: 'center',
-          key: "mixAmount"
+          key: "mixAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易次数' : 'Washing quantity'
+            )
+          }
         }
       ]
     };
@@ -390,6 +478,8 @@ export default {
     border-color: #000;
     background: #fff;
   }
-  
+  /deep/ .ivu-picker-panel-shortcut {
+    padding: 6px 5px;
+  }
 }
 </style>
