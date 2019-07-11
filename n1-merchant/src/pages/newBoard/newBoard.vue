@@ -99,7 +99,7 @@ import _ from "lodash"
 import dayjs from "dayjs"
 import { hourFormatBarData } from "@/config/format"
 import { formatBarData, formatMapData } from "@/config/format"
-import { getGameType } from "@/config/getGameType"
+import { getCNGameType, getENGameType } from "@/config/getGameType"
 import { httpRequest } from "@/service/index"
 import { getDefaultTime } from "@/config/getDefaultTime"
 
@@ -221,7 +221,32 @@ export default {
       }
     },
     getGameList() {
-      this.gameType = getGameType()
+      this.gameType = []
+      let val = JSON.parse(localStorage.getItem('userInfo')).gameList 
+      if (this.$store.state.language == 'zh') {
+        for (let i = 0; i < val.length; i++) {
+          for (let j = 0; j < getCNGameType().length; j++) {
+            if (val[i].code == getCNGameType()[j].code) {
+              this.gameType.push(getCNGameType()[j])
+            }
+          }
+        }
+        this.model1 = '全部游戏'
+        this.gameType.unshift({ company: "全部", code: "", name: "全部游戏" })
+      } else {
+        for (let i = 0; i < val.length; i++) {
+          for (let j = 0; j < getENGameType().length; j++) {
+            if (val[i].code == getENGameType()[j].code) {
+              this.gameType.push(getENGameType()[j])
+            }
+          }
+        }
+        this.model1 = 'All games'
+        this.gameType.unshift({ company: "All", code: "", name: "All games" })
+      }
+
+      //console.log(this.model1);
+      
     },
     selGame(code) {
       this.gameCode = code;
@@ -339,7 +364,7 @@ export default {
       }
     },
     search() {
-      console.log(this.$store.state.language); 
+      //console.log(this.$store.state.language); 
       if (this.initNum == 0) {
         this.init();
       } else {
@@ -357,9 +382,10 @@ export default {
       ];
       this.dateType = "2";
       this.gameCode = "";
-      this.$refs.resetSelect.clearSingleSelect();
-      this.model1 = "全部游戏";
-
+      //this.$refs.resetSelect.clearSingleSelect();
+     /*  this.model1 = this.$store.state.language == 'zh' ? "全部游戏" : 'All games'
+      console.log(this.model1) */
+      this.getGameList()
       if (this.initNum == 0) {
         this.init();
       } else {
@@ -844,15 +870,7 @@ export default {
   watch: {
       '$store.state.language': function() {
         if(this.$route.name == 'newBoard') {
-          if (this.initNum == 0) {
-            this.reportConfigure()
-            this.playerCountConfigure()
-          } else {
-            this.pyBetCount()
-            this.pyBetAmount()
-            this.pyRetAmount()
-            this.pyWinloseAmount()
-          }
+          this.reset()
         }
       }
     }

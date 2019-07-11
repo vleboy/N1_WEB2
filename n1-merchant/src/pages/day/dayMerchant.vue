@@ -55,7 +55,7 @@ import { httpRequest } from "@/service/index";
 import _ from "lodash";
 import dayjs from "dayjs";
 import { thousandFormatter } from "@/config/format";
-import { getGameType } from "@/config/getGameType";
+import { getCNGameType, getENGameType } from "@/config/getGameType"
 export default {
   beforeRouteEnter(to, from, next) {
     /* console.log(this, 'beforeRouteEnter'); // undefined
@@ -376,10 +376,12 @@ export default {
       this.init();
     },
     reset() {
-      this.$refs.resetSelect.clearSingleSelect();
+      //this.$refs.resetSelect.clearSingleSelect();
       this.getDate();
       (this.buID = ""), (this.buSN = ""), (this.dayStatList = []);
       this.showChat = false;
+      this.getGameList()
+      this.init()
     },
     search() {
       this.showChat = true;
@@ -394,13 +396,22 @@ export default {
       ) {
         let st = dayjs(this.$route.query.time[0]).format("YYYYMMDD");
         let et = dayjs(this.$route.query.time[1]).format("YYYYMMDD");
-        //自动选择游戏种类
-        for (let index = 0; index < getGameType().length; index++) {
-          if (this.$route.query.type == getGameType()[index].code) {
-            this.model1 = getGameType()[index].name;
+        //自动选择游戏种类\
+        let gameList = ''
+        let game = ''
+        if (this.$store.state.language == 'zh') {
+          gameList = getCNGameType()
+          game = '全部游戏'
+        } else {
+          gameList = getENGameType()
+          game = 'All games'
+        }
+        for (let index = 0; index < gameList.length; index++) {
+          if (this.$route.query.type == gameList[index].code) {
+            this.model1 = gameList[index].name;
             break;
           } else {
-            this.model1 = "全部游戏";
+            this.model1 = game;
           }
         }
 
@@ -459,9 +470,38 @@ export default {
     },
 
     getGameList() {
-      this.gameType = getGameType();
+      this.gameType = []
+      let val = JSON.parse(localStorage.getItem('userInfo')).gameList 
+      if (this.$store.state.language == 'zh') {
+        for (let i = 0; i < val.length; i++) {
+          for (let j = 0; j < getCNGameType().length; j++) {
+            if (val[i].code == getCNGameType()[j].code) {
+              this.gameType.push(getCNGameType()[j])
+            }
+          }
+        }
+        this.model1 = '全部游戏'
+        this.gameType.unshift({ company: "全部", code: "", name: "全部游戏" })
+      } else {
+        for (let i = 0; i < val.length; i++) {
+          for (let j = 0; j < getENGameType().length; j++) {
+            if (val[i].code == getENGameType()[j].code) {
+              this.gameType.push(getENGameType()[j])
+            }
+          }
+        }
+        this.model1 = 'All games'
+        this.gameType.unshift({ company: "All", code: "", name: "All games" })
+      }
     }
   },
+  watch: {
+      '$store.state.language': function() {
+        if(this.$route.name == 'dayMerchant') {
+          this.reset()
+        }
+      }
+    }
 };
 </script>
 <style lang="less" scoped>

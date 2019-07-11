@@ -50,7 +50,11 @@ $
               size="small"
               type="primary"
             >{{$t('playerDetail.search')}}</Button>
-            <Button @click="reset(true)" style="margin-right:.3rem" size="small">{{$t('playerDetail.reset')}}</Button>
+            <Button
+              @click="reset()"
+              style="margin-right:.3rem"
+              size="small"
+            >{{$t('playerDetail.reset')}}</Button>
             <Button @click="exportData" size="small">{{$t('playerDetail.exportData')}}</Button>
           </div>
         </Col>
@@ -135,7 +139,7 @@ $
 </template>
 <script type="text/ecmascript-6">
 import { formatUserName, thousandFormatter } from "@/config/format";
-import { getGameType } from "@/config/getGameType";
+import { getCNGameType, getENGameType } from "@/config/getGameType";
 import { httpRequest } from "@/service/index";
 import dayjs from "dayjs";
 import SportsModal from "@/components/record/sportsModal";
@@ -148,7 +152,7 @@ export default {
       options: {
         shortcuts: [
           {
-            text: this.$store.state.language == 'zh' ? '本周' : 'This week',
+            text: this.$store.state.language == "zh" ? "本周" : "This week",
             value() {
               return [
                 new Date(
@@ -166,7 +170,7 @@ export default {
             }
           },
           {
-            text: this.$store.state.language == 'zh' ? '本月' : 'This month',
+            text: this.$store.state.language == "zh" ? "本月" : "This month",
             value() {
               return [
                 new Date(
@@ -183,7 +187,7 @@ export default {
             }
           },
           {
-            text: this.$store.state.language == 'zh' ? '本周' : 'Last week',
+            text: this.$store.state.language == "zh" ? "本周" : "Last week",
             value() {
               return [
                 new Date(
@@ -204,7 +208,7 @@ export default {
             }
           },
           {
-            text: this.$store.state.language == 'zh' ? '上月' : 'Last month',
+            text: this.$store.state.language == "zh" ? "上月" : "Last month",
             value() {
               //-1 上月
               return [
@@ -258,7 +262,6 @@ export default {
         "NA电子游戏",
         "NA真人视讯"
       ],
-      
 
       amountDate: [
         new Date(new Date().getTime() - 3600 * 1000 * 24 * 6),
@@ -273,116 +276,121 @@ export default {
           title: "流水号",
           key: "sn",
           align: "center",
-           renderHeader: (h, params) => {
+          renderHeader: (h, params) => {
             return h(
-              'span',
-              this.$store.state.language == 'zh' ? '流水号' : 'Pipeline number'
-            )
+              "span",
+              this.$store.state.language == "zh" ? "流水号" : "Pipeline number"
+            );
           }
         },
         {
           title: "交易号",
           align: "center",
           key: "businessKey",
-           renderHeader: (h, params) => {
+          renderHeader: (h, params) => {
             return h(
-              'span',
-              this.$store.state.language == 'zh' ? '交易号' : 'Trading number'
-            )
+              "span",
+              this.$store.state.language == "zh" ? "交易号" : "Trading number"
+            );
           }
         },
         {
           title: "日期",
           align: "center",
           slot: "dateTime",
-           renderHeader: (h, params) => {
+          renderHeader: (h, params) => {
             return h(
-              'span',
-              this.$store.state.language == 'zh' ? '日期' : 'Date'
-            )
+              "span",
+              this.$store.state.language == "zh" ? "日期" : "Date"
+            );
           }
         },
         {
           title: "游戏类型",
           align: "center",
           key: "gameName",
-           renderHeader: (h, params) => {
+          renderHeader: (h, params) => {
             return h(
-              'span',
-              this.$store.state.language == 'zh' ? '游戏类型' : 'Game type'
-            )
+              "span",
+              this.$store.state.language == "zh" ? "游戏类型" : "Game type"
+            );
           }
         },
         {
           title: "游戏ID",
           align: "center",
           slot: "gameId",
-           renderHeader: (h, params) => {
+          renderHeader: (h, params) => {
             return h(
-              'span',
-              this.$store.state.language == 'zh' ? '游戏ID' : 'Game ID'
-            )
+              "span",
+              this.$store.state.language == "zh" ? "游戏ID" : "Game ID"
+            );
           }
         },
         {
           title: "交易类型",
           align: "center",
           slot: "msn",
-           renderHeader: (h, params) => {
+          renderHeader: (h, params) => {
             return h(
-              'span',
-              this.$store.state.language == 'zh' ? '交易类型' : 'Trading type'
-            )
+              "span",
+              this.$store.state.language == "zh" ? "交易类型" : "Trading type"
+            );
           }
         },
         {
           title: "帐变前余额",
           align: "center",
           slot: "originalAmount",
-           renderHeader: (h, params) => {
+          renderHeader: (h, params) => {
             return h(
-              'span',
-              this.$store.state.language == 'zh' ? '帐变前余额' : 'Pre-account balance'
-            )
+              "span",
+              this.$store.state.language == "zh"
+                ? "帐变前余额"
+                : "Pre-account balance"
+            );
           }
         },
         {
           title: "帐变金额",
           align: "center",
           slot: "amount",
-           renderHeader: (h, params) => {
+          renderHeader: (h, params) => {
             return h(
-              'span',
-              this.$store.state.language == 'zh' ? '帐变金额' : 'Account balance'
-            )
+              "span",
+              this.$store.state.language == "zh"
+                ? "帐变金额"
+                : "Account balance"
+            );
           }
         },
         {
           title: "帐变后金额",
           align: "center",
           slot: "afterAmount",
-           renderHeader: (h, params) => {
+          renderHeader: (h, params) => {
             return h(
-              'span',
-              this.$store.state.language == 'zh' ? '帐变后金额' : 'After account Change'
-            )
+              "span",
+              this.$store.state.language == "zh"
+                ? "帐变后金额"
+                : "After account Change"
+            );
           }
         },
         {
           title: "操作",
           slot: "action",
           align: "center",
-           renderHeader: (h, params) => {
+          renderHeader: (h, params) => {
             return h(
-              'span',
-              this.$store.state.language == 'zh' ? '操作' : 'Operate'
-            )
+              "span",
+              this.$store.state.language == "zh" ? "操作" : "Operate"
+            );
           }
         }
       ],
       radioInfo: "全部",
       companyInfo: "全部厂商",
-      sel: "全部厂商",
       propChild: {},
       isOpenModalBill: false
     };
@@ -441,53 +449,114 @@ export default {
         }
       }
       gameList.unshift("NA");
-      gameList.unshift("全部厂商");
+      if (this.$store.state.language == "zh") {
+        gameList.unshift("全部厂商");
+        //this.companyInfo == "全部厂商"
+      } else {
+        gameList.unshift("All manufacturers");
+        //this.companyInfo == 'All manufacturers'
+      }
+
       return gameList;
     },
     //获取游戏列表
     gameTypeList() {
-      let arr = JSON.parse(localStorage.getItem("userInfo")).gameList.map(
-        item => {
-          return item;
-        }
-      );
-      
-      for (let i = 0; i < this.removeArr.length; i++) {
-        for (let j = 0; j < arr.length; j++) {
-          if (this.removeArr[i] == arr[j].name) {
-            arr.splice(j, 1);
+      /* let arr = JSON.parse(localStorage.getItem("userInfo")).gameList.map(
+          item => {
+            return item;
+          }
+        );
+        
+        for (let i = 0; i < this.removeArr.length; i++) {
+          for (let j = 0; j < arr.length; j++) {
+            if (this.removeArr[i] == arr[j].name) {
+              arr.splice(j, 1);
+            }
           }
         }
-      }
-      
-      
+        
+        
+        let gameType = [];
+        if (this.sel == "全部厂商") {
+          gameType = arr.map(item => {
+            return item.name;
+          });
+        } else {
+          arr.map(item => {
+            if (this.sel == item.company) {
+              gameType.push(item.name);
+            }
+          });
+        }
+
+        for (let i = 0; i < gameType.length; i++) {
+          if (gameType[i] == "H5电子游戏") {
+            gameType.splice(i, 1);
+            gameType.unshift("H5电子游戏");
+          }
+          if (gameType[i] == "H5电子-无神秘奖游戏") {
+            gameType.splice(i, 1);
+            gameType.unshift("H5电子-无神秘奖游戏");
+          }
+        }
+
+        gameType.unshift("全部");
+        //this.radioInfo = '全部'
+        
+        return gameType;
+    } */
       let gameType = [];
-      if (this.sel == "全部厂商") {
-        gameType = arr.map(item => {
-          return item.name;
-        });
-      } else {
-        arr.map(item => {
-          if (this.sel == item.company) {
-            gameType.push(item.name);
+      let arr = [];
+      let val = JSON.parse(localStorage.getItem("userInfo")).gameList;
+      if (this.$store.state.language == "zh") {
+        for (let i = 0; i < val.length; i++) {
+          for (let j = 0; j < getCNGameType().length; j++) {
+            if (val[i].code == getCNGameType()[j].code) {
+              arr.push(getCNGameType()[j]);
+            }
           }
-        });
+        }
+
+        if (
+          this.companyInfo == "全部厂商" ||
+          this.companyInfo == "All manufacturers"
+        ) {
+          gameType = arr.map(item => {
+            return item.name;
+          });
+        } else {
+          arr.map(item => {
+            if (this.companyInfo == item.company) {
+              gameType.push(item.name);
+            }
+          });
+        }
+        gameType.unshift("全部");
+        return gameType;
+      } else {
+        for (let i = 0; i < val.length; i++) {
+          for (let j = 0; j < getENGameType().length; j++) {
+            if (val[i].code == getENGameType()[j].code) {
+              arr.push(getENGameType()[j]);
+            }
+          }
+        }
+
+        if (this.companyInfo == "All manufacturers") {
+          gameType = arr.map(item => {
+            return item.name;
+          });
+        } else {
+          arr.map(item => {
+            if (this.companyInfo == item.company) {
+              gameType.push(item.name);
+            }
+          });
+        }
+        gameType.unshift("All");
+        return gameType;
       }
 
-      for (let i = 0; i < gameType.length; i++) {
-        if (gameType[i] == "H5电子游戏") {
-          gameType.splice(i, 1);
-          gameType.unshift("H5电子游戏");
-        }
-        if (gameType[i] == "H5电子-无神秘奖游戏") {
-          gameType.splice(i, 1);
-          gameType.unshift("H5电子-无神秘奖游戏");
-        }
-      }
-
-      gameType.unshift("全部");
-      //this.radioInfo = '全部'
-      
       return gameType;
     }
   },
@@ -535,8 +604,8 @@ export default {
         "90016": "老寿星",
         "90017": "凤舞朝阳",
         "90018": "鲤跃龙门"
-      }
-      if (this.GameNameEnum[row.gameId]) {
+      };
+      if (GameNameEnum[row.gameId]) {
         return `${row.gameId}(${GameNameEnum[row.gameId]})`;
       } else {
         return row.gameId;
@@ -576,9 +645,13 @@ export default {
       }
     },
     reset() {
-      this.companyInfo = "全部厂商";
-      this.sel = "全部厂商";
-      this.radioInfo = "全部";
+      if (this.$store.state.language == "zh") {
+        this.companyInfo = "全部厂商";
+        this.radioInfo = "全部";
+      } else {
+        this.companyInfo = "All manufacturers";
+        this.radioInfo = "All";
+      }
       this.betId = "";
       this.sn = "";
       this.radioType = "";
@@ -587,7 +660,7 @@ export default {
         new Date(new Date().getTime() - 3600 * 1000 * 24 * 6),
         new Date()
       ];
-      this.initData()
+      this.initData();
       this.getPlayerAccount();
     },
     getNowpage(page) {
@@ -596,8 +669,8 @@ export default {
         page == Math.ceil(this.playerAccountList.length / this.nowSize) &&
         !this.isFetching &&
         page != 1 &&
-        !this.isLastMessage && 
-        this.playerAccountList.length >=100
+        !this.isLastMessage &&
+        this.playerAccountList.length >= 100
       ) {
         this.playerAccountListStorage = JSON.parse(
           JSON.stringify(this.playerAccountList)
@@ -609,19 +682,31 @@ export default {
       if (this.isFetching) return;
       this.isFetching = true;
       let code = "";
-      JSON.parse(localStorage.getItem("userInfo")).gameList.map(item => {
-        if (this.radioInfo == item.name) {
-          code = item.code;
-          return;
-        }
-      })
-    
+
+      let company = "";
+      if (this.$store.state.language == "zh") {
+        getCNGameType().map(item => {
+          if (this.radioInfo == item.name) {
+            code = item.code;
+            return;
+          }
+        });
+        company = company == "全部厂商" ? "-1" : this.companyInfo;
+      } else {
+        getENGameType().map(item => {
+          if (this.radioInfo == item.name) {
+            code = item.code;
+            return;
+          }
+        });
+        company = company == "All manufacturers" ? "-1" : this.companyInfo;
+      }
 
       httpRequest("post", "/player/bill/flow", {
         userName: localStorage.playerName,
         type: this.radioType,
         action: this.radioMoney,
-        company: this.companyInfo == "全部厂商" ? "-1" : this.companyInfo,
+        company: company,
         gameType: code,
         startTime: this.amountDate[0].getTime(),
         endTime: this.amountDate[1].getTime(),
@@ -654,7 +739,7 @@ export default {
         this.monthDate = "";
       }
       /*  */
-    }, 
+    },
     //日期改变联动
     getDate() {
       this.initData();
@@ -672,10 +757,10 @@ export default {
     },
     changeGameType(val) {
       //(val);
-      
+
       this.radioInfo == undefined ? "全部" : val;
-      this.initData()
-      this.getPlayerAccount()
+      this.initData();
+      this.getPlayerAccount();
     },
     // 月份联动
     selectionChange(val) {
@@ -685,12 +770,12 @@ export default {
         this.checkFormatNum += Number(item.amount);
       }
       this.checkFormatNum = thousandFormatter(this.checkFormatNum);
-    }, 
+    },
     //多选
     searchData() {
       this.initData();
       this.getPlayerAccount();
-    }, 
+    },
     // 重置筛选条件
     initData() {
       this.currentPage = 1;
@@ -713,9 +798,9 @@ export default {
       );
     },
     changeCompany(val) {
-      this.sel = val;
-      this.radioInfo = '';
-      this.initData()
+      this.companyInfo = val;
+      this.radioInfo = "";
+      this.initData();
     },
     openModalBill(data) {
       this.propChild = data;
@@ -732,14 +817,13 @@ export default {
           _new.name == "playDetail" &&
           localStorage.playDetail == "playDetail"
         ) {
-          
           this.amountDate = [];
           if (this.$route.query.type != undefined) {
             this.radioInfo = String(this.$route.query.type);
-           
+
             if (this.radioInfo != "") {
               getGameType().map(item => {
-                if (item.code ==  this.radioInfo) {
+                if (item.code == this.radioInfo) {
                   this.companyInfo = item.company;
                 }
               });
@@ -751,7 +835,7 @@ export default {
                 this.radioInfo = item.name;
                 return;
               }
-            })
+            });
             let st = this.$route.query.time[0];
             let et = this.$route.query.time[1];
             this.amountDate = [new Date(st), new Date(et)];
@@ -760,7 +844,6 @@ export default {
               new Date(new Date().getTime() - 3600 * 1000 * 24 * 6),
               new Date()
             ];
-            
           }
           this.searchData();
         }
@@ -768,7 +851,11 @@ export default {
       },
       immediate: true
     },
-    
+    "$store.state.language": function() {
+      if (this.$route.name == "playDetail") {
+        this.reset();
+      }
+    }
   },
   filter1s: {
     //过滤器，所有数字保留两位小数
@@ -856,6 +943,6 @@ export default {
   animation: ani-demo-spin 1s linear infinite;
 }
 /deep/ .ivu-picker-panel-shortcut {
-    padding: 6px 5px;
-  }
+  padding: 6px 5px;
+}
 </style>

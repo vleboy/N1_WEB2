@@ -32,7 +32,7 @@
             >{{ item.name }}</Option>
           </Select>
         </Col>
-        <Col span="4">
+        <Col span="3">
           <div class="btns">
             <Button type="primary" @click="getSearch(true)" style="margin-right:.3rem" size="small">{{$t('playerList.search')}}</Button>
             <Button @click="getSearch(false)" size="small">{{$t('playerList.reset')}}</Button>
@@ -84,7 +84,7 @@
 
 <script type="text/ecmascript-6">
 import { httpRequest } from "@/service/index";
-import { getGameType } from "@/config/getGameType";
+import { getCNGameType, getENGameType } from "@/config/getGameType"
 import dayjs from "dayjs";
 import {
   formatUserName,
@@ -439,7 +439,7 @@ export default {
           suffix: "",
           msn: ""
         }
-        this.defaultStatus = '全部'
+        this.getGameTypeList()
       }
       this.playerList = [];
       this.playerListStorage = [];
@@ -449,15 +449,49 @@ export default {
       this.getPlayList();
     },
     getGameTypeList() {
-      let GameListEnum = getGameType()
-      GameListEnum.shift()
-      GameListEnum.unshift({ code: "0", name: "离线" })
-      GameListEnum.unshift({ code: "1", name: "大厅" })
-      GameListEnum.unshift({ code: "", name: "全部" , value: "全部"})
+    
+      let GameListEnum = []
+      let val = JSON.parse(localStorage.getItem('userInfo')).gameList 
+      if (this.$store.state.language == 'zh') {
+        for (let i = 0; i < val.length; i++) {
+          for (let j = 0; j < getCNGameType().length; j++) {
+            if (val[i].code == getCNGameType()[j].code) {
+              GameListEnum.push(getCNGameType()[j])
+            }
+          }
+        }
+        this.defaultStatus = '全部'
+        GameListEnum.unshift({ code: "0", name: "离线" })
+        GameListEnum.unshift({ code: "1", name: "大厅" })
+        GameListEnum.unshift({ code: "", name: "全部" , value: "全部"})
+      } else {
+        for (let i = 0; i < val.length; i++) {
+          for (let j = 0; j < getENGameType().length; j++) {
+            if (val[i].code == getENGameType()[j].code) {
+              GameListEnum.push(getENGameType()[j])
+            }
+          }
+        }
+        this.defaultStatus = 'All'
+        GameListEnum.unshift({ code: "0", name: "Off-line" })
+        GameListEnum.unshift({ code: "1", name: "Hall" })
+        GameListEnum.unshift({ code: "", name: "All" , value: "All"})
+      }
+
 
       this.gameTypeList = GameListEnum;
+
+
+
     }
-  }
+  },
+  watch: {
+      '$store.state.language': function() {
+        if(this.$route.name == 'playList') {
+          this.getSearch(false)
+        }
+      }
+    }
 };
 </script>
 

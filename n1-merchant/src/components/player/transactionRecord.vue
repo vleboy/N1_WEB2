@@ -109,7 +109,7 @@
 import { thousandFormatter } from "@/config/format";
 import dayjs from "dayjs";
 import { httpRequest } from "@/service/index";
-
+import { getCNGameType, getENGameType } from "@/config/getGameType";
 import RealLifeModal from "@/components/record/realLifeModal";
 import oneRunningAccount from "@/components/player/oneRunningAccount";
 import SportsModal from "@/components/record/sportsModal";
@@ -232,7 +232,6 @@ export default {
       isOpenModalBill: false,
       isOpenModalRunning: false,
       radioInfo: "全部",
-      sel: "全部厂商",
       amountDate: [],
       companyList: [],
       companyInfo: "全部厂商",
@@ -441,7 +440,13 @@ export default {
 
 
 
-      gameList.unshift('全部厂商')
+      if (this.$store.state.language == "zh") {
+        gameList.unshift("全部厂商");
+        //this.companyInfo == "全部厂商"
+      } else {
+        gameList.unshift("All manufacturers");
+        //this.companyInfo == 'All manufacturers'
+      }
 
       return gameList 
 
@@ -456,48 +461,60 @@ export default {
       return arr; */
     },
     gameTypeList() {
-      let arr = JSON.parse(localStorage.getItem("userInfo")).gameList.map(
-        item => {
-          return item;
-        }
-      ) 
-
-      for (let i = 0; i < this.removeArr.length; i++) {
-        for (let j = 0; j < arr.length; j++) {
-          if (this.removeArr[i] == arr[j].name) {
-            arr.splice(j,1)
-          }
-        }
-      }  
-
-
       let gameType = [];
-      if (this.sel == "全部厂商") {
-        gameType = arr.map(item => {
-          return item.name
-        })
-      } else {
-       arr.map(item => {
-          if (this.sel == item.company) {
-            gameType.push(item.name);
+      let arr = [];
+      let val = JSON.parse(localStorage.getItem("userInfo")).gameList;
+      if (this.$store.state.language == "zh") {
+        for (let i = 0; i < val.length; i++) {
+          for (let j = 0; j < getCNGameType().length; j++) {
+            if (val[i].code == getCNGameType()[j].code) {
+              arr.push(getCNGameType()[j]);
+            }
           }
-        });
+        }
+
+        if (
+          this.companyInfo == "全部厂商" ||
+          this.companyInfo == "All manufacturers"
+        ) {
+          gameType = arr.map(item => {
+            return item.name;
+          });
+        } else {
+          arr.map(item => {
+            if (this.companyInfo == item.company) {
+              gameType.push(item.name);
+            }
+          });
+        }
+        gameType.unshift("全部");
+        return gameType;
+      } else {
+        for (let i = 0; i < val.length; i++) {
+          for (let j = 0; j < getENGameType().length; j++) {
+            if (val[i].code == getENGameType()[j].code) {
+              arr.push(getENGameType()[j]);
+            }
+          }
+        }
+
+        if (this.companyInfo == "All manufacturers") {
+          gameType = arr.map(item => {
+            return item.name;
+          });
+        } else {
+          arr.map(item => {
+            if (this.companyInfo == item.company) {
+              gameType.push(item.name);
+            }
+          });
+        }
+        gameType.unshift("All");
+        return gameType;
       }
 
-      for(let i = 0; i < gameType.length; i++) {
-        if (gameType[i] == 'H5电子游戏') {
-          gameType.splice(i, 1)
-          gameType.unshift('H5电子游戏')
-        }
-        if (gameType[i] == 'H5电子-无神秘奖游戏') {
-          gameType.splice(i, 1)
-          gameType.unshift('H5电子-无神秘奖游戏')
-        }
-      }
-
-      gameType.unshift("全部");
       return gameType;
-    }
+    }  
   },
   mounted() {
     this.getTransactionRecord();
@@ -554,11 +571,15 @@ export default {
       this.openModalRunning(row);
     },
     reset() {
-      this.companyInfo = '全部厂商'
-      this.selType = 'All'
+      if (this.$store.state.language == "zh") {
+        this.companyInfo = "全部厂商";
+        this.radioInfo = "全部";
+      } else {
+        this.companyInfo = "All manufacturers";
+        this.radioInfo = "All";
+      }
       this.startKey = ''
       this.betId = ''
-      this.radioInfo = '全部'
       this.amountDate = [new Date().getTime() - 3600 * 1000 * 24 * 6, new Date()]
       this.initData()
       this.changeRadio()
@@ -652,19 +673,31 @@ export default {
       this.isFetching = true;
       this.initTime();
       let code = "";
-      JSON.parse(localStorage.getItem("userInfo")).gameList.map(item => {
-        if (this.radioInfo == item.name) {
-          code = item.code;
-          return;
-        }
-      });
+      let company = "";
+      if (this.$store.state.language == "zh") {
+        getCNGameType().map(item => {
+          if (this.radioInfo == item.name) {
+            code = item.code;
+            return;
+          }
+        });
+        company = company == "全部厂商" ? "-1" : this.companyInfo;
+      } else {
+        getENGameType().map(item => {
+          if (this.radioInfo == item.name) {
+            code = item.code;
+            return;
+          }
+        });
+        company = company == "All manufacturers" ? "-1" : this.companyInfo;
+      }
       let name = localStorage.playerName;
       let [startTime, endTime] = this.amountDate;
       startTime = new Date(startTime).getTime();
       endTime = new Date(endTime).getTime();
       httpRequest("post", "/player/bill/detail", {
         userName: name,
-        company: this.companyInfo == "全部厂商" ? "-1" : this.companyInfo,
+        company: company,
         gameType: code,
         startTime: startTime,
         endTime: endTime,
@@ -686,7 +719,7 @@ export default {
  //获取运营商列表
     changeCompany(val) {
       this.radioInfo = null
-      this.sel = val;
+      this.companyInfo = val;
       this.initData()
     },
     searchAmount() {
@@ -734,6 +767,13 @@ export default {
           this.radioInfo
         }&startTime=${startTime}&endTime=${endTime}`
       );
+    }
+  },
+  watch: {
+    "$store.state.language": function() {
+      if (this.$route.name == "playDetail") {
+        this.reset();
+      }
     }
   }
 };
