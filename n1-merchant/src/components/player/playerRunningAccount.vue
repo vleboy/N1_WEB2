@@ -818,9 +818,8 @@ export default {
           localStorage.playDetail == "playDetail"
         ) {
           this.amountDate = [];
-          if (this.$route.query.type != undefined) {
+          if (this.$route.query.type != undefined || this.$route.query.type != '') {
             this.radioInfo = String(this.$route.query.type);
-
             if (this.radioInfo != "") {
               getGameType().map(item => {
                 if (item.code == this.radioInfo) {
@@ -844,7 +843,9 @@ export default {
               new Date(new Date().getTime() - 3600 * 1000 * 24 * 6),
               new Date()
             ];
+            this.radioInfo = '全部'
           }
+          //this.gameTypeList()
           this.searchData();
         }
         localStorage.removeItem("playDetail");
