@@ -519,6 +519,13 @@ export default {
       this.isFetching = true;
       this.initTime();
       let name = localStorage.playerName;
+
+      //判断时间是否超出当前日期
+      this.amountDate[0] = this.amountDate[0] > new Date() ? new Date() : this.amountDate[0]
+      this.amountDate[1] = this.amountDate[1] > new Date() ? new Date() : this.amountDate[1]
+     
+      
+
       let [startTime, endTime] = this.amountDate;
       startTime = new Date(startTime).getTime();
       endTime = new Date(endTime).getTime();
@@ -549,7 +556,7 @@ export default {
         startTime: startTime,
         endTime: endTime,
       }).then(res => {
-       
+        
         this.playerBetAmount = res.payload[0].betAmount
         this.playerMixAmount = res.payload[0].mixAmount
         this.playerWinloseAmount = res.payload[0].winloseAmount

@@ -8,7 +8,13 @@
 export default {
   name: "App",
   mounted() {
-    this.$store.commit('changeLanguage', localStorage.language)
+    let language = ''
+    if (localStorage.language) {
+      language = localStorage.language
+    } else {
+      language = 'zh'
+    }
+    this.$store.commit('changeLanguage', language)
   }
 };
 </script>
