@@ -324,7 +324,7 @@ export default {
       this.$router.push({
         name: "playDetail",
         query: {
-          name: row.userName
+          name: row.userName,
         }
       });
     },

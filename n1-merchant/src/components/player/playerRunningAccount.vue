@@ -818,23 +818,38 @@ export default {
           localStorage.playDetail == "playDetail"
         ) {
           this.amountDate = [];
-          if (this.$route.query.type != undefined || this.$route.query.type != '') {
-            this.radioInfo = String(this.$route.query.type);
-            if (this.radioInfo != "") {
-              getGameType().map(item => {
-                if (item.code == this.radioInfo) {
+          let code = 0
+          //判断是否从玩家列表跳转
+          if (this.$route.query.type != undefined) {
+            // 判断当前语言
+            if (this.$store.state.language == 'zh') {
+              //判断是否传了游戏
+              if (this.$route.query.type != "") { 
+                code = String(this.$route.query.type)
+                getCNGameType().map(item => {
+                if (item.code == code) {
                   this.companyInfo = item.company;
+                  this.radioInfo = item.name;
                 }
               });
-            } else {
-              this.companyInfo == "全部厂商";
-            }
-            JSON.parse(localStorage.getItem("userInfo")).gameList.map(item => {
-              if (this.radioInfo == item.code) {
-                this.radioInfo = item.name;
-                return;
+              } else {
+                this.companyInfo = '全部厂商'
+                this.radioInfo = '全部'
               }
-            });
+            } else {
+              if (this.$route.query.type != "") { 
+                code = String(this.$route.query.type)
+                getENGameType().map(item => {
+                if (item.code == code) {
+                  this.companyInfo = item.company;
+                  this.radioInfo = item.name;
+                }
+              });
+              } else {
+                this.companyInfo = 'All manufacturers'
+                this.radioInfo = 'All'
+              }
+            }
             let st = this.$route.query.time[0];
             let et = this.$route.query.time[1];
             this.amountDate = [new Date(st), new Date(et)];
@@ -843,9 +858,15 @@ export default {
               new Date(new Date().getTime() - 3600 * 1000 * 24 * 6),
               new Date()
             ];
-            this.radioInfo = '全部'
+            if (this.$store.state.language == 'zh') {
+              this.companyInfo = '全部厂商'
+              this.radioInfo = '全部'
+            } else {
+              this.companyInfo = 'All manufacturers'
+                this.radioInfo = 'All'
+            }
+            
           }
-          //this.gameTypeList()
           this.searchData();
         }
         localStorage.removeItem("playDetail");

@@ -155,7 +155,7 @@ export default {
     reset: '重置',
     loading: '加载中...',
     currentUser: '当前用户列表',
-    currentPlayer: '当前玩家列表',
+    PlayerList: '所属玩家列表',
     toDayReport: '前往日报表',
     toPlayerDetail: '前往玩家详情'
   },
