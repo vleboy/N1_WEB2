@@ -22,23 +22,23 @@ export const getCNGameType = () => {
 
 export const getENGameType = () => {
   return [
-    { company: "NA", code: "70000", name: "H5 video game" },
-    { company: "NA", code: "90000", name: "H5 video game-No mystery award" },
-    { company: "KY", code: "1070000", name: "KY chess game" },
-    { company: "TTG", code: "1010000", name: "TTG video game" },
-    { company: "PNG", code: "1020000", name: "PNG video game" },
-    { company: "MG", code: "10300000", name: "MG video game" },
-    { company: "HABA", code: "1040000", name: "HABA video game" },
-    { company: "AG", code: "1050000", name: "AG live game" },
-    { company: "SA", code: "1060000", name: "SA live game" },
-    { company: "SA", code: "1110000", name: "SA fishing game" },
-    { company: "PG", code: "1090000", name: "PG video game" },
-    { company: "YSB", code: "1130000", name: "YSB sports game" },
-    { company: "RTG", code: "1140000", name: "RTG video game" },
-    { company: "SB", code: "1080000", name: "SB video game" },
-    { company: "SB", code: "1120000", name: "RTG live game" },
-    { company: "DT", code: "1150000", name: "DT video game" },
-    { company: "PP", code: "1160000", name: "PP video game" }
+    { company: "NA", code: "70000", name: "H5 Video" },
+    { company: "NA", code: "90000", name: "H5 Video (without mystery)" },
+    { company: "KY", code: "1070000", name: "KY Table" },
+    { company: "TTG", code: "1010000", name: "TTG Video" },
+    { company: "PNG", code: "1020000", name: "PNG Video" },
+    { company: "MG", code: "10300000", name: "MG Video" },
+    { company: "HABA", code: "1040000", name: "HABA Video" },
+    { company: "AG", code: "1050000", name: "AG Live" },
+    { company: "SA", code: "1060000", name: "SA Live" },
+    { company: "SA", code: "1110000", name: "SA Fishing" },
+    { company: "PG", code: "1090000", name: "PG Video" },
+    { company: "YSB", code: "1130000", name: "YSB Sport" },
+    { company: "RTG", code: "1140000", name: "RTG Video" },
+    { company: "SB", code: "1080000", name: "SB Video" },
+    { company: "SB", code: "1120000", name: "RTG Live" },
+    { company: "DT", code: "1150000", name: "DT Video" },
+    { company: "PP", code: "1160000", name: "PP Video" }
   ]
 }
 

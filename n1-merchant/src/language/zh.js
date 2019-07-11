@@ -141,7 +141,7 @@ export default {
     look: '查看战绩',
     running: '流水详情',
     transactionTime: '交易时间',
-    transactionType: '交易类型',
+    transactionType: '游戏类型',
     preBalance: '结算前余额',
     operateAccount: '操作金额',
     returnAccount: '返还金额',

@@ -51,7 +51,7 @@
             renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '流水号' : 'Pipeline number'
+              this.$store.state.language == 'zh' ? '流水号' : 'Serial Number'
             )
           }
           },
@@ -62,7 +62,7 @@
             renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '交易时间' : 'Transaction time'
+              this.$store.state.language == 'zh' ? '交易时间' : 'Time'
             )
           }
           },
@@ -73,7 +73,7 @@
             renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '交易类型' : 'transaction Type'
+              this.$store.state.language == 'zh' ? '交易类型' : 'Type'
             )
           }
           },
@@ -84,7 +84,7 @@
             renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '帐变前余额' : 'Pre-account balance'
+              this.$store.state.language == 'zh' ? '帐变前余额' : 'Pre Balance'
             )
           }
           },
@@ -95,7 +95,7 @@
             renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '操作' : 'Account variable amount'
+              this.$store.state.language == 'zh' ? '操作' : 'Amount'
             )
           }
           },
@@ -106,7 +106,7 @@
             renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '帐变后金额' : 'Amount after Account Change'
+              this.$store.state.language == 'zh' ? '帐变后金额' : 'Balance'
             )
           }
           }

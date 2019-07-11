@@ -50,7 +50,7 @@
                       <Submenu name='sareport' v-if="gameStr.includes('SA')">
                           <template slot="title">{{$t('sideBar.saReport')}}</template>
                           <MenuItem name="saAll">{{$t('sideBar.saAll')}}</MenuItem>
-                          <MenuItem name="satrue" v-if="gameStr.includes('SA真人')">{{$t('sideBar.True')}}</MenuItem>
+                          <MenuItem name="satrue" v-if="gameStr.includes('SA真人')">{{$t('sideBar.saTrue')}}</MenuItem>
                           <MenuItem name="safishing" v-if="gameStr.includes('SA捕鱼')">{{$t('sideBar.saFishing')}}</MenuItem>
                       </Submenu>
                       <Submenu name='sbreport' v-if='gameList.includes("SB电子游戏")||gameList.includes("SB真人游戏")'>

@@ -271,7 +271,7 @@ export default {
       options: {
         shortcuts: [
           {
-            text: this.$store.state.language == 'zh' ? '本周' : 'This week',
+            text: this.$store.state.language == 'zh' ? '本周' : 'week',
             value() {
               return [
                 new Date(
@@ -289,7 +289,7 @@ export default {
             }
           },
           {
-            text: this.$store.state.language == 'zh' ? '本月' : 'This month',
+            text: this.$store.state.language == 'zh' ? '本月' : 'month',
             value() {
               return [
                 new Date(
@@ -306,7 +306,7 @@ export default {
             }
           },
           {
-            text: this.$store.state.language == 'zh' ? '本月' : 'This month',
+            text: this.$store.state.language == 'zh' ? '上周' : 'last week',
             value() {
               return [
                 new Date(
@@ -327,7 +327,7 @@ export default {
             }
           },
           {
-            text: this.$store.state.language == 'zh' ? '上月' : 'Last month',
+            text: this.$store.state.language == 'zh' ? '上月' : 'last month',
             value() {
               //-1 上月
               return [
@@ -379,7 +379,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '序号' : 'Serial number'
+              this.$store.state.language == 'zh' ? '序号' : 'NO.'
             )
           }
         },
@@ -401,7 +401,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '交易次数' : 'Transactions count'
+              this.$store.state.language == 'zh' ? '交易次数' : 'Transaction Count'
             )
           }
         },
@@ -412,7 +412,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '总游戏输赢金额' : 'Total game win/lose amount'
+              this.$store.state.language == 'zh' ? '总游戏输赢金额' : 'Win/Lose Amount'
             )
           }
         },
@@ -423,7 +423,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '总游戏交公司' : 'General game delivery company'
+              this.$store.state.language == 'zh' ? '总游戏交公司' : 'Submit Amount'
             )
           }
         },
@@ -434,7 +434,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'NA游戏(输赢金额)' : 'NA game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'NA游戏(输赢金额)' : 'NA(win/lose amount)'
             )
           }
         },
@@ -445,7 +445,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'NA游戏(商家交公司)' : 'NA game(Business Exchange Company)'
+              this.$store.state.language == 'zh' ? 'NA游戏(商家交公司)' : 'NA(submit amount)'
             )
           }
         },
@@ -456,7 +456,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'TTG游戏(商家交公司)' : 'TTG game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'TTG游戏(输赢金额)' : 'TTG(win/lose amount)'
             )
           }
         },
@@ -466,7 +466,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'TTG游戏(商家交公司)' : 'TTG game(Business Exchange Company)'
+              this.$store.state.language == 'zh' ? 'TTG游戏(商家交公司)' : 'TTG(submit amount)'
             )
           }
         },
@@ -477,7 +477,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'SA游戏(商家交公司)' : 'SA game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'SA游戏(输赢金额)' : 'SA(win/lose amount)'
             )
           }
         },
@@ -488,7 +488,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'SA游戏(商家交公司)' : 'SA game(Business Exchange Company)'
+              this.$store.state.language == 'zh' ? 'SA游戏(商家交公司)' : 'SA(submit amount)'
             )
           }
         },
@@ -499,7 +499,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'SB游戏(商家交公司)' : 'SB game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'SB游戏(输赢金额)' : 'SB(win/lose amount)'
             )
           }
         },
@@ -510,7 +510,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'SB游戏(商家交公司)' : 'SB game(Business Exchange Company)'
+              this.$store.state.language == 'zh' ? 'SB游戏(商家交公司)' : 'SB(submit amount)'
             )
           }
         },
@@ -521,7 +521,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'MG游戏(商家交公司)' : 'MG game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'MG游戏(输赢金额)' : 'MG(win/lose amount)'
             )
           }
         },
@@ -532,7 +532,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'MG游戏(商家交公司)' : 'MG game(Business Exchange Company)'
+              this.$store.state.language == 'zh' ? 'MG游戏(商家交公司)' : 'MG(submit amount)'
             )
           }
         },
@@ -543,7 +543,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'AG游戏(商家交公司)' : 'AG game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'AG游戏(输赢金额)' : 'AG(win/lose amount)'
             )
           }
         },
@@ -554,7 +554,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'AG游戏(商家交公司)' : 'AG game(Business Exchange Company)'
+              this.$store.state.language == 'zh' ? 'AG游戏(商家交公司)' : 'AG(submit amount)'
             )
           }
         },
@@ -565,7 +565,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'RTG游戏(商家交公司)' : 'RTG game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'RTG游戏(输赢金额)' : 'RTG(win/lose amount)'
             )
           }
         },
@@ -576,7 +576,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'RTG游戏(商家交公司)' : 'RTG game(Business Exchange Company)'
+              this.$store.state.language == 'zh' ? 'RTG游戏(商家交公司)' : 'RTG(submit amount)'
             )
           }
         },
@@ -587,7 +587,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'DT游戏(商家交公司)' : 'DT game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'DT游戏(输赢金额)' : 'DT(win/lose amount)'
             )
           }
         },
@@ -598,7 +598,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'DT游戏(商家交公司)' : 'DT game(Business Exchange Company)'
+              this.$store.state.language == 'zh' ? 'DT游戏(商家交公司)' : 'DT(submit amount)'
             )
           }
         },
@@ -609,7 +609,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'PP游戏(商家交公司)' : 'PP game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'PP游戏(输赢金额)' : 'PP(win/lose amount)'
             )
           }
         },
@@ -620,7 +620,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'PP游戏(商家交公司)' : 'PP game(Business Exchange Company)'
+              this.$store.state.language == 'zh' ? 'PP游戏(商家交公司)' : 'PP(submit amount)'
             )
           }
         },
@@ -631,7 +631,7 @@ export default {
           rrenderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'YSB游戏(商家交公司)' : 'YSB game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'YSB游戏(输赢金额)' : 'YSB(win/lose amount)'
             )
           }
         },
@@ -642,7 +642,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'YSB游戏(商家交公司)' : 'YSB game(Business Exchange Company)'
+              this.$store.state.language == 'zh' ? 'YSB游戏(商家交公司)' : 'YSB(submit amount)'
             )
           }
         },
@@ -653,7 +653,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'PG游戏(商家交公司)' : 'PG game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'PG游戏(输赢金额)' : 'PG game(win/lose amount)'
             )
           }
         },
@@ -664,7 +664,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'PG游戏(商家交公司)' : 'PG game(Business Exchange Company)'
+              this.$store.state.language == 'zh' ? 'PG游戏(商家交公司)' : 'PG game(submit amount)'
             )
           }
         },
@@ -675,7 +675,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'HABA游戏(商家交公司)' : 'HABA game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'HABA游戏(输赢金额)' : 'HABA game(win/lose amount)'
             )
           }
         },
@@ -686,7 +686,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'HABA游戏(商家交公司)' : 'HABA game(Business Exchange Company)'
+              this.$store.state.language == 'zh' ? 'HABA游戏(商家交公司)' : 'HABA game(submit amount)'
             )
           }
         },
@@ -697,7 +697,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'PNG游戏(商家交公司)' : 'PNG game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'PNG游戏(输赢金额)' : 'PNG game(win/lose amount)'
             )
           }
         },
@@ -708,7 +708,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'PNG游戏(商家交公司)' : 'PNG game(Business Exchange Company)'
+              this.$store.state.language == 'zh' ? 'PNG游戏(商家交公司)' : 'PNG game(submit amount)'
             )
           }
         },
@@ -719,7 +719,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'KY游戏(商家交公司)' : 'KY game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'KY游戏(输赢金额)' : 'KY game(win/lose amount)'
             )
           }
         },
@@ -730,7 +730,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'KY游戏(商家交公司)' : 'KY game(Business Exchange Company)'
+              this.$store.state.language == 'zh' ? 'KY游戏(商家交公司)' : 'KY game(submit amount)'
             )
           }
         }
@@ -743,7 +743,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '序号' : 'Serial number'
+              this.$store.state.language == 'zh' ? '序号' : 'NO.'
             )
           }
         },
@@ -776,7 +776,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '交易次数' : 'Transaction count'
+              this.$store.state.language == 'zh' ? '交易次数' : 'Transaction Count'
             )
           }
         },
@@ -787,7 +787,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '总游戏输赢金额' : 'Total game Win/Lose amount'
+              this.$store.state.language == 'zh' ? '总游戏输赢金额' : 'Win/Lose Amount'
             )
           }
         },
@@ -798,7 +798,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'NA游戏(输赢金额)' : 'NA game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'NA游戏(输赢金额)' : 'NA(win/lose amount)'
             )
           }
         },
@@ -809,7 +809,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'TTG游戏(输赢金额)' : 'TTG game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'TTG游戏(输赢金额)' : 'TTG(win/lose amount)'
             )
           }
         },
@@ -820,7 +820,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'SA游戏(输赢金额)' : 'SA game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'SA游戏(输赢金额)' : 'SA(win/lose amount)'
             )
           }
         },
@@ -831,7 +831,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'SB游戏(输赢金额)' : 'SB game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'SB游戏(输赢金额)' : 'SB(win/lose amount)'
             )
           }
         },
@@ -842,7 +842,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'MG游戏(输赢金额)' : 'MG game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'MG游戏(输赢金额)' : 'MG(win/lose amount)'
             )
           }
         },
@@ -853,7 +853,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'AG游戏(输赢金额)' : 'AG game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'AG游戏(输赢金额)' : 'AG(win/lose amount)'
             )
           }
         },
@@ -864,7 +864,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'RTG游戏(输赢金额)' : 'RTG game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'RTG游戏(输赢金额)' : 'RTG(win/lose amount)'
             )
           }
         },
@@ -875,7 +875,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'DT游戏(输赢金额)' : 'DT game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'DT游戏(输赢金额)' : 'DT(win/lose amount)'
             )
           }
         },
@@ -886,7 +886,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'PP游戏(输赢金额)' : 'PP game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'PP游戏(输赢金额)' : 'PP(win/lose amount)'
             )
           }
         },
@@ -897,7 +897,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'YSB游戏(输赢金额)' : 'YSB game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'YSB游戏(输赢金额)' : 'YSB(win/lose amount)'
             )
           }
         },
@@ -908,7 +908,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'PG游戏(输赢金额)' : 'PG game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'PG游戏(输赢金额)' : 'PG(win/lose amount)'
             )
           }
         },
@@ -919,7 +919,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'HABA游戏(输赢金额)' : 'HABA game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'HABA游戏(输赢金额)' : 'HABA(win/lose amount)'
             )
           }
         },
@@ -930,7 +930,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'PNG游戏(输赢金额)' : 'PNG game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'PNG游戏(输赢金额)' : 'PNG(win/lose amount)'
             )
           }
         },
@@ -941,7 +941,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'KY游戏(输赢金额)' : 'KY game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'KY游戏(输赢金额)' : 'KY(win/lose amount)'
             )
           }
         }

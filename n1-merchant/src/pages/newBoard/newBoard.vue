@@ -241,8 +241,8 @@ export default {
             }
           }
         }
-        this.model1 = 'All games'
-        this.gameType.unshift({ company: "All", code: "", name: "All games" })
+        this.model1 = 'All'
+        this.gameType.unshift({ company: "All", code: "", name: "All" })
       }
 
       //console.log(this.model1);

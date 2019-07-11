@@ -112,7 +112,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '序号' : 'Serial number'
+              this.$store.state.language == 'zh' ? '序号' : 'NO.'
             )
           }
         },
@@ -125,7 +125,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '交易时间' : 'Trading time'
+              this.$store.state.language == 'zh' ? '交易时间' : 'Transaction Time'
             )
           }
         },
@@ -137,7 +137,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '交易对象' : 'Transactors'
+              this.$store.state.language == 'zh' ? '交易对象' : 'Target'
             )
           }
         },
@@ -151,7 +151,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '交易类型' : 'Type of transaction'
+              this.$store.state.language == 'zh' ? '交易类型' : 'Transaction Type'
             )
           }
         },
@@ -164,7 +164,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '交易前余额' : 'Pre-transaction balance'
+              this.$store.state.language == 'zh' ? '交易前余额' : 'Pre Balance'
             )
           }
         },
@@ -178,7 +178,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '交易点数' : 'Trading Points'
+              this.$store.state.language == 'zh' ? '交易点数' : 'Point'
             )
           }
         },
@@ -191,7 +191,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '交易后余额' : 'Post-transaction balance'
+              this.$store.state.language == 'zh' ? '交易后余额' : 'Balance'
             )
           }
         },
@@ -215,7 +215,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '操作人' : 'Remarks'
+              this.$store.state.language == 'zh' ? '备注' : 'Remark'
             )
           }
         }
@@ -228,7 +228,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '商户标识' : 'Business logo'
+              this.$store.state.language == 'zh' ? '商户标识' : 'SN'
             )
           }
         },
@@ -240,7 +240,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '商户标识' : 'Business ID'
+              this.$store.state.language == 'zh' ? '商户标识' : 'Merchant ID'
             )
           }
         },
@@ -251,7 +251,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '商户标识' : 'Administrator account'
+              this.$store.state.language == 'zh' ? '商户标识' : 'Account'
             )
           }
         },
@@ -263,7 +263,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '管理员密码' : 'Administrator password'
+              this.$store.state.language == 'zh' ? '管理员密码' : 'Password'
             )
           }
         },
@@ -276,7 +276,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '商户API密钥' : 'Merchant API Key'
+              this.$store.state.language == 'zh' ? '商户API密钥' : 'API Key'
             )
           }
         },

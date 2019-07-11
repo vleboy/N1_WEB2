@@ -44,7 +44,7 @@ export default {
       options: {
         shortcuts: [
           {
-            text: this.$store.state.language == 'zh' ? '本周' : 'This week',
+            text: this.$store.state.language == 'zh' ? '本周' : 'week',
             value() {
               return [
                 new Date(
@@ -62,7 +62,7 @@ export default {
             }
           },
           {
-            text: this.$store.state.language == 'zh' ? '本月' : 'This month',
+            text: this.$store.state.language == 'zh' ? '本月' : 'month',
             value() {
               return [
                 new Date(
@@ -79,7 +79,7 @@ export default {
             }
           },
           {
-            text: this.$store.state.language == 'zh' ? '上周' : 'Last week',
+            text: this.$store.state.language == 'zh' ? '上周' : 'last week',
             value() {
               return [
                 new Date(
@@ -100,7 +100,7 @@ export default {
             }
           },
           {
-            text: this.$store.state.language == 'zh' ? '上月' : 'Last month',
+            text: this.$store.state.language == 'zh' ? '上月' : 'last month',
             value() {
               //-1 上月
               return [
@@ -144,7 +144,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '玩家账号' : 'Player account'
+              this.$store.state.language == 'zh' ? '玩家账号' : 'Player Account'
             )
           }
         },
@@ -156,7 +156,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '交易号' : 'Trading Number'
+              this.$store.state.language == 'zh' ? '交易号' : 'Transaction ID'
             )
           }
         },
@@ -167,7 +167,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '商户标识' : 'Date'
+              this.$store.state.language == 'zh' ? '日期' : 'Date'
             )
           }
         },
@@ -178,7 +178,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '商户标识' : 'Game type'
+              this.$store.state.language == 'zh' ? '游戏类型' : 'Game Type'
             )
           }
         },
@@ -189,7 +189,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '商户标识' : 'Game ID'
+              this.$store.state.language == 'zh' ? '游戏ID' : 'Game ID'
             )
           }
         },
@@ -200,7 +200,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '商户标识' : 'Medium bonus'
+              this.$store.state.language == 'zh' ? '中奖金额' : 'Bonus'
             )
           }
         }

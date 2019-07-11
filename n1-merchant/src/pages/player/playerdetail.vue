@@ -65,7 +65,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '所属商户' : 'Subordinate merchants'
+              this.$store.state.language == 'zh' ? '所属商户' : 'Merchants Name'
             )
           }
         },
@@ -76,7 +76,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '玩家ID' : 'Merchant sign'
+              this.$store.state.language == 'zh' ? '玩家ID' : 'SN'
             )
           }
         },
@@ -98,7 +98,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '玩家账号' : 'Player account'
+              this.$store.state.language == 'zh' ? '玩家账号' : 'Player Account'
             )
           }
         },
@@ -110,7 +110,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '游戏状态' : 'Game state'
+              this.$store.state.language == 'zh' ? '游戏状态' : 'Game Status'
             )
           }
         },
@@ -133,7 +133,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '最近登录游戏' : 'Recent login game'
+              this.$store.state.language == 'zh' ? '最近登录游戏' : 'Latest Login'
             )
           }
         },

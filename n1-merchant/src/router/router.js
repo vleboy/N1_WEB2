@@ -63,7 +63,7 @@ export const otherRouter = {
     title:'other',
     component: main,
     children: [
-        { path: 'home', name: 'home',title:'首页', component: home},
+      { path: 'home', name: 'home', title:'sideBar.home', component: home},
       { path: 'detail', name: 'playDetail', title:'sideBar.playerDetail',  meta: {keepAlive: true}, component:playerDetail},
     ]
 };

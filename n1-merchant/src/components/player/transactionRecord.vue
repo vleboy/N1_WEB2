@@ -131,7 +131,7 @@ export default {
       options: {
         shortcuts: [
           {
-            text: this.$store.state.language == 'zh' ? '本周' : 'This week',
+            text: this.$store.state.language == 'zh' ? '本周' : 'week',
             value() {
               return [
                 new Date(
@@ -149,7 +149,7 @@ export default {
             }
           },
           {
-            text: this.$store.state.language == 'zh' ? '本月' : 'This month',
+            text: this.$store.state.language == 'zh' ? '本月' : 'month',
             value() {
               return [
                 new Date(
@@ -166,7 +166,7 @@ export default {
             }
           },
           {
-            text: this.$store.state.language == 'zh' ? '上周' : 'Last week',
+            text: this.$store.state.language == 'zh' ? '上周' : 'last week',
             value() {
               return [
                 new Date(
@@ -187,7 +187,7 @@ export default {
             }
           },
           {
-            text: this.$store.state.language == 'zh' ? '上月' : 'Last month',
+            text: this.$store.state.language == 'zh' ? '上月' : 'last month',
             value() {
               //-1 上月
               return [
@@ -289,7 +289,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '交易号' : 'Trading number'
+              this.$store.state.language == 'zh' ? '交易号' : 'Transaction ID'
             )
           }
         },
@@ -301,7 +301,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '交易时间' : 'Trading time'
+              this.$store.state.language == 'zh' ? '交易时间' : 'Transaction Time'
             )
           }
         },
@@ -312,7 +312,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '游戏类型' : 'Game type'
+              this.$store.state.language == 'zh' ? '游戏类型' : 'Game Type'
             )
           }
         },
@@ -334,7 +334,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '结算前余额' : 'Pre-settlement balance'
+              this.$store.state.language == 'zh' ? '结算前余额' : 'Pre Balance'
             )
           }
         },
@@ -345,7 +345,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '操作金额' : 'Operating amountate'
+              this.$store.state.language == 'zh' ? '操作金额' : 'Operation Amount'
             )
           }
         },
@@ -356,7 +356,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '返还金额' : 'Return amount'
+              this.$store.state.language == 'zh' ? '返还金额' : 'Return Amount'
             )
           }
         },
@@ -366,7 +366,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '净利润' : 'Net profit'
+              this.$store.state.language == 'zh' ? '净利润' : 'Profit'
             )
           }
         },
@@ -444,7 +444,7 @@ export default {
         gameList.unshift("全部厂商");
         //this.companyInfo == "全部厂商"
       } else {
-        gameList.unshift("All manufacturers");
+        gameList.unshift("All");
         //this.companyInfo == 'All manufacturers'
       }
 
@@ -475,7 +475,7 @@ export default {
 
         if (
           this.companyInfo == "全部厂商" ||
-          this.companyInfo == "All manufacturers"
+          this.companyInfo == "All"
         ) {
           gameType = arr.map(item => {
             return item.name;
@@ -498,7 +498,7 @@ export default {
           }
         }
 
-        if (this.companyInfo == "All manufacturers") {
+        if (this.companyInfo == "All") {
           gameType = arr.map(item => {
             return item.name;
           });
@@ -575,7 +575,7 @@ export default {
         this.companyInfo = "全部厂商";
         this.radioInfo = "全部";
       } else {
-        this.companyInfo = "All manufacturers";
+        this.companyInfo = "All";
         this.radioInfo = "All";
       }
       this.startKey = ''
@@ -689,7 +689,7 @@ export default {
             return;
           }
         });
-        company = company == "All manufacturers" ? "-1" : this.companyInfo;
+        company = company == "All" ? "-1" : this.companyInfo;
       }
       let name = localStorage.playerName;
       let [startTime, endTime] = this.amountDate;

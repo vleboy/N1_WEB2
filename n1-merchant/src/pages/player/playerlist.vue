@@ -4,15 +4,15 @@
       <Row class="row -search-row">
         <Col span="1" style="margin-right:1rem">{{$t('playerList.playerID')}}</Col>
         <Col span="3" style="margin-right:0rem">
-          <Input v-model="searchInfo.userId" placeholder="请输入" size="small"></Input>
+          <Input v-model="searchInfo.userId" size="small"></Input>
         </Col>
-        <Col span="2">{{$t('playerList.playerID')}}</Col>
+        <Col span="2">{{$t('playerList.playerAccount')}}</Col>
         <Col span="3" style="margin-right:0rem">
-          <Input v-model="searchInfo.userName" placeholder="请输入" size="small"></Input>
+          <Input v-model="searchInfo.userName" size="small"></Input>
         </Col>
         <Col span="2">{{$t('playerList.PlayerNickname')}}</Col>
         <Col span="3" style="margin-right:0rem">
-          <Input v-model="searchInfo.nickname" placeholder="请输入" size="small"></Input>
+          <Input v-model="searchInfo.nickname" size="small"></Input>
         </Col>
         <Col span="2">{{$t('playerList.gameStatus')}}</Col>
         <Col span="3" style="margin-right:1rem">
@@ -126,7 +126,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '玩家ID' : 'Player ID'
+              this.$store.state.language == 'zh' ? '玩家ID' : 'ID'
             )
           }
         },
@@ -137,7 +137,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '玩家账号' : 'Player Account'
+              this.$store.state.language == 'zh' ? '玩家账号' : 'Account'
             )
           }
         },
@@ -148,7 +148,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '玩家昵称' : 'Player Nickname'
+              this.$store.state.language == 'zh' ? '玩家昵称' : 'Nickname'
             )
           }
         },
@@ -160,7 +160,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '所属商户ID' : 'Subordinate merchants ID'
+              this.$store.state.language == 'zh' ? '所属商户ID' : 'Merchant ID'
             )
           }
         },
@@ -172,7 +172,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '所属商户' : 'Subordinate merchants'
+              this.$store.state.language == 'zh' ? '所属商户' : 'Merchant Name'
             )
           }
         },
@@ -196,7 +196,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '游戏状态' : 'Game status'
+              this.$store.state.language == 'zh' ? '游戏状态' : 'Game Status'
             )
           }
         },
@@ -226,7 +226,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '注册时间' : 'Registration time'
+              this.$store.state.language == 'zh' ? '注册时间' : 'Registration'
             )
           }
         },
@@ -239,7 +239,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '投注金额' : 'Latest login game time'
+              this.$store.state.language == 'zh' ? '最近登录游戏时间' : 'Latest Login'
             )
           }
         },
@@ -281,7 +281,7 @@ export default {
       if (this.$store.state.language == 'zh') {
         playerStatus = ["已停用", "正常"]
       } else {
-        playerStatus = ["Deactivated", "Normal"]
+        playerStatus = ["frezze", "normal"]
       }
       return playerStatus[row.state]
     },
@@ -361,13 +361,14 @@ export default {
     changeStatus(row) {
       this.$Modal.confirm({
         title: this.$store.state.language == 'zh' ? "提示!" : "Tips!",
-        content: this.$store.state.language == 'zh' ? `<p>是否${row.state ? "停用" : "启用"}该玩家？</p>` : `<p>Is ${row.state ? "Stop" : "Open"} the player?</p>` ,
+        content: this.$store.state.language == 'zh' ? `<p>是否${row.state ? "停用" : "启用"}该玩家？</p>` : `<p>Confirm ${row.state ? "freeze" : "unfreeze"} the player?</p>` ,
         onOk: () => {
           httpRequest("post", "/player/forzen", {
             userName: row.userName,
             state: row.state ? 0 : 1
           }).then(res => {
-            this.$Message.success("状态改变成功");
+            let message = this.$store.state.language == 'zh' ? "状态改变成功" : "Success"
+            this.$Message.success(message);
             row.state = row.state ? 0 : 1; // 本地修改状态
           });
         }
@@ -473,8 +474,8 @@ export default {
           }
         }
         this.defaultStatus = 'All'
-        GameListEnum.unshift({ code: "0", name: "Off-line" })
-        GameListEnum.unshift({ code: "1", name: "Hall" })
+        GameListEnum.unshift({ code: "0", name: "Offline" })
+        GameListEnum.unshift({ code: "1", name: "Lobby" })
         GameListEnum.unshift({ code: "", name: "All" , value: "All"})
       }
 

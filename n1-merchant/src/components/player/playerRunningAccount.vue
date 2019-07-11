@@ -279,7 +279,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               "span",
-              this.$store.state.language == "zh" ? "流水号" : "Pipeline number"
+              this.$store.state.language == "zh" ? "流水号" : "Serial Number"
             );
           }
         },
@@ -290,7 +290,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               "span",
-              this.$store.state.language == "zh" ? "交易号" : "Trading number"
+              this.$store.state.language == "zh" ? "交易号" : "Transaction ID"
             );
           }
         },
@@ -312,7 +312,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               "span",
-              this.$store.state.language == "zh" ? "游戏类型" : "Game type"
+              this.$store.state.language == "zh" ? "游戏类型" : "Game Type"
             );
           }
         },
@@ -334,7 +334,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               "span",
-              this.$store.state.language == "zh" ? "交易类型" : "Trading type"
+              this.$store.state.language == "zh" ? "交易类型" : "Transaction Type"
             );
           }
         },
@@ -347,7 +347,7 @@ export default {
               "span",
               this.$store.state.language == "zh"
                 ? "帐变前余额"
-                : "Pre-account balance"
+                : "Pre Balance"
             );
           }
         },
@@ -360,7 +360,7 @@ export default {
               "span",
               this.$store.state.language == "zh"
                 ? "帐变金额"
-                : "Account balance"
+                : "Amount"
             );
           }
         },
@@ -373,7 +373,7 @@ export default {
               "span",
               this.$store.state.language == "zh"
                 ? "帐变后金额"
-                : "After account Change"
+                : "Balance"
             );
           }
         },
@@ -384,7 +384,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               "span",
-              this.$store.state.language == "zh" ? "操作" : "Operate"
+              this.$store.state.language == "zh" ? "操作" : "Operation"
             );
           }
         }
@@ -453,7 +453,7 @@ export default {
         gameList.unshift("全部厂商");
         //this.companyInfo == "全部厂商"
       } else {
-        gameList.unshift("All manufacturers");
+        gameList.unshift("All");
         //this.companyInfo == 'All manufacturers'
       }
 
@@ -519,7 +519,7 @@ export default {
 
         if (
           this.companyInfo == "全部厂商" ||
-          this.companyInfo == "All manufacturers"
+          this.companyInfo == "All"
         ) {
           gameType = arr.map(item => {
             return item.name;
@@ -542,7 +542,7 @@ export default {
           }
         }
 
-        if (this.companyInfo == "All manufacturers") {
+        if (this.companyInfo == "All") {
           gameType = arr.map(item => {
             return item.name;
           });
@@ -649,7 +649,7 @@ export default {
         this.companyInfo = "全部厂商";
         this.radioInfo = "全部";
       } else {
-        this.companyInfo = "All manufacturers";
+        this.companyInfo = "All";
         this.radioInfo = "All";
       }
       this.betId = "";
@@ -699,7 +699,7 @@ export default {
             return;
           }
         });
-        company = company == "All manufacturers" ? "-1" : this.companyInfo;
+        company = company == "All" ? "-1" : this.companyInfo;
       }
 
       httpRequest("post", "/player/bill/flow", {
@@ -846,7 +846,7 @@ export default {
                 }
               });
               } else {
-                this.companyInfo = 'All manufacturers'
+                this.companyInfo = 'All'
                 this.radioInfo = 'All'
               }
             }
@@ -862,7 +862,7 @@ export default {
               this.companyInfo = '全部厂商'
               this.radioInfo = '全部'
             } else {
-              this.companyInfo = 'All manufacturers'
+              this.companyInfo = 'All'
                 this.radioInfo = 'All'
             }
             

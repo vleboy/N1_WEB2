@@ -77,7 +77,7 @@ export default {
       options: {
         shortcuts: [
           {
-            text: this.$store.state.language == 'zh' ? '本周' : 'This week',
+            text: this.$store.state.language == 'zh' ? '本周' : 'week',
             value() {
               return [
                 new Date(
@@ -95,7 +95,7 @@ export default {
             }
           },
           {
-            text: this.$store.state.language == 'zh' ? '本月' : 'This month',
+            text: this.$store.state.language == 'zh' ? '本月' : 'month',
             value() {
               return [
                 new Date(
@@ -112,7 +112,7 @@ export default {
             }
           },
           {
-            text: this.$store.state.language == 'zh' ? '上周' : 'Last week',
+            text: this.$store.state.language == 'zh' ? '上周' : 'last week',
             value() {
               return [
                 new Date(
@@ -133,7 +133,7 @@ export default {
             }
           },
           {
-            text: this.$store.state.language == 'zh' ? '上月' : 'Last month',
+            text: this.$store.state.language == 'zh' ? '上月' : 'last month',
             value() {
               //-1 上月
               return [
@@ -404,7 +404,7 @@ export default {
           game = '全部游戏'
         } else {
           gameList = getENGameType()
-          game = 'All games'
+          game = 'All'
         }
         for (let index = 0; index < gameList.length; index++) {
           if (this.$route.query.type == gameList[index].code) {
@@ -490,8 +490,8 @@ export default {
             }
           }
         }
-        this.model1 = 'All games'
-        this.gameType.unshift({ company: "All", code: "", name: "All games" })
+        this.model1 = 'All'
+        this.gameType.unshift({ company: "All", code: "", name: "All" })
       }
     }
   },
