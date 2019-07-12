@@ -1,7 +1,7 @@
 import zh from 'iview/dist/locale/zh-CN';
 
 export default {
-  hello: '中文简体',
+  hello: '中文',
   //登录
   login: {
     system: 'NA商户后台',
@@ -16,7 +16,7 @@ export default {
   index: {
     welcome: '欢迎使用NA商户后台',
     loading: '欢迎使用《NA商户后台》，加载中...',
-    language: '中文简体',
+    language: '中文',
     exit: '退出登录',
   },
   //菜单

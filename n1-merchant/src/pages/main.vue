@@ -16,7 +16,7 @@
                 <Icon type="ios-arrow-down"></Icon>
               </a>
               <DropdownMenu slot="list">
-                <DropdownItem name="zh">中文简体</DropdownItem>
+                <DropdownItem name="zh">中文</DropdownItem>
                 <DropdownItem name="en">English</DropdownItem>
               </DropdownMenu>
             </Dropdown>
