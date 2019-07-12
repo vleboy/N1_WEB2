@@ -152,7 +152,7 @@ export default {
       options: {
         shortcuts: [
           {
-            text: this.$store.state.language == "zh" ? "本周" : "This week",
+            text: this.$store.state.language == "zh" ? "本周" : "week",
             value() {
               return [
                 new Date(
@@ -170,7 +170,7 @@ export default {
             }
           },
           {
-            text: this.$store.state.language == "zh" ? "本月" : "This month",
+            text: this.$store.state.language == "zh" ? "本月" : "month",
             value() {
               return [
                 new Date(
@@ -187,7 +187,7 @@ export default {
             }
           },
           {
-            text: this.$store.state.language == "zh" ? "本周" : "Last week",
+            text: this.$store.state.language == "zh" ? "本周" : "last week",
             value() {
               return [
                 new Date(
@@ -208,7 +208,7 @@ export default {
             }
           },
           {
-            text: this.$store.state.language == "zh" ? "上月" : "Last month",
+            text: this.$store.state.language == "zh" ? "上月" : "last month",
             value() {
               //-1 上月
               return [
@@ -396,6 +396,18 @@ export default {
     };
   },
   mounted() {
+    
+    //判断是否通过报表跳转到该页面
+    if (localStorage.playDetail != "playDetail") {
+      if (this.$store.state.language == "zh") {
+        this.companyInfo = "全部厂商";
+        this.radioInfo = "全部";
+      } else {
+        this.companyInfo = "All";
+        this.radioInfo = "All";
+      }
+    }
+
     this.searchData();
   },
   computed: {
@@ -645,6 +657,7 @@ export default {
       }
     },
     reset() {
+     
       if (this.$store.state.language == "zh") {
         this.companyInfo = "全部厂商";
         this.radioInfo = "全部";
@@ -691,7 +704,7 @@ export default {
             return;
           }
         });
-        company = company == "全部厂商" ? "-1" : this.companyInfo;
+        company = this.company == "全部厂商" ? "-1" : this.companyInfo;
       } else {
         getENGameType().map(item => {
           if (this.radioInfo == item.name) {
@@ -699,7 +712,7 @@ export default {
             return;
           }
         });
-        company = company == "All" ? "-1" : this.companyInfo;
+        company = this.company == "All" ? "-1" : this.companyInfo;
       }
 
       httpRequest("post", "/player/bill/flow", {

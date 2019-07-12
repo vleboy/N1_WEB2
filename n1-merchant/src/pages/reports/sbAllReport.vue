@@ -96,25 +96,25 @@ export default {
       options: {
         shortcuts: [
           {
-            text: this.$store.state.language == 'zh' ? '本周' : 'This week',
+            text: this.$store.state.language == 'zh' ? '本周' : 'week',
             value() {
               return [new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().endOf('second').valueOf())]
             }
           },
           {
-            text: this.$store.state.language == 'zh' ? '本月' : 'This month',
+            text: this.$store.state.language == 'zh' ? '本月' : 'month',
             value() {
               return [new Date(dayjs().startOf('month').valueOf()), new Date(dayjs().endOf('second').valueOf())]
             }
           },
           {
-            text: this.$store.state.language == 'zh' ? '上周' : 'Last week',
+            text: this.$store.state.language == 'zh' ? '上周' : 'last week',
             value() {
               return [new Date(dayjs().add(-1, 'week').startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000 - 1)]
             }
           },
           {
-            text: this.$store.state.language == 'zh' ? '上月' : 'Last month',
+            text: this.$store.state.language == 'zh' ? '上月' : 'last month',
             value() {
               //-1 上月
               return [new Date(dayjs().add(-1, 'month').startOf('month').valueOf()), new Date(dayjs().startOf('month').valueOf() - 1)]
@@ -136,7 +136,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '序号' : 'Serial number'
+              this.$store.state.language == 'zh' ? '序号' : 'NO.'
             )
           }
         },
@@ -171,7 +171,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '总游戏输赢金额' : 'Total game win/lose amount'
+              this.$store.state.language == 'zh' ? '总游戏输赢金额' : 'Win/Lose amount'
             )
           }
         },
@@ -182,7 +182,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '总游戏交公司' : 'General game delivery company'
+              this.$store.state.language == 'zh' ? '总游戏交公司' : 'Submit Amount'
             )
           }
         },
@@ -193,7 +193,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'SB真人游戏(输赢金额)' : 'SB Live Game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'SB真人游戏(输赢金额)' : 'SB Live(win/lose amount)'
             )
           }
         },
@@ -204,7 +204,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'SB真人游戏(商家交公司)' : 'SB Live Game(Business Exchange Company)'
+              this.$store.state.language == 'zh' ? 'SB真人游戏(商家交公司)' : 'SB Live(submit amount)'
             )
           }
         },
@@ -215,7 +215,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'SB电子游戏(输赢金额)' : 'SB Video Game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'SB电子游戏(输赢金额)' : 'SB Video(win/lose amount)'
             )
           }
         },
@@ -226,7 +226,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'SB电子游戏(商家交公司)' : 'SB Video Game(Business Exchange Company)'
+              this.$store.state.language == 'zh' ? 'SB电子游戏(商家交公司)' : 'SB Video(submit amount)'
             )
           }
         }
@@ -240,7 +240,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '序号' : 'Serial number'
+              this.$store.state.language == 'zh' ? '序号' : 'NO.'
             )
           }
         },
@@ -284,7 +284,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '总游戏输赢金额' : 'Total game win/lose amount'
+              this.$store.state.language == 'zh' ? '总游戏输赢金额' : 'Win/Lose amount'
             )
           }
         },
@@ -295,7 +295,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'SB真人游戏(输赢金额)' : 'SB Live Game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'SB真人游戏(输赢金额)' : 'SB Live(win/lose amount)'
             )
           }
         },
@@ -306,7 +306,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'SB电子游戏(输赢金额)' : 'SB Video Game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'SB电子游戏(输赢金额)' : 'SB Video(win/lose amount)'
             )
           }
         }

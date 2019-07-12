@@ -66,12 +66,40 @@
 
       <Row style="padding: 20px 0">
         <Col span="12" class="g-text-right">
-          <div style="margin-bottom: 10px;font-size: 15px;" v-if="radioInfo!=-1">
-            {{$t('playerDetail.total')}}:
-            <span
-              :class="{'-p-green':this.allAmount>0,'-p-red':this.allAmount<0}"
-            >{{formatPoints(allAmountFun)}}</span>
-          </div>
+          <Row type="flex"> 
+            <Col style="margin-right:1rem">
+              {{$t('playerDetail.pageAmount')}}:
+              <span>
+                {{formatPoints(allBetAmountFun)}}
+              </span>
+            </Col>
+            <Col>
+              {{$t('playerDetail.pageWinlose')}}:
+              <span :class="{'-p-green':this.allAmount>0,'-p-red':this.allAmount<0}">
+                {{formatPoints(allAmountFun)}}
+              </span>
+            </Col>
+          </Row>
+          <Row type="flex">
+            <Col style="margin-right:1rem">
+              {{$t('playerDetail.total')}}:
+              <span>
+                {{formatPoints(playerBetAmount)}}
+              </span>
+            </Col>
+            <Col style="margin-right:1rem">
+              {{$t('playerDetail.effectiveAmount')}}:
+              <span>
+                {{formatPoints(playerMixAmount)}}
+              </span>
+            </Col>
+            <Col>
+              {{$t('playerDetail.totalAmount')}}:
+              <span :class="{'-p-green':this.playerWinloseAmount>0,'-p-red':this.playerWinloseAmount<0}">
+                {{formatPoints(playerWinloseAmount)}}
+              </span>
+            </Col>
+          </Row>
         </Col>
         <Col span="12" style="text-align: right;font-size: 12px">
           <Page
@@ -242,6 +270,9 @@ export default {
       betId: "",
       propChild: {},
       runningDetail: {},
+      playerBetAmount: '',
+      playerMixAmount: '',
+      playerWinloseAmount: '',
       GameNameEnum: {
         "70001": "塔罗之谜",
         "70002": "小厨娘",
@@ -412,6 +443,15 @@ export default {
       }
       return this.allAmount;
     },
+    allBetAmountFun() {
+      this.allBetAmount = 0;
+      for (let item of this.dataList) {
+        if (item.gameType != "2") {
+          this.allBetAmount = item.betAmount + this.allBetAmount;
+        }
+      }
+      return this.allBetAmount;
+    },
     getCompanyList() {
 
        let arr = JSON.parse(localStorage.getItem("userInfo")).gameList.map(
@@ -517,6 +557,13 @@ export default {
     }  
   },
   mounted() {
+    if (this.$store.state.language == "zh") {
+        this.companyInfo = "全部厂商";
+        this.radioInfo = "全部";
+      } else {
+        this.companyInfo = "All";
+        this.radioInfo = "All";
+      }
     this.getTransactionRecord();
 
   },
@@ -571,6 +618,8 @@ export default {
       this.openModalRunning(row);
     },
     reset() {
+      console.log(123);
+      
       if (this.$store.state.language == "zh") {
         this.companyInfo = "全部厂商";
         this.radioInfo = "全部";
@@ -681,7 +730,7 @@ export default {
             return;
           }
         });
-        company = company == "全部厂商" ? "-1" : this.companyInfo;
+        company = this.companyInfo == "全部厂商" ? "-1" : this.companyInfo;
       } else {
         getENGameType().map(item => {
           if (this.radioInfo == item.name) {
@@ -689,9 +738,18 @@ export default {
             return;
           }
         });
-        company = company == "All" ? "-1" : this.companyInfo;
+      
+        
+        company = this.companyInfo == "All" ? "-1" : this.companyInfo;
+
+      
+        
       }
       let name = localStorage.playerName;
+
+      this.amountDate[0] = this.amountDate[0] > new Date() ? new Date() : this.amountDate[0]
+      this.amountDate[1] = this.amountDate[1] > new Date() ? new Date() : this.amountDate[1]
+
       let [startTime, endTime] = this.amountDate;
       startTime = new Date(startTime).getTime();
       endTime = new Date(endTime).getTime();
@@ -715,6 +773,21 @@ export default {
           ));
         this.isFetching = false;
       });
+
+
+      httpRequest("post", "/querySinglePlayerStat",{
+        userName: name,
+        company: company,
+        gameType: code,
+        startTime: startTime,
+        endTime: endTime,
+      }).then(res => {
+        
+        this.playerBetAmount = res.payload[0].betAmount
+        this.playerMixAmount = res.payload[0].mixAmount
+        this.playerWinloseAmount = res.payload[0].winloseAmount
+
+      })
     },
  //获取运营商列表
     changeCompany(val) {

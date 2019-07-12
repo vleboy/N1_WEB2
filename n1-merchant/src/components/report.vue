@@ -82,25 +82,25 @@ export default {
        options: {
         shortcuts: [
           {
-            text: this.$store.state.language == 'zh' ? '本周' : 'This week',
+            text: this.$store.state.language == 'zh' ? '本周' : 'week',
             value() {
               return [new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().endOf('second').valueOf())]
             }
           },
           {
-            text: this.$store.state.language == 'zh' ? '本月' : 'This month',
+            text: this.$store.state.language == 'zh' ? '本月' : 'month',
             value() {
               return [new Date(dayjs().startOf('month').valueOf()), new Date(dayjs().endOf('second').valueOf())]
             }
           },
           {
-            text: this.$store.state.language == 'zh' ? '上周' : 'Last week',
+            text: this.$store.state.language == 'zh' ? '上周' : 'last week',
             value() {
               return [new Date(dayjs().add(-1, 'week').startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000 - 1)]
             }
           },
           {
-            text: this.$store.state.language == 'zh' ? '上月' : 'Last month',
+            text: this.$store.state.language == 'zh' ? '上月' : 'last month',
             value() {
               //-1 上月
               return [new Date(dayjs().add(-1, 'month').startOf('month').valueOf()), new Date(dayjs().startOf('month').valueOf() - 1)]
@@ -120,7 +120,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '序号' : 'Serial number'
+              this.$store.state.language == 'zh' ? '序号' : 'NO.'
             )
           }
         },
@@ -144,7 +144,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '交易次数' : 'Transactions count'
+              this.$store.state.language == 'zh' ? '交易次数' : 'Transactions Count'
             )
           }
         },
@@ -155,7 +155,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '投注金额' : 'Bet amount'
+              this.$store.state.language == 'zh' ? '投注金额' : 'Bet Amount'
             )
           }
         },
@@ -166,7 +166,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '输赢金额' : 'Win/Lose amount'
+              this.$store.state.language == 'zh' ? '输赢金额' : 'Win/Lose Amount'
             )
           }
         },
@@ -177,7 +177,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '商家占成' : 'Merchant occupies'
+              this.$store.state.language == 'zh' ? '商家占成' : 'Merchant Occupies'
             )
           }
         },
@@ -188,7 +188,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '商家交公司' : 'Merchant exchange company'
+              this.$store.state.language == 'zh' ? '商家交公司' : 'Submit Amount'
             )
           }
         },
@@ -199,7 +199,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '获利比例' : 'Profit ratio'
+              this.$store.state.language == 'zh' ? '获利比例' : 'Profit'
             )
           }
         }
@@ -212,7 +212,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '序号' : 'Serial number'
+              this.$store.state.language == 'zh' ? '序号' : 'NO.'
             )
           }
         },
@@ -245,7 +245,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '交易次数' : 'Transactions count'
+              this.$store.state.language == 'zh' ? '交易次数' : 'Transactions Count'
             )
           }
         },
@@ -256,7 +256,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '交易次数' : 'Bet amount'
+              this.$store.state.language == 'zh' ? '交易次数' : 'Bet Amount'
             )
           }
         },
@@ -267,7 +267,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '交易次数' : 'Win/Lose amount'
+              this.$store.state.language == 'zh' ? '交易次数' : 'Win/Lose Amount'
             )
           }
         },

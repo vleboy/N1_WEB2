@@ -95,25 +95,25 @@ export default {
       options: {
         shortcuts: [
           {
-            text: this.$store.state.language == 'zh' ? '本周' : 'This week',
+            text: this.$store.state.language == 'zh' ? '本周' : 'week',
             value() {
               return [new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().endOf('second').valueOf())]
             }
           },
           {
-            text: this.$store.state.language == 'zh' ? '本月' : 'This month',
+            text: this.$store.state.language == 'zh' ? '本月' : 'month',
             value() {
               return [new Date(dayjs().startOf('month').valueOf()), new Date(dayjs().endOf('second').valueOf())]
             }
           },
           {
-            text: this.$store.state.language == 'zh' ? '上周' : 'Last week',
+            text: this.$store.state.language == 'zh' ? '上周' : 'last week',
             value() {
               return [new Date(dayjs().add(-1, 'week').startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000 - 1)]
             }
           },
           {
-            text: this.$store.state.language == 'zh' ? '上月' : 'Last month',
+            text: this.$store.state.language == 'zh' ? '上月' : 'last month',
             value() {
               //-1 上月
               return [new Date(dayjs().add(-1, 'month').startOf('month').valueOf()), new Date(dayjs().startOf('month').valueOf() - 1)]
@@ -134,7 +134,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '序号' : 'Serial number'
+              this.$store.state.language == 'zh' ? '序号' : 'NO.'
             )
           }
         },
@@ -156,7 +156,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '交易次数' : 'Transactions count'
+              this.$store.state.language == 'zh' ? '交易次数' : 'Transactions Count'
             )
           }
         },
@@ -167,7 +167,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '总游戏输赢金额' : 'Total game win/lose amount'
+              this.$store.state.language == 'zh' ? '总游戏输赢金额' : 'Win/Lose Amount'
             )
           }
         },
@@ -178,7 +178,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '总游戏交公司' : 'General game delivery company'
+              this.$store.state.language == 'zh' ? '总游戏交公司' : 'Submit Amount'
             )
           }
         },
@@ -189,7 +189,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'NA游戏(输赢金额)' : 'NA Electron H5(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'NA游戏(输赢金额)' : 'NA H5 Video(win/lose amount)'
             )
           }
         },
@@ -200,7 +200,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'NA游戏(商家交公司)' : 'NA Electron H5(Business Exchange Company)'
+              this.$store.state.language == 'zh' ? 'NA游戏(商家交公司)' : 'NA H5 Video(submit amount)'
             )
           }
         },
@@ -211,7 +211,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'NA电子H5无神秘奖(输赢金额)' : 'NA Electronic H5 No Mystery Award game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'NA电子H5无神秘奖(输赢金额)' : 'NA H5 Video Without Mystery Award game(win/lose Amount)'
             )
           }
         },
@@ -222,7 +222,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'NA游戏(商家交公司)' : 'NA Electronic H5 No Mystery Award game(Business Exchange Company)'
+              this.$store.state.language == 'zh' ? 'NA游戏(商家交公司)' : 'NA H5 Video Without Mystery(submit amount)'
             )
           }
         },
@@ -235,7 +235,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '序号' : 'Serial number'
+              this.$store.state.language == 'zh' ? '序号' : 'NO.'
             )
           }
         },
@@ -279,7 +279,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '总游戏输赢金额' : 'Total game win/lose amount'
+              this.$store.state.language == 'zh' ? '总游戏输赢金额' : 'Win/Lose Amount'
             )
           }
         },
@@ -290,7 +290,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'NA电子H5(输赢金额)' : 'NA Electron H5(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'NA电子H5(输赢金额)' : 'NA H5 Video(win/lose amount)'
             )
           }
         },
@@ -301,7 +301,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? 'NA电子H5无神秘奖(输赢金额)' : 'NA Electronic H5 No Mystery Award game(Win/Lose Amount)'
+              this.$store.state.language == 'zh' ? 'NA电子H5无神秘奖(输赢金额)' : 'NA H5 Video Without Mystery(win/lose amount)'
             )
           }
         }
