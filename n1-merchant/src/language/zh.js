@@ -21,6 +21,7 @@ export default {
   },
   //菜单
   sideBar: {
+    home: '首页',
     playerDetail: '玩家详情',
     newBoard: '数据看板',
     ownSpace: '个人中心',
