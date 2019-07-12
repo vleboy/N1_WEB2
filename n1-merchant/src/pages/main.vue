@@ -99,7 +99,7 @@ export default {
       
     },
     changeLanguage(name) {
-      let title = name == "zh" ? 'NA商户后台' : 'NA MERCHANT SYSTEM'
+      let title = name == "zh" ? 'NA商户后台' : 'NA Merchant'
       this.$i18n.locale = name
       document.title = title
       this.$store.commit('changeLanguage', name)
