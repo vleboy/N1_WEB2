@@ -7,7 +7,7 @@
     <div class="top">
       <Select style="width:200px;" ref="resetSelect" clearable v-model="model1" size="small">
         <Option
-          v-for="(item, index) in gameType"
+          v-for="(item, index) in getGameList"
           :value="item.name"
           :key="item.name"
           @click.native="selGame(item.code)"
@@ -203,7 +203,7 @@ export default {
     };
   },
   mounted() {
-    this.getGameList();
+    //this.getGameList();
     this.changeDate();
   },
   methods: {
@@ -220,34 +220,7 @@ export default {
         this.pyRankInit();
       }
     },
-    getGameList() {
-      this.gameType = []
-      let val = JSON.parse(localStorage.getItem('userInfo')).gameList 
-      if (this.$store.state.language == 'zh') {
-        for (let i = 0; i < val.length; i++) {
-          for (let j = 0; j < getCNGameType().length; j++) {
-            if (val[i].code == getCNGameType()[j].code) {
-              this.gameType.push(getCNGameType()[j])
-            }
-          }
-        }
-        this.model1 = '全部游戏'
-        this.gameType.unshift({ company: "全部", code: "", name: "全部游戏" })
-      } else {
-        for (let i = 0; i < val.length; i++) {
-          for (let j = 0; j < getENGameType().length; j++) {
-            if (val[i].code == getENGameType()[j].code) {
-              this.gameType.push(getENGameType()[j])
-            }
-          }
-        }
-        this.model1 = 'All'
-        this.gameType.unshift({ company: "All", code: "", name: "All" })
-      }
-
-      //console.log(this.model1);
-      
-    },
+    
     selGame(code) {
       this.gameCode = code;
       if (this.initNum == 0) {
@@ -385,7 +358,7 @@ export default {
       //this.$refs.resetSelect.clearSingleSelect();
      /*  this.model1 = this.$store.state.language == 'zh' ? "全部游戏" : 'All games'
       console.log(this.model1) */
-      this.getGameList()
+     // this.getGameList()
       if (this.initNum == 0) {
         this.init();
       } else {
@@ -865,7 +838,33 @@ export default {
       } else {
         return 0
       } */
-    }
+    },
+    getGameList() {
+      let gameType = []
+      let val = JSON.parse(localStorage.getItem('userInfo')).gameList 
+      if (this.$store.state.language == 'zh') {
+        for (let i = 0; i < val.length; i++) {
+          for (let j = 0; j < getCNGameType().length; j++) {
+            if (val[i].code == getCNGameType()[j].code) {
+              gameType.push(getCNGameType()[j])
+            }
+          }
+        }
+        this.model1 = '全部游戏'
+        gameType.unshift({ company: "全部", code: "", name: "全部游戏" })
+      } else {
+        for (let i = 0; i < val.length; i++) {
+          for (let j = 0; j < getENGameType().length; j++) {
+            if (val[i].code == getENGameType()[j].code) {
+              gameType.push(getENGameType()[j])
+            }
+          }
+        }
+        this.model1 = 'All'
+        gameType.unshift({ company: "All", code: "", name: "All" })
+      }
+      return gameType
+    },
   },
   watch: {
       '$store.state.language': function() {

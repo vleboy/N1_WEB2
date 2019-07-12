@@ -6,7 +6,7 @@
         <Col span="3" style="margin-right:0rem">
           <Input v-model="searchInfo.userId" size="small"></Input>
         </Col>
-        <Col span="2">{{$t('playerList.playerAccount')}}</Col>
+        <Col span="2">{{$t('playerList.PlayerAccount')}}</Col>
         <Col span="3" style="margin-right:0rem">
           <Input v-model="searchInfo.userName" size="small"></Input>
         </Col>
@@ -25,7 +25,7 @@
             @on-change="changeGameStatus"
           >
             <Option
-              v-for="(item, index) in gameTypeList"
+              v-for="(item, index) in getGameTypeList"
               :value="item.name"
               :key="index"
               
@@ -259,7 +259,7 @@ export default {
   },
   created() {
     this.getPlayList();
-    this.getGameTypeList();
+    //this.getGameTypeList();
   },
   computed: {
     
@@ -272,6 +272,42 @@ export default {
           this.nowSize * this.nowPage
         );
       }
+    },
+    getGameTypeList() {
+    
+      let GameListEnum = []
+      let val = JSON.parse(localStorage.getItem('userInfo')).gameList 
+      if (this.$store.state.language == 'zh') {
+        for (let i = 0; i < val.length; i++) {
+          for (let j = 0; j < getCNGameType().length; j++) {
+            if (val[i].code == getCNGameType()[j].code) {
+              GameListEnum.push(getCNGameType()[j])
+            }
+          }
+        }
+        this.defaultStatus = '全部'
+        GameListEnum.unshift({ code: "0", name: "离线" })
+        GameListEnum.unshift({ code: "1", name: "大厅" })
+        GameListEnum.unshift({ code: "", name: "全部" , value: "全部"})
+      } else {
+        for (let i = 0; i < val.length; i++) {
+          for (let j = 0; j < getENGameType().length; j++) {
+            if (val[i].code == getENGameType()[j].code) {
+              GameListEnum.push(getENGameType()[j])
+            }
+          }
+        }
+        this.defaultStatus = 'All'
+        GameListEnum.unshift({ code: "0", name: "Offline" })
+        GameListEnum.unshift({ code: "1", name: "Lobby" })
+        GameListEnum.unshift({ code: "", name: "All" , value: "All"})
+      }
+
+
+      let gameTypeList = GameListEnum;
+
+
+      return gameTypeList
     }
   },
   methods: {
@@ -440,7 +476,7 @@ export default {
           suffix: "",
           msn: ""
         }
-        this.getGameTypeList()
+        //this.getGameTypeList()
       }
       this.playerList = [];
       this.playerListStorage = [];
@@ -449,42 +485,7 @@ export default {
       this.nowPage = 1;
       this.getPlayList();
     },
-    getGameTypeList() {
     
-      let GameListEnum = []
-      let val = JSON.parse(localStorage.getItem('userInfo')).gameList 
-      if (this.$store.state.language == 'zh') {
-        for (let i = 0; i < val.length; i++) {
-          for (let j = 0; j < getCNGameType().length; j++) {
-            if (val[i].code == getCNGameType()[j].code) {
-              GameListEnum.push(getCNGameType()[j])
-            }
-          }
-        }
-        this.defaultStatus = '全部'
-        GameListEnum.unshift({ code: "0", name: "离线" })
-        GameListEnum.unshift({ code: "1", name: "大厅" })
-        GameListEnum.unshift({ code: "", name: "全部" , value: "全部"})
-      } else {
-        for (let i = 0; i < val.length; i++) {
-          for (let j = 0; j < getENGameType().length; j++) {
-            if (val[i].code == getENGameType()[j].code) {
-              GameListEnum.push(getENGameType()[j])
-            }
-          }
-        }
-        this.defaultStatus = 'All'
-        GameListEnum.unshift({ code: "0", name: "Offline" })
-        GameListEnum.unshift({ code: "1", name: "Lobby" })
-        GameListEnum.unshift({ code: "", name: "All" , value: "All"})
-      }
-
-
-      this.gameTypeList = GameListEnum;
-
-
-
-    }
   },
   watch: {
       '$store.state.language': function() {

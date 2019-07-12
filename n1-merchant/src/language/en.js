@@ -109,7 +109,7 @@ export default {
   },
   playerList: {
     playerID: 'Player ID',
-    playerAccount: 'Player Account',
+    PlayerAccount: 'Player Account',
     PlayerNickname: 'Player Nickname',
     gameStatus: 'Game Status',
     search: 'Search',

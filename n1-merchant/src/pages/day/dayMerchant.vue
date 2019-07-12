@@ -10,7 +10,7 @@
           size="small"
         >
           <Option
-            v-for="(item, index) in gameType"
+            v-for="(item, index) in getGameList"
             :value="item.name"
             :key="item.name"
             @click.native="selGame(item.code)"
@@ -233,14 +233,41 @@ export default {
       gameCode: ""
     };
   },
-  created() {
+  mounted() {
     this.getDate();
-    this.getGameList();
+    //this.getGameList();
     this.init();
   },
   computed: {
     permission() {
       return JSON.parse(localStorage.getItem("userInfo")).subRolePermission;
+    },
+    getGameList() {
+      let gameType = []
+      let val = JSON.parse(localStorage.getItem('userInfo')).gameList 
+      if (this.$store.state.language == 'zh') {
+        for (let i = 0; i < val.length; i++) {
+          for (let j = 0; j < getCNGameType().length; j++) {
+            if (val[i].code == getCNGameType()[j].code) {
+              gameType.push(getCNGameType()[j])
+            }
+          }
+        }
+        this.model1 = '全部游戏'
+        gameType.unshift({ company: "全部", code: "", name: "全部游戏" })
+      } else {
+        for (let i = 0; i < val.length; i++) {
+          for (let j = 0; j < getENGameType().length; j++) {
+            if (val[i].code == getENGameType()[j].code) {
+              this.gameType.push(getENGameType()[j])
+            }
+          }
+        }
+        this.model1 = 'All'
+        gameType.unshift({ company: "All", code: "", name: "All" })
+      }
+      
+      return gameType
     }
   },
   methods: {
@@ -380,7 +407,7 @@ export default {
       this.getDate();
       (this.buID = ""), (this.buSN = ""), (this.dayStatList = []);
       this.showChat = false;
-      this.getGameList()
+      //this.getGameList()
       this.init()
     },
     search() {
@@ -469,31 +496,7 @@ export default {
       }
     },
 
-    getGameList() {
-      this.gameType = []
-      let val = JSON.parse(localStorage.getItem('userInfo')).gameList 
-      if (this.$store.state.language == 'zh') {
-        for (let i = 0; i < val.length; i++) {
-          for (let j = 0; j < getCNGameType().length; j++) {
-            if (val[i].code == getCNGameType()[j].code) {
-              this.gameType.push(getCNGameType()[j])
-            }
-          }
-        }
-        this.model1 = '全部游戏'
-        this.gameType.unshift({ company: "全部", code: "", name: "全部游戏" })
-      } else {
-        for (let i = 0; i < val.length; i++) {
-          for (let j = 0; j < getENGameType().length; j++) {
-            if (val[i].code == getENGameType()[j].code) {
-              this.gameType.push(getENGameType()[j])
-            }
-          }
-        }
-        this.model1 = 'All'
-        this.gameType.unshift({ company: "All", code: "", name: "All" })
-      }
-    }
+    
   },
   watch: {
       '$store.state.language': function() {
