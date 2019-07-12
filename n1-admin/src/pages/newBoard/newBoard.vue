@@ -1484,7 +1484,7 @@ export default {
               name: this.gameUnit,
               type: "pie",
               radius: "55%",
-              center: ["70%", "60%"],
+              center: ["65%", "60%"],
               data: this.valueGD,
               itemStyle: {
                 emphasis: {
