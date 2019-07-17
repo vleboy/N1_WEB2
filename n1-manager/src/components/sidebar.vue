@@ -14,7 +14,7 @@
                 <Menu ref="sideMenu" :active-name="$route.name" :open-names="openName" theme="dark" width="auto" @on-select='selectMenu' >
                     <MenuItem name="ownspace-index" :class="flodMenu ? 'flodMuenS' : 'class-b' ">
                         <Icon type="ios-person"></Icon>
-                        <span v-if="unFlodMenu">个人中心</span>
+                        <span v-if="unFlodMenu">{{$t('sideBar.ownSpace')}}</span>
                     </MenuItem>
                     <MenuItem name="allreport" v-if='gameList.length>0 && flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
                         <Icon type="ios-paper" @click="unfold"/>
@@ -22,70 +22,70 @@
                     <Submenu name="report" v-if="gameList.length>0 && unFlodMenu">
                         <template slot="title">
                             <Icon type="ios-paper-outline"></Icon>
-                            输赢报表
+                            {{$t('sideBar.report')}}
                         </template>
-                        <MenuItem name="allreport">公司输赢总报表</MenuItem>
+                        <MenuItem name="allreport">{{$t('sideBar.allReport')}}</MenuItem>
                         <Submenu name='nareport' v-if="gameStr.includes('NA')||gameStr.includes('H5')">
-                            <template slot="title">NA游戏报表</template>
-                            <MenuItem name="naAll">NA游戏总报表</MenuItem>
-                            <MenuItem name="nahfive" v-if='gameList.includes("H5电子游戏")'>NA电子H5报表</MenuItem>
-                            <MenuItem name="nanomsy" v-if='gameList.includes("H5电子游戏-无神秘奖")'>NA电子H5无神秘奖报表</MenuItem>
+                            <template slot="title">{{$t('sideBar.naReport')}}</template>
+                            <MenuItem name="naAll">{{$t('sideBar.naAll')}}</MenuItem>
+                            <MenuItem name="nahfive" v-if='gameList.includes("H5电子游戏")'>{{$t('sideBar.naHFive')}}</MenuItem>
+                            <MenuItem name="nanomsy" v-if='gameList.includes("H5电子游戏-无神秘奖")'>{{$t('sideBar.nanomsy')}}</MenuItem>
                         </Submenu>
                         <Submenu name='kyreport' v-if='gameList.includes("KY棋牌游戏报表")'>
-                            <template slot="title">KY游戏报表</template>
-                            <MenuItem name="kychess">KY棋牌游戏报表</MenuItem>
+                            <template slot="title">{{$t('sideBar.kyReport')}}</template>
+                            <MenuItem name="kychess">{{$t('sideBar.kyChess')}}</MenuItem>
                         </Submenu>
                         <Submenu name='ttgreport' v-if="gameList.includes('TTG电子游戏')">
-                            <template slot="title">TTG游戏报表</template>
-                            <MenuItem name="ttgvideo">TTG电子游戏报表</MenuItem>
+                            <template slot="title">{{$t('sideBar.ttgReport')}}</template>
+                            <MenuItem name="ttgvideo">{{$t('sideBar.ttgVideo')}}</MenuItem>
                         </Submenu>
                         <Submenu name='sareport' v-if="gameStr.includes('SA')">
-                            <template slot="title">SA游戏报表</template>
-                            <MenuItem name="saAll">SA游戏总报表</MenuItem>
-                            <MenuItem name="satrue" v-if="gameStr.includes('SA真人')">SA真人游戏报表</MenuItem>
-                            <MenuItem name="safishing" v-if="gameStr.includes('SA捕鱼')">SA捕鱼游戏报表</MenuItem>
+                            <template slot="title">{{$t('sideBar.saReport')}}</template>
+                            <MenuItem name="saAll">{{$t('sideBar.saAll')}}</MenuItem>
+                            <MenuItem name="satrue" v-if="gameStr.includes('SA真人')">{{$t('sideBar.saTrue')}}</MenuItem>
+                            <MenuItem name="safishing" v-if="gameStr.includes('SA捕鱼')">{{$t('sideBar.saFishing')}}</MenuItem>
                         </Submenu>
                         <Submenu name='sbreport' v-if='gameList.includes("SB电子游戏")||gameList.includes("SB真人游戏")'>
-                            <template slot="title">SB游戏报表</template>
-                            <MenuItem name="sbAll">SB游戏总报表</MenuItem>
-                            <MenuItem name="sbvideo" v-if='gameList.includes("SB电子游戏")'>SB电子游戏报表</MenuItem>
-                            <MenuItem name="sbtrue" v-if='gameList.includes("SB真人游戏")'>SB真人游戏报表</MenuItem>
+                            <template slot="title">{{$t('sideBar.sbReport')}}</template>
+                            <MenuItem name="sbAll">{{$t('sideBar.sbAll')}}</MenuItem>
+                            <MenuItem name="sbvideo" v-if='gameList.includes("SB电子游戏")'>{{$t('sideBar.sbVideo')}}</MenuItem>
+                            <MenuItem name="sbtrue" v-if='gameList.includes("SB真人游戏")'>{{$t('sideBar.sbTrue')}}</MenuItem>
                         </Submenu>
                         <Submenu name='mgreport' v-if="gameStr.includes('MG')">
-                            <template slot="title">MG游戏报表</template>
-                            <MenuItem name="mgvideo">MG电子游戏报表</MenuItem>
+                            <template slot="title">{{$t('sideBar.mgReport')}}</template>
+                            <MenuItem name="mgvideo">{{$t('sideBar.mgVideo')}}</MenuItem>
                         </Submenu>
                         <Submenu name='agreport' v-if="gameStr.includes('AG真人')">
-                            <template slot="title">AG游戏报表</template>
-                            <MenuItem name="agtrue">AG真人游戏报表</MenuItem>
+                            <template slot="title">{{$t('sideBar.agReport')}}</template>
+                            <MenuItem name="agtrue">{{$t('sideBar.agTrue')}}</MenuItem>
                         </Submenu>
                         <Submenu name='rtgReport' v-if="gameList.includes('RTG电子游戏')">
-                            <template slot="title">RTG游戏报表</template>
-                            <MenuItem name="rtgGame">RTG电子游戏报表</MenuItem>
+                            <template slot="title">{{$t('sideBar.rtgReport')}}</template>
+                            <MenuItem name="rtgGame">{{$t('sideBar.rtgGame')}}</MenuItem>
                         </Submenu>
                         <Submenu name='dtReport' v-if='gameList.includes("DT电子游戏")'>
-                            <template slot="title">DT游戏报表</template>
-                            <MenuItem name="dtGame">DT电子游戏报表</MenuItem>
+                            <template slot="title">{{$t('sideBar.dtReport')}}</template>
+                            <MenuItem name="dtGame">{{$t('sideBar.dtGame')}}</MenuItem>
                         </Submenu>
                         <Submenu name='ppReport' v-if='gameList.includes("PP电子游戏")'>
-                            <template slot="title">PP游戏报表</template>
-                            <MenuItem name="ppGame">PP电子游戏报表</MenuItem>
+                            <template slot="title">{{$t('sideBar.ppReport')}}</template>
+                            <MenuItem name="ppGame">{{$t('sideBar.ppGame')}}</MenuItem>
                         </Submenu>
                         <Submenu name='ysbReport' v-if="gameList.includes('YSB体育游戏')">
-                            <template slot="title">YSB游戏报表</template>
-                            <MenuItem name="ysbSport">YSB体育游戏报表</MenuItem>
+                            <template slot="title">{{$t('sideBar.ysbReport')}}</template>
+                            <MenuItem name="ysbSport">{{$t('sideBar.ysbGame')}}</MenuItem>
                         </Submenu>
                         <Submenu name='pgReport' v-if='gameList.includes("PG电子游戏")'>
-                            <template slot="title">PG游戏报表</template>
-                            <MenuItem name="pgGame">PG电子游戏报表</MenuItem>
+                            <template slot="title">{{$t('sideBar.pgReport')}}</template>
+                            <MenuItem name="pgGame">{{$t('sideBar.pgGame')}}</MenuItem>
                         </Submenu>
                         <Submenu name='habaReport' v-if='gameList.includes("HABA电子游戏")'>
-                            <template slot="title">HABA游戏报表</template>
-                            <MenuItem name="habaGame">HABA电子游戏报表</MenuItem>
+                            <template slot="title">{{$t('sideBar.habaReport')}}</template>
+                            <MenuItem name="habaGame">{{$t('sideBar.habaGame')}}</MenuItem>
                         </Submenu>
                         <Submenu name='pngReport' v-if='gameList.includes("PNG电子游戏")'>
-                            <template slot="title">PNG游戏报表</template>
-                            <MenuItem name="pngGame">PNG电子游戏报表</MenuItem>
+                            <template slot="title">{{$t('sideBar.pngReport')}}</template>
+                            <MenuItem name="pngGame">{{$t('sideBar.pngGame')}}</MenuItem>
                         </Submenu>
                     </Submenu>
                     <MenuItem name="dayCompany" v-if='flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
@@ -94,10 +94,10 @@
                     <Submenu name="dayReport" v-if='unFlodMenu'>
                         <template slot="title">
                             <Icon type="md-stats"></Icon>
-                            日报表
+                            {{$t('sideBar.dailyReport')}}
                         </template>
-                        <MenuItem name="dayCompany">公司日列表</MenuItem>
-                        <MenuItem name="dayMerchant">商户日报表</MenuItem>
+                        <MenuItem name="dayCompany">{{$t('sideBar.dayCompany')}}</MenuItem>
+                        <MenuItem name="dayMerchant">{{$t('sideBar.dayMerchant')}}</MenuItem>
                     </Submenu>
                     <MenuItem name="dealerList" v-if='flodMenu' :class="flodMenu ? 'flodMuenS' : 'class-b' ">
                         <Icon type="md-people" @click="unfold"/>
@@ -105,14 +105,14 @@
                     <Submenu name="businessCenter" v-if='unFlodMenu'>
                         <template slot="title">
                             <Icon type="md-people"></Icon>
-                            商户中心
+                            {{$t('sideBar.merchantCenter')}}
                         </template>
-                        <MenuItem name="dealerList">线路商列表</MenuItem>
-                        <MenuItem name="merchantList">商户列表</MenuItem>
+                        <MenuItem name="dealerList">{{$t('sideBar.managerList')}}</MenuItem>
+                        <MenuItem name="merchantList">{{$t('sideBar.merchantList')}}</MenuItem>
                     </Submenu>
                     <MenuItem name="playList" :class="flodMenu ? 'flodMuenS' : 'class-b' ">
                         <Icon type="md-game-controller-b"></Icon>
-                        <span v-if="unFlodMenu">玩家中心</span>
+                        <span v-if="unFlodMenu">{{$t('sideBar.player')}}</span>
                     </MenuItem>
                 </Menu>
             </transition>

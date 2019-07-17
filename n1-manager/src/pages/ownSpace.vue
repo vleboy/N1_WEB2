@@ -5,9 +5,9 @@
         <template slot-scope="{row, index}" slot="password">
           <span v-if="showPass">{{row.password}}</span>
           <span v-else>******</span>
-          <span v-if="showPass" @click="showPass = !showPass" style="color:#20a0ff;cursor:pointer;margin:0 .3rem;">隐藏</span>
-          <span v-else @click="showPass = !showPass" style="color:#20a0ff;cursor:pointer;margin:0 .3rem;">显示</span>
-          <span class="newPassword" @click="newPassword">修改密码</span>
+          <span v-if="showPass" @click="showPass = !showPass" style="color:#20a0ff;cursor:pointer;margin:0 .3rem;">{{$t('ownSpace.hide')}}</span>
+          <span v-else @click="showPass = !showPass" style="color:#20a0ff;cursor:pointer;margin:0 .3rem;">{{$t('ownSpace.show')}}</span>
+          <span class="newPassword" @click="newPassword">{{$t('ownSpace.changePwd')}}</span>
         </template>
         <template slot-scope="{row, index}" slot="joinTime">
           <span>{{joinTimeConfig(row)}}</span>
@@ -18,24 +18,24 @@
         <template slot-scope="{row, index}" slot="apiKey">
           <span v-if="showKey">{{row.apiKey}}</span>
           <span v-else>******</span>
-          <span  @click="showKey=!showKey" v-if="showKey" style="color:#20a0ff;cursor:pointer;margin:0 .3rem;">隐藏</span>
-          <span  @click="showKey=!showKey" v-else style="color:#20a0ff;cursor:pointer;margin:0 .3rem;">显示</span>
+          <span  @click="showKey=!showKey" v-if="showKey" style="color:#20a0ff;cursor:pointer;margin:0 .3rem;">{{$t('ownSpace.hide')}}</span>
+          <span  @click="showKey=!showKey" v-else style="color:#20a0ff;cursor:pointer;margin:0 .3rem;">{{$t('ownSpace.show')}}</span>
         </template>
         <template slot-scope="{row, index}" slot="operate">
-          <span @click="reset" style="color:#20a0ff;cursor:pointer">刷新</span>
+          <span @click="reset" style="color:#20a0ff;cursor:pointer">{{$t('ownSpace.refresh')}}</span>
         </template>
       </Table>
     </div>
     <div class="manager-copertion">
-      <h2>财务信息
-        <span style="color:#20a0ff;cursor:pointer;fontSize:1rem" @click="getWaterfallList">(点击查询)</span>
+      <h2>{{$t('ownSpace.infomation')}}
+        <span style="color:#20a0ff;cursor:pointer;fontSize:1rem" @click="getWaterfallList">{{$t('ownSpace.query')}}</span>
       </h2>
       <Table :columns="columns1" :data="showWaterList" size="small">
         <template slot-scope="{row, index}" slot="waterCreatedAt">
           <span>{{createdAtConfig(row)}}</span>
         </template>
         <template slot-scope="{row, index}" slot="amountType">
-          <span>{{row.fromLevel > row.toLevel ? "减点" : "加点"}}</span>
+          <span>{{amountConfig1(row)}}</span>
         </template>
         <template slot-scope="{row, index}" slot="toUser">
           <span>{{row.fromLevel > row.toLevel ? `${row.toDisplayName}对${row.fromDisplayName}` : `${row.fromDisplayName}对${row.toDisplayName}`}}</span>
@@ -62,27 +62,27 @@
       </Table>
       <Page :total="total" class="page" :page-size='pageSize' @on-change="changepage"></Page>
     </div>
-    <Modal v-model="modal" title="修改密码" :width='350' @on-ok="ok" @on-cancel='cancel'>
+    <Modal v-model="modal" :title="$t('ownSpace.changePwd')" :width='350' @on-ok="ok" @on-cancel='cancel'>
       <p class="modal_input">
         <Row>
-          <Col span="6" class="label">新密码</Col>
+          <Col span="6" class="label">{{$t('ownSpace.newPWd')}}</Col>
           <Col span="14">
-          <Input v-model="password" placeholder="请输入新密码"></Input>
+          <Input v-model="password" :placeholder="$t('ownSpace.regPwd')"></Input>
           </Col>
         </Row>
       </p>
       <p class="modal_input">
         <Row>
-          <Col span="6" class="label">重复新密码</Col>
+          <Col span="6" class="label">{{$t('ownSpace.rePwd')}}</Col>
           <Col span="14">
-          <Input v-model="repassword" placeholder="请重复新密码"></Input>
+          <Input v-model="repassword"></Input>
           </Col>
         </Row>
       </p>
     </Modal>
     <Spin size="large" fix v-if="$store.state.login.loading">
       <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+      <div>{{$t('ownSpace.loading')}}</div>
     </Spin>
   </div>
 </template>
@@ -113,49 +113,104 @@ export default {
         {
           title: "线路商标识",
           align: "center",
-          key: "suffix"
+          key: "suffix",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '线路商标识' : 'SN'
+            )
+          }
         },
         {
           title: "线路商ID",
           align: "center",
-          maxWidth: 80,
-          key: "displayId"
+          minWidth: 30,
+          key: "displayId",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '线路商ID' : 'Manager ID'
+            )
+          }
         },
         {
           title: "线路商账号",
           align: "center",
-          key: "uname"
+          key: "uname",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '线路商账号' : 'Account'
+            )
+          }
         },
         {
           title: "线路商密码",
           align: "center",
-          slot: "password"
+          slot: "password",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '线路商密码' : 'Password'
+            )
+          }
         },
         {
           title: "上次登录IP",
           align: "center",
-          key: "lastIP"
+          key: "lastIP",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '上次登录IP' : 'Last IP'
+            )
+          }
         },
         {
           title: "上次登录时间",
           align: "center",
-          slot: "joinTime"
+          slot: "joinTime",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '上次登录时间' : 'Last Time'
+            )
+          }
         },
         {
           title: "创建时间",
           align: "center",
-          slot: "createdAt"
+          slot: "createdAt",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '创建时间' : 'Create Time'
+            )
+          }
         },
         {
           title: "商户API密钥",
           minWidth: 100,
           slot: "apiKey",
-          align: "center"
+          align: "center",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '商户API密钥' : 'API Key'
+            )
+          }
         },
         {
           title: "操作",
           align: "center",
-          slot: "operate"
+          slot: "operate",
+          minWidth: 30,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '操作' : 'Operation'
+            )
+          }
         }
       ],
       columns1: [
@@ -163,57 +218,117 @@ export default {
           title: "序号",
           type: "index",
           align: 'center',
-          maxWidth: 80
+          maxWidth: 90,
+          minWidth: 50,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '序号' : 'NO.'
+            )
+          }
         },
         {
           title: "交易时间",
           slot: "waterCreatedAt",
           align: 'center',
           sortable: true,
-          minWidth: 50
+          minWidth: 60,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易时间' : 'Transaction Time'
+            )
+          }
         },
         {
           title: "交易对象",
-          minWidth: 50,
+          minWidth: 30,
           slot: "toUser",
-          align: 'center'
+          align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易对象' : 'Target'
+            )
+          }
         },
         {
           title: "交易类型",
           slot: "amountType",
-          maxWidth: 80,
+          maxWidth: 140,
+          minWidth: 100,
           align: 'center',
-          sortable: true
+          sortable: true,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易类型' : 'Transaction Type'
+            )
+          }
         },
         {
           title: "交易前余额",
           slot: "oldBalance",
           sortable: true,
-          align: 'center'
+          align: 'center',
+          minWidth: 100,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易前余额' : 'Pre Balance'
+            )
+          }
         },
         {
           title: "交易点数",
           slot: "amount",
           align: 'center',
-          sortable: true
+          sortable: true,
+          maxWidth: 200,
+          minWidth: 20,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易点数' : 'Point'
+            )
+          }
         },
         {
           title: "交易后余额",
           slot: "balance",
           sortable: true,
-          align: 'center'
+          align: 'center',
+          minWidth: 100,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易后余额' : 'Balance'
+            )
+          }
         },
         {
           title: "操作人",
           slot: "operator",
           align: 'center',
-          sortable: true
+          sortable: true,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '操作人' : 'Operator'
+            )
+          }
         },
         {
           title: "备注",
           slot: "remark",
           align: 'center',
-          width:90
+          maxWidth: 60,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '备注' : 'Remark'
+            )
+          }
         }
       ]
     };
@@ -241,6 +356,37 @@ export default {
     //交易前余额
     oldBalanceConfig(row) {
       return thousandFormatter(row.oldBalance)
+    },
+    amountConfig1(row) {
+      if (this.$store.state.language == 'zh') {
+        if(row.fromDisplayName == row.toDisplayName){
+          if(row.amount<0){
+            return '玩家充值'
+          }else{
+            return '玩家提现'
+          }
+        }else{
+          if (row.fromLevel > row.toLevel) {
+            return "减点"
+          } else {
+            return "加点"
+          }
+        }
+      } else {
+        if(row.fromDisplayName == row.toDisplayName){
+          if(row.amount<0){
+            return 'Player recharge'
+          }else{
+            return 'Player withdrawal'
+          }
+        }else{
+          if (row.fromLevel > row.toLevel) {
+            return "Reduce point"
+          } else {
+            return "Add point"
+          }
+        }
+      }
     },
     //交易点数
     amountConfig(row) {

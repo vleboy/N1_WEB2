@@ -149,85 +149,7 @@ export default {
   components: { SportsModal },
   data() {
     return {
-      options: {
-        shortcuts: [
-          {
-            text: this.$store.state.language == "zh" ? "本周" : "week",
-            value() {
-              return [
-                new Date(
-                  dayjs()
-                    .startOf("week")
-                    .valueOf() +
-                    24 * 60 * 60 * 1000
-                ),
-                new Date(
-                  dayjs()
-                    .endOf("second")
-                    .valueOf()
-                )
-              ];
-            }
-          },
-          {
-            text: this.$store.state.language == "zh" ? "本月" : "month",
-            value() {
-              return [
-                new Date(
-                  dayjs()
-                    .startOf("month")
-                    .valueOf()
-                ),
-                new Date(
-                  dayjs()
-                    .endOf("second")
-                    .valueOf()
-                )
-              ];
-            }
-          },
-          {
-            text: this.$store.state.language == "zh" ? "本周" : "last week",
-            value() {
-              return [
-                new Date(
-                  dayjs()
-                    .add(-1, "week")
-                    .startOf("week")
-                    .valueOf() +
-                    24 * 60 * 60 * 1000
-                ),
-                new Date(
-                  dayjs()
-                    .startOf("week")
-                    .valueOf() +
-                    24 * 60 * 60 * 1000 -
-                    1
-                )
-              ];
-            }
-          },
-          {
-            text: this.$store.state.language == "zh" ? "上月" : "last month",
-            value() {
-              //-1 上月
-              return [
-                new Date(
-                  dayjs()
-                    .add(-1, "month")
-                    .startOf("month")
-                    .valueOf()
-                ),
-                new Date(
-                  dayjs()
-                    .startOf("month")
-                    .valueOf() - 1
-                )
-              ];
-            }
-          }
-        ]
-      },
+      
       nowSize: 20,
       nowPage: 1,
       pageSize: 100,
@@ -411,6 +333,87 @@ export default {
     this.searchData();
   },
   computed: {
+    options() {
+      return {
+        shortcuts: [
+          {
+            text: this.$store.state.language == "zh" ? "本周" : "week",
+            value() {
+              return [
+                new Date(
+                  dayjs()
+                    .startOf("week")
+                    .valueOf() +
+                    24 * 60 * 60 * 1000
+                ),
+                new Date(
+                  dayjs()
+                    .endOf("second")
+                    .valueOf()
+                )
+              ];
+            }
+          },
+          {
+            text: this.$store.state.language == "zh" ? "本月" : "month",
+            value() {
+              return [
+                new Date(
+                  dayjs()
+                    .startOf("month")
+                    .valueOf()
+                ),
+                new Date(
+                  dayjs()
+                    .endOf("second")
+                    .valueOf()
+                )
+              ];
+            }
+          },
+          {
+            text: this.$store.state.language == "zh" ? "本周" : "last week",
+            value() {
+              return [
+                new Date(
+                  dayjs()
+                    .add(-1, "week")
+                    .startOf("week")
+                    .valueOf() +
+                    24 * 60 * 60 * 1000
+                ),
+                new Date(
+                  dayjs()
+                    .startOf("week")
+                    .valueOf() +
+                    24 * 60 * 60 * 1000 -
+                    1
+                )
+              ];
+            }
+          },
+          {
+            text: this.$store.state.language == "zh" ? "上月" : "last month",
+            value() {
+              //-1 上月
+              return [
+                new Date(
+                  dayjs()
+                    .add(-1, "month")
+                    .startOf("month")
+                    .valueOf()
+                ),
+                new Date(
+                  dayjs()
+                    .startOf("month")
+                    .valueOf() - 1
+                )
+              ];
+            }
+          }
+        ]
+      }
+    },
     dataList() {
       if (this.nowPage === 1) {
         return this.playerAccountList.slice(0, this.nowSize);

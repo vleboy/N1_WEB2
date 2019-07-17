@@ -74,85 +74,7 @@ export default {
   },
   data() {
     return {
-      options: {
-        shortcuts: [
-          {
-            text: this.$store.state.language == 'zh' ? '本周' : 'week',
-            value() {
-              return [
-                new Date(
-                  dayjs()
-                    .startOf("week")
-                    .valueOf() +
-                    24 * 60 * 60 * 1000
-                ),
-                new Date(
-                  dayjs()
-                    .endOf("second")
-                    .valueOf()
-                )
-              ];
-            }
-          },
-          {
-            text: this.$store.state.language == 'zh' ? '本月' : 'month',
-            value() {
-              return [
-                new Date(
-                  dayjs()
-                    .startOf("month")
-                    .valueOf()
-                ),
-                new Date(
-                  dayjs()
-                    .endOf("second")
-                    .valueOf()
-                )
-              ];
-            }
-          },
-          {
-            text: this.$store.state.language == 'zh' ? '上周' : 'last week',
-            value() {
-              return [
-                new Date(
-                  dayjs()
-                    .add(-1, "week")
-                    .startOf("week")
-                    .valueOf() +
-                    24 * 60 * 60 * 1000
-                ),
-                new Date(
-                  dayjs()
-                    .startOf("week")
-                    .valueOf() +
-                    24 * 60 * 60 * 1000 -
-                    1
-                )
-              ];
-            }
-          },
-          {
-            text: this.$store.state.language == 'zh' ? '上月' : 'last month',
-            value() {
-              //-1 上月
-              return [
-                new Date(
-                  dayjs()
-                    .add(-1, "month")
-                    .startOf("month")
-                    .valueOf()
-                ),
-                new Date(
-                  dayjs()
-                    .startOf("month")
-                    .valueOf() - 1
-                )
-              ];
-            }
-          }
-        ]
-      },
+      
       defaultTime: [], //getDefaultTime(),
       cacheTime: [],
       model1: "全部游戏",
@@ -239,6 +161,87 @@ export default {
     this.init();
   },
   computed: {
+    options() {
+      return {
+        shortcuts: [
+          {
+            text: this.$store.state.language == 'zh' ? '本周' : 'week',
+            value() {
+              return [
+                new Date(
+                  dayjs()
+                    .startOf("week")
+                    .valueOf() +
+                    24 * 60 * 60 * 1000
+                ),
+                new Date(
+                  dayjs()
+                    .endOf("second")
+                    .valueOf()
+                )
+              ];
+            }
+          },
+          {
+            text: this.$store.state.language == 'zh' ? '本月' : 'month',
+            value() {
+              return [
+                new Date(
+                  dayjs()
+                    .startOf("month")
+                    .valueOf()
+                ),
+                new Date(
+                  dayjs()
+                    .endOf("second")
+                    .valueOf()
+                )
+              ];
+            }
+          },
+          {
+            text: this.$store.state.language == 'zh' ? '上周' : 'last week',
+            value() {
+              return [
+                new Date(
+                  dayjs()
+                    .add(-1, "week")
+                    .startOf("week")
+                    .valueOf() +
+                    24 * 60 * 60 * 1000
+                ),
+                new Date(
+                  dayjs()
+                    .startOf("week")
+                    .valueOf() +
+                    24 * 60 * 60 * 1000 -
+                    1
+                )
+              ];
+            }
+          },
+          {
+            text: this.$store.state.language == 'zh' ? '上月' : 'last month',
+            value() {
+              //-1 上月
+              return [
+                new Date(
+                  dayjs()
+                    .add(-1, "month")
+                    .startOf("month")
+                    .valueOf()
+                ),
+                new Date(
+                  dayjs()
+                    .startOf("month")
+                    .valueOf() - 1
+                )
+              ];
+            }
+          }
+        ]
+      }
+    },
     permission() {
       return JSON.parse(localStorage.getItem("userInfo")).subRolePermission;
     },
@@ -259,7 +262,7 @@ export default {
         for (let i = 0; i < val.length; i++) {
           for (let j = 0; j < getENGameType().length; j++) {
             if (val[i].code == getENGameType()[j].code) {
-              this.gameType.push(getENGameType()[j])
+              gameType.push(getENGameType()[j])
             }
           }
         }

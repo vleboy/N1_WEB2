@@ -96,7 +96,7 @@ export const appRouter = [
            title: 'AG游戏报表',
            name: 'aggame',
            component: main,
-           children: [{ path: 'true', title: 'sideBar.saTrue', name: 'agtrue', component: agtrue }]
+           children: [{ path: 'true', title: 'sideBar.agTrue', name: 'agtrue', component: agtrue }]
          },
          {
            path: '/mggame',

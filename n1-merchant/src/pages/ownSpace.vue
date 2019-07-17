@@ -240,7 +240,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '商户标识' : 'Merchant ID'
+              this.$store.state.language == 'zh' ? '商户ID' : 'Merchant ID'
             )
           }
         },
@@ -251,7 +251,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '商户标识' : 'Account'
+              this.$store.state.language == 'zh' ? '管理员账号' : 'Account'
             )
           }
         },

@@ -1,37 +1,37 @@
 <template>
   <div class="business">
     <div class="search">
-      <p>商户标识</p>
+      <p>{{$t('merchantList.sn')}}</p>
       <p style="margin:0 1rem">
-      <Input v-model="sn" placeholder="请输入" size="small"></Input>
+      <Input v-model="sn" size="small"></Input>
       </p>
-      <p>商户ID</p>
+      <p>{{$t('merchantList.id')}}</p>
       <p style="margin:0 1rem">
-      <Input v-model="displayId" placeholder="请输入" size="small"></Input>
+      <Input v-model="displayId" size="small"></Input>
       </p>
       <p>
       </p>
-      <p>商户昵称</p>
+      <p>{{$t('merchantList.nickname')}}</p>
       <p style="margin:0 1rem">
-        <Input v-model="displayName" placeholder="请输入" size="small"></Input>
+        <Input v-model="displayName" size="small"></Input>
       </p>
-      <p>上级标识</p>
+      <p>{{$t('merchantList.upSn')}}</p>
       <p style="margin:0 1rem">
-        <Input v-model="supSuffix" placeholder="请输入" size="small"></Input>
+        <Input v-model="supSuffix" size="small"></Input>
       </p>
       <div class="btns">
-        <Button type="primary" @click="init" size="small" style="margin-right:.3rem">搜索</Button>
-        <Button@click="reset" size="small">重置</Button>
+        <Button type="primary" @click="init" size="small" style="margin-right:.3rem">{{$t('merchantList.search')}}</Button>
+        <Button@click="reset" size="small">{{$t('merchantList.reset')}}</Button>
       </div>
     </div>
     
     <div class="option">
-      <span>H5接线</span>
+      <span>{{$t('merchantList.h5')}}</span>
       <i-switch v-model="isH5" @on-change="init" size="small" style="margin:0 1rem 0 .3rem"></i-switch>
       <RadioGroup v-model="source" class="radioGroup" type="button" @on-change='init' size="small">
-        <Radio label="正式"></Radio>
-        <Radio label="测试"></Radio>
-        <Radio label="全部"></Radio>
+        <Radio label="0">{{$t('merchantList.formal')}}</Radio>
+        <Radio label="1">{{$t('merchantList.test')}}</Radio>
+        <Radio label="2">{{$t('merchantList.all')}}</Radio>
       </RadioGroup>
     </div>
 
@@ -41,20 +41,20 @@
           <span>{{`${row.parentDisplayName}(${row.parentSuffix})`}}</span>
         </template>
         <template slot-scope="{row, index}" slot="playerCount">
-          <Tooltip content="前往玩家列表" transfer>
+          <Tooltip :content="$t('merchantList.toPlayer')" transfer>
             <span style="color:#20a0ff;cursor:pointer" @click="playerCount(row)">{{row.playerCount}}</span>
           </Tooltip> 
         </template>
         <template slot-scope="{row, index}" slot="balance">
           <p>{{balanceConfig(row)}}</p>
           <div style="display:flex;justify-content:center">
-            <p style="color:#20a0ff;cursor:pointer;margin-right:1rem" @click="addBalance(row)">加点</p>
-            <p style="color:#20a0ff;cursor:pointer" @click="reduceBalance(row)">减点</p>
+            <p style="color:#20a0ff;cursor:pointer;margin-right:1rem" @click="addBalance(row)">{{$t('merchantList.add')}}</p>
+            <p style="color:#20a0ff;cursor:pointer" @click="reduceBalance(row)">{{$t('merchantList.reduce')}}</p>
           </div>
         </template>
         <template slot-scope="{row, index}" slot="merchantGame">
           <Poptip trigger="hover" transfer placement="right">
-            <p style="color:#20a0ff;cursor:pointer">{{`${row.gameList.length}款游戏`}}</p>
+            <p style="color:#20a0ff;cursor:pointer">{{`${row.gameList.length}`}}{{$t('merchantList.game')}}</p>
             <div slot="content">
               <Table :columns="merchantGame(row).columns" :data="merchantGame(row).data" border size="small" width="250"></Table>
             </div>
@@ -67,53 +67,53 @@
           <span>{{joinTimeConfig(row)}}</span>
         </template> -->
         <template slot-scope="{row, index}" slot="status">
-          <Button type="text" size="small" :style="{borderColor: statusConfig(row, true), color:statusConfig(row, true)}">{{row.status == 1 ? "已启用" : "已停用"}}</Button>
+          <Button type="text" size="small" :style="{borderColor: statusConfig(row, true), color:statusConfig(row, true)}">{{statusConfig1(row, true)}}</Button>
         </template>
         <template slot-scope="{row, index}" slot="operate">
-          <Button type="text" size="small" style="color:#20a0ff" @click="operateCheck(row)">查看</Button>
-          <Button type="text" size="small" :style="{color:statusConfig(row, false)}" @click="operateConfig(row)">{{row.status == 1 ? "停用" : "启用"}}</Button>
+          <Button type="text" size="small" style="color:#20a0ff" @click="operateCheck(row)">{{$t('merchantList.see')}}</Button>
+          <Button type="text" size="small" :style="{color:statusConfig(row, false)}" @click="operateConfig(row)">{{statusConfig1(row, false)}}</Button>
         </template>
       </Table>
     </div>
     <Spin size="large" fix v-if="spinShow">
       <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+      <div>{{$t('merchantList.loading')}}</div>
     </Spin>
     <Modal v-model="modal" @on-ok="ok" id="plusModal" @on-cancel='cancel'>
-      <h2 v-if='plus'>加点操作</h2>
-      <h2 v-else>减点操作</h2>
+      <h2 v-if='plus'>{{$t('merchantList.addOperate')}}</h2>
+      <h2 v-else>{{$t('merchantList.reduceOperate')}}</h2>
       <Row class-name='modalrow'>
-        <Col span="4" v-if='plus'>增加点数</Col>
-        <Col span="4" v-else>减少点数</Col>
+        <Col span="4" v-if='plus'>{{$t('merchantList.addPoint')}}</Col>
+        <Col span="4" v-else>{{$t('merchantList.reducePoint')}}</Col>
         <Col span="16">
         <Tooltip :content="tooltip" placement="top">
-          <Input v-model="point" placeholder="请输入点数"></Input>
+          <Input v-model="point"></Input>
         </Tooltip>
         </Col>
       </Row>
       <Row class-name='modalrow'>
-        <Col span="4">起始账户</Col>
+        <Col span="4">{{$t('merchantList.startAccount')}}</Col>
         <Col span="16">
-        <p v-if="plus">【线路商】 {{parentAcount}} </p>
-        <p v-else>【商户】 {{uname}}</p>
+        <p v-if="plus">【{{$t('merchantList.manager')}}】 {{parentAcount}} </p>
+        <p v-else>【{{$t('merchantList.merchant')}}】 {{uname}}</p>
         </Col>
       </Row>
       <Row v-if="plus" class-name='modalrow'>
-        <Col span="4">增加账户</Col>
+        <Col span="4">{{$t('merchantList.addAccount')}}</Col>
         <Col span="16">
-        <p>【商户】{{uname}}</p>
+        <p>【{{$t('merchantList.merchant')}}】{{uname}}</p>
         </Col>
       </Row>
       <Row v-else class-name='modalrow'>
-        <Col span="4">转入账户</Col>
+        <Col span="4">{{$t('merchantList.transferAccount')}}</Col>
         <Col span="16">
-        <p>【线路商】 {{parentAcount}} </p>
+        <p>【{{$t('merchantList.manager')}}】 {{parentAcount}} </p>
         </Col>
       </Row>
       <Row class-name='textrow'>
-        <Col span="4">备注</Col>
+        <Col span="4">{{$t('merchantList.remark')}}</Col>
         <Col span="16">
-        <textarea v-model="note" id="textRow" placeholder="注明备注,如没有可不填" rows="6" autocomplete="off" maxlength="180"></textarea>
+        <textarea v-model="note" id="textRow" rows="6" autocomplete="off" maxlength="180"></textarea>
         </Col>
       </Row>
     </Modal>
@@ -139,57 +139,105 @@ export default {
       plus: null, //加点
       modal: false, //加点弹窗
       fromUserId: "", //id
-      source: "正式",
+      source: "0",
       toRole: " ",
       toUser: "",
-      tooltip: "起始账户余额为", //tooltip content
+      tooltip: '',
       columns1: [
         {
           title: "序号",
           type: "index",
           maxWidth: 40,
-          align: 'center'
+          align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '序号' : 'NO.'
+            )
+          }
         },
         {
           title: "商户ID",
           key: "displayId",
           sortable: true,
-          align: 'center'
+          align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '序号' : 'ID.'
+            )
+          }
         },
         {
           title: "商户标识",
           key: "sn",
           sortable: true,
-          align: 'center'
+          align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '商户标识' : 'SN'
+            )
+          }
         },
         {
           title: "商户昵称",
           key: "displayName",
           sortable: true,
-          align: 'center'
+          align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '商户昵称' : 'Nickname'
+            )
+          }
         },
         {
           title: "上级线路商",
           slot: "parentDisplayName",
           sortable: true,
           align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '上级线路商' : 'UP Merchant'
+            )
+          }
           
         },
         {
           title:'玩家数量',
           slot:'playerCount',
-          align: 'center'
+          align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '玩家数量' : 'Player Count'
+            )
+          }
         },
         {
           title: "剩余点数",
           slot: "balance",
           sortable: true,
-          align: 'center'
+          align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '剩余点数' : 'Surplus Points'
+            )
+          }
         },
         {
           title: "商户游戏",
           slot: "merchantGame",
-          align: 'center'
+          align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '商户游戏' : 'Merchant Games'
+            )
+          }
         },
         {
           title: "创建时间",
@@ -199,6 +247,12 @@ export default {
           render: (h, params) => {
             return h("span", dayjs(params.row.createdAt).format("YYYY-MM-DD"));
           },
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '创建时间' : 'Create Time'
+            )
+          }
         },
         {
           title: "最后登录时间",
@@ -208,16 +262,34 @@ export default {
           render: (h, params) => {
             return h("span", dayjs(params.row.joinTime).format("YYYY-MM-DD"));
           },
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '最后登录时间' : 'Latest Login'
+            )
+          }
         },
         {
           title: "状态",
           slot: "status",
-          align: 'center'
+          align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '状态' : 'Status'
+            )
+          }
         },
         {
           title: "操作",
           slot: "operate",
-          align: 'center'
+          align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '操作' : 'Operation'
+            )
+          }
         }
       ]
     };
@@ -243,7 +315,11 @@ export default {
       this.toUser = row.username;
       this.toRole = "100";
       getBill(adminId).then(res => {
-        this.tooltip = "起始账户余额为" + res.payload.balance;
+        if (this.$store.state.language == 'zh') {
+          this.tooltip = "起始账户余额为" + res.payload.balance;
+        } else {
+          this.tooltip = "Start Account Balance :" + res.payload.balance;
+        }
       })
     },
     //减点
@@ -255,7 +331,7 @@ export default {
       this.toRole = "10";
       this.toUser = userName;
       this.fromUserId = row.userId;
-      this.tooltip = "起始账户余额为" + row.balance;
+      this.tooltip = "Start Account Balance :" + row.balance;
     },
     //商户游戏
     merchantGame(row) {
@@ -301,6 +377,21 @@ export default {
         return row.status == 1 ? "#f5141e" : "#20a0ff"
       }
     },
+    statusConfig1(row,bool) {
+      if (this.$store.state.language == 'zh') {
+        if (bool) {
+          return row.status == 1 ? "已启用" : "已停用"
+        } else {
+          return row.status == 1 ? "停用" : "启用"
+        }
+      } else {
+        if (bool) {
+          return row.status == 1 ? "enabled" : "disabled"
+        } else {
+          return row.status == 1 ? "enable" : "disable"
+        }
+      }
+    },
     /* 操作 */
     //查看      
     operateCheck(row) {
@@ -322,18 +413,20 @@ export default {
     },
     //启用禁用
     operateConfig(row) {
+      console.log(233);
+      
       let text = "";
       let status = null;
       if (row.status == 1) {
-        text = "停用";
+        text = this.$store.state.language == 'zh' ? "停用" : 'disable';
         status = 0;
       } else {
-        text = "启用";
+        text = this.$store.state.language == 'zh' ? "停用" : 'enable';
         status = 1;
       }
         this.$Modal.confirm({
-          title: "提示!",
-          content: `<p>是否${text}商户</p>`,
+          title: this.$store.state.language == 'zh' ? "提示" : 'Hint',
+          content: this.$store.state.language == 'zh' ? `<p>是否${text}商户</p>` : `<p>${text} Merchant</p>` ,
           onOk: () => {
             userChangeStatus({
               role: "100",
@@ -341,7 +434,7 @@ export default {
               userId: row.userId
             }).then(res => {
               if (res.code == 0) {
-                this.$Message.success(`${text}成功`);
+                this.$Message.success(this.$store.state.language == 'zh' ?`${text}成功` : 'success');
                 this.$store.dispatch("getMerchantsList", {
                   query: {},
                   sortkey: "createdAt",
@@ -423,7 +516,7 @@ export default {
       let params = {
         query,
         isH5:this.isH5,
-        isTest: +this.source,
+        isTest: this.source,
         sortkey: "createdAt",
         sort: "desc"
       };
@@ -442,16 +535,7 @@ export default {
       name = `${name.displayName}（${name.username}）`;
       return name;
     },
-    isTest() {
-      let source = this.source;
-      if (source == "正式") {
-        return 0;
-      } else if (source == "测试") {
-        return 1;
-      } else {
-        return 2;
-      }
-    }
+    
   },
   created() {
     this.init();

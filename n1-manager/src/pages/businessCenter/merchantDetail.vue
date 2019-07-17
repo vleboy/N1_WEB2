@@ -3,29 +3,29 @@
     <div class="userName">
       <span>{{$route.query.displayName}} ({{$route.query.username }})</span>
       <span class="btns">
-        <Button type="primary" class="edit" @click="reload" size="small">刷新</Button>
-        <Button type="primary" class="edit" @click.stop="editBtn" v-if="isedit" size="small" style="margin-right:.3rem">编辑</Button>
-        <Button type="primary" class="edit" @click.stop="save" v-else size="small" style="margin-right:.3rem">提交修改</Button>
+        <Button type="primary" class="edit" @click="reload" size="small">{{$t('merchantDetail.refresh')}}</Button>
+        <Button type="primary" class="edit" @click.stop="editBtn" v-if="isedit" size="small" style="margin-right:.3rem">{{$t('merchantDetail.edit')}}</Button>
+        <Button type="primary" class="edit" @click.stop="save" v-else size="small" style="margin-right:.3rem">{{$t('merchantDetail.submit')}}</Button>
       </span>
     </div>
     <Collapse v-model="value">
       <Panel name="1">
-        基本信息 所属线路商: {{$route.query.parentDisplayName}}
+        {{$t('merchantDetail.basic')}}: {{$route.query.parentDisplayName}}
         <div slot="content">
           <Form label-position="left" :label-width="100">
             <Row>
               <Col span="8">
-              <FormItem label="上级商户">
+              <FormItem :label="$t('merchantDetail.upMerchant')">
                 {{ merchantDetail.parentDisplayName }}
               </FormItem>
               </Col>
               <Col span="8">
-              <FormItem label="商户ID">
+              <FormItem :label="$t('merchantDetail.merchantID')">
                 {{ merchantDetail.displayId }}
               </FormItem>
               </Col>
               <Col span="8">
-              <FormItem label="商户标识">
+              <FormItem :label="$t('merchantDetail.merchantSN')">
                 {{merchantDetail.sn}}
               </FormItem>
               </Col>
@@ -33,25 +33,25 @@
             </Row>
             <Row>
               <Col span="8">
-              <FormItem label="商户昵称">
+              <FormItem :label="$t('merchantDetail.merchantNickname')">
                 {{merchantDetail.displayName}}
               </FormItem>
               </Col>
               <Col span="8">
-              <FormItem label="管理员账号">
+              <FormItem :label="$t('merchantDetail.adminAccount')">
                 {{ merchantDetail.uname}}
               </FormItem>
               </Col>
               <Col span="8">
-              <FormItem label="商户密匙">
+              <FormItem :label="$t('merchantDetail.merchantKey')">
                 <Row>
                   <Col span="18">
                   <span v-if="showKey">{{merchantDetail.apiKey}}</span>
                   <span v-else>********</span>
                   </Col>
                   <Col>
-                  <span class="show" @click="showKey=!showKey" v-if="!showKey">显示</span>
-                  <span class="show" @click="showKey=!showKey" v-else>隐藏</span>
+                  <span class="show" @click="showKey=!showKey" v-if="!showKey">{{$t('merchantDetail.show')}}</span>
+                  <span class="show" @click="showKey=!showKey" v-else>{{$t('merchantDetail.hide')}}</span>
                   </Col>
                 </Row>
               </FormItem>
@@ -59,17 +59,17 @@
             </Row>
             <Row>
               <Col span="8">
-              <FormItem label="创建时间">
+              <FormItem :label="$t('merchantDetail.createTime')">
                 {{dayjs(merchantDetail.createdAt).format("YYYY-MM-DD HH:mm:ss")}}
               </FormItem>
               </Col>
               <Col span="8">
-              <FormItem label="上次登录时间">
+              <FormItem :label="$t('merchantDetail.lastLogin')">
                 {{dayjs(merchantDetail.loginAt).format("YYYY-MM-DD HH:mm:ss")}}
               </FormItem>
               </Col>
               <Col span="8">
-              <FormItem label="上次登录IP">
+              <FormItem :label="$t('merchantDetail.lastIP')">
                 {{merchantDetail.lastIP}}
               </FormItem>
               </Col>
@@ -78,48 +78,48 @@
         </div>
       </Panel>
       <Panel name="2">
-        配置信息
+        {{$t('merchantDetail.config')}}
         <div slot="content">
           <Form :model="basic" label-position="left" :label-width="100">
             <Row>
               <Col span="8">
-              <FormItem label="管理员密码" v-if="edit">
+              <FormItem :label="$t('merchantDetail.adminPwd')" v-if="edit">
                 <Row>
                   <Col span="6">
                   <span v-if="showPass">{{merchantDetail.password}}</span>
                   <span v-else>********</span>
                   </Col>
                   <Col span="6">
-                  <span class="show" @click="showPass=!showPass" v-if="!showPass">显示</span>
-                  <span class="show" @click="showPass=!showPass" v-else>隐藏</span>
+                  <span class="show" @click="showPass=!showPass" v-if="!showPass">{{$t('merchantDetail.show')}}</span>
+                  <span class="show" @click="showPass=!showPass" v-else>{{$t('merchantDetail.hide')}}</span>
                   </Col>
                 </Row>
               </FormItem>
-              <FormItem label="管理员密码" prop="password" v-else>
+              <FormItem :label="$t('merchantDetail.adminPwd')" prop="password" v-else>
                 <Row>
                   <Col span="10">
-                  <Input v-model="basic.password" placeholder="6~16位,包含字母、数字及符号中任意三种组合"></Input>
+                  <Input v-model="basic.password" :placeholder="$t('merchantDetail.enter1')"></Input>
                   </Col>
                 </Row>
               </FormItem>
               </Col>
               <Col span="8">
-              <FormItem label="备注" v-if="edit">
+              <FormItem :label="$t('merchantDetail.remark')" v-if="edit">
                 {{merchantDetail.remark}}
               </FormItem>
-              <FormItem label="备注" prop="remark" v-else>
+              <FormItem :label="$t('merchantDetail.remark')" prop="remark" v-else>
                 <Row>
                   <Col span="20">
-                  <Input v-model="basic.remark" type="textarea" :maxlength='200' :rows="1" placeholder="请输入备注,最多不超过200个字符"></Input>
+                  <Input v-model="basic.remark" type="textarea" :maxlength='200' :rows="1"></Input>
                   </Col>
                 </Row>
               </FormItem>
               </Col>
               <Col span="8">
-              <FormItem label="商户白名单" v-if="edit">
+              <FormItem :label="$t('merchantDetail.bwList')" v-if="edit">
                 {{merchantDetail.loginWhiteList}}
               </FormItem>
-              <FormItem label="商户白名单" v-else>
+              <FormItem :label="$t('merchantDetail.bwList')" v-else>
                 <Row>
                   <Col span="10">
                   <Input v-model="basic.loginWhiteList"></Input>
@@ -132,33 +132,33 @@
         </div>
       </Panel>
       <Panel name="3">
-        游戏信息
+        {{$t('merchantDetail.game')}}
         <div slot="content">
           <Form ref='gameList' :model="gameForm" :label-width="110" v-if="!edit" :rules="gameValidate">
             <FormItem prop="ownGame">
               <Row>
                 <Col span="3">
-                <Select v-model="gameForm.gameType" placeholder="请选择" @on-change="selectCompany">
+                <Select v-model="gameForm.gameType" :placeholder="$t('merchantDetail.select')" @on-change="selectCompany">
                   <Option v-for="item in gameType" :value="item.company" :key="item.company">{{ item.company }}</Option>
                 </Select>
                 </Col>
                 <Col span="3">
-                <Select v-model="gameForm.gamelist" placeholder="请选择" @on-change="selectGame">
+                <Select v-model="gameForm.gamelist" :placeholder="$t('merchantDetail.select')" @on-change="selectGame">
                   <Option v-for="item in gameList" :value="item.name" :key="item.name">{{ item.name }}</Option>
                 </Select>
                 </Col>
               </Row>
             </FormItem>
             <FormItem v-if="selected" prop='balance'>
-              <label slot="label">{{game}}商家占成(%)</label>
+              <label slot="label">{{game}}{{$t('merchantDetail.infomation')}}(%)</label>
               <Row>
                 <Col span="4">
                 <Tooltip :content="rateTip" placement="top">
-                  <Input v-model="gameForm.balance" placeholder="请输入0.00~100.00之间的数字"></Input>
+                  <Input v-model="gameForm.balance" :placeholder="$t('merchantDetail.enter2')"></Input>
                 </Tooltip>
                 </Col>
                 <Col span="2">
-                <span class="add" @click="addGame">添加</span>
+                <span class="add" @click="addGame">{{$t('merchantDetail.add')}}</span>
                 </Col>
               </Row>
             </FormItem>
@@ -169,11 +169,11 @@
     </Collapse>
     <div class="finance">
       <h2>
-        财务信息
+        {{$t('merchantDetail.infomation')}}
          <span
           style="color:#20a0ff;cursor:pointer;fontSize:1rem"
           @click="getWaterfallList"
-        >(点击查询)</span>
+        >({{$t('merchantDetail.query')}})</span>
       </h2>
       <Table :columns="columns" :data="showWaterList" size="small">
         <template slot-scope="{row, index}" slot="createdAt">
@@ -209,7 +209,7 @@
     </div>
     <Spin size="large" fix v-if="spinShow">
       <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+      <div>{{$t('merchantDetail.loading')}}</div>
     </Spin>
   </div>
 </template>
@@ -226,6 +226,7 @@ import {
 import dayjs from "dayjs";
 import _ from "lodash";
 import { thousandFormatter } from "@/config/format";
+import { getCNGameType, getENGameType } from "@/config/getGameType"
 export default {
   beforeRouteEnter(to, from, next) {
     /* console.log(this, 'beforeRouteEnter'); // undefined
@@ -313,11 +314,24 @@ export default {
           title: "公司",
           align: 'center',
           key: "company",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '公司' : 'Company'
+            )
+          }
+          
         },
         {
           title: "游戏",
           align: 'center',
-          key: "name"
+          key: "name",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '游戏' : 'Games'
+            )
+          }
         },
         {
           title: "商家占成",
@@ -325,6 +339,12 @@ export default {
           key: "rate",
           render: (h, params) => {
             return h("span", params.row.rate + "%");
+          },
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '商家占成' : 'Rate'
+            )
           }
         },
         {
@@ -350,6 +370,12 @@ export default {
                 "删除"
               );
             }
+          },
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '操作' : 'Operation'
+            )
           }
         }
       ],
@@ -358,50 +384,103 @@ export default {
           title: "序号",
           type: "index",
           align: 'center',
-          maxWidth: 80
+          maxWidth: 80,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '序号' : 'NO.'
+            )
+          }
         },
         {
           title: "交易时间",
           slot: "createdAt",
           align: 'center',
-          minWidth: 100
+          minWidth: 100,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易时间' : 'Transaction Time'
+            )
+          }
         },
         {
           title: "交易对象",
           slot: "toUser",
           align: 'center',
-          minWidth: 250
+          minWidth: 250,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易对象' : 'Transactor'
+            )
+          }
         },
         {
           title: "交易类型",
           align: 'center',
-          slot: "amountType"
+          slot: "amountType",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易类型' : 'Transaction Type'
+            )
+          }
         },
         {
           title: "交易前余额",
           slot: "oldBalance",
-          align: 'center'
+          align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易前余额' : 'Pre-Amount'
+            )
+          }
         },
         {
           title: "交易点数",
           align: 'center',
-          slot: "amount"
+          slot: "amount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易点数' : 'Transaction Code'
+            )
+          }
         },
         {
           title: "交易后余额",
           slot: "balance",
-          align: 'center'
+          align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易后余额' : 'Balance'
+            )
+          }
         },
         {
           title: "操作人",
           slot: "operator",
-          align: 'center'
+          align: 'center',
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '操作人' : 'Operator'
+            )
+          }
         },
         {
           title: "备注",
           align: 'center',
           slot: "remark",
-          maxWidth: 80
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '备注' : 'Remark'
+            )
+          }
         }
       ],
       waterfall: [],
@@ -557,16 +636,13 @@ export default {
       });
     },
     selectCompany(value) {
-      let userId = this.parent;
-      let params = { companyIden: value, userId };
-      if (userId == "01") {
-        delete params.userId;
-      }
-      gameBigType(params).then(res => {
-        if (res.code == 0) {
-          this.gameList = res.payload;
+      this.gameList = []
+      for (let i = 0; i < this.parentGame.length; i++) {
+        if (value == this.parentGame[i].company) {
+          this.gameList.push(this.parentGame[i])
         }
-      });
+      }
+      /* this.getGameList() */
     },
     selectGame(value) {
       this.selected = true;
@@ -582,7 +658,8 @@ export default {
       } else {
         rate = 100;
       }
-      this.rateTip = `该上级线路商${value}占成为${rate}%`;
+      
+      this.rateTip = this.$store.state.language == 'zh' ? `该上级线路商${value}占成为${rate}%` : `Superior Merchant${value}Rate${rate}%`;
     },
     reload() {
       this.init();
@@ -727,6 +804,7 @@ export default {
         this.isTest = merchant.payload.isTest == 1 ? true : false;
         this.gameDetail = merchant.payload.gameList;
       }
+      
       if (company && company.code == 0) {
         this.gameType = company.payload;
       }

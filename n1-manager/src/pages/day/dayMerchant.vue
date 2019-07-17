@@ -2,23 +2,23 @@
   <div class="dayReport">
     <div class="nowList">
       <div class="top">
-          <p>商户标识</p>
+          <p>{{$t('dailyReport.sn')}}</p>
           <p style="margin:0 1rem">
-          <Input v-model="buSN" placeholder="请输入" size="small"></Input>
+          <Input v-model="buSN" size="small"></Input>
           </p>
-          <p>商户ID</p>
+          <p>{{$t('dailyReport.id')}}</p>
           <p style="margin:0 1rem">
-          <Input v-model="buID" placeholder="请输入" size="small"></Input>
+          <Input v-model="buID" size="small"></Input>
           </p>
           <p>
             <Select style="width:200px;" placeholder="选择游戏类别" ref="resetSelect" clearable v-model="model1" size="small">
-              <Option v-for="(item, index) in gameType" :value="item.name" :key="item.name" @click.native="selGame(item.code)">{{item.name}}</Option>
+              <Option v-for="(item, index) in getGameList" :value="item.name" :key="item.name" @click.native="selGame(item.code)">{{item.name}}</Option>
             </Select>   
           </p>
         <DatePicker size="small" type="daterange" :options="options" :editable='false' :value="defaultTime" placeholder="选择日期时间范围(默认最近一个月)" style="width: 300px;margin:0 1rem" confirm @on-ok="confirms" @on-change="handle"></DatePicker>
         <div class="right">
-          <Button type="primary" @click="search" size="small" style="margin-right:.3rem">搜索</Button>
-          <Button @click="reset" size="small">重置</Button>
+          <Button type="primary" @click="search" size="small" style="margin-right:.3rem">{{$t('dailyReport.search')}}</Button>
+          <Button @click="reset" size="small">{{$t('dailyReport.reset')}}</Button>
         </div>
       </div>
     </div>
@@ -30,7 +30,7 @@
     </div>
     <Spin size="large" fix v-if="spinShow">
       <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+      <div>{{$t('dailyReport.loading')}}</div>
     </Spin>
   </div>
 </template>
@@ -39,7 +39,7 @@ import { httpRequest } from "@/service/index";
 import _ from "lodash";
 import dayjs from 'dayjs'
 import { thousandFormatter } from "@/config/format";
-import { getGameType } from "@/config/getGameType";
+import { getCNGameType, getENGameType } from "@/config/getGameType"
 export default {
   beforeRouteEnter(to, from, next) {
     /* console.log(this, 'beforeRouteEnter'); // undefined
@@ -59,35 +59,7 @@ export default {
   },
   data() {
     return {
-      options: {
-        shortcuts: [
-          {
-            text: "本周",
-            value() {
-              return [new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().endOf('second').valueOf())]
-            }
-          },
-          {
-            text: "本月",
-            value() {
-              return [new Date(dayjs().startOf('month').valueOf()), new Date(dayjs().endOf('second').valueOf())]
-            }
-          },
-          {
-            text: "上周",
-            value() {
-              return [new Date(dayjs().add(-1, 'week').startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000 - 1)]
-            }
-          },
-          {
-            text: "上月",
-            value() {
-              //-1 上月
-              return [new Date(dayjs().add(-1, 'month').startOf('month').valueOf()), new Date(dayjs().startOf('month').valueOf() - 1)]
-            }
-          }
-        ]
-      }, 
+      
       defaultTime: [],//getDefaultTime(),
       cacheTime:[],
       model1: "全部游戏",
@@ -100,27 +72,57 @@ export default {
         {
           title: "日期",
           align: 'center',
-          key: "createdDate"
+          key: "createdDate",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '日期' : 'Date'
+            )
+          }
         },
         {
           title: "投注次数",
           align: 'center',
-          key: "betCount"
+          key: "betCount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '投注次数' : 'Bet Count'
+            )
+          }
         },
         {
           title: "投注金额",
           align: 'center',
-          key: "betAmount"
+          key: "betAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '投注金额' : 'Bet Amount'
+            )
+          }
         },
         {
           title: "返还金额",
           align: 'center',
-          key: "retAmount"
+          key: "retAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '返还金额' : 'Return Amount'
+            )
+          }
         },
         {
           title: "退款金额",
           align: 'center',
-          key: "refundAmount"
+          key: "refundAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '退款金额' : 'Refund Amount'
+            )
+          }
         },
         {
           title: "输赢金额",
@@ -152,11 +154,68 @@ export default {
   },
   created() {
     this.getDate()
-    this.getGameList();
   },
 
 
   computed: {
+    options() {
+      return {
+        shortcuts: [
+          {
+            text: this.$store.state.language == 'zh' ? '本周' : 'week',
+            value() {
+              return [new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().endOf('second').valueOf())]
+            }
+          },
+          {
+            text: this.$store.state.language == 'zh' ? '本月' : 'month',
+            value() {
+              return [new Date(dayjs().startOf('month').valueOf()), new Date(dayjs().endOf('second').valueOf())]
+            }
+          },
+          {
+            text: this.$store.state.language == 'zh' ? '上周' : 'last week',
+            value() {
+              return [new Date(dayjs().add(-1, 'week').startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000 - 1)]
+            }
+          },
+          {
+            text: this.$store.state.language == 'zh' ? '上月' : 'last month',
+            value() {
+              //-1 上月
+              return [new Date(dayjs().add(-1, 'month').startOf('month').valueOf()), new Date(dayjs().startOf('month').valueOf() - 1)]
+            }
+          }
+        ]
+      }
+    },
+    getGameList() {
+      let gameType = []
+      let val = JSON.parse(localStorage.getItem('userInfo')).gameList 
+      if (this.$store.state.language == 'zh') {
+        for (let i = 0; i < val.length; i++) {
+          for (let j = 0; j < getCNGameType().length; j++) {
+            if (val[i].code == getCNGameType()[j].code) {
+              gameType.push(getCNGameType()[j])
+            }
+          }
+        }
+        this.model1 = '全部游戏'
+        gameType.unshift({ company: "全部", code: "", name: "全部游戏" })
+      } else {
+        for (let i = 0; i < val.length; i++) {
+          for (let j = 0; j < getENGameType().length; j++) {
+            if (val[i].code == getENGameType()[j].code) {
+              gameType.push(getENGameType()[j])
+            }
+          }
+        }
+        this.model1 = 'All'
+        gameType.unshift({ company: "All", code: "", name: "All" })
+      }
+      
+      return gameType
+    },
     permission() {
       return JSON.parse(localStorage.getItem("userInfo")).subRolePermission;
     }
@@ -195,25 +254,12 @@ export default {
       let refundAmountArr = _this.dayStatList.map((item) => {return item.refundAmount})
       let winloseAmountArr = _this.dayStatList.map((item) => {return item.winloseAmount})
       let xArr = _this.dayStatList.map((item) => {return item.createdDate})
-      
-     
-      // 绘制图表
-      myChart.setOption({
-        xAxis: {
-          type: "category",
-          data: xArr
-        },
-        tooltip: {
-        trigger: 'axis'
-        },
-        yAxis: {
-          type: "value"
-        },
-        legend: {
-          data: ["投注次数",	"投注金额", "返还金额",	"退款金额",	"输赢金额"],
-          selectedMode: "single"
-        },
-        series: [
+      let data = []
+      let series = []
+
+      if (this.$store.state.language == 'zh') {
+        data = ["投注次数", "投注金额", "返还金额", "退款金额", "输赢金额"]
+        series = [
           {
             name: "投注次数",
             data: betCountArr,
@@ -238,8 +284,56 @@ export default {
             name: "输赢金额",
             data: winloseAmountArr,
             type: "line"
-          },
+          }
         ]
+      } else {
+        data = ["Bet Count", "Bet Amount", "Return Amount", "Refund Amount", "Win/Lose Amount"]
+        series = [
+          {
+            name: "Bet Count",
+            data: betCountArr,
+            type: "line"
+          },
+          {
+            name: "Bet Amount",
+            data: betAmountArr,
+            type: "line"
+          },
+          {
+            name: "Return Amount",
+            data: retAmountArr,
+            type: "line"
+          },
+          {
+            name: "Refund Amount",
+            data: refundAmountArr,
+            type: "line"
+          },
+          {
+            name: "Win/Lose Amount",
+            data: winloseAmountArr,
+            type: "line"
+          }
+        ]
+      }
+     
+      // 绘制图表
+      myChart.setOption({
+        xAxis: {
+          type: "category",
+          data: xArr
+        },
+        tooltip: {
+        trigger: 'axis'
+        },
+        yAxis: {
+          type: "value"
+        },
+        legend: {
+          data: data,
+          selectedMode: "single"
+        },
+        series: series
       });
     },
     confirms() {
@@ -252,7 +346,6 @@ export default {
       this.init();
     },
     reset() {
-      this.$refs.resetSelect.clearSingleSelect()
       this.getDate()
       this.buID = "",
       this.buSN = "",
@@ -341,15 +434,14 @@ export default {
       }
       
     },
-    getGameList() {
-      /* httpRequest("post","/gameBigType",{companyIden: -1},"game")
-      .then(result => {
-        this.gameType = result.payload
-        this.gameType.unshift({type: 4, code: "", name: "全部", company: ""})
-      }) */
-      this.gameType = getGameType()
-    },
   },
+  watch: {
+      '$store.state.language': function() {
+        if(this.$route.name == 'dayMerchant') {
+          this.reset()
+        }
+      }
+    },
   props: ['identity']
 };
 </script>
@@ -399,6 +491,9 @@ export default {
   }
   /deep/.ivu-select-selection {
     border-color: #000;
+  }
+  /deep/ .ivu-picker-panel-shortcut {
+    padding: 6px 5px;
   }
 }
 #myChart {

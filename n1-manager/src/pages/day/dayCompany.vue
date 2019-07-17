@@ -6,15 +6,15 @@
           <div style="display:flex">
             <p>
               <RadioGroup v-model="source" class="radioGroup" type="button" @on-change="changeSource" style="" size="small">
-                <Radio label="0">正式</Radio>
-                <Radio label="1">测试</Radio>
-                <Radio label="2">全部</Radio>
+                <Radio label="0">{{$t('dailyReport.formal')}}</Radio>
+                <Radio label="1">{{$t('dailyReport.test')}}</Radio>
+                <Radio label="2">{{$t('dailyReport.all')}}</Radio>
               </RadioGroup>
             </p>
             <p style="margin:0 1rem;">
               <RadioGroup v-model="isAll" class="radioGroup" type="button" @on-change="changeShow" size="small">
-                <Radio label="全部"></Radio>
-                <Radio label="仅包含直属"></Radio>
+                <Radio label="0">{{$t('dailyReport.formal')}}</Radio>
+                <Radio label="1">{{$t('dailyReport.under')}}</Radio>
               </RadioGroup>
             </p>  
             <p>
@@ -23,12 +23,12 @@
               </p>
             </p>
             <Select style="width:200px;margin:0 1rem" placeholder="选择游戏类别" ref="resetSelect" clearable v-model="model1" size="small" >
-                <Option v-for="(item, index) in gameType" :value="item.name" :key="item.name" @click.native="selGame(item.code)">{{item.name}}</Option>
+                <Option v-for="(item, index) in getGameList" :value="item.name" :key="item.name" @click.native="selGame(item.code)">{{item.name}}</Option>
             </Select>
           </div>
           <div>
-            <Button type="primary" @click="search" size="small" style="margin-right:.3rem;">搜索</Button>
-            <Button @click="reset" size="small">重置</Button>
+            <Button type="primary" @click="search" size="small" style="margin-right:.3rem;">{{$t('dailyReport.search')}}</Button>
+            <Button @click="reset" size="small">{{$t('dailyReport.reset')}}</Button>
           </div>
         </div>
       </div>
@@ -46,7 +46,7 @@
     </div>
     <Spin size="large" fix v-if="spinShow">
       <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+      <div>{{$t('dailyReport.loading')}}</div>
     </Spin>
   </div>
 </template>
@@ -55,7 +55,7 @@ import { httpRequest } from "@/service/index";
 import _ from "lodash";
 import dayjs from 'dayjs'
 import { thousandFormatter } from "@/config/format";
-import { getGameType } from "@/config/getGameType";
+import { getCNGameType, getENGameType } from "@/config/getGameType"
 export default {
    beforeRouteEnter(to, from, next) {
     /* console.log(this, 'beforeRouteEnter'); // undefined
@@ -75,42 +75,13 @@ export default {
   },
   data() {
     return {
-      options: {
-        shortcuts: [
-          {
-            text: "本周",
-            value() {
-              return [new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().endOf('second').valueOf())]
-            }
-          },
-          {
-            text: "本月",
-            value() {
-              return [new Date(dayjs().startOf('month').valueOf()), new Date(dayjs().endOf('second').valueOf())]
-            }
-          },
-          {
-            text: "上周",
-            value() {
-              return [new Date(dayjs().add(-1, 'week').startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000 - 1)]
-            }
-          },
-          {
-            text: "上月",
-            value() {
-              //-1 上月
-              return [new Date(dayjs().add(-1, 'month').startOf('month').valueOf()), new Date(dayjs().startOf('month').valueOf() - 1)]
-            }
-          }
-        ]
-      }, 
       defaultTime: [],//getDefaultTime(),
       cacheTime:[],
       managerName:"",
       spinShow: false, //加载spin
       source: "1",
       model1: "全部游戏",
-      isAll: "全部",
+      isAll: "0",
       isBoolean: true,
       dayStatList: [],
       showBox: false,
@@ -119,32 +90,68 @@ export default {
         {
           title: "日期",
           align: 'center',
-          key: "createdDate"
+          key: "createdDate",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '日期' : 'Date'
+            )
+          }
         },
         {
           title: "投注次数",
           align: 'center',
-          key: "betCount"
+          key: "betCount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '投注次数' : 'Bet Count'
+            )
+          }
         },
         {
           title: "投注金额",
           align: 'center',
-          key: "betAmount"
+          key: "betAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '投注金额' : 'Bet Amount'
+            )
+          }
         },
         {
           title: "返还金额",
           align: 'center',
-          key: "retAmount"
+          key: "retAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '返还金额' : 'Return Amount'
+            )
+          }
         },
         {
           title: "退款金额",
           align: 'center',
-          key: "refundAmount"
+          key: "refundAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '退款金额' : 'Refund Amount'
+            )
+          }
         },
         {
           title: "输赢金额",
           align: 'center',
-          slot: "winloseAmount"
+          slot: "winloseAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '输赢金额' : 'Win/Lose Amount'
+            )
+          }
         }
       ],
       gameType: [],
@@ -167,7 +174,6 @@ export default {
     } */
     this.source = "0";
     this.getDate()
-    this.getGameList();
     this.init()
   },
   /* watch: {
@@ -183,9 +189,70 @@ export default {
   }, */
 
   computed: {
+    options() {
+      return {
+        shortcuts: [
+          {
+            text: this.$store.state.language == 'zh' ? '本周' : 'week',
+            value() {
+              return [new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().endOf('second').valueOf())]
+            }
+          },
+          {
+            text: this.$store.state.language == 'zh' ? '本月' : 'month',
+            value() {
+              return [new Date(dayjs().startOf('month').valueOf()), new Date(dayjs().endOf('second').valueOf())]
+            }
+          },
+          {
+            text: this.$store.state.language == 'zh' ? '上周' : 'last week',
+            value() {
+              return [new Date(dayjs().add(-1, 'week').startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000 - 1)]
+            }
+          },
+          {
+            text: this.$store.state.language == 'zh' ? '上月' : 'last month',
+            value() {
+              //-1 上月
+              return [new Date(dayjs().add(-1, 'month').startOf('month').valueOf()), new Date(dayjs().startOf('month').valueOf() - 1)]
+            }
+          }
+        ]
+      }
+    },
     /* permission() {
       return JSON.parse(localStorage.getItem("userInfo")).subRolePermission;
     } */
+    getGameList() {
+      let gameType = []
+      let val = JSON.parse(localStorage.getItem('userInfo')).gameList 
+      if (this.$store.state.language == 'zh') {
+        for (let i = 0; i < val.length; i++) {
+          for (let j = 0; j < getCNGameType().length; j++) {
+            if (val[i].code == getCNGameType()[j].code) {
+              gameType.push(getCNGameType()[j])
+            }
+          }
+        }
+        this.model1 = '全部游戏'
+        gameType.unshift({ company: "全部", code: "", name: "全部游戏" })
+      } else {
+        
+        for (let i = 0; i < val.length; i++) {
+          for (let j = 0; j < getENGameType().length; j++) {
+            if (val[i].code == getENGameType()[j].code) {
+              gameType.push(getENGameType()[j])
+            }
+          }
+        }
+        
+        
+        this.model1 = 'All'
+        gameType.unshift({ company: "All", code: "", name: "All" })
+      }
+      
+      return gameType
+    }
   },
   methods: {
     //输赢报表
@@ -207,32 +274,18 @@ export default {
       // 基于准备好的dom，初始化echarts实例
       let myChart = echarts.init(document.getElementById("myChart"));
       let _this = this;
-     
-
       let betCountArr = _this.dayStatList.map((item) => {return item.betCount})
       let betAmountArr = _this.dayStatList.map((item) => {return item.betAmount})
       let retAmountArr = _this.dayStatList.map((item) => {return item.retAmount})
       let refundAmountArr = _this.dayStatList.map((item) => {return item.refundAmount})
       let winloseAmountArr = _this.dayStatList.map((item) => {return item.winloseAmount})
       let xArr = _this.dayStatList.map((item) => {return item.createdDate})
-     
-      // 绘制图表
-      myChart.setOption({
-        xAxis: {
-          type: "category",
-          data: xArr
-        },
-        tooltip: {
-        trigger: 'axis'
-        },
-        yAxis: {
-          type: "value"
-        },
-        legend: {
-          data: ["投注次数",	"投注金额", "返还金额",	"退款金额",	"输赢金额"],
-          selectedMode: "single"
-        },
-        series: [
+      let data = []
+      let series = []
+
+      if (this.$store.state.language == 'zh') {
+        data = ["投注次数", "投注金额", "返还金额", "退款金额", "输赢金额"]
+        series = [
           {
             name: "投注次数",
             data: betCountArr,
@@ -257,8 +310,56 @@ export default {
             name: "输赢金额",
             data: winloseAmountArr,
             type: "line"
-          },
+          }
         ]
+      } else {
+        data = ["Bet Count", "Bet Amount", "Return Amount", "Refund Amount", "Win/Lose Amount"]
+        series = [
+          {
+            name: "Bet Count",
+            data: betCountArr,
+            type: "line"
+          },
+          {
+            name: "Bet Amount",
+            data: betAmountArr,
+            type: "line"
+          },
+          {
+            name: "Return Amount",
+            data: retAmountArr,
+            type: "line"
+          },
+          {
+            name: "Refund Amount",
+            data: refundAmountArr,
+            type: "line"
+          },
+          {
+            name: "Win/Lose Amount",
+            data: winloseAmountArr,
+            type: "line"
+          }
+        ]
+      }
+
+      // 绘制图表
+      myChart.setOption({
+        xAxis: {
+          type: "category",
+          data: xArr
+        },
+        tooltip: {
+        trigger: 'axis'
+        },
+        yAxis: {
+          type: "value"
+        },
+        legend: {
+          data: data,
+          selectedMode: "single"
+        },
+        series: series
       });
     },
     confirms() {
@@ -271,7 +372,7 @@ export default {
       this.init();
     },
     changeShow(value) {
-      if (this.isAll != "全部") {
+      if (this.isAll != "0") {
         this.isBoolean = false
       } else {
         this.isBoolean = true
@@ -279,9 +380,8 @@ export default {
      this.init();
     },
     reset() {
-      this.$refs.resetSelect.clearSingleSelect()
       this.showBox = false
-      this.isAll = "全部游戏"
+      this.isAll = "0"
       this.isBoolean = true
       this.getDate();
       /* if (this.permission.includes("正式数据")) {
@@ -303,14 +403,7 @@ export default {
     // permission() {
     //   return JSON.parse(localStorage.getItem("userInfo")).subRolePermission;
     // },
-    getGameList() {
-      /* httpRequest("post","/gameBigType",{companyIden: -1},"game")
-      .then(result => {
-        this.gameType = result.payload
-        this.gameType.unshift({type: 4, code: "", name: "全部", company: ""})
-      }) */
-      this.gameType = getGameType()
-    },
+    
     async init() {
       this.spinShow = true;
       this.showBox = true
@@ -323,12 +416,21 @@ export default {
         .then(result => {
           return result.payload
         }) */
-        for (let index = 0; index < getGameType().length; index++) {
-          if(this.$route.query.type == getGameType()[index].code) {
-            this.model1 = getGameType()[index].name
+
+        /* 输赢报表跳转逻辑 */
+        if (this.$store.state.language == 'zh') {
+          gameList = getCNGameType()
+          game = '全部游戏'
+        } else {
+          gameList = getENGameType()
+          game = 'All'
+        }
+        for (let index = 0; index < gameList.length; index++) {
+          if(this.$route.query.type == gameList[index].code) {
+            this.model1 = gameList[index].name
             break;
           } else {
-            this.model1 = '全部'
+            this.model1 = game
           }
         }
         this.source = this.$route.query.source
@@ -379,7 +481,14 @@ export default {
       }
       
     }
-  }
+  },
+  watch: {
+      '$store.state.language': function() {
+        if(this.$route.name == 'dayCompany') {
+          this.reset()
+        }
+      }
+    }
 };
 </script>
 <style lang="less" scoped>
@@ -430,6 +539,9 @@ export default {
   }
   /deep/.ivu-select-selection {
     border-color: #000;
+  }
+  /deep/ .ivu-picker-panel-shortcut {
+    padding: 6px 5px;
   }
 }
 #myChart {

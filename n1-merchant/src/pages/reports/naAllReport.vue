@@ -92,35 +92,7 @@ import {
 export default {
   data() {
     return {
-      options: {
-        shortcuts: [
-          {
-            text: this.$store.state.language == 'zh' ? '本周' : 'week',
-            value() {
-              return [new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().endOf('second').valueOf())]
-            }
-          },
-          {
-            text: this.$store.state.language == 'zh' ? '本月' : 'month',
-            value() {
-              return [new Date(dayjs().startOf('month').valueOf()), new Date(dayjs().endOf('second').valueOf())]
-            }
-          },
-          {
-            text: this.$store.state.language == 'zh' ? '上周' : 'last week',
-            value() {
-              return [new Date(dayjs().add(-1, 'week').startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000 - 1)]
-            }
-          },
-          {
-            text: this.$store.state.language == 'zh' ? '上月' : 'last month',
-            value() {
-              //-1 上月
-              return [new Date(dayjs().add(-1, 'month').startOf('month').valueOf()), new Date(dayjs().startOf('month').valueOf() - 1)]
-            }
-          }
-        ]
-      }, 
+      
       defaultTime: getDefaultTime(),
       spinShow: false, //加载spin
       playerList: [], //玩家列表
@@ -311,6 +283,37 @@ export default {
     };
   },
   computed: {
+    options() {
+      return {
+        shortcuts: [
+          {
+            text: this.$store.state.language == 'zh' ? '本周' : 'week',
+            value() {
+              return [new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().endOf('second').valueOf())]
+            }
+          },
+          {
+            text: this.$store.state.language == 'zh' ? '本月' : 'month',
+            value() {
+              return [new Date(dayjs().startOf('month').valueOf()), new Date(dayjs().endOf('second').valueOf())]
+            }
+          },
+          {
+            text: this.$store.state.language == 'zh' ? '上周' : 'last week',
+            value() {
+              return [new Date(dayjs().add(-1, 'week').startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000 - 1)]
+            }
+          },
+          {
+            text: this.$store.state.language == 'zh' ? '上月' : 'last month',
+            value() {
+              //-1 上月
+              return [new Date(dayjs().add(-1, 'month').startOf('month').valueOf()), new Date(dayjs().startOf('month').valueOf() - 1)]
+            }
+          }
+        ]
+      }
+    },
     changedTime() {
       let time = this.defaultTime;
       time = time.map((item, index) => {

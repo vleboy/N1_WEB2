@@ -10,15 +10,40 @@ import iView from 'iview';
 import '../my-theme/index.less'
 import axios from 'axios'
 
+import VueI18n from 'vue-i18n';
+import en from './language/en';
+import zh from './language/zh';
 
 Vue.prototype.axios = axios
 
 
 Vue.config.productionTip = false
-Vue.use(iView);
+
+Vue.use(VueI18n);
+//Vue.use(iView);
 /* eslint-disable no-new */
+Vue.locale = () => {};
+
+const messages = {
+    en,
+    zh
+};
+
+const i18n = new VueI18n({
+    locale: localStorage.language || 'zh',
+    messages,
+    silentTranslationWarn: true
+})
+
+Vue.use(iView, {
+    i18n: (key, value) => i18n.t(key, value)
+})
+
+document.title = localStorage.title || 'NA线路商后台',
+
 new Vue({
     el: '#app',
+    i18n,
     router,
     store,
     render: h => h(App),

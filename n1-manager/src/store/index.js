@@ -7,12 +7,16 @@ import {merchants} from './modules/merchants'
 Vue.use(Vuex)
 export const store = new Vuex.Store({
     state:{
-        loading:false
+        loading:false,
+        language: 'zh'
     },
     mutations:{
-     globalLoading(state,{params}){
-        state.loading=params
-        },
+        globalLoading(state,{params}){
+            state.loading=params
+            },
+        changeLanguage(state, params) {
+            state.language = params
+        }
     },
     modules: {
         login,

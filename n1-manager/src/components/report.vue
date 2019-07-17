@@ -3,18 +3,18 @@
     <div class="nowList">
       <div class="top">
         <p class="title">
-          当前用户列表
+          {{$t('allReport.currentUser')}}
           <RadioGroup v-model="source" type="button" @on-change='changeSource' size="small">
-             <Radio label="0">正式</Radio>
-              <Radio label="1">测试</Radio>
-              <Radio label="2">全部</Radio>
+             <Radio label="0">{{$t('allReport.formal')}}</Radio>
+              <Radio label="1">{{$t('allReport.test')}}</Radio>
+              <Radio label="2">{{$t('allReport.all')}}</Radio>
           </RadioGroup>
          <!-- <Button size="small" @click="exportdata('table_0')" style="margin:0 1rem">导出数据</Button> -->
         </p>
         <div class="right">
-          <DatePicker size="small" type="datetimerange" :options="options" :editable='false' v-model="defaultTime" placeholder="选择日期时间范围(默认最近一周)" style="width: 300px" @on-ok="confirm"></DatePicker>
-          <Button type="primary" @click="search" size="small" style="margin:0 .3rem 0 1rem">搜索</Button>
-          <Button size="small" @click="reset">重置</Button>
+          <DatePicker size="small" type="datetimerange" :options="options" :editable='false' v-model="defaultTime" placeholder="选择日期时间范围(默认最近一周)" style="width: 300px;margin-left:1rem" @on-ok="confirm"></DatePicker>
+          <Button type="primary" @click="search" size="small" style="margin:0 .3rem 0 1rem">{{$t('allReport.search')}}</Button>
+          <Button size="small" @click="reset">{{$t('allReport.reset')}}</Button>
         </div>
       </div>
       <Table :columns="columns1" :data="user" size="small" ref='table_0'>
@@ -27,12 +27,12 @@
     </div>
     <div class="childList">
       <p class="title">
-        直属下级列表
+        {{$t('allReport.under')}}
         <!-- <Button size="small" @click="exportdata('table_1')">导出数据</Button> -->
       </p>
       <Table :columns="columns1" :data="child" size="small" ref='table_1'>
         <template slot-scope="{row, index}" slot="userDisplayName">
-          <Tooltip content="前往日报表"  transfer>
+          <Tooltip :content="$t('allReport.toDayReport')"  transfer>
             <span style="color:#20a0ff;cursor:pointer" @click="userDisplayName(row)">{{row.displayName}}</span>
           </Tooltip>
         </template>
@@ -40,12 +40,12 @@
     </div>
     <div class="childList" v-for="(item,index) in reportChild" :key="index">
       <p class="title">
-        ({{item.length > 0 && item[0].parentDisplayName ? item[0].parentDisplayName : ''}}) 直属下级列表
+        ({{item.length > 0 && item[0].parentDisplayName ? item[0].parentDisplayName : ''}}) {{$t('allReport.under')}}
         <!-- <Button size="small" @click="exportdata(index)">导出数据</Button> -->
       </p>
       <Table :columns="columns1" :data="item" size="small" :ref="'table'+index">
         <template slot-scope="{row, index}" slot="userDisplayName">
-          <Tooltip content="前往日报表"  transfer>
+          <Tooltip :content="$t('allReport.toDayReport')"  transfer>
             <span style="color:#20a0ff;cursor:pointer" @click="userDisplayName(row)">{{row.displayName}}</span>
           </Tooltip>
         </template>
@@ -53,7 +53,7 @@
     </div>
     <div class="playerList" id="playerList">
       <p class="title">
-        <span v-show="showName"> ({{ userName }})</span>所属玩家列表
+        <span v-show="showName"> ({{ userName }})</span>{{$t('allReport.PlayerList')}}
         <!-- <Button size="small" @click="exportdata('table_2')">导出数据</Button> -->
       </p>
       <Table :columns="columns2" :data="playerList" size="small" ref='table_2'>
@@ -64,7 +64,7 @@
     </div>
     <Spin size="large" fix v-if="spinShow">
       <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+      <div>{{$t('allReport.loading')}}</div>
     </Spin>
   </div>
 </template>
@@ -77,35 +77,7 @@ import { spawn } from 'child_process';
 export default {
   data() {
     return {
-       options: {
-        shortcuts: [
-          {
-            text: "本周",
-            value() {
-              return [new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().endOf('second').valueOf())]
-            }
-          },
-          {
-            text: "本月",
-            value() {
-              return [new Date(dayjs().startOf('month').valueOf()), new Date(dayjs().endOf('second').valueOf())]
-            }
-          },
-          {
-            text: "上周",
-            value() {
-              return [new Date(dayjs().add(-1, 'week').startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000 - 1)]
-            }
-          },
-          {
-            text: "上月",
-            value() {
-              //-1 上月
-              return [new Date(dayjs().add(-1, 'month').startOf('month').valueOf()), new Date(dayjs().startOf('month').valueOf() - 1)]
-            }
-          }
-        ]
-      }, 
+       
       defaultTime: getDefaultTime(),
       spinShow: false, //加载spin
       showName: false, //上级商家
@@ -123,18 +95,36 @@ export default {
       columns1: [
         {
           title: "序号",
-          type: "index"
+          type: "index",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '序号' : 'NO.'
+            )
+          }
         },
         {
           title: "类型",
           key: "role",
           render: (h, params) => {
             return h("span", this.types(params.row.role));
+          },
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '类型' : 'Type'
+            )
           }
         },
         {
           title: "昵称",
-          slot: "userDisplayName"
+          slot: "userDisplayName",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '昵称' : 'Nickname'
+            )
+          }
         },
         {
           title: "管理员账号",
@@ -229,17 +219,35 @@ export default {
               },
               params.row.uname
             );
+          },
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '管理员账号' : 'Account'
+            )
           }
         },
         {
           title: "交易次数",
-          key: "betCount"
+          key: "betCount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易次数' : 'Transactions Count'
+            )
+          }
         },
         {
           title: "投注金额",
           key: "betAmount",
           render: (h, params) => {
             return h("span", thousandFormatter(params.row.betAmount));
+          },
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '投注金额' : 'Bet Amount'
+            )
           }
         },
         {
@@ -256,6 +264,12 @@ export default {
               },
               thousandFormatter(params.row.winloseAmount)
             );
+          },
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '输赢金额' : 'Win/Lose Amount'
+            )
           }
         },
         {
@@ -274,6 +288,12 @@ export default {
             } else {
               return h("span", "100%");
             }
+          },
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '商家占成' : 'Merchant Occupies'
+            )
           }
         },
         {
@@ -281,6 +301,12 @@ export default {
           key: "submitAmount",
           render:(h,params)=>{
             return h('span',thousandFormatter(params.row.submitAmount))
+          },
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '商家交公司' : 'Submit Amount'
+            )
           }
         },
         {
@@ -312,13 +338,25 @@ export default {
                 ).toFixed(2) + "%"
               );
             }
+          },
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '获利比例' : 'Profit'
+            )
           }
         }
       ],
       columns2: [
         {
           title: "序号",
-          type: "index"
+          type: "index",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '序号' : 'NO.'
+            )
+          }
         },
         {
           title: "用户名",
@@ -349,21 +387,45 @@ export default {
               },
               name
             );
+          },
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '用户名' : 'Username'
+            )
           }
         },
         {
           title: "昵称",
-          slot: "playerNickname"
+          slot: "playerNickname",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '昵称' : 'Nickname'
+            )
+          }
         },
         {
           title: "交易次数",
-          key: "betCount"
+          key: "betCount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易次数' : 'Transactions Count'
+            )
+          }
         },
         {
           title: "投注金额",
           key: "betAmount",
            render: (h, params) => {
             return h("span", thousandFormatter(params.row.betAmount));
+          },
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '投注金额' : 'Bet Amount'
+            )
           }
         },
         {
@@ -380,16 +442,59 @@ export default {
               },
               thousandFormatter(params.row.winloseAmount)
             );
+          },
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '输赢金额' : 'Win/Lose Amount'
+            )
           }
         },
         {
           title: "洗码量",
-          key: "mixAmount"
+          key: "mixAmount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '洗码量' : 'Washing quantity'
+            )
+          }
         }
       ]
     };
   },
   computed: {
+    options() {
+      return {
+          shortcuts: [
+            {
+              text: this.$store.state.language == 'zh' ? '本周' : 'week',
+              value() {
+                return [new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().endOf('second').valueOf())]
+              }
+            },
+            {
+              text: this.$store.state.language == 'zh' ? '本月' : 'month',
+              value() {
+                return [new Date(dayjs().startOf('month').valueOf()), new Date(dayjs().endOf('second').valueOf())]
+              }
+            },
+            {
+              text: this.$store.state.language == 'zh' ? '上周' : 'last week',
+              value() {
+                return [new Date(dayjs().add(-1, 'week').startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000 - 1)]
+              }
+            },
+            {
+              text: this.$store.state.language == 'zh' ? '上月' : 'last month',
+              value() {
+                //-1 上月
+                return [new Date(dayjs().add(-1, 'month').startOf('month').valueOf()), new Date(dayjs().startOf('month').valueOf() - 1)]
+              }
+            }
+          ]
+       }
+    },
     changedTime() {
       let time = this.defaultTime;
       time = time.map((item, index) => {
@@ -526,6 +631,7 @@ export default {
     reset() {
       this.defaultTime = getDefaultTime();
       this.reportChild = [];
+      this.source = '0'
       this.init();
     },
     search() {
@@ -611,6 +717,7 @@ export default {
     // console.log(this.defaultTime);
     this.init();
   },
+  
   props: ["gameType"]
 };
 </script>
@@ -649,6 +756,9 @@ export default {
   }
   /deep/.ivu-select-selection {
     border-color: #000;
+  }
+  /deep/ .ivu-picker-panel-shortcut {
+    padding: 6px 5px;
   }
 }
 </style>

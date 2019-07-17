@@ -1,6 +1,6 @@
 <template>
   <div class="hfive">
-    <report :gameType='70000'></report>
+    <report :gameType='70000' ref="nahfive"></report>
   </div>
 </template>
 <script>
@@ -10,6 +10,9 @@ export default {
     return {
 
     }
+  },
+  mounted() {
+   
   },
   components:{report}
 }

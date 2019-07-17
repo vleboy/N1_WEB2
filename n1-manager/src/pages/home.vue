@@ -1,7 +1,7 @@
 <template>
     <div class="home-main">
         <div class="contentBox">
-            <span class="test">欢迎使用NA线路商后台管理系统</span>
+            <span class="test">{{$t('index.welcome')}}</span>
         </div>
     </div>
 </template>

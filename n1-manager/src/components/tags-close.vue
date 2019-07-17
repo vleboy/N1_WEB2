@@ -3,7 +3,7 @@
         <div ref="scrollBody" class="tags-inner-scroll-body">
             <!--  :style="{left: tagBodyLeft + 'px'}"-->
             <transition-group name="taglist-moving-animation">
-                <Tag type="dot" v-for="(item, index) in arrList" ref="tagsPageOpened" :key="item.name" :name="item.name" @on-close="closePage" @click.native="linkTo(item)" :closable="true" :color="item.children?(item.children[0].name===currentPageName?'#000':'default'):(item.name===currentPageName?'#000':'default')">{{ item.title }}</Tag>
+                <Tag type="dot" v-for="(item, index) in arrList" ref="tagsPageOpened" :key="item.name" :name="item.name" @on-close="closePage" @click.native="linkTo(item)" :closable="true" :color="item.children?(item.children[0].name===currentPageName?'#000':'default'):(item.name===currentPageName?'#000':'default')">{{ $t(item.title) }}</Tag>
             </transition-group>
         </div>
     </div>
