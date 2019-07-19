@@ -6,6 +6,7 @@
       <div class="particle particle-3"></div>
       <div class="particle particle-4"></div>
     </div>
+    
     <div class="page-wrapper">
       <div class="login-left">
         <p class="title-big">{{$t('login.system')}}</p>
