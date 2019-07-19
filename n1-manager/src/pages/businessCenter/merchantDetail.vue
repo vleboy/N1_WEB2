@@ -434,7 +434,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '交易前余额' : 'Pre-Amount'
+              this.$store.state.language == 'zh' ? '交易前余额' : 'Pre Balance'
             )
           }
         },
@@ -445,7 +445,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '交易点数' : 'Transaction Code'
+              this.$store.state.language == 'zh' ? '交易点数' : 'Point'
             )
           }
         },

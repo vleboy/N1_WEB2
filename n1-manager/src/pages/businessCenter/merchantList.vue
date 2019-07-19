@@ -200,7 +200,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '上级线路商' : 'UP Manager'
+              this.$store.state.language == 'zh' ? '上级线路商' : 'Superior Manager'
             )
           }
           
@@ -224,7 +224,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '剩余点数' : 'Surplus Points'
+              this.$store.state.language == 'zh' ? '剩余点数' : 'Points'
             )
           }
         },
@@ -388,7 +388,7 @@ export default {
         if (bool) {
           return row.status == 1 ? "enabled" : "disabled"
         } else {
-          return row.status == 1 ? "enable" : "disable"
+          return row.status == 1 ? "disable" : "enable"
         }
       }
     },

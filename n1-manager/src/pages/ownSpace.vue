@@ -173,7 +173,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '上次登录时间' : 'Last Time'
+              this.$store.state.language == 'zh' ? '上次登录时间' : 'Last Login'
             )
           }
         },
@@ -350,7 +350,7 @@ export default {
     },
     //创建时间
     createdAtConfig(row) {
-      return dayjs(row.createdAt).format('YYYY-MM-DD HH:mm:ss')
+      return dayjs(row.createdAt).format('YYYY-MM-DD')
     },
     /* 财务信息 */
     //交易前余额

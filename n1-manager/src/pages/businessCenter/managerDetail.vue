@@ -421,7 +421,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '线路商昵称' : 'Surplus Points'
+              this.$store.state.language == 'zh' ? '线路商昵称' : 'Points'
             )
           }
         },
@@ -497,7 +497,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '剩余点数' : 'Surplus Points'
+              this.$store.state.language == 'zh' ? '剩余点数' : 'Points'
             )
           }
         },
@@ -647,7 +647,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '交易前余额' : 'Pre-Balance'
+              this.$store.state.language == 'zh' ? '交易前余额' : 'Pre Balance'
             )
           }
         },
@@ -768,7 +768,7 @@ export default {
         if (bool) {
           return row.status == 1 ? "enabled" : "disabled"
         } else {
-          return row.status == 1 ? "enable" : "disable"
+          return row.status == 1 ? "disable" : "enable"
         }
       }
     },
@@ -1371,6 +1371,7 @@ export default {
 }
 .page {
   text-align: right;
+  margin-top: 1rem;
 }
 #textRow {
   display: block;

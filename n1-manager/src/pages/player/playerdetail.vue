@@ -73,7 +73,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '所属商户' : 'Merchants Name'
+              this.$store.state.language == 'zh' ? '所属商户' : 'Merchant Name'
             )
           }
         },

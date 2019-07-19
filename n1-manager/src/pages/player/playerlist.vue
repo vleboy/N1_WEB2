@@ -62,7 +62,7 @@
         <div>{{$t('playerList.loading')}}</div>
       </Spin>
       <div style="text-align: right;margin:2rem 0">
-        <Page :total="playerList.length" show-elevator :page-size="20" :current.sync="currentPage" @on-change="getNowpage"></Page>
+        <Page :total="playerList.length" :page-size="20" :current.sync="currentPage" @on-change="getNowpage"></Page>
       </div>
     </div>
   </div>
@@ -403,8 +403,8 @@ export default {
     },
     changeStatus(row) {
       this.$Modal.confirm({
-        title: "提示!",
-        content: `<p>是否${row.state ? "停用" : "启用"}该玩家？</p>`,
+        title: this.$store.state.language == 'zh' ? "提示!" : "Hint",
+        content: this.$store.state.language == 'zh' ? `<p>是否${row.state ? "停用" : "启用"}该玩家？</p>` : `<p>${row.state ? "disable" : "enable"} player？</p>`,
         onOk: () => {
           httpRequest("post", "/player/forzen", {
             userName: row.userName,

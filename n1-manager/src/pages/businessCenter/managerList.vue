@@ -162,7 +162,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '上级线路商' : 'UP Manager'
+              this.$store.state.language == 'zh' ? '上级线路商' : 'Superior Manager'
             )
           }
         },
@@ -174,7 +174,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '剩余点数' : 'Surplus Points'
+              this.$store.state.language == 'zh' ? '剩余点数' : 'Points'
             )
           }
         },
@@ -185,7 +185,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '商户游戏' : 'Manager Games'
+              this.$store.state.language == 'zh' ? '商户游戏' : 'Games'
             )
           }
         },
@@ -324,15 +324,15 @@ export default {
       let text = "";
       let status = null;
       if (row.status == 1) {
-        text = "停用";
+        text = this.$store.state.language == 'zh' ? "停用" : "disable";
         status = 0;
       } else {
-        text = "启用";
+        text = this.$store.state.language == 'zh' ? "启用" : "enable";
         status = 1;
       }
         this.$Modal.confirm({
-        title: "提示!",
-        content: `<p>是否${text}线路商</p>`,
+        title: this.$store.state.language == 'zh' ? "提示!" : 'Hint',
+        content: this.$store.state.language == 'zh' ? `<p>是否${text}线路商</p>` : `<p>${text} manager</p>`,
         onOk: () => {
           userChangeStatus({
             role: "10",
@@ -340,7 +340,7 @@ export default {
             userId: row.userId
           }).then(res => {
             if (res.code == 0) {
-              this.$Message.success(`${text}成功`);
+              this.$Message.success(`success`);
               this.$store.dispatch("getManagerList", {
                 query: {},
                 sortkey: "createdAt",
@@ -362,7 +362,7 @@ export default {
         if (bool) {
           return row.status == 1 ? "enabled" : "disabled"
         } else {
-          return row.status == 1 ? "enable" : "disable"
+          return row.status == 1 ? "disable" : "enable"
         }
       }
     },
