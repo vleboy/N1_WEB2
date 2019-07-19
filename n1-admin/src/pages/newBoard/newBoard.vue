@@ -1466,6 +1466,7 @@ export default {
         true
       );
     },
+    
     gameDtributedConfigure() {
       let myChart = this.$echarts.init(this.$refs.gameDtributed);
       myChart.setOption(
