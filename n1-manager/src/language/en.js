@@ -101,6 +101,7 @@ export default {
     under: 'Direct',
     id: 'ID',
     sn: 'SN',
+    loading: 'Loading...'
   },
   playerList: {
     playerID: 'Player ID',
@@ -185,7 +186,7 @@ export default {
     addOperate: 'Add Operation',
     reduceOperate: 'Reduce Operation',
     game: 'games',
-    see: 'see',
+    see: 'detail',
     loading: 'Loading...',
     startAccount: 'Start Account',
     manager: 'Manager',
@@ -243,7 +244,7 @@ export default {
     addOperate: 'Add Operation',
     reduceOperate: 'Reduce Operation',
     game: 'games',
-    see: 'see',
+    see: 'detail',
     loading: 'Loading...',
     startAccount: 'Start Account',
     manager: 'Manager',

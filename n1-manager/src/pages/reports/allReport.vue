@@ -40,7 +40,7 @@
     </div>
     <div class="childList" v-for="(item,index) in reportChild" :key="index">
       <p class="title">
-        ({{item.length > 0 && item[0].parentDisplayName ? item[0].parentDisplayName : ''}}) {{$t('allReport.PlayerList')}}
+        ({{item.length > 0 && item[0].parentDisplayName ? item[0].parentDisplayName : ''}}) {{$t('allReport.under')}}
         <!-- <Button @click="exportdata(index)" size="small">导出数据</Button> -->
       </p>
       <Table :columns="columns11" :data="item" size="small" :ref="'table'+index">
@@ -181,10 +181,12 @@ export default {
                       let anchor = this.$el.querySelector("#playerList");
                       document.documentElement.scrollTop = anchor.offsetTop;
                     } else if (params.row.role == "10") {
+                      console.log(10);
+                      
                       //线路商
                       this.playerList=[]
                       let id = localStorage.loginId;
-                      if ((params.row.userId = id)) {
+                      if ((params.row.userId == id)) {
                         this.$store
                           .dispatch("getUserChild", {
                             parent: id,

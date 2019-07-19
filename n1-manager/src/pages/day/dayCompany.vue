@@ -418,6 +418,8 @@ export default {
         }) */
 
         /* 输赢报表跳转逻辑 */
+        let gameList = []
+        let game = ''
         if (this.$store.state.language == 'zh') {
           gameList = getCNGameType()
           game = '全部游戏'

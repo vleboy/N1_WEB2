@@ -100,6 +100,7 @@ export default {
     under: '仅包含直属',
     id: '商户ID',
     sn: '商户标识',
+    loading: '加载中...'
   },
   playerList: {
     playerID: '玩家ID',
