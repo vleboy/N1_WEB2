@@ -173,7 +173,7 @@ export default {
                       //线路商
                       this.playerList=[]
                       let id = localStorage.loginId;
-                      if ((params.row.userId = id)) {
+                      if ((params.row.userId == id)) {
                         this.$store
                           .dispatch("getUserChild", {
                             parent: id,

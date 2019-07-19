@@ -181,8 +181,6 @@ export default {
                       let anchor = this.$el.querySelector("#playerList");
                       document.documentElement.scrollTop = anchor.offsetTop;
                     } else if (params.row.role == "10") {
-                      console.log(10);
-                      
                       //线路商
                       this.playerList=[]
                       let id = localStorage.loginId;
