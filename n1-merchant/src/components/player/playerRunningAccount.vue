@@ -28,7 +28,7 @@ $
               placeholder="选择日期范围"
               style="width: 300px"
               size="small"
-              @on-ok="getDate"
+              @on-ok="searchData"
             ></DatePicker>
           </div>
           <div style="display:flex;">
@@ -133,7 +133,7 @@ $
     </Modal>
     <Spin size="large" fix v-if="isFetching">
       <Icon type="ios-loading" size="64" class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+      <div>{{$t('playerDetail.loading')}}</div>
     </Spin>
   </div>
 </template>
@@ -283,7 +283,7 @@ export default {
               this.$store.state.language == "zh"
                 ? "帐变金额"
                 : "Amount"
-            );
+            )
           }
         },
         {
@@ -476,50 +476,6 @@ export default {
     },
     //获取游戏列表
     gameTypeList() {
-      /* let arr = JSON.parse(localStorage.getItem("userInfo")).gameList.map(
-          item => {
-            return item;
-          }
-        );
-        
-        for (let i = 0; i < this.removeArr.length; i++) {
-          for (let j = 0; j < arr.length; j++) {
-            if (this.removeArr[i] == arr[j].name) {
-              arr.splice(j, 1);
-            }
-          }
-        }
-        
-        
-        let gameType = [];
-        if (this.sel == "全部厂商") {
-          gameType = arr.map(item => {
-            return item.name;
-          });
-        } else {
-          arr.map(item => {
-            if (this.sel == item.company) {
-              gameType.push(item.name);
-            }
-          });
-        }
-
-        for (let i = 0; i < gameType.length; i++) {
-          if (gameType[i] == "H5电子游戏") {
-            gameType.splice(i, 1);
-            gameType.unshift("H5电子游戏");
-          }
-          if (gameType[i] == "H5电子-无神秘奖游戏") {
-            gameType.splice(i, 1);
-            gameType.unshift("H5电子-无神秘奖游戏");
-          }
-        }
-
-        gameType.unshift("全部");
-        //this.radioInfo = '全部'
-        
-        return gameType;
-    } */
       let gameType = [];
       let arr = [];
       let val = JSON.parse(localStorage.getItem("userInfo")).gameList;

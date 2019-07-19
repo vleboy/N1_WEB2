@@ -12,8 +12,8 @@
     </div>
     <div class="-d-content">
       <RadioGroup v-model="reportType" type="button" :style="{paddingBottom:'10px'}" size="small">
-        <Radio label="1">流水报表</Radio>
-        <Radio label="2">交易记录</Radio>
+        <Radio label="1">{{$t('playerDetail.flowReport')}}</Radio>
+        <Radio label="2">{{$t('playerDetail.transactionRecord')}}</Radio>
       </RadioGroup>
       <div class="-c-info">
         <playerRunningAccount ref="childMethod" v-if="reportType==1"></playerRunningAccount>
@@ -22,7 +22,7 @@
     </div>
     <Spin size="large" fix v-if="isFetching">
       <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+      <div>{{$t('playerDetail.loading')}}</div>
     </Spin>
   </div>
 </template>
@@ -59,44 +59,90 @@ export default {
           title: "商户ID",
           align: "center",
           key: "buId",
-          maxWidth:80
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '商户ID' : 'Merchant ID'
+            )
+          }
         },
         {
           title: "所属商户",
           align: "center",
-          key: "merchantName"
+          key: "merchantName",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '所属商户' : 'Merchants Name'
+            )
+          }
         },
         {
           title: "商户标识",
           align: "center",
-          key: "sn"
+          key: "sn",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '玩家ID' : 'SN'
+            )
+          }
         },
         {
           title: "玩家ID",
           align: "center",
-          key: "userId"
+          key: "userId",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '玩家ID' : 'Player ID'
+            )
+          }
         },
         {
           title: "玩家账号",
           align: "center",
-          key: "userName"
+          key: "userName",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '玩家账号' : 'Player Account'
+            )
+          }
         },
         {
           title: "游戏状态",
           align: "center",
           slot: "gameStatus",
-          maxWidth:90
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '游戏状态' : 'Game Status'
+            )
+          }
         },
         {
           title: "余额",
           align: "center",
-          key: "balance"
+          key: "balance",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '余额' : 'Balance'
+            )
+          }
         },
         {
           title: "最近登录游戏时间",
           align: "center",
-          slot: "joinTime"
-        },
+          slot: "joinTime",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '最近登录游戏' : 'Latest Login'
+            )
+          }
+        }
       ]
     }
   },

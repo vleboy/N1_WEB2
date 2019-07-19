@@ -1,27 +1,27 @@
 <template>
   <div class="p-playerlist">
     <div class="propList-search">
-        <p>玩家ID</p>
+        <p>{{$t('playerList.playerID')}}</p>
         <p style="margin:0 1rem">
-          <Input v-model="searchInfo.userId" placeholder="请输入"size="small"></Input>
+          <Input v-model="searchInfo.userId" size="small"></Input>
         </p>
-        <p>玩家账号</p>
+        <p>{{$t('playerList.PlayerAccount')}}</p>
         <p style="margin:0 1rem">
-          <Input v-model="searchInfo.userName" placeholder="请输入"size="small"></Input>
+          <Input v-model="searchInfo.userName" size="small"></Input>
         </p>
-        <p>玩家昵称</p>
+        <p>{{$t('playerList.PlayerNickname')}}</p>
         <p style="margin:0 1rem">
-          <Input v-model="searchInfo.nickname" placeholder="请输入"size="small"></Input>
+          <Input v-model="searchInfo.nickname" size="small"></Input>
         </p>
-        <p>游戏状态</p>
+        <p>{{$t('playerList.gameStatus')}}</p>
         <p style="margin:0 1rem">
           <Select v-model="defaultStatus" clearable placeholder="请选择游戏状态" style="width:150px;text-align: left" size="small"  @on-change="changeGameStatus">
-            <Option v-for="(item, index) in gameTypeList" :value="item.name" :key="index">{{ item.name }}</Option>
+            <Option v-for="(item, index) in getGameTypeList" :value="item.name" :key="index">{{ item.name }}</Option>
           </Select>
         </p>
         <div class="btns">
-          <Button type="primary" @click="getSearch(true)" style="margin-right:.3rem" size="small">搜索</Button>
-          <Button @click="getSearch(false)" size="small">重置</Button>
+          <Button type="primary" @click="getSearch(true)" style="margin-right:.3rem" size="small">{{$t('playerList.search')}}</Button>
+          <Button @click="getSearch(false)" size="small">{{$t('playerList.reset')}}</Button>
         </div>
     </div>
     <div class="playerform">
@@ -52,14 +52,14 @@
         </template>
          <template slot-scope="{row, index}" slot="operate">
           <div>
-            <Button type="text" size="small" style="color:#20a0ff" @click="operateCheck(row)">查看</Button>
-            <Button type="text" size="small" :style="{color:statusConfig(row)}" @click="operateState(row)">{{row.state ? "停用" : "开启"}}</Button>
+            <Button type="text" size="small" style="color:#20a0ff" @click="operateCheck(row)">{{$t('playerList.see')}}</Button>
+            <Button type="text" size="small" :style="{color:statusConfig(row)}" @click="operateState(row)">{{row.state ? $t('playerList.stop') : $t('playerList.open')}}</Button>
           </div>
         </template>
       </Table>
       <Spin size="large" fix v-if="isFetching">
         <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-        <div>加载中...</div>
+        <div>{{$t('playerList.loading')}}</div>
       </Spin>
       <div style="text-align: right;margin:2rem 0">
         <Page :total="playerList.length" show-elevator :page-size="20" :current.sync="currentPage" @on-change="getNowpage"></Page>
@@ -70,7 +70,7 @@
 
 <script type="text/ecmascript-6">
 import { httpRequest } from "@/service/index";
-import { getGameType } from "@/config/getGameType";
+import { getCNGameType, getENGameType } from "@/config/getGameType"
 import dayjs from "dayjs";
 import {
   formatUserName,
@@ -107,27 +107,6 @@ export default {
       isFetching: false,
       isLastMessage: false, // 主要判断是否是后台返回最后一次信息
       playerList: [],
-      GameListEnum: [
-        {code: "0",name: '离线'},
-        {code: '1', name: '大厅'},
-        { company: "NA", code: "70000", name: "H5电子游戏" },
-        { company: "NA", code: "90000", name: "H5电子游戏-无神秘奖" },
-        { company: "KY", code: "1070000", name: "KY棋牌游戏" },
-        { company: "TTG", code: "1010000", name: "TTG电子游戏" },
-        { company: "PNG", code: "1020000", name: "PNG电子游戏" },
-        { company: "MG", code: "10300000", name: "MG电子游戏" },
-        { company: "HABA", code: "1040000", name: "HABA电子游戏" },
-        { company: "AG", code: "1050000", name: "AG真人游戏" },
-        { company: "SA", code: "1060000", name: "SA真人游戏" },
-        { company: "SA", code: "1110000", name: "SA捕鱼游戏" },
-        { company: "PG", code: "1090000", name: "PG电子游戏" },
-        { company: "YSB", code: "1130000", name: "YSB体育游戏" },
-        { company: "RTG", code: "1140000", name: "RTG电子游戏" },
-        { company: "SB", code: "1080000", name: "SB电子游戏" },
-        { company: "SB", code: "1120000", name: "SB真人游戏" },
-        { company: "DT", code: "1150000", name: "DT电子游戏" },
-        { company: "PP", code: "1160000", name: "PP电子游戏" }
-      ],
       playerListStorage: [],
       playerListStartKey: "",
       playerStatus: ["已停用", "正常"],
@@ -147,41 +126,83 @@ export default {
           title: "玩家ID",
           key: "userId",
           align: 'center',
-          sortable: true
+          sortable: true,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '玩家ID' : 'ID'
+            )
+          }
         },
         {
           title: "玩家账号",
           key: "userName",
           align: 'center',
-          sortable: true
+          sortable: true,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '玩家账号' : 'Account'
+            )
+          }
         },
         {
           title: "商户ID",
           align: 'center',
           key: "buId",
-          sortable: true
+          sortable: true,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '商户ID' : 'Merchant ID'
+            )
+          }
         },
         {
           title: "所属商户",
           align: 'center',
           key: "merchantName",
-          sortable: true
+          sortable: true,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '所属商户' : 'Merchant'
+            )
+          }
         },
         {
           title: "玩家昵称",
           align: 'center',
           slot: "nickname",
-          sortable: true
+          sortable: true,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '玩家昵称' : 'Nickname'
+            )
+          }
         },
         {
           title: "状态",
           align: 'center',
           slot: "state",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '状态' : 'State'
+            )
+          }
         },
         {
           title: "游戏状态",
           align: 'center',
           slot: "gameState",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '游戏状态' : 'Game Status'
+            )
+          }
         },
         {
           title: "点数",
@@ -191,6 +212,12 @@ export default {
           render: (h, params) => {
             return h("span", thousandFormatter(params.row.balance));
           },
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '点数' : 'Point'
+            )
+          }
         },
         {
           title: "注册时间",
@@ -200,29 +227,82 @@ export default {
            render: (h, params) => {
             return h("span", dayjs(params.row.createdAt).format("YYYY-MM-DD"));
           },
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '注册时间' : 'Registration'
+            )
+          }
         },
         {
           title: "最近登录游戏时间",
           align: 'center',
           slot: "joinTime",
           sortable: true,
-          minWidth: 60
+          minWidth: 60,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '最近登录游戏时间' : 'Latest Login'
+            )
+          }
         },
         {
           title: "操作",
           align: 'center',
           slot: "operate",
-          align: "center"
+          align: "center",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '操作' : 'Operation'
+            )
+          }
         }
       ]
     };
   },
   created() {
     // this.getPlayList();
-    this.getGameTypeList();
     this.getSearch(true)
   },
   computed: {
+    getGameTypeList() {
+    
+      let GameListEnum = []
+      let val = JSON.parse(localStorage.getItem('userInfo')).gameList 
+      if (this.$store.state.language == 'zh') {
+        for (let i = 0; i < val.length; i++) {
+          for (let j = 0; j < getCNGameType().length; j++) {
+            if (val[i].code == getCNGameType()[j].code) {
+              GameListEnum.push(getCNGameType()[j])
+            }
+          }
+        }
+        this.defaultStatus = '全部'
+        GameListEnum.unshift({ code: "0", name: "离线" })
+        GameListEnum.unshift({ code: "1", name: "大厅" })
+        GameListEnum.unshift({ code: "", name: "全部" , value: "全部"})
+      } else {
+        for (let i = 0; i < val.length; i++) {
+          for (let j = 0; j < getENGameType().length; j++) {
+            if (val[i].code == getENGameType()[j].code) {
+              GameListEnum.push(getENGameType()[j])
+            }
+          }
+        }
+        this.defaultStatus = 'All'
+        GameListEnum.unshift({ code: "0", name: "Offline" })
+        GameListEnum.unshift({ code: "1", name: "Lobby" })
+        GameListEnum.unshift({ code: "", name: "All" , value: "All"})
+      }
+
+
+      let gameTypeList = GameListEnum;
+
+
+      return gameTypeList
+    },
     getItems() {
       if (this.nowPage === 1) {
         return this.playerList.slice(0, this.nowSize);
@@ -294,6 +374,7 @@ export default {
         }  
       }
     },
+    
     getPlayList() {
       //if (this.isFetching) return;
       this.isFetching = true;
@@ -401,6 +482,7 @@ export default {
           suffix: "",
           msn: ""
         });
+      this.defaultStatus = this.$store.state.language == 'zh' ? '全部' : 'All'
       this.playerList = [];
       this.playerListStorage = [];
       this.playerListStartKey = "";
@@ -408,40 +490,15 @@ export default {
       this.nowPage = 1;
       this.getPlayList();
     },
-    getGameTypeList() {
-      /* httpRequest(
-        "post",
-        "/gameBigType",
-        {
-          companyIden: -1
-        },
-        "game"
-      ).then(result => {
-        for (let item of result.payload) {
-          if (item.code != "10000") {
-            this.gameTypeList.push(item);
-          }
+   
+  },
+  watch: {
+      '$store.state.language': function() {
+        if(this.$route.name == 'playList') {
+          this.getSearch(false)
         }
-        this.gameTypeList.unshift(
-          {
-            code: "0",
-            name: "离线"
-          },
-          {
-            code: "1",
-            name: "大厅"
-          }
-        );
-        // this.$store.commit('closeLoading')
-      }); */
-      this.gameTypeList = getGameType()
-      this.gameTypeList.unshift(
-        { code: "", name: "全部" , value: "全部"},
-        {code: "0",name: '离线'},
-        {code: '1', name: '大厅'},
-      )
+      }
     }
-  }
 };
 </script>
 

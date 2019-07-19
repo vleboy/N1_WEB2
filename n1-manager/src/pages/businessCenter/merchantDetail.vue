@@ -636,13 +636,32 @@ export default {
       });
     },
     selectCompany(value) {
+      let games = []
       this.gameList = []
+      //this.gameList = []
       for (let i = 0; i < this.parentGame.length; i++) {
         if (value == this.parentGame[i].company) {
-          this.gameList.push(this.parentGame[i])
+          games.push(this.parentGame[i])
         }
       }
-      /* this.getGameList() */
+
+      if (this.$store.state.language == 'zh') {
+        for (let i = 0; i < games.length; i++) {
+          for (let j = 0; j < getCNGameType().length; j++) {
+            if (games[i].code == getCNGameType()[j].code) {
+              this.gameList.push(getCNGameType()[j])
+            }
+          }
+        }
+      } else {
+        for (let i = 0; i < games.length; i++) {
+          for (let j = 0; j < getENGameType().length; j++) {
+            if (games[i].code == getENGameType()[j].code) {
+              this.gameList.push(getENGameType()[j])
+            }
+          }
+        }
+      }  
     },
     selectGame(value) {
       this.selected = true;

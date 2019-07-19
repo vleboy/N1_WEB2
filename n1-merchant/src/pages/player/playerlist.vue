@@ -478,6 +478,7 @@ export default {
         }
         //this.getGameTypeList()
       }
+      this.defaultStatus = this.$store.state.language == 'zh' ? '全部' : 'All'
       this.playerList = [];
       this.playerListStorage = [];
       this.playerListStartKey = "";

@@ -164,7 +164,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '序号' : 'ID.'
+              this.$store.state.language == 'zh' ? '商户ID' : 'ID.'
             )
           }
         },
@@ -200,7 +200,7 @@ export default {
           renderHeader: (h, params) => {
             return h(
               'span',
-              this.$store.state.language == 'zh' ? '上级线路商' : 'UP Merchant'
+              this.$store.state.language == 'zh' ? '上级线路商' : 'UP Manager'
             )
           }
           

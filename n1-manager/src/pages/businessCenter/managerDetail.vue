@@ -3,53 +3,53 @@
     <div class="userName">
       <span>{{$route.query.displayName}} ({{$route.query.username }})</span>
       <span class="btns">
-        <Button type="primary" class="edit" @click="reload" size="small" style="margin-left:.3rem">刷新</Button>
-        <Button type="primary" class="edit" @click.stop="editBtn" v-if="isedit" size="small">编辑</Button>
-        <Button type="primary" class="edit" @click.stop="save" v-else size="small">提交修改</Button>
+        <Button type="primary" class="edit" @click="reload" size="small" style="margin-left:.3rem">{{$t('managerDetail.refresh')}}</Button>
+        <Button type="primary" class="edit" @click.stop="editBtn" v-if="isedit" size="small">{{$t('managerDetail.edit')}}</Button>
+        <Button type="primary" class="edit" @click.stop="save" v-else size="small">{{$t('managerDetail.submit')}}</Button>
       </span>
     </div>
     <Collapse v-model="value">
       <Panel name="1">
-        基本信息
+        {{$t('managerDetail.basic')}}
         <div slot="content">
           <Form label-position="left" :label-width="100">
             <Row>
                <Col span="8">
-              <FormItem label="上级线路商">
+              <FormItem :label="$t('managerDetail.upManager')">
                 {{lineDetail.parentDisplayName}}
               </FormItem>
               </Col>
               <Col span="8">
-              <FormItem label="线路商ID">
+              <FormItem :label="$t('managerDetail.managerID')">
                 {{ lineDetail.displayId}}
               </FormItem>
               </Col>
               <Col span="8">
-              <FormItem label="线路商标识">
+              <FormItem :label="$t('managerDetail.managerSN')">
                 {{lineDetail.suffix}}
               </FormItem>
               </Col>
             </Row>
             <Row>
               <Col span="8">
-              <FormItem label="管理员账号">
+              <FormItem :label="$t('managerDetail.adminAccount')">
                 {{ lineDetail.uname}}
               </FormItem>
               </Col>
               <Col span="8">
-              <FormItem label="创建时间">
+              <FormItem :label="$t('managerDetail.createTime')">
                 {{dayjs(lineDetail.createdAt).format("YYYY-MM-DD HH:mm:ss")}}
               </FormItem>
               </Col>
               <Col span="8">
-              <FormItem label="上次登录时间">
+              <FormItem :label="$t('managerDetail.lastLogin')">
                 {{dayjs(lineDetail.updatedAt).format("YYYY-MM-DD HH:mm:ss")}}
               </FormItem>
               </Col>
             </Row>
             <Row>
               <Col span="8">
-              <FormItem label="上次登录IP">
+              <FormItem :label="$t('managerDetail.lastIP')">
                 {{lineDetail.lastIP}}
               </FormItem>
               </Col>
@@ -58,42 +58,42 @@
         </div>
       </Panel>
       <Panel name="2">
-        配置信息
+        {{$t('managerDetail.config')}}
         <div slot="content">
           <Form ref='basicform' :model="basic" label-position="left" :label-width="100">
             <Row>
               <Col span="8">
-              <FormItem label="管理员密码" v-if="edit">
+              <FormItem :label="$t('managerDetail.adminPwd')" v-if="edit">
                 <Col span="6">
                 <span v-if="showPass">{{lineDetail.password}}</span>
                 <span v-else>********</span>
                 </Col>
                 <Col span="6">
-                <span class="showpass" @click="showPass=!showPass" v-if="!showPass">显示</span>
-                <span class="showpass" @click="showPass=!showPass" v-else>隐藏</span>
+                <span class="showpass" @click="showPass=!showPass" v-if="!showPass">{{$t('managerDetail.show')}}</span>
+                <span class="showpass" @click="showPass=!showPass" v-else>{{$t('managerDetail.hide')}}</span>
                 </Col>
               </FormItem>
-              <FormItem label="管理员密码" prop="password" v-else>
+              <FormItem :label="$t('managerDetail.adminPwd')" prop="password" v-else>
                 <Row>
                   <Col span="10">
-                  <Input v-model="basic.password" placeholder="6~16位,包含字母、数字及符号中至少两种组合"></Input>
+                  <Input v-model="basic.password" :placeholder="$t('managerDetail.enter1')"></Input>
                   </Col>
                 </Row>
               </FormItem>
               </Col>
               <Col span="8">
-              <Checkbox class="browser" :disabled='edit' v-model="isTest">测试号</Checkbox>
+              <Checkbox class="browser" :disabled='edit' v-model="isTest">{{$t('managerDetail.isTest')}}</Checkbox>
               </Col>
             </Row>
             <Row>
               <Col span="16">
-              <FormItem label="备注" v-if="edit">
+              <FormItem :label="$t('managerDetail.remark')" v-if="edit">
                 {{lineDetail.remark}}
               </FormItem>
-              <FormItem label="备注" prop="remark" v-else>
+              <FormItem :label="$t('managerDetail.remark')" prop="remark" v-else>
                 <Row>
                   <Col span="20">
-                  <Input v-model="basic.remark" type="textarea" :maxlength='200' :rows="1" placeholder="请输入备注,最多不超过200个字符"></Input>
+                  <Input v-model="basic.remark" type="textarea" :maxlength='200' :rows="1"></Input>
                   </Col>
                 </Row>
               </FormItem>
@@ -103,33 +103,33 @@
         </div>
       </Panel>
       <Panel name="3">
-        游戏信息
+        {{$t('managerDetail.game')}}
         <div slot="content">
           <Form ref='gameList' :model="gameForm" :label-width="110" v-if="!edit" :rules="gameValidate">
             <FormItem prop="ownGame">
               <Row>
                 <Col span="3">
-                <Select v-model="gameForm.gameType" placeholder="请选择" @on-change="selectCompany">
+                <Select v-model="gameForm.gameType" :placeholder="$t('managerDetail.select')" @on-change="selectCompany">
                   <Option v-for="item in gameType" :value="item.company" :key="item.company">{{ item.company }}</Option>
                 </Select>
                 </Col>
                 <Col span="3">
-                <Select v-model="gameForm.gamelist" placeholder="请选择" @on-change="selectGame">
+                <Select v-model="gameForm.gamelist" :placeholder="$t('managerDetail.select')" @on-change="selectGame">
                   <Option v-for="item in gameList" :value="item.name" :key="item.name">{{ item.name }}</Option>
                 </Select>
                 </Col>
               </Row>
             </FormItem>
             <FormItem v-if="selected">
-              <label slot="label">{{game}}商家占成(%)</label>
+              <label slot="label">{{game}}{{$t('managerDetail.rote')}}(%)</label>
               <Row>
                 <Col span="4">
                 <Tooltip :content="rateTip" placement="top">
-                  <Input v-model="gameForm.balance" placeholder="请输入0.00~100.00之间的数字"></Input>
+                  <Input v-model="gameForm.balance" :placeholder="$t('managerDetail.enter2')"></Input>
                 </Tooltip>
                 </Col>
                 <Col span="2">
-                <span class="add" @click="addGame">添加</span>
+                <span class="add" @click="addGame">{{$t('managerDetail.add')}}</span>
                 </Col>
               </Row>
             </FormItem>
@@ -139,11 +139,11 @@
       </Panel>
     </Collapse>
     <div class="finance">
-      <h2>财务信息
+      <h2>{{$t('managerDetail.infomation')}}
         <span
           style="color:#20a0ff;cursor:pointer;fontSize:1rem"
           @click="getWaterfallList"
-        >(点击查询)</span>
+        >({{$t('managerDetail.query')}})</span>
       </h2>
       
       <Table :columns="columns" :data="showWaterList" size="small">
@@ -178,7 +178,7 @@
       <Page :total="totalPage" class="page" :page-size='pageSize' @on-change="changepage"></Page>
     </div>
     <div class="next">
-      <h2>下级线路商列表</h2>
+      <h2>{{$t('managerDetail.subManager')}}</h2>
       <Table :columns="columns2" :data="nextLine" size="small">
         <template slot-scope="{row, index}" slot="maDisplayName">
            <span style="color:#20a0ff;cursor:pointer" @click="maDisplayNameConfig(row)">{{row.displayName}}</span>
@@ -196,14 +196,14 @@
           <span v-else></span>
         </template>
         <template slot-scope="{row, index}" slot="maOperate">
-          <Button type="text" size="small" style="color:#20a0ff" @click="maAddBalance(row)">加点</Button>
-          <Button type="text" size="small" style="color:#20a0ff" @click="maReduceBalance(row)">减点</Button>
-          <Button type="text" size="small" :style="{color:statusConfig(row, false)}" @click="maOperateConfig(row)">{{row.status == 1 ? "停用" : "启用"}}</Button>
+          <Button type="text" size="small" style="color:#20a0ff" @click="maAddBalance(row)">{{$t('managerDetail.add')}}</Button>
+          <Button type="text" size="small" style="color:#20a0ff" @click="maReduceBalance(row)">{{$t('managerDetail.reduce')}}</Button>
+          <Button type="text" size="small" :style="{color:statusConfig(row, false)}" @click="maOperateConfig(row)">{{statusConfig1(row, false)}}</Button>
         </template>
       </Table>
     </div>
     <div class="ownedMerchant">
-      <h2>拥有商户列表</h2>
+      <h2>{{$t('managerDetail.merchant')}}</h2>
       <Table :columns="columns3" :data="ownedbusiness" size="small">
         <template slot-scope="{row, index}" slot="meDisplayName">
            <span style="color:#20a0ff;cursor:pointer" @click="meDisplayNameConfig(row)">{{row.displayName}}</span>
@@ -221,45 +221,45 @@
           <span v-else></span>
         </template>
         <template slot-scope="{row, index}" slot="meOperate">
-          <Button type="text" size="small" style="color:#20a0ff" @click="meAddBalance(row)">加点</Button>
-          <Button type="text" size="small" style="color:#20a0ff" @click="meReduceBalance(row)">减点</Button>
-          <Button type="text" size="small" :style="{color:statusConfig(row, false)}" @click="meOperateConfig(row)">{{row.status == 1 ? "停用" : "启用"}}</Button>
+          <Button type="text" size="small" style="color:#20a0ff" @click="meAddBalance(row)">{{$t('managerDetail.add')}}</Button>
+          <Button type="text" size="small" style="color:#20a0ff" @click="meReduceBalance(row)">{{$t('managerDetail.reduce')}}</Button>
+          <Button type="text" size="small" :style="{color:statusConfig(row, false)}" @click="meOperateConfig(row)">{{statusConfig1(row, false)}}</Button>
         </template>
       </Table>
     </div>
     <Spin size="large" fix v-if="spinShow">
       <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-      <div>加载中...</div>
+      <div>{{$t('managerDetail.loading')}}</div>
     </Spin>
     <Modal v-model="modal" @on-ok="ok" id="plusModal" @on-cancel='cancel'>
-      <h2 v-if='plus'>加点操作</h2>
-      <h2 v-else>减点操作</h2>
+      <h2 v-if='plus'>{{$t('managerDetail.addOperate')}}</h2>
+      <h2 v-else>{{$t('managerDetail.reduceOperate')}}</h2>
       <Row class-name='modalrow'>
-        <Col span="4" v-if='plus'>增加点数</Col>
-        <Col span="4" v-else>减少点数</Col>
+        <Col span="4" v-if='plus'>{{$t('managerDetail.addPoint')}}</Col>
+        <Col span="4" v-else>{{$t('managerDetail.reducePoint')}}</Col>
         <Col span="16">
         <Tooltip :content="tooltip" placement="top" @on-popper-show="focus" :disabled='disabled'>
-          <Input v-model="point" placeholder="请输入点数" :disabled='disabled'></Input>
+          <Input v-model="point" :disabled='disabled'></Input>
         </Tooltip>
         </Col>
       </Row>
       <Row class-name='modalrow'>
-        <Col span="4">起始账户</Col>
+        <Col span="4">{{$t('managerDetail.startAccount')}}</Col>
         <Col span="16">
         <Select v-model="select" v-if='plus' @on-change='changeOption'>
           <Option v-for="item in options" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
-        <p v-else>【线路商】{{uname}}</p>
+        <p v-else>【{{$t('managerDetail.manager')}}】{{uname}}</p>
         </Col>
       </Row>
       <Row v-if="plus" class-name='modalrow'>
-        <Col span="4">增加账户</Col>
+        <Col span="4">{{$t('managerDetail.addAccount')}}</Col>
         <Col span="16">
-        <p>【线路商】{{uname}}</p>
+        <p>【{{$t('managerDetail.manager')}}】{{uname}}</p>
         </Col>
       </Row>
       <Row v-else class-name='modalrow'>
-        <Col span="4">转入账户</Col>
+        <Col span="4">{{$t('managerDetail.transferAccount')}}</Col>
         <Col span="16">
         <Select v-model="select" @on-change='changeOption'>
           <Option v-for="item in options" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -267,7 +267,7 @@
         </Col>
       </Row>
       <Row class-name='textrow'>
-        <Col span="4">备注</Col>
+        <Col span="4">{{$t('managerDetail.remark')}}</Col>
         <Col span="16">
         <textarea v-model="note" id="textRow" placeholder="注明备注,如没有可不填" rows="6" autocomplete="off" maxlength="180"></textarea>
         </Col>
@@ -288,6 +288,7 @@ import {
 } from "@/service/index";
 import dayjs from "dayjs";
 import { thousandFormatter } from "@/config/format";
+import { getCNGameType, getENGameType } from "@/config/getGameType"
 import _ from "lodash";
 export default {
   beforeRouteEnter(to, from, next) {
@@ -383,84 +384,186 @@ export default {
           title: "序号",
           type: "index",
           align: "center",
-          maxWidth: 80
+          maxWidth: 80,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '序号' : 'NO.'
+            )
+          }
         },
         {
           title: "线路商标识",
           align: "center",
-          key: "suffix"
+          key: "suffix",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '线路商标识' : 'SN'
+            )
+          }
         },
         {
           title: "线路商昵称",
           slot: "maDisplayName",
-          align: "center"
+          align: "center",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '线路商昵称' : 'Nickname'
+            )
+          }
         },
         {
           title: "剩余点数",
           slot: "maBalance",
-          align: "center"
+          align: "center",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '线路商昵称' : 'Surplus Points'
+            )
+          }
         },
         {
           title: "创建时间",
           align: "center",
-          slot: "maCreatedAt"
+          slot: "maCreatedAt",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '创建时间' : 'Create Time'
+            )
+          }
         },
         {
           title: "备注",
           key: "maRemark",
-          align: "center"
+          align: "center",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '备注' : 'Remark'
+            )
+          }
         },
         {
           title: "操作(对旗下线路商操作)",
           slot: "maOperate",
-          align: "center"
+          align: "center",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '操作(对旗下线路商操作)' : 'Operation'
+            )
+          }
         }
       ],
       columns3: [
         {
           title: "序号",
           type: "index",
-          maxWidth: 80
+          maxWidth: 80,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '序号' : 'NO.'
+            )
+          }
         },
         {
           title: "商户标识",
-          key: "sn"
+          key: "sn",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '商户标识' : 'SN'
+            )
+          }
         },
         {
           title: "商户昵称",
-          slot: "meDisplayName"
+          slot: "meDisplayName",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '商户昵称' : 'Nickname'
+            )
+          }
         },
         {
           title: "剩余点数",
-          slot: "meBalance"
+          slot: "meBalance",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '剩余点数' : 'Surplus Points'
+            )
+          }
         },
         {
           title: "创建时间",
-          slot: "meCreatedAt"
+          slot: "meCreatedAt",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '创建时间' : 'Create Time'
+            )
+          }
         },
         {
           title: "备注",
-          slot: "meRemark"
+          slot: "meRemark",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '备注' : 'Remark'
+            )
+          }
         },
         {
           title: "操作(对旗下商户操作)",
-          slot: "meOperate"
+          slot: "meOperate",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '操作(对旗下商户操作)' : 'Operation'
+            )
+          }
         }
       ],
       columns1: [
         {
           title: "公司",
-          key: "company"
+          key: "company",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '公司' : 'Company'
+            )
+          }
         },
         {
           title: "游戏",
-          key: "name"
+          key: "name",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '游戏' : 'Game'
+            )
+          }
         },
         {
           title: "商家占成",
           key: "rate",
           render: (h, params) => {
             return h("span", params.row.rate + "%");
+          },
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '商家占成' : 'Rate'
+            )
           }
         },
         {
@@ -485,6 +588,12 @@ export default {
                 "删除"
               );
             }
+          },
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '操作' : 'Operation'
+            )
           }
         }
       ],
@@ -492,41 +601,95 @@ export default {
         {
           title: "序号",
           type: "index",
-          maxWidth: 80
+          maxWidth: 80,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '序号' : 'NO.'
+            )
+          }
         },
         {
           title: "交易时间",
           slot: "tradeAt",
-          minWidth: 100
+          minWidth: 100,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易时间' : 'Transaction Time'
+            )
+          }
         },
         {
           title: "交易对象",
           slot: "toUser",
-          minWidth: 250
+          minWidth: 250,
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易对象' : 'Transactor'
+            )
+          }
         },
         {
           title: "交易类型",
-          slot: "tradeType"
+          slot: "tradeType",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易类型' : 'Transaction Type'
+            )
+          }
         },
         {
           title: "交易前余额",
-          slot: "oldBalance"
+          slot: "oldBalance",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易前余额' : 'Pre-Balance'
+            )
+          }
         },
         {
           title: "交易点数",
-          slot: "amount"
+          slot: "amount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易点数' : 'Transaction points'
+            )
+          }
         },
         {
           title: "交易后余额",
-          slot: "balance"
+          slot: "balance",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '交易后余额' : 'Balance'
+            )
+          }
         },
         {
           title: "操作人",
-          slot: "operator"
+          slot: "operator",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '操作人' : 'Operator'
+            )
+          }
         },
         {
           title: "备注",
-          slot: "remark"
+          slot: "remark",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '备注' : 'Operation'
+            )
+          }
         }
       ],
       waterfall: []
@@ -594,7 +757,21 @@ export default {
         }
       });
     },
-
+    statusConfig1(row,bool) {
+      if (this.$store.state.language == 'zh') {
+        if (bool) {
+          return row.status == 1 ? "已启用" : "已停用"
+        } else {
+          return row.status == 1 ? "停用" : "启用"
+        }
+      } else {
+        if (bool) {
+          return row.status == 1 ? "enabled" : "disabled"
+        } else {
+          return row.status == 1 ? "enable" : "disable"
+        }
+      }
+    },
     statusConfig(row) {
       return row.status == 1 ? "#f5141e" : "#20a0ff"
     },
@@ -930,16 +1107,32 @@ export default {
       });
     },
     selectCompany(value) {
-      let userId = this.parent;
-      let params = { companyIden: value, userId };
-      if (userId == "01") {
-        delete params.userId;
-      }
-      gameBigType(params).then(res => {
-        if (res.code == 0) {
-          this.gameList = res.payload;
+      let games = []
+      this.gameList = []
+      //this.gameList = []
+      for (let i = 0; i < this.parentGame.length; i++) {
+        if (value == this.parentGame[i].company) {
+          games.push(this.parentGame[i])
         }
-      });
+      }
+
+      if (this.$store.state.language == 'zh') {
+        for (let i = 0; i < games.length; i++) {
+          for (let j = 0; j < getCNGameType().length; j++) {
+            if (games[i].code == getCNGameType()[j].code) {
+              this.gameList.push(getCNGameType()[j])
+            }
+          }
+        }
+      } else {
+        for (let i = 0; i < games.length; i++) {
+          for (let j = 0; j < getENGameType().length; j++) {
+            if (games[i].code == getENGameType()[j].code) {
+              this.gameList.push(getENGameType()[j])
+            }
+          }
+        }
+      }  
     },
     selectGame(value) {
       this.selected = true;

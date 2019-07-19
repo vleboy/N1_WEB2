@@ -8,37 +8,37 @@
     </div>
     <div class="page-wrapper">
       <div class="login-left">
-        <p class="title-big">NA线路商后台</p>
+        <p class="title-big">{{$t('login.system')}}</p>
       </div>
       <div class="login-center"></div>
       <div class="login-right">
         <Form label-position="left" :label-width="80">
-          <FormItem label="账号">
+          <FormItem :label="$t('login.account')">
             <Row>
               <Col span="8">
                 <Input v-model.trim="username" :maxlength="16"></Input>
               </Col>
             </Row>
           </FormItem>
-          <FormItem label="密码">
+          <FormItem :label="$t('login.password')">
             <Row>
               <Col span="8">
                 <Input v-model.trim="password" type="password" :maxlength="16"></Input>
               </Col>
             </Row>
           </FormItem>
-          <FormItem label="标识">
+          <FormItem :label="$t('login.sign')">
             <Row>
               <Col span="8">
                 <Input v-model.trim="suffix"></Input>
               </Col>
             </Row>
           </FormItem>
-          <FormItem label="验证">
+          <FormItem :label="$t('login.validation')">
             <Row>
               <Col span="8" style="display:flex;">
                 <Input v-model="validate" style="width: 80px" :maxlength="4"></Input>
-                <span class="getCode" v-if="showCode" @click="getCode" style="flex:1;cursor:pointer">点击显示验证码</span>
+                <span class="getCode" v-if="showCode" @click="getCode" style="flex:1;cursor:pointer">{{$t('login.click')}}</span>
                 <img class="validateImg" v-else :src="codeSrc" @click="getCode" alt="oo" style="background:grey;positon:relative;flex:1;cursor:pointer;">
                 <Spin fix v-if="loadImg"></Spin>
               </Col>
@@ -52,7 +52,7 @@
                   :loading="$store.state.login.loading"
                   @click="login"
                 >
-                  <span v-if="!loading">登录</span>
+                  <span v-if="!loading">{{$t('login.login')}}</span>
                   <span v-else>Loading...</span>
                 </Button>
               </Col>
