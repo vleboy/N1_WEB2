@@ -1,6 +1,5 @@
 /* 增删游戏公司大类如 需要另外在玩家中心的companyList修改*/
 /*  */
-
 //游戏种类
 export const getGameType = () => {
   return [
