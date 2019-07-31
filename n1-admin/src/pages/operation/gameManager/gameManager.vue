@@ -32,6 +32,8 @@
         </Select>
       </Col>
     </Row>
+
+    
     <div class="outresult">
       <Table :columns="columns" :data="gameItems">
         <template slot-scope="{row, index}" slot="classify">
