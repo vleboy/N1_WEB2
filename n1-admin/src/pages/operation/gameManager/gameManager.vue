@@ -57,7 +57,6 @@
       <div style="text-align: right;margin:2rem 0">
         <Page
           :total="gameListData.length"
-          show-elevator
           :page-size="50"
           :current.sync="currentPage"
           @on-change="getNowpage"
