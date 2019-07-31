@@ -21,7 +21,8 @@ export const getGameType = () => {
     { company: "SB", code: "1080000", name: "SB电子游戏" },
     { company: "SB", code: "1120000", name: "SB真人游戏" },
     { company: "DT", code: "1150000", name: "DT电子游戏" },
-    { company: "PP", code: "1160000", name: "PP电子游戏" }
+    { company: "PP", code: "1160000", name: "PP电子游戏" },
+    { company: "VG", code: "1100000", name: "VG棋牌游戏" }
   ]
 }
 
@@ -76,7 +77,8 @@ export const getGameListEnum = () => {
       { company: "SB", code: "1080000", name: "SB电子游戏" },
       { company: "SB", code: "1120000", name: "SB真人游戏" },
       { company: "DT", code: "1150000", name: "DT电子游戏" },
-      { company: "PP", code: "1160000", name: "PP电子游戏" }
+      { company: "PP", code: "1160000", name: "PP电子游戏" },
+      { company: "VG", code: "1100000", name: "VG棋牌游戏" }
     ],
     NA: [
       { company: "全部", code: "", name: "全部" },
@@ -136,7 +138,8 @@ export const getGameListEnum = () => {
     PP: [
       { company: "全部", code: "", name: "全部" },
       { company: "PP", code: "1160000", name: "PP电子游戏" }
-    ]
+    ],
+    VG: [{ company: "VG", code: "1100000", name: "VG棋牌游戏" }]
   }
 }
 
