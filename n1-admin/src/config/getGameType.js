@@ -50,7 +50,8 @@ export const GameListEnum = () => {
       { company: "SB", code: "1120000", name: "SB真人游戏" }
     ],
     DT: [{ company: "DT", code: "1150000", name: "DT电子游戏" }],
-    PP: [{ company: "PP", code: "1160000", name: "PP电子游戏" }]
+    PP: [{ company: "PP", code: "1160000", name: "PP电子游戏" }],
+    VG: [{ company: "VG", code: "1100000", name: "VG棋牌游戏" }]
   }
 }
 
