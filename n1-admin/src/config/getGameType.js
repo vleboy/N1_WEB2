@@ -25,7 +25,6 @@ export const getGameType = () => {
     { company: "VG", code: "1100000", name: "VG棋牌游戏" }
   ]
 }
-
 //游戏枚举
 export const GameListEnum = () => {
   return {
