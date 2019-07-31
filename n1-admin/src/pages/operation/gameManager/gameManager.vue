@@ -124,7 +124,6 @@ export default {
       isShowDetail: false,
 
       companyInfo: "",
-      companyOptions: [],
       gameStatusNum: ["下线", "正常"],
       companyOptions: [
         { company: "NA", companyName: "NA" },
@@ -140,7 +139,8 @@ export default {
         { company: "AG", companyName: "AG" },
         { company: "SA", companyName: "SA" },
         { company: "SB", companyName: "SB" },
-        { company: "YSB", companyName: "YSB" }
+        { company: "YSB", companyName: "YSB" },
+        { company: "VG", companyName: "VG" }
       ],
       searchInfo: {
         gameStatus: "2",
