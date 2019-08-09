@@ -109,6 +109,9 @@ export default {
       this.$store.commit("setCurrentPageName", name);
       this.checkTag(name);
       this.openName=menuOpen(name);
+
+      console.log(this.openName);
+      
       // this.$store.commit("addOpenSubmenu", pathArr[1].name);
     }
   }
