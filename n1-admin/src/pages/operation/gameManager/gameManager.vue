@@ -141,7 +141,8 @@ export default {
         { company: "SA", companyName: "SA" },
         { company: "SB", companyName: "SB" },
         { company: "YSB", companyName: "YSB" },
-        { company: "VG", companyName: "VG" }
+        { company: "VG", companyName: "VG" },
+        { company: "DJ", companyName: "DJ" },
       ],
       searchInfo: {
         gameStatus: "2",
