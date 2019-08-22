@@ -116,7 +116,14 @@ export default {
     see: '查看',
     stop: '停用',
     open: '开启',
-    loading: '加载中...'
+    loading: '加载中...',
+    createPlayer: '创建玩家',
+    add: '上分',
+    reduce: '下分',
+    operatePlayer: '操作玩家',
+    point: '点数',
+    account: '账号',
+    pwd: '密码'
   },
   playerDetail: {
     flowReport: '流水报表',

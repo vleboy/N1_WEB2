@@ -117,7 +117,14 @@ export default {
     see: 'detail',
     stop: 'freeze',
     open: 'unfreeze',
-    loading: 'Loading...'
+    loading: 'Loading...',
+    createPlayer: 'Create',
+    add: 'add',
+    reduce: 'reduce',
+    operatePlayer: 'Operate player',
+    point: 'Point',
+    account: 'Account',
+    pwd: 'Password'
   },
   playerDetail: {
     flowReport: 'Bill',

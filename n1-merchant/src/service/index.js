@@ -184,3 +184,16 @@ export async function childList(id,role){
 export async function configOne(params){
     return http(post('/configOne',params))
 }
+
+
+
+/* 玩家中心 */
+//创建玩家
+export async function createPlayer(params) {
+    return http(post('/merchant/player/create', params))
+}
+
+//上下分操作
+export async function playerPointAction(params) {
+    return http(post('/merchant/player/point', params))
+}

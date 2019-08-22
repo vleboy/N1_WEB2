@@ -32,10 +32,11 @@
             >{{ item.name }}</Option>
           </Select>
         </Col>
-        <Col span="3">
+        <Col span="4">
           <div class="btns">
-            <Button type="primary" @click="getSearch(true)" style="margin-right:.3rem" size="small">{{$t('playerList.search')}}</Button>
-            <Button @click="getSearch(false)" size="small">{{$t('playerList.reset')}}</Button>
+            <Button type="primary" @click="getSearch(true)" size="small">{{$t('playerList.search')}}</Button>
+            <Button style="margin:0 .3rem"  @click="getSearch(false)" size="small">{{$t('playerList.reset')}}</Button>
+            <Button @click="showCreate = true" size="small">{{$t('playerList.createPlayer')}}</Button>
           </div>
         </Col>
       </Row>
@@ -63,6 +64,8 @@
        <template slot-scope="{row, index}" slot="action">
           <Button type="text" size="small" style="color:#20a0ff" @click="playDetail(row)">{{$t('playerList.see')}}</Button>
           <Button type="text" size="small" :style="{color:stateConfig(row, false)}" @click="changeStatus(row)">{{row.state ? $t('playerList.stop') : $t('playerList.open')}}</Button>
+          <Button type="text" size="small" style="color:#20a0ff" @click="add(row)">{{$t('playerList.add')}}</Button>
+          <Button type="text" size="small" style="color:#20a0ff" @click="reduce(row)">{{$t('playerList.reduce')}}</Button>
         </template>
       </Table>
 
@@ -79,11 +82,52 @@
         ></Page>
       </div>
     </div>
+
+    <Modal v-model="showCreate" width="360" @on-ok="create">
+      <p slot="header" style="text-align:center">
+        <span>{{$t('playerList.createPlayer')}}</span>
+      </p>
+      <div>
+        <Row style="display:flex;align-items:center;margin-bottom:1rem;">
+          <Col span="10">{{$t('playerList.account')}}:</Col>
+          <Col span="14">
+            <Input v-model="playerName" placeholder="1-20" style="width: 100%" />
+          </Col>
+        </Row> 
+        <Row style="display:flex;align-items:center;">
+          <Col span="10">{{$t('playerList.pwd')}}:</Col>
+          <Col span="14">
+            <Input v-model="playerPwd" type="password" placeholder="6-20" style="width: 100%" />
+          </Col>
+        </Row>
+      </div>
+    </Modal>
+
+
+    <Modal v-model="showPoint" width="360" @on-ok="actionPoint">
+      <p slot="header" style="text-align:center">
+        <span>{{operatePoint}}</span>
+      </p>
+      <div>
+        <Row style="display:flex;align-items:center;margin-bottom:1rem;">
+          <Col span="10">{{$t('playerList.operatePlayer')}}:</Col>
+          <Col span="14">
+            {{actionPlayerName}}
+          </Col>
+        </Row> 
+        <Row style="display:flex;align-items:center;">
+          <Col span="10">{{$t('playerList.point')}}:</Col>
+          <Col span="14">
+            <Input v-model.number="amount" style="width: 100%" />
+          </Col>
+        </Row>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import { httpRequest } from "@/service/index";
+import { httpRequest, createPlayer, playerPointAction } from "@/service/index";
 import { getCNGameType, getENGameType } from "@/config/getGameType"
 import dayjs from "dayjs";
 import {
@@ -95,6 +139,13 @@ export default {
   beforeCreate() {},
   data() {
     return {
+      playerName: '',
+      playerPwd: '',
+      action : '1',//上下分操作 1上-1下
+      amount: 0,
+      showCreate: false,
+      showPoint: false,
+      actionPlayerName: '',
       defaultStatus: '全部',
       nowSize: 20,
       nowPage: 1,
@@ -247,6 +298,7 @@ export default {
           title: "操作",
           slot: "action",
           align: "center",
+          minWidth: 80,
           renderHeader: (h, params) => {
             return h(
               'span',
@@ -262,7 +314,6 @@ export default {
     //this.getGameTypeList();
   },
   computed: {
-    
     getItems() {
       if (this.nowPage === 1) {
         return this.playerList.slice(0, this.nowSize);
@@ -273,8 +324,7 @@ export default {
         );
       }
     },
-    getGameTypeList() {
-    
+    getGameTypeList() { 
       let GameListEnum = []
       let val = JSON.parse(localStorage.getItem('userInfo')).gameList 
       if (this.$store.state.language == 'zh') {
@@ -308,6 +358,13 @@ export default {
 
 
       return gameTypeList
+    },
+    operatePoint() {
+      if (this.$store.state.language == 'zh') {
+        return this.action == '1' ? '上分操作' : '下分操作'
+      } else {
+        return this.action == '1' ? 'add point' : 'reduce point'
+      }
     }
   },
   methods: {
@@ -338,19 +395,54 @@ export default {
         return ""
       }
     },
-    //点数
-    /* balanceConfig(row) {
-      return thousandFormatter(row.balance)
-    }, */
-    //注册时间
-    /* createAtConfig(row) {
-      return dayjs(row.createdAt).format("YYYY-MM-DD")
-    }, */
     //最近游戏登录时间
     updateAtConfig(row) {
       return dayjs(row.joinTime).format("YYYY-MM-DD HH:mm:ss")
     },
-
+    create() {
+      let params = {
+        userName: this.playerName,
+        userPwd: this.playerPwd,
+      }
+      createPlayer(params).then(res => {
+        if (res.code != -1) {
+          let message = this.$store.state.language == 'zh' ? "创建成功" : "Success create"
+          this.$Message.success(message)
+          this.playerName = ''
+          this.playerPwd = ''
+          this.getSearch(true)
+        } else {
+          this.playerName = ''
+          this.playerPwd = ''
+        }
+      }).catch(err => {
+          this.playerName = ''
+          this.playerPwd = ''
+      })
+    },
+    add(row) {
+      this.showPoint = true
+      this.actionPlayerName = row.userName
+      this.action = '1'
+    },
+    reduce(row) {
+      this.showPoint = true
+      this.actionPlayerName = row.userName
+      this.action = '-1'
+    },
+    actionPoint() {
+      let params = {
+        userName: this.actionPlayerName,
+        action: this.action,
+        amount: this.amount
+      }
+      playerPointAction(params).then(res => {
+        let message = this.$store.state.language == 'zh' ? "创建成功" : "Success create"
+        this.$Message.success(message)
+        this.getSearch(true)
+        this.amount = 0
+      })
+    },
     selectionChange(val) {
       this.checkedArray = val;
     },
