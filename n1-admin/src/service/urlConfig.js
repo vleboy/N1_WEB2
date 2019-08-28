@@ -12,6 +12,8 @@ export let URL = type => {
     }
   } else {
     switch (type) {
+      case 'vn': 
+        return 'https://testvn.alimuban.cn:45557'
       case 'prize':
         return 'https://testgame.alimuban.cn:45557'
       // return 'http://192.168.3.200:45557'

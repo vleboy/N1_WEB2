@@ -69,7 +69,7 @@
       openName = ['report']
     } else if (name == 'flow' || name == 'noTransferReport') {
       openName = ['noTransfer']
-    } else if (name == 'sysConfig' || name == 'prizeList') {
+    } else if (name == 'sysConfig' || name == 'prizeList' || name=='vnSysConfig') {
       openName = ['operation', 'mysPrice']
     } else if (name == 'numericalControl') {
       openName = ['operation', 'electronicGame']

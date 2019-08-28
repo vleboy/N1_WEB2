@@ -147,6 +147,7 @@
                     <Submenu name='mysPrice' v-if="permission.includes('神秘大奖')">
                       <template slot="title">神秘大奖</template>
                       <MenuItem name="sysConfig">系统配置</MenuItem>
+                      <MenuItem name="vnSysConfig">系统配置(柬埔寨)</MenuItem>
                       <MenuItem name="prizeList">中奖记录</MenuItem>
                     </Submenu>
                 </Submenu>

@@ -58,6 +58,7 @@ import debugLog from '@/pages/log/debugLog'
 
 import prizeList from '@/pages/operation/mysPrize/prizeList'
 import sysConfig from '@/pages/operation/mysPrize/sysConfig'
+import vnSysConfig from '@/pages/operation/mysPrize/vnSysConfig'
 import dataRepair from '@/pages/log/dataRepair'
 import playerlist from '@/pages/player/playerlist'
 
@@ -328,6 +329,7 @@ export const appRouter = [
            component: main,
            children: [
              { path: 'sysConfig', title: '系统配置', name: 'sysConfig', component: sysConfig },
+             { path: 'vnSysConfig', title: '系统配置(柬埔寨)', name: 'vnSysConfig', component: vnSysConfig },
              { path: 'prizeList', title: '中奖纪录', name: 'prizeList', component: prizeList },
              { path: 'numericalControl', title: '数值调控中心', name: 'numericalControl', component: numericalControl },
              { path: 'gameManager', title: '游戏管理', name: 'gameManager', component: gameManager },
