@@ -957,8 +957,8 @@ export default {
     changedTime() {
       let time = this.defaultTime;
       time = time.map((item, index) => {
-        if (index == 1 && item.getTime() > Date.now() - 180000) {
-          return Date.now() - 180000;
+        if (index == 1 && item.getTime() > Date.now()) {
+          return Date.now();
         }
         return item.getTime();
       });

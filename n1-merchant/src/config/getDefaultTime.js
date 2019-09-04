@@ -5,7 +5,7 @@ export const getDefaultTime = function (current) {
   let endTime = new Date().getTime()
 
   startTime = startTime.setHours(0, 0, 0, 0)
-  endTime = current ? endTime : endTime - 180000
+  endTime = current ? endTime : endTime
 
 
   startTime - endTime > 0 ? startTime = new Date().setHours(0, 0, 0, 0) : ''
