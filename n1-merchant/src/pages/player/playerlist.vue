@@ -2,19 +2,21 @@
   <div class="p-playerlist">
     <div class="propList-search">
       <Row class="row -search-row">
-        <Col span="1" style="margin-right:1rem">{{$t('playerList.playerID')}}</Col>
+        <Col span="1" style="margin-right:1rem">{{
+          $t("playerList.playerID")
+        }}</Col>
         <Col span="3" style="margin-right:0rem">
           <Input v-model="searchInfo.userId" size="small"></Input>
         </Col>
-        <Col span="2">{{$t('playerList.PlayerAccount')}}</Col>
+        <Col span="2">{{ $t("playerList.PlayerAccount") }}</Col>
         <Col span="3" style="margin-right:0rem">
           <Input v-model="searchInfo.userName" size="small"></Input>
         </Col>
-        <Col span="2">{{$t('playerList.PlayerNickname')}}</Col>
+        <Col span="2">{{ $t("playerList.PlayerNickname") }}</Col>
         <Col span="3" style="margin-right:0rem">
           <Input v-model="searchInfo.nickname" size="small"></Input>
         </Col>
-        <Col span="2">{{$t('playerList.gameStatus')}}</Col>
+        <Col span="2">{{ $t("playerList.gameStatus") }}</Col>
         <Col span="3" style="margin-right:1rem">
           <Select
             v-model="defaultStatus"
@@ -28,29 +30,42 @@
               v-for="(item, index) in getGameTypeList"
               :value="item.name"
               :key="index"
-              
-            >{{ item.name }}</Option>
+              >{{ item.name }}</Option
+            >
           </Select>
         </Col>
         <Col span="4">
           <div class="btns">
-            <Button type="primary" @click="getSearch(true)" size="small">{{$t('playerList.search')}}</Button>
-            <Button style="margin:0 .3rem"  @click="getSearch(false)" size="small">{{$t('playerList.reset')}}</Button>
-            <Button @click="showCreate = true" size="small">{{$t('playerList.createPlayer')}}</Button>
+            <Button type="primary" @click="getSearch(true)" size="small">{{
+              $t("playerList.search")
+            }}</Button>
+            <Button
+              style="margin:0 .3rem"
+              @click="getSearch(false)"
+              size="small"
+              >{{ $t("playerList.reset") }}</Button
+            >
+            <Button @click="showCreate = true" size="small">{{
+              $t("playerList.createPlayer")
+            }}</Button>
           </div>
         </Col>
       </Row>
     </div>
     <div class="playerform">
       <Table :columns="columns" :data="getItems">
-         <template slot-scope="{row, index}" slot="nickname">
-          <span>{{row.nickname === "NULL!" ? "-" : row.nickname}}</span>
+        <template slot-scope="{ row, index }" slot="nickname">
+          <span>{{ row.nickname === "NULL!" ? "-" : row.nickname }}</span>
         </template>
-        <template slot-scope="{row, index}" slot="state">
-          <Tag type="border" :color="stateConfig(row ,true)">{{playerStatusConfig(row)}}</Tag>
+        <template slot-scope="{ row, index }" slot="state">
+          <Tag type="border" :color="stateConfig(row, true)">{{
+            playerStatusConfig(row)
+          }}</Tag>
         </template>
-        <template slot-scope="{row, index}" slot="gameStateName">
-          <Tag type="border" :color="gameStateConfig(row)">{{row.gameStateName}}</Tag>
+        <template slot-scope="{ row, index }" slot="gameStateName">
+          <Tag type="border" :color="gameStateConfig(row)">{{
+            row.gameStateName
+          }}</Tag>
         </template>
         <!-- <template slot-scope="{row, index}" slot="balance">
           <span>{{balanceConfig(row)}}</span>
@@ -58,20 +73,53 @@
         <!-- <template slot-scope="{row, index}" slot="createdAt">
           <span>{{createAtConfig(row)}}</span>
         </template> -->
-        <template slot-scope="{row, index}" slot="joinTime">
-          <span>{{updateAtConfig(row)}}</span>
+        <template slot-scope="{ row, index }" slot="joinTime">
+          <span>{{ updateAtConfig(row) }}</span>
         </template>
-       <template slot-scope="{row, index}" slot="action">
-          <Button type="text" size="small" style="color:#20a0ff" @click="playDetail(row)">{{$t('playerList.see')}}</Button>
-          <Button type="text" size="small" :style="{color:stateConfig(row, false)}" @click="changeStatus(row)">{{row.state ? $t('playerList.stop') : $t('playerList.open')}}</Button>
-          <Button type="text" size="small" style="color:#20a0ff" @click="add(row)">{{$t('playerList.add')}}</Button>
-          <Button type="text" size="small" style="color:#20a0ff" @click="reduce(row)">{{$t('playerList.reduce')}}</Button>
+        <template slot-scope="{ row, index }" slot="action">
+          <Button
+            type="text"
+            size="small"
+            style="color:#20a0ff"
+            @click="playDetail(row)"
+            >{{ $t("playerList.see") }}</Button
+          >
+          <Button
+            type="text"
+            size="small"
+            style="color:#20a0ff"
+            @click="showThisPWD(row)"
+            >{{ $t("playerList.pwd") }}</Button
+          >
+          <Button
+            type="text"
+            size="small"
+            :style="{ color: stateConfig(row, false) }"
+            @click="changeStatus(row)"
+            >{{
+              row.state ? $t("playerList.stop") : $t("playerList.open")
+            }}</Button
+          >
+          <Button
+            type="text"
+            size="small"
+            style="color:#20a0ff"
+            @click="add(row)"
+            >{{ $t("playerList.add") }}</Button
+          >
+          <Button
+            type="text"
+            size="small"
+            style="color:#20a0ff"
+            @click="reduce(row)"
+            >{{ $t("playerList.reduce") }}</Button
+          >
         </template>
       </Table>
 
       <Spin size="large" fix v-if="isFetching">
-       <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
-        <div>{{$t('playerList.loading')}}</div>
+        <Icon type="ios-loading" size="64" class="demo-spin-icon-load"></Icon>
+        <div>{{ $t("playerList.loading") }}</div>
       </Spin>
       <div style="text-align: right;margin:2rem 0">
         <Page
@@ -85,38 +133,70 @@
 
     <Modal v-model="showCreate" width="360" @on-ok="create">
       <p slot="header" style="text-align:center">
-        <span>{{$t('playerList.createPlayer')}}</span>
+        <span>{{ $t("playerList.createPlayer") }}</span>
       </p>
       <div>
         <Row style="display:flex;align-items:center;margin-bottom:1rem;">
-          <Col span="10">{{$t('playerList.account')}}:</Col>
+          <Col span="10">{{ $t("playerList.account") }}:</Col>
           <Col span="14">
-            <Input v-model="playerName" placeholder="1-20" style="width: 100%" />
+            <Input
+              v-model="playerName"
+              placeholder="1-20"
+              style="width: 100%"
+            />
           </Col>
-        </Row> 
+        </Row>
         <Row style="display:flex;align-items:center;">
-          <Col span="10">{{$t('playerList.pwd')}}:</Col>
+          <Col span="10">{{ $t("playerList.pwd") }}:</Col>
           <Col span="14">
-            <Input v-model="playerPwd" type="password" placeholder="6-20" style="width: 100%" />
+            <Input
+              v-model="playerPwd"
+              type="password"
+              placeholder="6-20"
+              style="width: 100%"
+            />
           </Col>
         </Row>
       </div>
     </Modal>
 
-
-    <Modal v-model="showPoint" width="360" @on-ok="actionPoint">
+    <Modal v-model="showPWD" width="360" @on-ok="changePWD">
       <p slot="header" style="text-align:center">
-        <span>{{operatePoint}}</span>
+        <span>{{ $t("playerList.createPlayer") }}</span>
       </p>
       <div>
         <Row style="display:flex;align-items:center;margin-bottom:1rem;">
-          <Col span="10">{{$t('playerList.operatePlayer')}}:</Col>
+          <Col span="10">{{ $t("playerList.account") }}:</Col>
           <Col span="14">
-            {{actionPlayerName}}
+            <Input
+              v-model="playerName"
+              placeholder="1-20"
+              style="width: 100%"
+            />
           </Col>
-        </Row> 
+        </Row>
         <Row style="display:flex;align-items:center;">
-          <Col span="10">{{$t('playerList.point')}}:</Col>
+          <Col span="10">{{ $t("playerList.pwd") }}:</Col>
+          <Col span="14">
+            <Input v-model="playerPwd" placeholder="6-20" style="width: 100%" />
+          </Col>
+        </Row>
+      </div>
+    </Modal>
+
+    <Modal v-model="showPoint" width="360" @on-ok="actionPoint">
+      <p slot="header" style="text-align:center">
+        <span>{{ operatePoint }}</span>
+      </p>
+      <div>
+        <Row style="display:flex;align-items:center;margin-bottom:1rem;">
+          <Col span="10">{{ $t("playerList.operatePlayer") }}:</Col>
+          <Col span="14">
+            {{ actionPlayerName }}
+          </Col>
+        </Row>
+        <Row style="display:flex;align-items:center;">
+          <Col span="10">{{ $t("playerList.point") }}:</Col>
           <Col span="14">
             <Input v-model.number="amount" style="width: 100%" />
           </Col>
@@ -136,14 +216,15 @@ import {
   thousandFormatter
 } from "@/config/format";
 export default {
-  beforeCreate() {},
-  data() {
+  beforeCreate () { },
+  data () {
     return {
       playerName: '',
       playerPwd: '',
-      action : '1',//上下分操作 1上-1下
+      action: '1',//上下分操作 1上-1下
       amount: 0,
       showCreate: false,
+      showPWD: false,
       showPoint: false,
       actionPlayerName: '',
       defaultStatus: '全部',
@@ -181,7 +262,7 @@ export default {
             )
           }
         },
-         {
+        {
           title: "玩家账号",
           align: "center",
           key: "userName",
@@ -227,7 +308,7 @@ export default {
             )
           }
         },
-        
+
         {
           title: "状态",
           slot: "state",
@@ -266,7 +347,7 @@ export default {
             )
           }
         },
-       {
+        {
           title: "注册时间",
           slot: "createdAt",
           align: "center",
@@ -309,12 +390,12 @@ export default {
       ]
     };
   },
-  created() {
+  created () {
     this.getPlayList();
     //this.getGameTypeList();
   },
   computed: {
-    getItems() {
+    getItems () {
       if (this.nowPage === 1) {
         return this.playerList.slice(0, this.nowSize);
       } else {
@@ -324,9 +405,9 @@ export default {
         );
       }
     },
-    getGameTypeList() { 
+    getGameTypeList () {
       let GameListEnum = []
-      let val = JSON.parse(localStorage.getItem('userInfo')).gameList 
+      let val = JSON.parse(localStorage.getItem('userInfo')).gameList
       if (this.$store.state.language == 'zh') {
         for (let i = 0; i < val.length; i++) {
           for (let j = 0; j < getCNGameType().length; j++) {
@@ -338,7 +419,7 @@ export default {
         this.defaultStatus = '全部'
         GameListEnum.unshift({ code: "0", name: "离线" })
         GameListEnum.unshift({ code: "1", name: "大厅" })
-        GameListEnum.unshift({ code: "", name: "全部" , value: "全部"})
+        GameListEnum.unshift({ code: "", name: "全部", value: "全部" })
       } else {
         for (let i = 0; i < val.length; i++) {
           for (let j = 0; j < getENGameType().length; j++) {
@@ -350,7 +431,7 @@ export default {
         this.defaultStatus = 'All'
         GameListEnum.unshift({ code: "0", name: "Offline" })
         GameListEnum.unshift({ code: "1", name: "Lobby" })
-        GameListEnum.unshift({ code: "", name: "All" , value: "All"})
+        GameListEnum.unshift({ code: "", name: "All", value: "All" })
       }
 
 
@@ -359,7 +440,7 @@ export default {
 
       return gameTypeList
     },
-    operatePoint() {
+    operatePoint () {
       if (this.$store.state.language == 'zh') {
         return this.action == '1' ? '上分操作' : '下分操作'
       } else {
@@ -369,7 +450,7 @@ export default {
   },
   methods: {
     //玩家状态
-    playerStatusConfig(row) {
+    playerStatusConfig (row) {
       let playerStatus = []
       if (this.$store.state.language == 'zh') {
         playerStatus = ["已停用", "正常"]
@@ -379,8 +460,8 @@ export default {
       return playerStatus[row.state]
     },
     //状态
-    stateConfig(row, bool) {
-      
+    stateConfig (row, bool) {
+
       if (bool) {
         return row.state ? 'green' : 'red'
       } else {
@@ -388,7 +469,7 @@ export default {
       }
     },
     //游戏状态
-    gameStateConfig(row) {
+    gameStateConfig (row) {
       if (row.gameState == 3 || row.gameState == 2) {
         return "green"
       } else {
@@ -396,10 +477,10 @@ export default {
       }
     },
     //最近游戏登录时间
-    updateAtConfig(row) {
-      return dayjs(row.joinTime).format("YYYY-MM-DD HH:mm:ss")
+    updateAtConfig (row) {
+      return dayjs(row.joinTime).format("YY-MM-DD HH:mm")
     },
-    create() {
+    create () {
       let params = {
         userName: this.playerName,
         userPwd: this.playerPwd,
@@ -416,21 +497,21 @@ export default {
           this.playerPwd = ''
         }
       }).catch(err => {
-          this.playerName = ''
-          this.playerPwd = ''
+        this.playerName = ''
+        this.playerPwd = ''
       })
     },
-    add(row) {
+    add (row) {
       this.showPoint = true
       this.actionPlayerName = row.userName
       this.action = '1'
     },
-    reduce(row) {
+    reduce (row) {
       this.showPoint = true
       this.actionPlayerName = row.userName
       this.action = '-1'
     },
-    actionPoint() {
+    actionPoint () {
       let params = {
         userName: this.actionPlayerName,
         action: this.action,
@@ -443,10 +524,10 @@ export default {
         this.amount = 0
       })
     },
-    selectionChange(val) {
+    selectionChange (val) {
       this.checkedArray = val;
     },
-    playDetail(row) {
+    playDetail (row) {
       localStorage.setItem("playerName", row.userName);
       localStorage.setItem("playDetail", "playDetail");
       this.$router.push({
@@ -456,14 +537,14 @@ export default {
         }
       });
     },
-    changeGameStatus(val) {
+    changeGameStatus (val) {
       for (let i = 0; i < this.gameTypeList.length; i++) {
-        if (this.gameTypeList[i].name ==  val) {
+        if (this.gameTypeList[i].name == val) {
           this.searchInfo.gameId = this.gameTypeList[i].code
-        }  
+        }
       }
     },
-    getPlayList() {
+    getPlayList () {
       if (this.isFetching) return;
       this.isFetching = true;
       this.searchInfo.startKey = this.playerListStartKey;
@@ -485,11 +566,11 @@ export default {
           this.isFetching = false;
         });
     },
-   
-    changeStatus(row) {
+
+    changeStatus (row) {
       this.$Modal.confirm({
         title: this.$store.state.language == 'zh' ? "提示!" : "Tips!",
-        content: this.$store.state.language == 'zh' ? `<p>是否${row.state ? "停用" : "启用"}该玩家？</p>` : `<p>Confirm ${row.state ? "freeze" : "unfreeze"} the player?</p>` ,
+        content: this.$store.state.language == 'zh' ? `<p>是否${row.state ? "停用" : "启用"}该玩家？</p>` : `<p>Confirm ${row.state ? "freeze" : "unfreeze"} the player?</p>`,
         onOk: () => {
           httpRequest("post", "/player/forzen", {
             userName: row.userName,
@@ -502,7 +583,7 @@ export default {
         }
       });
     }, // 更改玩家状态
-    allChangeState(num) {
+    allChangeState (num) {
       if (!this.checkedArray.length) {
         return this.$message({
           message: "请选择需要批量操作的数据",
@@ -543,10 +624,10 @@ export default {
         this.$store.commit("closeLoading");
       });
     },
-    getNowsize(size) {
+    getNowsize (size) {
       this.nowSize = size;
     },
-    getNowpage(page) {
+    getNowpage (page) {
       this.nowPage = page;
       if (
         page == Math.ceil(this.playerList.length / this.nowSize) &&
@@ -558,8 +639,8 @@ export default {
         this.getPlayList();
       }
     },
-    getSearch(bool) {
-      
+    getSearch (bool) {
+
       if (!bool) {
         this.searchInfo = {
           gameId: "",
@@ -578,15 +659,36 @@ export default {
       this.nowPage = 1;
       this.getPlayList();
     },
-    
+    showThisPWD (row) {
+      this.playerName = row.userName
+      this.playerPwd = row.password
+      this.showPWD = true
+    },
+    changePWD () {
+      var params = {
+        userName: this.playerName,
+        password: this.playerPwd
+      }
+      httpRequest("post", "/player/password", params)
+        .then(res => {
+          this.$Message.success(res.msg)
+          this.playerName = ''
+          this.playerPwd = ''
+          this.getSearch(false)
+        }).catch(err => {
+          this.playerName = ''
+          this.playerPwd = ''
+          this.getSearch(false)
+        })
+    }
   },
   watch: {
-      '$store.state.language': function() {
-        if(this.$route.name == 'playList') {
-          this.getSearch(false)
-        }
+    '$store.state.language': function () {
+      if (this.$route.name == 'playList') {
+        this.getSearch(false)
       }
     }
+  }
 };
 </script>
 
@@ -603,9 +705,7 @@ export default {
     padding-bottom: 10px;
   }
   .propList-search {
-   
     text-align: center;
-    
   }
   .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;
@@ -616,16 +716,16 @@ export default {
   }
   .propList-search {
     .ivu-btn {
-    background: #fff;
-    color: #000;
-    border-color: #000;
+      background: #fff;
+      color: #000;
+      border-color: #000;
+    }
+    .ivu-btn:hover {
+      background: #000;
+      color: #fff;
+    }
   }
-  .ivu-btn:hover {
-    background: #000;
-    color: #fff;
-  }
-  }
-  
+
   /deep/ .ivu-input {
     border-color: #000;
     background: #fff;
