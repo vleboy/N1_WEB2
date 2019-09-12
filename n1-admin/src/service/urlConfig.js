@@ -3,6 +3,8 @@
 export let URL = type => {
   if (process.env.NODE_ENV == 'production') {
     switch (type) {
+      case 'vn': 
+        return 'https://testvn.alimuban.cn:45557'
       case 'prize':
         return 'https://game.alimuban.cn:45557'
       case 'map':
