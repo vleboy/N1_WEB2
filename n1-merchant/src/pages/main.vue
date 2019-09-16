@@ -1,18 +1,35 @@
 <template>
   <div class="home">
     <!-- 左侧菜单列表 -->
-    <sidebar :openName='openName'/>
+    <sidebar :openName="openName" />
     <!-- 右侧显示内容 -->
-    <Layout :style="{marginLeft:layoutWidth}">
+    <Layout :style="{ marginLeft: layoutWidth }">
       <Header class="main_header">
         <div class="tags-con">
-          <tag-close :pageTagsList="pageTagsList"/>
+          <tag-close :pageTagsList="pageTagsList" />
         </div>
         <div class="user-dropdown-menu-con">
-          <Row type="flex" justify="end" align="middle" class="user-dropdown-innercon">
-            <Dropdown transfer trigger="click" @on-click="changeLanguage" placement="bottom" style="margin-right:1rem">
+          <Row
+            type="flex"
+            justify="end"
+            align="middle"
+            class="user-dropdown-innercon"
+          >
+            <div class="user-balance">
+              <div class="balance">余额：{{ balance }}</div>
+              <div>
+                <a href="javascript:void(0)" @click="getBalance">刷新</a>
+              </div>
+            </div>
+            <Dropdown
+              transfer
+              trigger="click"
+              @on-click="changeLanguage"
+              placement="bottom"
+              style="margin-right:1rem"
+            >
               <a href="javascript:void(0)">
-                {{$t('index.language')}}
+                {{ $t("index.language") }}
                 <Icon type="ios-arrow-down"></Icon>
               </a>
               <DropdownMenu slot="list">
@@ -20,14 +37,25 @@
                 <DropdownItem name="en">English</DropdownItem>
               </DropdownMenu>
             </Dropdown>
-            <Avatar icon="md-person" size="small" style="background: #619fe7;margin-right: 10px;"></Avatar>
-            <Dropdown transfer trigger="click" @on-click="handleClickUserDropdown" placement="bottom-start">
+            <Avatar
+              icon="md-person"
+              size="small"
+              style="background: #619fe7;margin-right: 10px;"
+            ></Avatar>
+            <Dropdown
+              transfer
+              trigger="click"
+              @on-click="handleClickUserDropdown"
+              placement="bottom-start"
+            >
               <a href="javascript:void(0)">
                 <span class="main-user-name">{{ userName }}</span>
                 <Icon type="ios-arrow-down"></Icon>
               </a>
               <DropdownMenu slot="list">
-                <DropdownItem name="loginout" >{{$t('index.exit')}}</DropdownItem>
+                <DropdownItem name="loginout">{{
+                  $t("index.exit")
+                }}</DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </Row>
@@ -47,28 +75,31 @@
 import sidebar from "@/components/sidebar";
 import tagClose from "@/components/tags-close.vue";
 import util from "@/libs/util.js";
-import {menuOpen} from '@/config/menuOpen'
+import { menuOpen } from '@/config/menuOpen'
+import { httpRequest } from "@/service/index";
 export default {
-  data() {
+  data () {
     return {
       // avatorPath: "",
       userName: JSON.parse(localStorage.getItem("userInfo")).displayName,
-      openName: []
+      openName: [],
+      balance: 0
     };
   },
   computed: {
-    pageTagsList() {
+    pageTagsList () {
       return this.$store.state.home.pageOpenedList; //打开的页面的页面对象
     },
-    layoutWidth() {
+    layoutWidth () {
       return this.$store.state.home.menuSize
     }
   },
   methods: {
-    init() {
+    init () {
       this.checkTag(this.$route.name);
+      this.getBalance();
     },
-    checkTag(name) {
+    checkTag (name) {
       let openpageHasTag = this.pageTagsList.some(item => {
         if (item.name === name) {
           return true;
@@ -84,8 +115,8 @@ export default {
         );
       }
     },
-    handleClickUserDropdown(name) {
-     
+    handleClickUserDropdown (name) {
+
       this.$Modal.confirm({
         title: localStorage.language == 'zh' ? "提示" : 'Hint',
         content: localStorage.language == 'zh' ? "<p>是否确认退出</p>" : '<p>Confirm exit</p>',
@@ -93,36 +124,46 @@ export default {
           localStorage.clear();
           this.$store.commit('clearAllTag')
           this.$router.push({ name: "login" });
-          this.$store.commit('changeLoading',{params:false});
+          this.$store.commit('changeLoading', { params: false });
         }
       });
-      
+
     },
-    changeLanguage(name) {
+    changeLanguage (name) {
       let title = name == "zh" ? 'NA商户后台' : 'NA Merchant'
       this.$i18n.locale = name
       document.title = title
       this.$store.commit('changeLanguage', name)
       localStorage.setItem('language', name)
       localStorage.setItem('title', title)
+    },
+    getBalance () {
+      let userId = localStorage.loginId;
+      httpRequest("get", "/merchants/" + userId)
+        .then(res => {
+          console.log(res)
+          if (res.code == 0) {
+            this.balance = res.payload.balance
+          }
+        })
     }
   },
   components: { sidebar, tagClose },
-  mounted() {
+  mounted () {
     this.init();
     //console.log(this);
-    
+
   },
-  created() {
+  created () {
     // 显示打开的页面的列表
     // this.$store.commit("setOpenedList");
   },
   watch: {
-    $route(to) {
+    $route (to) {
       let name = to.name;
       this.$store.commit("setCurrentPageName", name);
       this.checkTag(name);
-      this.openName=menuOpen(name);
+      this.openName = menuOpen(name);
       // this.$store.commit("addOpenSubmenu", pathArr[1].name);
     }
   }
@@ -131,7 +172,6 @@ export default {
 <style lang="less" scoped>
 /deep/ .ivu-layout-header[data-v-73309bbd] {
   padding: 0;
-  
 }
 /deep/ .user-dropdown-menu-con {
   display: flex;
@@ -168,5 +208,17 @@ export default {
   z-index: 10;
   padding-right: 20px;
 }
-
+.user-balance {
+  display: flex;
+  margin-right: 10px;
+  div {
+    margin-right: 10px;
+  }
+  a {
+    color: #2d8cf0;
+  }
+  a:hover {
+    color: #5cadff;
+  }
+}
 </style>

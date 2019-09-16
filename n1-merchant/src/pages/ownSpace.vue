@@ -508,7 +508,7 @@ export default {
        this.spinShow = true
         let waterfall = await httpRequest(
           "get",
-          `/waterfall/${userId}`,
+          `/waterfall/${userId}?r=${Math.random()}`,
           params
         );
         this.spinShow = false
@@ -520,7 +520,7 @@ export default {
         this.spinShow = true
         let waterfall = await httpRequest(
           "get",
-          `/waterfall/${userId}`,
+          `/waterfall/${userId}?r=${Math.random()}`,
           params
         );
         this.spinShow = false
@@ -537,6 +537,7 @@ export default {
       let userId = localStorage.loginId ? localStorage.getItem("loginId") : "";
       let req2 = oneMerchants(userId);
       let [admin] = await this.axios.all([req2]);
+      await this.getWaterfallList()
       this.spinShow = false
       if (admin && admin.code == 0) {
         this.admin = admin.payload;
