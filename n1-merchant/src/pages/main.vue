@@ -17,8 +17,21 @@
           >
             <div class="user-balance">
               <div class="balance">余额：{{ balance }}</div>
-              <div>
-                <a href="javascript:void(0)" @click="getBalance">刷新</a>
+              <div class="refresh">
+                <a
+                  v-show="!balanceLoading"
+                  href="javascript:void(0)"
+                  @click="getBalance"
+                  >刷新</a
+                >
+                <Spin v-show="balanceLoading" class="spin-icon">
+                  <Icon
+                    type="ios-loading"
+                    size="16"
+                    color="#2d8cf0"
+                    class="spin-icon-load"
+                  ></Icon>
+                </Spin>
               </div>
             </div>
             <Dropdown
@@ -83,7 +96,8 @@ export default {
       // avatorPath: "",
       userName: JSON.parse(localStorage.getItem("userInfo")).displayName,
       openName: [],
-      balance: 0
+      balance: 0,
+      balanceLoading: false
     };
   },
   computed: {
@@ -138,13 +152,18 @@ export default {
       localStorage.setItem('title', title)
     },
     getBalance () {
-      let userId = localStorage.loginId;
+      let userId = `${localStorage.loginId}?r=${Math.random()}`;
+      this.balanceLoading = true
       httpRequest("get", "/merchants/" + userId)
         .then(res => {
           console.log(res)
           if (res.code == 0) {
             this.balance = res.payload.balance
           }
+          this.balanceLoading = false
+        })
+        .catch(err => {
+          this.balanceLoading = false
         })
     }
   },
@@ -219,6 +238,27 @@ export default {
   }
   a:hover {
     color: #5cadff;
+  }
+  .refresh {
+    min-width: 20px;
+  }
+}
+.spin-icon {
+  position: absolute;
+  top: -2px;
+}
+.spin-icon-load {
+  animation: ani-demo-spin 1s linear infinite;
+}
+@keyframes ani-demo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 </style>
