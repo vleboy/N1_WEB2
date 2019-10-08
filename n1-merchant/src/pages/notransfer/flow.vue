@@ -45,7 +45,13 @@
             :key="item.value"
           >{{ item.label }}</Option>
         </Select>
-        <Select v-model="status" style="width:90px" v-if="reportType=='1'" @on-change="search" size="small">
+        <Select
+          v-model="status"
+          style="width:90px"
+          v-if="reportType=='1'"
+          @on-change="search"
+          size="small"
+        >
           <Option v-for="item in statusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </Col>
@@ -122,7 +128,7 @@
       @on-change="changepage"
     ></Page>
     <Spin size="large" fix v-if="spin">
-      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <Icon type="ios-loading" size="64" class="demo-spin-icon-load"></Icon>
       <div>加载中...</div>
     </Spin>
     <Modal title="流水详情" v-model="isOpenModalRunning" class="g-text-center" width="800">
@@ -162,18 +168,19 @@
 import { httpRequest } from "@/service/index";
 import dayjs from "dayjs";
 import { getDefaultTime } from "@/config/getDefaultTime";
+import util from "@/libs/util.js";
 export default {
   name: "",
   components: {},
   filters: {
-    format(v) {
+    format (v) {
       return v.toLocaleString();
     }
   },
   props: {},
-  data() {
+  data () {
     return {
-      
+
       gameType: "A",
       gameTypeList: [
         {
@@ -418,18 +425,18 @@ export default {
     };
   },
   computed: {
-    options() {
+    options () {
       return {
         shortcuts: [
           {
             text: "本周",
-            value() {
+            value () {
               return [
                 new Date(
                   dayjs()
                     .startOf("week")
                     .valueOf() +
-                    24 * 60 * 60 * 1000
+                  24 * 60 * 60 * 1000
                 ),
                 new Date(
                   dayjs()
@@ -441,7 +448,7 @@ export default {
           },
           {
             text: "本月",
-            value() {
+            value () {
               return [
                 new Date(
                   dayjs()
@@ -458,28 +465,28 @@ export default {
           },
           {
             text: "上周",
-            value() {
+            value () {
               return [
                 new Date(
                   dayjs()
                     .add(-1, "week")
                     .startOf("week")
                     .valueOf() +
-                    24 * 60 * 60 * 1000
+                  24 * 60 * 60 * 1000
                 ),
                 new Date(
                   dayjs()
                     .startOf("week")
                     .valueOf() +
-                    24 * 60 * 60 * 1000 -
-                    1
+                  24 * 60 * 60 * 1000 -
+                  1
                 )
               ];
             }
           },
           {
             text: "上月",
-            value() {
+            value () {
               //-1 上月
               return [
                 new Date(
@@ -499,11 +506,11 @@ export default {
         ]
       }
     },
-    total() {
+    total () {
       let data = this.reportType == "1" ? this.flowList : this.tradeRecord;
       return data.length;
     },
-    changedTime() {
+    changedTime () {
       let time = this.defaultTime;
       time = time.map((item, index) => {
         return item.getTime();
@@ -511,7 +518,7 @@ export default {
       this.defaultTime = [new Date(time[0]), new Date(time[1])];
       return time;
     },
-    dataList() {
+    dataList () {
       let list = [];
       if (this.reportType == "1") {
         if (this.nowPage === 1) {
@@ -543,7 +550,7 @@ export default {
     }
   },
   watch: {
-    $route: function(to, from) {
+    $route: function (to, from) {
       if (from.name == "noTransferReport") {
         let userId = this.$route.query.userId;
         if (userId) {
@@ -553,7 +560,7 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     let userId = this.$route.query.userId;
     if (userId) {
       this.userId = userId;
@@ -563,7 +570,7 @@ export default {
   methods: {
     /* columns配置 */
     //帐变金额
-    amountConfig(row) {
+    amountConfig (row) {
       if (row.amount > 0) {
         return "#0c0";
       } else {
@@ -571,11 +578,11 @@ export default {
       }
     },
     //类型
-    typeConfig(row) {
+    typeConfig (row) {
       return this.typeList[row.type];
     },
     //状态
-    statusConfig(row) {
+    statusConfig (row) {
       let color, text;
       switch (row.status) {
         case "Y":
@@ -594,13 +601,13 @@ export default {
       return { text, color };
     },
     //同步时间
-    createdAtConfig(row) {
+    createdAtConfig (row) {
       return dayjs(row.createdAt).format("YYYY-MM-DD HH:mm:ss");
     },
 
     /* columns1配置 */
     //状态
-    status1Config(row) {
+    status1Config (row) {
       let color, text;
       switch (row.status) {
         case "Y":
@@ -619,7 +626,7 @@ export default {
       return { text, color };
     },
     //输赢金额
-    winloseAmount1Config(row) {
+    winloseAmount1Config (row) {
       if (row.winloseAmount > 0) {
         return "#0c0";
       } else {
@@ -627,18 +634,18 @@ export default {
       }
     },
     //操作
-    operation1Config(row) {
+    operation1Config (row) {
       this.openModalRunning(row.content);
       this.rowDetail = params.row;
     },
 
     /* columns2配置 */
     //类型
-    type2Config(row) {
+    type2Config (row) {
       return this.typeList[row.type];
     },
     //状态
-    status2Config(row) {
+    status2Config (row) {
       let color, text;
       switch (row.status) {
         case "Y":
@@ -657,18 +664,18 @@ export default {
       return { text, color };
     },
     //交易时间
-    createdAt2Config(row) {
+    createdAt2Config (row) {
       return dayjs(params.row.createdAt).format("YYYY-MM-DD HH:mm:ss");
     },
 
-    getFlowCount(list) {
+    getFlowCount (list) {
       this.flowAmount = 0;
       for (let item of list) {
         this.flowAmount += item.amount;
       }
       this.flowAmount = +this.flowAmount.toFixed(2);
     },
-    getAllCount(list) {
+    getAllCount (list) {
       this.allBetCount = 0;
       this.allBetAmount = 0;
       this.allWinLose = 0;
@@ -689,7 +696,7 @@ export default {
       this.allWin = +this.allWin.toFixed(2);
       this.allRet = +this.allRet.toFixed(2);
     },
-    changepage(page) {
+    changepage (page) {
       this.nowPage = page;
       if (this.reportType == "1") {
         if (
@@ -713,18 +720,18 @@ export default {
         }
       }
     },
-    openModalRunning(data) {
+    openModalRunning (data) {
       this.isOpenModalRunning = true;
       this.runningDetail = data;
     },
-    reset() {
+    reset () {
       this.userId = "";
       this.businessKey = "";
       this.status = "A";
       this.defaultTime = getDefaultTime(true);
       this.resetPage();
     },
-    resetPage() {
+    resetPage () {
       this.currentPage = 1;
       this.nowPage = 1;
       this.flowList = [];
@@ -734,11 +741,11 @@ export default {
       this.tradeStorage = [];
       this.tradeStartKey = null;
     },
-    search() {
+    search () {
       this.resetPage();
       this.getData();
     },
-    getData() {
+    getData () {
       if (this.plat == "" && this.userId == "" && this.businessKey == "") {
         return this.$Message.warning("请输入查询条件");
       }
@@ -752,8 +759,8 @@ export default {
         startKey:
           this.reportType == "1" ? this.flowStartKey : this.tradeStartKey,
         businessKey: this.businessKey,
-        startTime: this.changedTime[0],
-        endTime: this.changedTime[1]
+        startTime: util.timeZoneConversion(this.changedTime[0], this.$store.state.timeZone),
+        endTime: util.timeZoneConversion(this.changedTime[1], this.$store.state.timeZone)
       })
         .then(res => {
           if (res.code == 0) {
@@ -814,16 +821,16 @@ export default {
   animation: ani-demo-spin 1s linear infinite;
 }
 .ivu-btn {
-    background: #fff;
-    color: #000;
-    border-color: #000;
-  }
-  .ivu-btn:hover {
-    background: #000;
-    color: #fff;
-  }
-  /deep/ .ivu-input {
-    border-color: #000;
-    background: #fff;
-  }
+  background: #fff;
+  color: #000;
+  border-color: #000;
+}
+.ivu-btn:hover {
+  background: #000;
+  color: #fff;
+}
+/deep/ .ivu-input {
+  border-color: #000;
+  background: #fff;
+}
 </style>

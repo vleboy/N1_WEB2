@@ -9,30 +9,27 @@
           <tag-close :pageTagsList="pageTagsList" />
         </div>
         <div class="user-dropdown-menu-con">
-          <Row
-            type="flex"
-            justify="end"
-            align="middle"
-            class="user-dropdown-innercon"
-          >
+          <Row type="flex" justify="end" align="middle" class="user-dropdown-innercon">
             <div class="user-balance">
               <div class="balance">余额：{{ balance }}</div>
               <div class="refresh">
-                <a
-                  v-show="!balanceLoading"
-                  href="javascript:void(0)"
-                  @click="getBalance"
-                  >刷新</a
-                >
+                <a v-show="!balanceLoading" href="javascript:void(0)" @click="getBalance">刷新</a>
                 <Spin v-show="balanceLoading" class="spin-icon">
-                  <Icon
-                    type="ios-loading"
-                    size="16"
-                    color="#2d8cf0"
-                    class="spin-icon-load"
-                  ></Icon>
+                  <Icon type="ios-loading" size="16" color="#2d8cf0" class="spin-icon-load"></Icon>
                 </Spin>
               </div>
+            </div>
+            <div style="margin-right:20px">
+              <span>时区：</span>
+              <Dropdown>
+                <a href="javascript:void(0)">
+                  (UTC+08:00)北京
+                  <Icon type="ios-arrow-down"></Icon>
+                </a>
+                <DropdownMenu slot="list">
+                  <DropdownItem>(UTC+08:00)北京</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
             </div>
             <Dropdown
               transfer
@@ -50,11 +47,7 @@
                 <DropdownItem name="en">English</DropdownItem>
               </DropdownMenu>
             </Dropdown>
-            <Avatar
-              icon="md-person"
-              size="small"
-              style="background: #619fe7;margin-right: 10px;"
-            ></Avatar>
+            <Avatar icon="md-person" size="small" style="background: #619fe7;margin-right: 10px;"></Avatar>
             <Dropdown
               transfer
               trigger="click"
@@ -66,9 +59,11 @@
                 <Icon type="ios-arrow-down"></Icon>
               </a>
               <DropdownMenu slot="list">
-                <DropdownItem name="loginout">{{
+                <DropdownItem name="loginout">
+                  {{
                   $t("index.exit")
-                }}</DropdownItem>
+                  }}
+                </DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </Row>

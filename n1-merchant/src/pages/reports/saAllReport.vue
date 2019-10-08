@@ -90,6 +90,7 @@ import {
   getsubmitAmount,
   winloseAmountCount
 } from "@/config/getAmount";
+import util from "@/libs/util.js";
 export default {
   data() {
     return {
@@ -426,14 +427,20 @@ export default {
         userId: userId,
         gameType: this.gameType,
         query: {
-          createdAt: this.changedTime
+          createdAt: [
+            util.timeZoneConversion(this.changedTime[0], this.$store.state.timeZone),
+            util.timeZoneConversion(this.changedTime[1], this.$store.state.timeZone)
+          ]
         }
       };
       let params2 = {
         parentId: userId,
         gameType: this.gameType,
         query: {
-          createdAt: this.changedTime
+          createdAt: [
+            util.timeZoneConversion(this.changedTime[0], this.$store.state.timeZone),
+            util.timeZoneConversion(this.changedTime[1], this.$store.state.timeZone)
+          ]
         }
       };
       let req1 = this.$store.dispatch("getUserList", params1);

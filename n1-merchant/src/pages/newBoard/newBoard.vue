@@ -102,6 +102,7 @@ import { formatBarData, formatMapData } from "@/config/format"
 import { getCNGameType, getENGameType } from "@/config/getGameType"
 import { httpRequest } from "@/service/index"
 import { getDefaultTime } from "@/config/getDefaultTime"
+import util from "@/libs/util.js";
 
 export default {
   data() {
@@ -696,19 +697,13 @@ export default {
     
     //参数初始化
     paramsInit() {
-      let params = {};
-      if (this.gameCode == "") {
-        params = {
-          startTime: new Date(this.defaultTime[0]).getTime(),
-          endTime: new Date(this.defaultTime[1]).getTime()
-        }
-      } else {
-        params = {
-          startTime: new Date(this.defaultTime[0]).getTime(),
-          endTime: new Date(this.defaultTime[1]).getTime(),
-          gameType: this.gameCode
-        }
-      }
+      let params = {
+          startTime: util.timeZoneConversion(this.defaultTime[0],this.$store.state.timeZone),
+          endTime: util.timeZoneConversion(this.defaultTime[0],this.$store.state.timeZone)
+        }      
+      if (this.gameCode != "") {
+        params.gameType = this.gameCode
+      }      
       return params
     },
     //趋势初始化

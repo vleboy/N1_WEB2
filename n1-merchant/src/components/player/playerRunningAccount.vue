@@ -144,6 +144,7 @@ import { httpRequest } from "@/service/index";
 import dayjs from "dayjs";
 import SportsModal from "@/components/record/sportsModal";
 import _ from "lodash";
+import util from "@/libs/util.js";
 
 export default {
   components: { SportsModal },
@@ -673,15 +674,14 @@ export default {
         });
         company = this.company == "All" ? "-1" : this.companyInfo;
       }
-
       httpRequest("post", "/player/bill/flow", {
         userName: localStorage.playerName,
         type: this.radioType,
         action: this.radioMoney,
         company: company,
         gameType: code,
-        startTime: this.amountDate[0].getTime(),
-        endTime: this.amountDate[1].getTime(),
+        startTime: util.timeZoneConversion(this.amountDate[0].getTime(),this.$store.state.timeZone),
+        endTime: util.timeZoneConversion(this.amountDate[1].getTime(),this.$store.state.timeZone),
         startKey: this.playerAccountListStartKey,
         pageSize: this.pageSize,
         sn: this.sn,

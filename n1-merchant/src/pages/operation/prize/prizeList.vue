@@ -17,7 +17,10 @@
     <Table :columns="columns1" :data="prizeList" size="small">
       <template slot-scope="{ row, index }" slot="userName">
         <Tooltip :content="$t('prizeList.jump')">
-          <span style="color: rgb(32, 160, 255);cursor: pointer" @click="userNameConfig()">{{row.userName}}</span>
+          <span
+            style="color: rgb(32, 160, 255);cursor: pointer"
+            @click="userNameConfig()"
+          >{{row.userName}}</span>
         </Tooltip>
       </template>
       <template slot-scope="{ row, index }" slot="dateTime">
@@ -28,7 +31,7 @@
       </template>
     </Table>
     <Spin size="large" fix v-if="spinShow">
-      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <Icon type="ios-loading" size="64" class="demo-spin-icon-load"></Icon>
       <div>{{$t('prizeList.loading')}}</div>
     </Spin>
   </div>
@@ -37,11 +40,12 @@
 import { getDefaultTime } from "@/config/getDefaultTime";
 import { httpRequest } from "@/service/index";
 import dayjs from "dayjs";
+import util from "@/libs/util.js";
 export default {
   name: "prizeList",
-  data() {
+  data () {
     return {
-      
+
       defaultTime: getDefaultTime(true),
       sn: "",
       spinShow: false,
@@ -49,7 +53,7 @@ export default {
         {
           title: "玩家ID",
           key: "userId",
-          maxWidth:130,
+          maxWidth: 130,
           align: 'center',
           renderHeader: (h, params) => {
             return h(
@@ -60,7 +64,7 @@ export default {
         },
         {
           title: "玩家账号",
-          maxWidth:130,
+          maxWidth: 130,
           slot: "userName",
           align: 'center',
           renderHeader: (h, params) => {
@@ -73,7 +77,7 @@ export default {
         {
           title: "交易号",
           key: "betId",
-          minWidth:100,
+          minWidth: 100,
           align: 'center',
           renderHeader: (h, params) => {
             return h(
@@ -131,18 +135,18 @@ export default {
     };
   },
   computed: {
-    options() {
+    options () {
       return {
         shortcuts: [
           {
             text: this.$store.state.language == 'zh' ? '本周' : 'week',
-            value() {
+            value () {
               return [
                 new Date(
                   dayjs()
                     .startOf("week")
                     .valueOf() +
-                    24 * 60 * 60 * 1000
+                  24 * 60 * 60 * 1000
                 ),
                 new Date(
                   dayjs()
@@ -154,7 +158,7 @@ export default {
           },
           {
             text: this.$store.state.language == 'zh' ? '本月' : 'month',
-            value() {
+            value () {
               return [
                 new Date(
                   dayjs()
@@ -171,28 +175,28 @@ export default {
           },
           {
             text: this.$store.state.language == 'zh' ? '上周' : 'last week',
-            value() {
+            value () {
               return [
                 new Date(
                   dayjs()
                     .add(-1, "week")
                     .startOf("week")
                     .valueOf() +
-                    24 * 60 * 60 * 1000
+                  24 * 60 * 60 * 1000
                 ),
                 new Date(
                   dayjs()
                     .startOf("week")
                     .valueOf() +
-                    24 * 60 * 60 * 1000 -
-                    1
+                  24 * 60 * 60 * 1000 -
+                  1
                 )
               ];
             }
           },
           {
             text: this.$store.state.language == 'zh' ? '上月' : 'last month',
-            value() {
+            value () {
               //-1 上月
               return [
                 new Date(
@@ -212,7 +216,7 @@ export default {
         ]
       }
     },
-    changedTime() {
+    changedTime () {
       let time = this.defaultTime;
       time = time.map((item) => {
         return item.getTime();
@@ -220,12 +224,12 @@ export default {
       return time;
     }
   },
-  created() {
+  created () {
     this.init();
   },
   methods: {
     //玩家账号
-    userNameConfig() {
+    userNameConfig () {
       localStorage.setItem("playerName", name)
       this.$router.push({
         name: "playDetail",
@@ -235,19 +239,22 @@ export default {
       })
     },
     //日期
-    dateTimeConfig(row) {
+    dateTimeConfig (row) {
       return dayjs(row.betTime).format("YYYY-MM-DD HH:mm:ss")
     },
-    reset() {
+    reset () {
       this.sn = "";
       this.defaultTime = getDefaultTime(true);
       this.init();
     },
-    init() {
+    init () {
       this.spinShow = true;
       let params = {
         winType: "SecretBonus",
-        betTime: this.changedTime,
+        betTime: [
+          util.timeZoneConversion(this.changedTime[0], this.$store.state.timeZone),
+          util.timeZoneConversion(this.changedTime[1], this.$store.state.timeZone)
+        ],
         query: {
           sn: this.sn
         }
@@ -274,23 +281,22 @@ export default {
   }
 }
 .demo-spin-icon-load {
-    animation: ani-demo-spin 1s linear infinite;
-  }
-  .ivu-btn {
-    background: #fff;
-    color: #000;
-    border-color: #000;
-  }
-  .ivu-btn:hover {
-    background: #000;
-    color: #fff;
-  }
-  /deep/ .ivu-input {
-    border-color: #000;
-    background: #fff;
-  }
-  /deep/ .ivu-picker-panel-shortcut {
-    padding: 6px 5px;
-  }
-  
+  animation: ani-demo-spin 1s linear infinite;
+}
+.ivu-btn {
+  background: #fff;
+  color: #000;
+  border-color: #000;
+}
+.ivu-btn:hover {
+  background: #000;
+  color: #fff;
+}
+/deep/ .ivu-input {
+  border-color: #000;
+  background: #fff;
+}
+/deep/ .ivu-picker-panel-shortcut {
+  padding: 6px 5px;
+}
 </style>

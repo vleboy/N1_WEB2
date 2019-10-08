@@ -7,7 +7,8 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
     state:{
         loading:false,
-        language: 'zh'
+        language: 'zh',
+        timeZone:8
     },
     mutations:{
         globalLoading(state,{params}){

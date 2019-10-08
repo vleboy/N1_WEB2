@@ -7,16 +7,28 @@
           <!-- <Button @click="exportdata('table_0')" size="small">导出数据</Button> -->
         </p>
         <div class="right">
-          <DatePicker size="small" type="datetimerange" :options="options"  :editable='false' v-model="defaultTime" placeholder="选择日期时间范围(默认最近一周)" style="width: 300px" @on-ok="confirm"></DatePicker>
-          <Button type="primary" @click="search" size="small" style="margin:0 .3rem 0 1rem">{{$t('allReport.search')}}</Button>
+          <DatePicker
+            size="small"
+            type="datetimerange"
+            :options="options"
+            :editable="false"
+            v-model="defaultTime"
+            placeholder="选择日期时间范围(默认最近一周)"
+            style="width: 300px"
+            @on-ok="confirm"
+          ></DatePicker>
+          <Button
+            type="primary"
+            @click="search"
+            size="small"
+            style="margin:0 .3rem 0 1rem"
+          >{{$t('allReport.search')}}</Button>
           <Button @click="reset" size="small">{{$t('allReport.reset')}}</Button>
         </div>
       </div>
-      <Table :columns="columns11" :data="user" size="small" ref='table_0'>
+      <Table :columns="columns11" :data="user" size="small" ref="table_0">
         <template slot-scope="{row, index}" slot="userWinloseAmount">
-          <span
-            :style="{color: winloseAmountConfig(row).color}"
-          >{{winloseAmountConfig(row).amount}}</span>
+          <span :style="{color: winloseAmountConfig(row).color}">{{winloseAmountConfig(row).amount}}</span>
         </template>
         <template slot-scope="{row, index}" slot="userSubmitAmount">
           <span>{{submitAmountConfig(row)}}</span>
@@ -44,7 +56,7 @@
         {{$t('allReport.PlayerList')}}
         <!-- <Button @click="exportdata('table_1')" size="small">导出数据</Button> -->
       </p>
-      <Table :columns="columns22" :data="playerList" size="small" ref='table_1'>
+      <Table :columns="columns22" :data="playerList" size="small" ref="table_1">
         <template slot-scope="{row, index}" slot="playerName">
           <Tooltip :content="$t('allReport.toPlayerDetail')" placement="right">
             <span
@@ -53,13 +65,12 @@
             >{{row.userName}}</span>
           </Tooltip>
         </template>
-        <template slot-scope="{row, index}" slot="nickname">
-          {{row.nickname == 'NULL!' ? '-' : row.nickname}}
-        </template>
+        <template
+          slot-scope="{row, index}"
+          slot="nickname"
+        >{{row.nickname == 'NULL!' ? '-' : row.nickname}}</template>
         <template slot-scope="{row, index}" slot="playerWinloseAmount">
-          <span
-            :style="{color: winloseAmountConfig(row).color}"
-          >{{winloseAmountConfig(row).amount}}</span>
+          <span :style="{color: winloseAmountConfig(row).color}">{{winloseAmountConfig(row).amount}}</span>
         </template>
         <template slot-scope="{row, index}" slot="pH5WinloseAmount">
           <span
@@ -74,7 +85,7 @@
       </Table>
     </div>
     <Spin size="large" fix v-if="spinShow">
-      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <Icon type="ios-loading" size="64" class="demo-spin-icon-load"></Icon>
       <div>{{$t('allReport.loading')}}</div>
     </Spin>
   </div>
@@ -89,15 +100,16 @@ import {
   getsubmitAmount,
   winloseAmountCount
 } from "@/config/getAmount";
+import util from "@/libs/util.js";
 export default {
-  data() {
+  data () {
     return {
-      
+
       defaultTime: getDefaultTime(),
       spinShow: false, //加载spin
       playerList: [], //玩家列表
       user: [], //当前商户
-      gameType: [70000,90000],
+      gameType: [70000, 90000],
       columns1: [
         {
           title: "序号",
@@ -255,7 +267,7 @@ export default {
             )
           }
         },
-         {
+        {
           title: "NA电子H5(输赢金额)",
           align: 'center',
           slot: "pH5WinloseAmount",
@@ -283,30 +295,30 @@ export default {
     };
   },
   computed: {
-    options() {
+    options () {
       return {
         shortcuts: [
           {
             text: this.$store.state.language == 'zh' ? '本周' : 'week',
-            value() {
+            value () {
               return [new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().endOf('second').valueOf())]
             }
           },
           {
             text: this.$store.state.language == 'zh' ? '本月' : 'month',
-            value() {
+            value () {
               return [new Date(dayjs().startOf('month').valueOf()), new Date(dayjs().endOf('second').valueOf())]
             }
           },
           {
             text: this.$store.state.language == 'zh' ? '上周' : 'last week',
-            value() {
+            value () {
               return [new Date(dayjs().add(-1, 'week').startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000 - 1)]
             }
           },
           {
             text: this.$store.state.language == 'zh' ? '上月' : 'last month',
-            value() {
+            value () {
               //-1 上月
               return [new Date(dayjs().add(-1, 'month').startOf('month').valueOf()), new Date(dayjs().startOf('month').valueOf() - 1)]
             }
@@ -314,18 +326,18 @@ export default {
         ]
       }
     },
-    changedTime() {
+    changedTime () {
       let time = this.defaultTime;
       time = time.map((item, index) => {
-        if (index == 1 && item.getTime() > Date.now() ) {
-          return Date.now() ;
+        if (index == 1 && item.getTime() > Date.now()) {
+          return Date.now();
         }
         return item.getTime();
       });
       this.defaultTime = [new Date(time[0]), new Date(time[1])];
       return time;
     },
-    getTabWidth() {
+    getTabWidth () {
       if (this.columns11.length <= 9) {
         return '100%'
       } else {
@@ -336,7 +348,7 @@ export default {
   methods: {
     /* 用户 */
     //总游戏输赢金额
-    winloseAmountConfig(row) {
+    winloseAmountConfig (row) {
       if (row.winloseAmount < 0) {
         return { amount: thousandFormatter(row.winloseAmount), color: "#f30" };
       } else {
@@ -344,12 +356,12 @@ export default {
       }
     },
     //总游戏交公司
-    submitAmountConfig(row) {
+    submitAmountConfig (row) {
       return thousandFormatter(row.submitAmount);
     },
 
     //游戏输赢金额
-    gameWinloseAmountConfig(arr, row, name) {
+    gameWinloseAmountConfig (arr, row, name) {
       let winloseAmount = getWinloseAmount(arr, row);
       winloseAmount = winloseAmount.toFixed(2);
       if (winloseAmount < 0) {
@@ -359,7 +371,7 @@ export default {
       }
     },
     //游戏交公司
-    gameSubmitAmountConfig(arr, row, name) {
+    gameSubmitAmountConfig (arr, row, name) {
       let submitAmount = getsubmitAmount(arr, row);
       submitAmount = submitAmount.toFixed(2);
       return { submitAmount };
@@ -367,7 +379,7 @@ export default {
 
     /* 玩家 */
     //账号
-    playerNameConfig(row) {
+    playerNameConfig (row) {
       localStorage.setItem("playerName", row.userName);
       this.$router.push({
         name: "playDetail",
@@ -376,16 +388,16 @@ export default {
         }
       });
     },
-    confirm() {
+    confirm () {
       this.init();
     },
-    exportdata(table) {
+    exportdata (table) {
       if (table == "table_0") {
         this.$refs.table_0.exportCsv({ filename: "current" });
       } else if (table == "table_1") {
         this.$refs.table_1.exportCsv({ filename: "player" });
       }
-       this.$Notice.config({
+      this.$Notice.config({
         top: 200,
         duration: 10
       });
@@ -395,15 +407,15 @@ export default {
           "因导出报表含中文字符,导出后请进行转码操作,方法是：1、先用记事本打开；2、点击文件-另存为-设置编码为ASNI-保存覆盖"
       });
     },
-    reset() {
+    reset () {
       this.defaultTime = getDefaultTime();
 
       this.init();
     },
-    search() {
+    search () {
       this.init();
     },
-    types(value) {
+    types (value) {
       switch (value) {
         case "0":
           return "超级管理员";
@@ -425,21 +437,27 @@ export default {
           break;
       }
     },
-    async init() {
+    async init () {
       let userId = localStorage.loginId;
       this.spinShow = true;
       let params1 = {
         userId: userId,
         gameType: this.gameType,
         query: {
-          createdAt: this.changedTime
+          createdAt: [
+            util.timeZoneConversion(this.changedTime[0], this.$store.state.timeZone),
+            util.timeZoneConversion(this.changedTime[1], this.$store.state.timeZone)
+          ]
         }
       };
       let params2 = {
         parentId: userId,
         gameType: this.gameType,
         query: {
-          createdAt: this.changedTime
+          createdAt: [
+            util.timeZoneConversion(this.changedTime[0], this.$store.state.timeZone),
+            util.timeZoneConversion(this.changedTime[1], this.$store.state.timeZone)
+          ]
         }
       };
       let req1 = this.$store.dispatch("getUserList", params1);
@@ -450,27 +468,27 @@ export default {
 
       this.columns11 = await _.cloneDeep(this.columns1)
       this.columns22 = await _.cloneDeep(this.columns2)
-      
+
       let arr = perms.payload
       let removeArr = []
       let removeArr1 = []
 
       if (winloseAmountCount(arr, ["90000"]) == 0) {
-        removeArr.push(8,9)
+        removeArr.push(8, 9)
         removeArr1.push(6)
       }
 
       let flg = true
       let flg1 = true
-    
+
       for (let i = 0; i < removeArr.length; i++) {
         if (flg) {
           this.columns11.splice(removeArr[i], 1)
           flg = !flg
         } else {
-          this.columns11.splice(removeArr[i] - i, 1)   
+          this.columns11.splice(removeArr[i] - i, 1)
         }
-          
+
       }
 
       for (let i = 0; i < removeArr1.length; i++) {
@@ -478,13 +496,13 @@ export default {
           this.columns22.splice(removeArr1[i], 1)
           flg1 = !flg1
         } else {
-          this.columns22.splice(removeArr1[i] - i, 1)   
+          this.columns22.splice(removeArr1[i] - i, 1)
         }
-          
+
       }
 
-      
-      
+
+
 
       removeArr = []
       removeArr1 = []
@@ -497,7 +515,7 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     this.init();
   }
 };

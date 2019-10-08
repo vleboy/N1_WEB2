@@ -59,6 +59,7 @@
 import { httpRequest } from "@/service/index";
 import dayjs from 'dayjs';
 import { getDefaultTime } from "@/config/getDefaultTime";
+import util from "@/libs/util.js";
 export default {
   name: "notransferReport",
   components: {},
@@ -318,13 +319,13 @@ export default {
     async init() {
       this.spin = true;
       let req1= httpRequest("post", "/transferUserStat", {
-        startTime: this.changedTime[0],
+        startTime: util.timeZoneConversion(this.changedTime[0],this.$store.state.timeZone),
         gameType:this.gameType,
-        endTime: this.changedTime[1]
+        endTime:util.timeZoneConversion(this.changedTime[1],this.$store.state.timeZone)
       })
       let req2= httpRequest("post", "/transferUserStat", {
-        startTime: this.changedTime[0],
-        endTime: this.changedTime[1],
+        startTime: util.timeZoneConversion(this.changedTime[0],this.$store.state.timeZone),
+        endTime: util.timeZoneConversion(this.changedTime[1],this.$store.state.timeZone),
         gameType:this.gameType,
         handleType: "player"
       })

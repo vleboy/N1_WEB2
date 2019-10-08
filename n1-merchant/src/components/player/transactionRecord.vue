@@ -143,6 +143,7 @@ import oneRunningAccount from "@/components/player/oneRunningAccount";
 import SportsModal from "@/components/record/sportsModal";
 import HfiveModal from "@/components/player/HfiveModal";
 import SecreatModal from "@/components/player/SecreatModal";
+import util from "@/libs/util.js";
 
 export default {
   components: {
@@ -754,8 +755,8 @@ export default {
       this.amountDate[1] = this.amountDate[1] > new Date() ? new Date() : this.amountDate[1]
 
       let [startTime, endTime] = this.amountDate;
-      startTime = new Date(startTime).getTime();
-      endTime = new Date(endTime).getTime();
+      startTime = util.timeZoneConversion(startTime,this.$store.state.timeZone);
+      endTime = util.timeZoneConversion(endTime,this.$store.state.timeZone);
       httpRequest("post", "/player/bill/detail", {
         userName: name,
         company: company,

@@ -7,13 +7,26 @@
           <!-- <Button @click="exportdata('table_0')" size="small">导出数据</Button> -->
         </p>
         <div class="right">
-          <DatePicker size="small" type="datetimerange" :options="options" :editable='false' v-model="defaultTime" placeholder="选择日期时间范围(默认最近一周)" style="width: 300px" @on-ok="confirm"></DatePicker>
-          <Button type="primary" @click="search" size="small" style="margin:0 .3rem 0 1rem">{{$t('allReport.search')}}</Button>
-          <Button  @click="reset" size="small">{{$t('allReport.reset')}}</Button>
+          <DatePicker
+            size="small"
+            type="datetimerange"
+            :options="options"
+            :editable="false"
+            v-model="defaultTime"
+            placeholder="选择日期时间范围(默认最近一周)"
+            style="width: 300px"
+            @on-ok="confirm"
+          ></DatePicker>
+          <Button
+            type="primary"
+            @click="search"
+            size="small"
+            style="margin:0 .3rem 0 1rem"
+          >{{$t('allReport.search')}}</Button>
+          <Button @click="reset" size="small">{{$t('allReport.reset')}}</Button>
         </div>
       </div>
-      <Table :columns="columns1" :data="user" size="small" ref='table_0'>
-        
+      <Table :columns="columns1" :data="user" size="small" ref="table_0">
         <template slot-scope="{row, index}" slot="uDisplayName">
           <Tooltip content="前往日报表" placement="right">
             <span
@@ -26,7 +39,9 @@
           <span>{{betAmountConfig(row)}}</span>
         </template>
         <template slot-scope="{row, index}" slot="userWinloseAmount">
-          <span :style="{color: winloseAmountConfig(row).color}">{{winloseAmountConfig(row).winloseAmount}}</span>
+          <span
+            :style="{color: winloseAmountConfig(row).color}"
+          >{{winloseAmountConfig(row).winloseAmount}}</span>
         </template>
         <template slot-scope="{row, index}" slot="userRate">
           <span>{{rateConfig(row)}}</span>
@@ -35,7 +50,9 @@
           <span>{{submitAmountConfig(row)}}</span>
         </template>
         <template slot-scope="{row, index}" slot="userProfit">
-          <span v-if="profitConfig(row).isShow">{{(100 * row.winloseAmount / row.mixAmount).toFixed(2) + "%"}}</span>
+          <span
+            v-if="profitConfig(row).isShow"
+          >{{(100 * row.winloseAmount / row.mixAmount).toFixed(2) + "%"}}</span>
           <span v-else>{{0}}</span>
         </template>
       </Table>
@@ -45,7 +62,7 @@
         {{$t('allReport.PlayerList')}}
         <!-- <Button @click="exportdata('table_1')" size="small">导出数据</Button> -->
       </p>
-      <Table :columns="columns2" :data="playerList" size="small" ref='table_1'>
+      <Table :columns="columns2" :data="playerList" size="small" ref="table_1">
         <template slot-scope="{row, index}" slot="playerName">
           <Tooltip content="前往玩家详情" placement="right">
             <span
@@ -54,19 +71,22 @@
             >{{row.userName}}</span>
           </Tooltip>
         </template>
-        <template slot-scope="{row, index}" slot="nickname">
-          {{row.nickname == 'NULL!' ? '-' : row.nickname}}
-        </template>
+        <template
+          slot-scope="{row, index}"
+          slot="nickname"
+        >{{row.nickname == 'NULL!' ? '-' : row.nickname}}</template>
         <template slot-scope="{row, index}" slot="playerBetAmount">
           <span>{{betAmountConfig(row)}}</span>
         </template>
         <template slot-scope="{row, index}" slot="playerWinloseAmount">
-          <span :style="{color:winloseAmountConfig(row).color}">{{winloseAmountConfig(row).winloseAmount}}</span>
+          <span
+            :style="{color:winloseAmountConfig(row).color}"
+          >{{winloseAmountConfig(row).winloseAmount}}</span>
         </template>
       </Table>
     </div>
     <Spin size="large" fix v-if="spinShow">
-      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <Icon type="ios-loading" size="64" class="demo-spin-icon-load"></Icon>
       <div>加载中...</div>
     </Spin>
   </div>
@@ -76,10 +96,12 @@ import _ from "lodash";
 import dayjs from "dayjs";
 import { getDefaultTime } from "@/config/getDefaultTime";
 import { thousandFormatter } from "@/config/format";
+import util from "@/libs/util.js";
+
 export default {
-  data() {
+  data () {
     return {
-       
+
       defaultTime: getDefaultTime(),
       spinShow: false, //加载spin
       playerList: [], //玩家列表
@@ -96,10 +118,10 @@ export default {
             )
           }
         },
-        
+
         {
           title: "昵称",
-           align: 'center',
+          align: 'center',
           slot: "uDisplayName",
           renderHeader: (h, params) => {
             return h(
@@ -108,10 +130,10 @@ export default {
             )
           }
         },
-        
+
         {
           title: "交易次数",
-           align: 'center',
+          align: 'center',
           key: "betCount",
           renderHeader: (h, params) => {
             return h(
@@ -122,7 +144,7 @@ export default {
         },
         {
           title: "投注金额",
-           align: 'center',
+          align: 'center',
           slot: "userBetAmount",
           renderHeader: (h, params) => {
             return h(
@@ -133,7 +155,7 @@ export default {
         },
         {
           title: "输赢金额",
-           align: 'center',
+          align: 'center',
           slot: "userWinloseAmount",
           renderHeader: (h, params) => {
             return h(
@@ -144,7 +166,7 @@ export default {
         },
         {
           title: "商家占成",
-           align: 'center',
+          align: 'center',
           slot: "userRate",
           renderHeader: (h, params) => {
             return h(
@@ -155,7 +177,7 @@ export default {
         },
         {
           title: "商家交公司",
-           align: 'center',
+          align: 'center',
           slot: "userSubmitAmount",
           renderHeader: (h, params) => {
             return h(
@@ -166,7 +188,7 @@ export default {
         },
         {
           title: "获利比例",
-           align: 'center',
+          align: 'center',
           slot: "userProfit",
           renderHeader: (h, params) => {
             return h(
@@ -179,7 +201,7 @@ export default {
       columns2: [
         {
           title: "序号",
-           align: 'center',
+          align: 'center',
           type: "index",
           renderHeader: (h, params) => {
             return h(
@@ -190,7 +212,7 @@ export default {
         },
         {
           title: "账号",
-           align: 'center',
+          align: 'center',
           slot: "playerName",
           renderHeader: (h, params) => {
             return h(
@@ -212,7 +234,7 @@ export default {
         },
         {
           title: "交易次数",
-           align: 'center',
+          align: 'center',
           key: "betCount",
           renderHeader: (h, params) => {
             return h(
@@ -223,7 +245,7 @@ export default {
         },
         {
           title: "投注金额",
-           align: 'center',
+          align: 'center',
           slot: "playerBetAmount",
           renderHeader: (h, params) => {
             return h(
@@ -234,7 +256,7 @@ export default {
         },
         {
           title: "输赢金额",
-           align: 'center',
+          align: 'center',
           slot: "playerWinloseAmount",
           renderHeader: (h, params) => {
             return h(
@@ -245,7 +267,7 @@ export default {
         },
         {
           title: "洗码量",
-           align: 'center',
+          align: 'center',
           key: "mixAmount",
           renderHeader: (h, params) => {
             return h(
@@ -258,30 +280,30 @@ export default {
     };
   },
   computed: {
-    options() {
+    options () {
       return {
         shortcuts: [
           {
             text: this.$store.state.language == 'zh' ? '本周' : 'week',
-            value() {
+            value () {
               return [new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().endOf('second').valueOf())]
             }
           },
           {
             text: this.$store.state.language == 'zh' ? '本月' : 'month',
-            value() {
+            value () {
               return [new Date(dayjs().startOf('month').valueOf()), new Date(dayjs().endOf('second').valueOf())]
             }
           },
           {
             text: this.$store.state.language == 'zh' ? '上周' : 'last week',
-            value() {
+            value () {
               return [new Date(dayjs().add(-1, 'week').startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000 - 1)]
             }
           },
           {
             text: this.$store.state.language == 'zh' ? '上月' : 'last month',
-            value() {
+            value () {
               //-1 上月
               return [new Date(dayjs().add(-1, 'month').startOf('month').valueOf()), new Date(dayjs().startOf('month').valueOf() - 1)]
             }
@@ -289,11 +311,11 @@ export default {
         ]
       }
     },
-    changedTime() {
+    changedTime () {
       let time = this.defaultTime;
       time = time.map((item, index) => {
-        if (index == 1 && item.getTime() > Date.now() ) {
-          return Date.now() ;
+        if (index == 1 && item.getTime() > Date.now()) {
+          return Date.now();
         }
         return item.getTime();
       });
@@ -304,26 +326,26 @@ export default {
   methods: {
     /* 用户 */
     //昵称
-    uDisplayNameConfig(row) {
+    uDisplayNameConfig (row) {
       let time = this.changedTime
-      this.$router.push({name: "dayMerchant",query:{name:row.sn,time:time,type:this.gameType}})
-      localStorage.setItem('dayMerchant','dayMerchant')
+      this.$router.push({ name: "dayMerchant", query: { name: row.sn, time: time, type: this.gameType } })
+      localStorage.setItem('dayMerchant', 'dayMerchant')
     },
-    
+
     //投注金额
-    betAmountConfig(row) {
+    betAmountConfig (row) {
       return thousandFormatter(row.betAmount)
     },
     //输赢金额
-    winloseAmountConfig(row) {
+    winloseAmountConfig (row) {
       if (row.winloseAmount < 0) {
-        return {winloseAmount: row.winloseAmount, color: "#f30"}
+        return { winloseAmount: row.winloseAmount, color: "#f30" }
       } else {
-        return {winloseAmount: row.winloseAmount, color: "#0c0"}
-      }    
+        return { winloseAmount: row.winloseAmount, color: "#0c0" }
+      }
     },
     //商家占成
-    rateConfig(row) {
+    rateConfig (row) {
       let arr = row.gameList;
       let result = "";
       for (let item of arr) {
@@ -334,42 +356,42 @@ export default {
       return result + "%"
     },
     //商家交公司
-    submitAmountConfig(row) {
+    submitAmountConfig (row) {
       return thousandFormatter(row.submitAmount)
     },
     //获利比例
-    profitConfig(row) {
+    profitConfig (row) {
       if (row.mixAmount && row.mixAmount > 0) {
-        return {isShow: true}
+        return { isShow: true }
       } else {
-        return {isShow: false}
+        return { isShow: false }
       }
     },
     /* 玩家 */
     //账号
-    playerNameConfig(row) {
+    playerNameConfig (row) {
       let name = row.userName;
       localStorage.setItem("playerName", name);
-        this.$router.push({
-          name: "playDetail",
-          query: {
-            name:name,
-            time: this.changedTime,
-            type: this.gameType
-            }
-          })
-          localStorage.setItem("playDetail", "playDetail")
+      this.$router.push({
+        name: "playDetail",
+        query: {
+          name: name,
+          time: this.changedTime,
+          type: this.gameType
+        }
+      })
+      localStorage.setItem("playDetail", "playDetail")
     },
-    confirm() {
+    confirm () {
       this.init();
     },
-    exportdata(table) {
+    exportdata (table) {
       if (table == "table_0") {
         this.$refs.table_0.exportCsv({ filename: "current" });
       } else if (table == "table_1") {
         this.$refs.table_1.exportCsv({ filename: "player" });
       }
-       this.$Notice.config({
+      this.$Notice.config({
         top: 200,
         duration: 10
       });
@@ -379,14 +401,14 @@ export default {
           "因导出报表含中文字符,导出后请进行转码操作,方法是：1、先用记事本打开；2、点击文件-另存为-设置编码为ASNI-保存覆盖"
       });
     },
-    reset() {
+    reset () {
       this.defaultTime = getDefaultTime();
       this.init();
     },
-    search() {
+    search () {
       this.init();
     },
-    types(value) {
+    types (value) {
       switch (value) {
         case "0":
           return "超级管理员";
@@ -408,21 +430,27 @@ export default {
           break;
       }
     },
-    async init() {
+    async init () {
       let userId = localStorage.loginId;
       this.spinShow = true;
       let params1 = {
         userId: userId,
         gameType: this.gameType,
         query: {
-          createdAt: this.changedTime
+          createdAt: [
+            util.timeZoneConversion(this.changedTime[0], this.$store.state.timeZone),
+            util.timeZoneConversion(this.changedTime[1], this.$store.state.timeZone)
+          ]
         }
       };
       let params2 = {
         parentId: userId,
         gameType: this.gameType,
         query: {
-          createdAt: this.changedTime
+          createdAt: [
+            util.timeZoneConversion(this.changedTime[0], this.$store.state.timeZone),
+            util.timeZoneConversion(this.changedTime[1], this.$store.state.timeZone)
+          ]
         }
       };
       let req1 = this.$store.dispatch("getUserList", params1);
@@ -438,11 +466,11 @@ export default {
         this.playerList = player.payload;
 
         //console.log(this.playerList);
-        
+
       }
     }
   },
-  created() {
+  created () {
     // console.log(this.defaultTime);
     this.init();
   },

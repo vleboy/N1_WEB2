@@ -17,7 +17,12 @@
             @on-ok="confirm"
             size="small"
           ></DatePicker>
-          <Button size="small" type="primary" @click="search" style="margin-left:1rem;margin-right:.3rem">{{$t('allReport.search')}}</Button>
+          <Button
+            size="small"
+            type="primary"
+            @click="search"
+            style="margin-left:1rem;margin-right:.3rem"
+          >{{$t('allReport.search')}}</Button>
           <Button size="small" @click="reset">{{$t('allReport.reset')}}</Button>
         </div>
       </div>
@@ -31,9 +36,7 @@
           </Tooltip>
         </template>
         <template slot-scope="{row, index}" slot="userWinloseAmount">
-          <span
-            :style="{color: winloseAmountConfig(row).color}"
-          >{{winloseAmountConfig(row).amount}}</span>
+          <span :style="{color: winloseAmountConfig(row).color}">{{winloseAmountConfig(row).amount}}</span>
         </template>
         <template slot-scope="{row, index}" slot="userSubmitAmount">
           <span>{{submitAmountConfig(row)}}</span>
@@ -167,18 +170,17 @@
           </Tooltip>
         </template>
         <template slot-scope="{row, index}" slot="playerWinloseAmount">
-          <span
-            :style="{color: winloseAmountConfig(row).color}"
-          >{{winloseAmountConfig(row).amount}}</span>
+          <span :style="{color: winloseAmountConfig(row).color}">{{winloseAmountConfig(row).amount}}</span>
         </template>
         <template slot-scope="{row, index}" slot="pNaWinloseAmount">
           <span
             :style="{color: gameWinloseAmountConfig(['70000', '90000'], row, 'NA').color}"
           >{{gameWinloseAmountConfig(['70000', '90000'], row, 'NA').winloseAmount}}</span>
         </template>
-        <template slot-scope="{row, index}" slot="nickname">
-          {{row.nickname == 'NULL!' ? '-' : row.nickname}}
-        </template>
+        <template
+          slot-scope="{row, index}"
+          slot="nickname"
+        >{{row.nickname == 'NULL!' ? '-' : row.nickname}}</template>
         <template slot-scope="{row, index}" slot="pTtgWinloseAmount">
           <span
             :style="{color: gameWinloseAmountConfig(['1010000'], row, 'TTG').color}"
@@ -247,7 +249,7 @@
       </Table>
     </div>
     <Spin size="large" fix v-if="spinShow">
-      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <Icon type="ios-loading" size="64" class="demo-spin-icon-load"></Icon>
       <div>{{$t('allReport.loading')}}</div>
     </Spin>
   </div>
@@ -262,13 +264,14 @@ import {
   winloseAmountCount
 } from "@/config/getAmount";
 import { thousandFormatter } from "@/config/format";
+import util from "@/libs/util.js";
 export default {
-  data() {
+  data () {
     return {
       userRemoveArr: [], //用户需要隐藏的列
       playerRemoveArr: [], //玩家需要隐藏的列
       tabCount: 7, //显示的列数
-      
+
       defaultTime: getDefaultTime(),
       spinShow: false, //加载spin
       playerList: [], //玩家列表
@@ -873,18 +876,18 @@ export default {
     };
   },
   computed: {
-    options() {
+    options () {
       return {
         shortcuts: [
           {
             text: this.$store.state.language == 'zh' ? '本周' : 'week',
-            value() {
+            value () {
               return [
                 new Date(
                   dayjs()
                     .startOf("week")
                     .valueOf() +
-                    24 * 60 * 60 * 1000
+                  24 * 60 * 60 * 1000
                 ),
                 new Date(
                   dayjs()
@@ -896,7 +899,7 @@ export default {
           },
           {
             text: this.$store.state.language == 'zh' ? '本月' : 'month',
-            value() {
+            value () {
               return [
                 new Date(
                   dayjs()
@@ -913,28 +916,28 @@ export default {
           },
           {
             text: this.$store.state.language == 'zh' ? '上周' : 'last week',
-            value() {
+            value () {
               return [
                 new Date(
                   dayjs()
                     .add(-1, "week")
                     .startOf("week")
                     .valueOf() +
-                    24 * 60 * 60 * 1000
+                  24 * 60 * 60 * 1000
                 ),
                 new Date(
                   dayjs()
                     .startOf("week")
                     .valueOf() +
-                    24 * 60 * 60 * 1000 -
-                    1
+                  24 * 60 * 60 * 1000 -
+                  1
                 )
               ];
             }
           },
           {
             text: this.$store.state.language == 'zh' ? '上月' : 'last month',
-            value() {
+            value () {
               //-1 上月
               return [
                 new Date(
@@ -954,7 +957,7 @@ export default {
         ]
       }
     },
-    changedTime() {
+    changedTime () {
       let time = this.defaultTime;
       time = time.map((item, index) => {
         if (index == 1 && item.getTime() > Date.now()) {
@@ -965,7 +968,7 @@ export default {
       this.defaultTime = [new Date(time[0]), new Date(time[1])];
       return time;
     },
-    getTabWidth() {
+    getTabWidth () {
       if (this.columns11.length <= 9) {
         return "100%";
       } else {
@@ -977,7 +980,7 @@ export default {
   methods: {
     /* 用户列表配置 */
     //昵称
-    userDisplayNameConfig(row) {
+    userDisplayNameConfig (row) {
       let time = this.changedTime;
       this.$router.push({
         name: "dayMerchant",
@@ -986,7 +989,7 @@ export default {
       localStorage.setItem("dayMerchant", "dayMerchant");
     },
     //总游戏输赢金额
-    winloseAmountConfig(row) {
+    winloseAmountConfig (row) {
       if (row.winloseAmount < 0) {
         return { amount: thousandFormatter(row.winloseAmount), color: "#f30" };
       } else {
@@ -994,12 +997,12 @@ export default {
       }
     },
     //总游戏交公司
-    submitAmountConfig(row) {
+    submitAmountConfig (row) {
       return thousandFormatter(row.submitAmount);
     },
 
     //游戏输赢金额
-    gameWinloseAmountConfig(arr, row, name) {
+    gameWinloseAmountConfig (arr, row, name) {
       let winloseAmount = getWinloseAmount(arr, row);
       winloseAmount = winloseAmount.toFixed(2);
       if (winloseAmount < 0) {
@@ -1009,14 +1012,14 @@ export default {
       }
     },
     //游戏交公司
-    gameSubmitAmountConfig(arr, row, name) {
+    gameSubmitAmountConfig (arr, row, name) {
       let submitAmount = getsubmitAmount(arr, row);
       submitAmount = submitAmount.toFixed(2);
       return { submitAmount };
     },
     /* 玩家列表配置 */
     //账号
-    playerNameConfig(row) {
+    playerNameConfig (row) {
       localStorage.setItem("playerName", row.userName);
       this.$router.push({
         name: "playDetail",
@@ -1026,13 +1029,13 @@ export default {
           type: ""
         }
       });
-      localStorage.setItem("playDetail", "playDetail");  
+      localStorage.setItem("playDetail", "playDetail");
     },
-  
-    confirm() {
+
+    confirm () {
       this.init();
     },
-    exportdata(table) {
+    exportdata (table) {
       if (table == "table_0") {
         this.$refs.table_0.exportCsv({ filename: "current" });
       } else if (table == "table_1") {
@@ -1048,14 +1051,14 @@ export default {
           "因导出报表含中文字符,导出后请进行转码操作,方法是：1、先用记事本打开；2、点击文件-另存为-设置编码为ASNI-保存覆盖"
       });
     },
-    reset() {
+    reset () {
       this.defaultTime = getDefaultTime();
       this.init();
     },
-    search() {
+    search () {
       this.init();
     },
-    types(value) {
+    types (value) {
       switch (value) {
         case "0":
           return "超级管理员";
@@ -1077,21 +1080,27 @@ export default {
           break;
       }
     },
-    async init() {
+    async init () {
       let userId = localStorage.loginId;
       this.spinShow = true;
       let params1 = {
         userId: userId,
         gameType: this.gameType,
         query: {
-          createdAt: this.changedTime
+          createdAt: [
+            util.timeZoneConversion(this.changedTime[0], this.$store.state.timeZone),
+            util.timeZoneConversion(this.changedTime[1], this.$store.state.timeZone)
+          ]
         }
       };
       let params2 = {
         parentId: userId,
         gameType: this.gameType,
         query: {
-          createdAt: this.changedTime
+          createdAt: [
+            util.timeZoneConversion(this.changedTime[0], this.$store.state.timeZone),
+            util.timeZoneConversion(this.changedTime[1], this.$store.state.timeZone)
+          ]
         }
       };
       let req1 = this.$store.dispatch("getUserList", params1);
@@ -1179,9 +1188,9 @@ export default {
           this.columns22.splice(removeArr1[i], 1)
           flg1 = !flg1
         } else {
-          this.columns22.splice(removeArr1[i] - i, 1)   
+          this.columns22.splice(removeArr1[i] - i, 1)
         }
-          
+
       }
 
       removeArr = [];
@@ -1195,7 +1204,7 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     // console.log(this.defaultTime);
     this.init();
   }
