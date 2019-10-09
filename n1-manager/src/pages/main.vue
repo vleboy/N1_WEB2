@@ -9,7 +9,7 @@
         <div class="user-dropdown-menu-con">
           <Row type="flex" justify="end" align="middle" class="user-dropdown-innercon">
             <div style="margin-right:20px">
-              <span>时区：(UTC+08:00) 北京</span>
+              <span>UTC+08:00</span>
             </div>
             <Dropdown transfer trigger="click" @on-click="changeLanguage" placement="bottom" style="margin-right:1rem">
               <a href="javascript:void(0)">

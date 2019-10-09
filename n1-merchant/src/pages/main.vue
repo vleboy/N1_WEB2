@@ -20,7 +20,7 @@
               </div>
             </div>
             <div style="margin-right:20px">
-              <span>时区：(UTC+08:00) 北京</span>
+              <span>UTC+08:00</span>
             </div>
             <Dropdown
               transfer
