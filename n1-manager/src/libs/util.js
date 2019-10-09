@@ -113,5 +113,12 @@ util.toDefaultPage = function (routers, name, route, next) {
         next();
     }
 };
+//转换时区
+util.timeZoneConversion = function (date, timezone) {
+    let offset_GMT = new Date().getTimezoneOffset(),
+        nowDate = new Date(date).getTime(),
+        targetDate = new Date(nowDate + offset_GMT * 60 * 1000 + timezone * 60 * 60 * 1000);
+    return targetDate.getTime()
+}
 
 export default util;

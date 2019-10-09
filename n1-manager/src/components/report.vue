@@ -4,23 +4,40 @@
       <div class="top">
         <p class="title">
           {{$t('allReport.currentUser')}}
-          <RadioGroup v-model="source" type="button" @on-change='changeSource' size="small">
-             <Radio label="0">{{$t('allReport.formal')}}</Radio>
-              <Radio label="1">{{$t('allReport.test')}}</Radio>
-              <Radio label="2">{{$t('allReport.all')}}</Radio>
+          <RadioGroup v-model="source" type="button" @on-change="changeSource" size="small">
+            <Radio label="0">{{$t('allReport.formal')}}</Radio>
+            <Radio label="1">{{$t('allReport.test')}}</Radio>
+            <Radio label="2">{{$t('allReport.all')}}</Radio>
           </RadioGroup>
-         <!-- <Button size="small" @click="exportdata('table_0')" style="margin:0 1rem">导出数据</Button> -->
+          <!-- <Button size="small" @click="exportdata('table_0')" style="margin:0 1rem">导出数据</Button> -->
         </p>
         <div class="right">
-          <DatePicker size="small" type="datetimerange" :options="options" :editable='false' v-model="defaultTime" placeholder="选择日期时间范围(默认最近一周)" style="width: 300px;margin-left:1rem" @on-ok="confirm"></DatePicker>
-          <Button type="primary" @click="search" size="small" style="margin:0 .3rem 0 1rem">{{$t('allReport.search')}}</Button>
+          <DatePicker
+            size="small"
+            type="datetimerange"
+            :options="options"
+            :editable="false"
+            v-model="defaultTime"
+            placeholder="选择日期时间范围(默认最近一周)"
+            style="width: 300px;margin-left:1rem"
+            @on-ok="confirm"
+          ></DatePicker>
+          <Button
+            type="primary"
+            @click="search"
+            size="small"
+            style="margin:0 .3rem 0 1rem"
+          >{{$t('allReport.search')}}</Button>
           <Button size="small" @click="reset">{{$t('allReport.reset')}}</Button>
         </div>
       </div>
-      <Table :columns="columns1" :data="user" size="small" ref='table_0'>
+      <Table :columns="columns1" :data="user" size="small" ref="table_0">
         <template slot-scope="{row, index}" slot="userDisplayName">
-          <Tooltip content="前往日报表"  transfer>
-            <span style="color:#20a0ff;cursor:pointer" @click="userDisplayName(row)">{{row.displayName}}</span>
+          <Tooltip content="前往日报表" transfer>
+            <span
+              style="color:#20a0ff;cursor:pointer"
+              @click="userDisplayName(row)"
+            >{{row.displayName}}</span>
           </Tooltip>
         </template>
       </Table>
@@ -30,10 +47,13 @@
         {{$t('allReport.under')}}
         <!-- <Button size="small" @click="exportdata('table_1')">导出数据</Button> -->
       </p>
-      <Table :columns="columns1" :data="child" size="small" ref='table_1'>
+      <Table :columns="columns1" :data="child" size="small" ref="table_1">
         <template slot-scope="{row, index}" slot="userDisplayName">
-          <Tooltip :content="$t('allReport.toDayReport')"  transfer>
-            <span style="color:#20a0ff;cursor:pointer" @click="userDisplayName(row)">{{row.displayName}}</span>
+          <Tooltip :content="$t('allReport.toDayReport')" transfer>
+            <span
+              style="color:#20a0ff;cursor:pointer"
+              @click="userDisplayName(row)"
+            >{{row.displayName}}</span>
           </Tooltip>
         </template>
       </Table>
@@ -45,25 +65,29 @@
       </p>
       <Table :columns="columns1" :data="item" size="small" :ref="'table'+index">
         <template slot-scope="{row, index}" slot="userDisplayName">
-          <Tooltip :content="$t('allReport.toDayReport')"  transfer>
-            <span style="color:#20a0ff;cursor:pointer" @click="userDisplayName(row)">{{row.displayName}}</span>
+          <Tooltip :content="$t('allReport.toDayReport')" transfer>
+            <span
+              style="color:#20a0ff;cursor:pointer"
+              @click="userDisplayName(row)"
+            >{{row.displayName}}</span>
           </Tooltip>
         </template>
       </Table>
     </div>
     <div class="playerList" id="playerList">
       <p class="title">
-        <span v-show="showName"> ({{ userName }})</span>{{$t('allReport.PlayerList')}}
+        <span v-show="showName">({{ userName }})</span>
+        {{$t('allReport.PlayerList')}}
         <!-- <Button size="small" @click="exportdata('table_2')">导出数据</Button> -->
       </p>
-      <Table :columns="columns2" :data="playerList" size="small" ref='table_2'>
+      <Table :columns="columns2" :data="playerList" size="small" ref="table_2">
         <template slot-scope="{row, index}" slot="playerNickname">
           <span>{{row.nickname == 'NULL!' ? '-' : row.nickname}}</span>
         </template>
       </Table>
     </div>
     <Spin size="large" fix v-if="spinShow">
-      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+      <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
       <div>{{$t('allReport.loading')}}</div>
     </Spin>
   </div>
@@ -74,10 +98,11 @@ import dayjs from "dayjs";
 import { getDefaultTime } from "@/config/getDefaultTime";
 import { thousandFormatter } from "@/config/format";
 import { spawn } from 'child_process';
+import util from "@/libs/util.js";
 export default {
-  data() {
+  data () {
     return {
-       
+
       defaultTime: getDefaultTime(),
       spinShow: false, //加载spin
       showName: false, //上级商家
@@ -171,14 +196,14 @@ export default {
                       document.documentElement.scrollTop = anchor.offsetTop;
                     } else if (params.row.role == "10") {
                       //线路商
-                      this.playerList=[]
+                      this.playerList = []
                       let id = localStorage.loginId;
                       if ((params.row.userId == id)) {
                         this.$store
                           .dispatch("getUserChild", {
                             parent: id,
                             gameType: this.gameType,
-                            isTest:+this.source,
+                            isTest: +this.source,
                             query: {
                               createdAt: this.changedTime
                             }
@@ -208,7 +233,7 @@ export default {
                           this.reportChild,
                           userId
                         );
-                        showList = _.filter(showList, function(o) {
+                        showList = _.filter(showList, function (o) {
                           return o.length;
                         });
                         this.reportChild = showList;
@@ -299,8 +324,8 @@ export default {
         {
           title: "商家交公司",
           key: "submitAmount",
-          render:(h,params)=>{
-            return h('span',thousandFormatter(params.row.submitAmount))
+          render: (h, params) => {
+            return h('span', thousandFormatter(params.row.submitAmount))
           },
           renderHeader: (h, params) => {
             return h(
@@ -368,7 +393,7 @@ export default {
               {
                 style: {
                   color: "#20a0ff",
-                  cursor:'pointer'
+                  cursor: 'pointer'
                 },
                 on: {
                   click: () => {
@@ -376,7 +401,7 @@ export default {
                     this.$router.push({
                       name: "playDetail",
                       query: {
-                        name:name,
+                        name: name,
                         time: this.changedTime,
                         type: this.gameType
                       }
@@ -418,7 +443,7 @@ export default {
         {
           title: "投注金额",
           key: "betAmount",
-           render: (h, params) => {
+          render: (h, params) => {
             return h("span", thousandFormatter(params.row.betAmount));
           },
           renderHeader: (h, params) => {
@@ -464,38 +489,38 @@ export default {
     };
   },
   computed: {
-    options() {
+    options () {
       return {
-          shortcuts: [
-            {
-              text: this.$store.state.language == 'zh' ? '本周' : 'week',
-              value() {
-                return [new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().endOf('second').valueOf())]
-              }
-            },
-            {
-              text: this.$store.state.language == 'zh' ? '本月' : 'month',
-              value() {
-                return [new Date(dayjs().startOf('month').valueOf()), new Date(dayjs().endOf('second').valueOf())]
-              }
-            },
-            {
-              text: this.$store.state.language == 'zh' ? '上周' : 'last week',
-              value() {
-                return [new Date(dayjs().add(-1, 'week').startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000 - 1)]
-              }
-            },
-            {
-              text: this.$store.state.language == 'zh' ? '上月' : 'last month',
-              value() {
-                //-1 上月
-                return [new Date(dayjs().add(-1, 'month').startOf('month').valueOf()), new Date(dayjs().startOf('month').valueOf() - 1)]
-              }
+        shortcuts: [
+          {
+            text: this.$store.state.language == 'zh' ? '本周' : 'week',
+            value () {
+              return [new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().endOf('second').valueOf())]
             }
-          ]
-       }
+          },
+          {
+            text: this.$store.state.language == 'zh' ? '本月' : 'month',
+            value () {
+              return [new Date(dayjs().startOf('month').valueOf()), new Date(dayjs().endOf('second').valueOf())]
+            }
+          },
+          {
+            text: this.$store.state.language == 'zh' ? '上周' : 'last week',
+            value () {
+              return [new Date(dayjs().add(-1, 'week').startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000 - 1)]
+            }
+          },
+          {
+            text: this.$store.state.language == 'zh' ? '上月' : 'last month',
+            value () {
+              //-1 上月
+              return [new Date(dayjs().add(-1, 'month').startOf('month').valueOf()), new Date(dayjs().startOf('month').valueOf() - 1)]
+            }
+          }
+        ]
+      }
     },
-    changedTime() {
+    changedTime () {
       let time = this.defaultTime;
       time = time.map((item, index) => {
         if (index == 1 && item.getTime() > Date.now() - 180000) {
@@ -510,14 +535,14 @@ export default {
   methods: {
     /* 用户列表 */
     //昵称
-    userDisplayName(row) {
+    userDisplayName (row) {
       let time = this.changedTime
       if (row.role == 10) {
-        this.$router.push({name: "dayCompany",query:{time:time,type:this.gameType}})
-        localStorage.setItem('dayCompany','dayCompany')
+        this.$router.push({ name: "dayCompany", query: { time: time, type: this.gameType } })
+        localStorage.setItem('dayCompany', 'dayCompany')
       } else {
-        this.$router.push({name: "dayMerchant",query:{name:row.sn,time:time,type:this.gameType}})
-        localStorage.setItem('dayMerchant','dayMerchant')
+        this.$router.push({ name: "dayMerchant", query: { name: row.sn, time: time, type: this.gameType } })
+        localStorage.setItem('dayMerchant', 'dayMerchant')
       }
     },
     /* 玩家列表 */
@@ -600,22 +625,22 @@ export default {
 
 
 
-    confirm() {
+    confirm () {
       this.reportChild = [];
       this.init();
     },
-    exportdata(table) {
-      if(table=='table_0'){
-        this.$refs.table_0.exportCsv({filename:'current'});
-      }else if(table=='table_1'){
-        this.$refs.table_1.exportCsv({filename:'next'});
-      }else if(table=='table_2'){
-        this.$refs.table_2.exportCsv({filename:'player'});
-      }else{
-        let ref='table'+table;
-        this.$refs[ref][0].exportCsv({filename:ref})
+    exportdata (table) {
+      if (table == 'table_0') {
+        this.$refs.table_0.exportCsv({ filename: 'current' });
+      } else if (table == 'table_1') {
+        this.$refs.table_1.exportCsv({ filename: 'next' });
+      } else if (table == 'table_2') {
+        this.$refs.table_2.exportCsv({ filename: 'player' });
+      } else {
+        let ref = 'table' + table;
+        this.$refs[ref][0].exportCsv({ filename: ref })
       }
-       this.$Notice.config({
+      this.$Notice.config({
         top: 200,
         duration: 10
       });
@@ -625,20 +650,20 @@ export default {
           "因导出报表含中文字符,导出后请进行转码操作,方法是：1、先用记事本打开；2、点击文件-另存为-设置编码为ASNI-保存覆盖"
       });
     },
-    changeSource() {
+    changeSource () {
       this.init();
     },
-    reset() {
+    reset () {
       this.defaultTime = getDefaultTime();
       this.reportChild = [];
       this.source = '0'
       this.init();
     },
-    search() {
+    search () {
       this.reportChild = [];
       this.init();
     },
-    types(value) {
+    types (value) {
       switch (value) {
         case "0":
           return "超级管理员";
@@ -660,13 +685,13 @@ export default {
           break;
       }
     },
-    async getNextLevel(showList, userId) {
+    async getNextLevel (showList, userId) {
       return new Promise((resolve, reject) => {
         this.$store
           .dispatch("getUserChild", {
             parent: userId,
             gameType: this.gameType,
-            isTest:+this.source,
+            isTest: +this.source,
             query: {
               createdAt: this.changedTime
             }
@@ -679,16 +704,19 @@ export default {
           });
       });
     },
-    async init() {
+    async init () {
       let userId = JSON.parse(localStorage.getItem("userInfo")).userId;
       this.spinShow = true;
-      this.playerList=[]
+      this.playerList = []
       let params1 = {
         userId: userId,
         isTest: +this.source,
         gameType: this.gameType,
         query: {
-          createdAt: this.changedTime
+          createdAt: [
+            util.timeZoneConversion(this.changedTime[0], this.$store.state.timeZone),
+            util.timeZoneConversion(this.changedTime[1], this.$store.state.timeZone)
+          ]
         }
       };
       let params2 = {
@@ -696,7 +724,10 @@ export default {
         isTest: +this.source,
         gameType: this.gameType,
         query: {
-          createdAt: this.changedTime
+          createdAt: [
+            util.timeZoneConversion(this.changedTime[0], this.$store.state.timeZone),
+            util.timeZoneConversion(this.changedTime[1], this.$store.state.timeZone)
+          ]
         }
       };
       let req1 = this.$store.dispatch("getUserList", params1);
@@ -713,11 +744,11 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     // console.log(this.defaultTime);
     this.init();
   },
-  
+
   props: ["gameType"]
 };
 </script>
@@ -733,7 +764,7 @@ export default {
   .top {
     display: flex;
     align-items: center;
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
   }
   .demo-spin-icon-load {
     animation: ani-demo-spin 1s linear infinite;

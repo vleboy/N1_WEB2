@@ -4,27 +4,35 @@
       <div class="top">
         <p class="title">
           当前用户列表
-          <RadioGroup v-model="source" type="button" @on-change='changeSource'>
-             <Radio label="0">正式</Radio>
-              <Radio label="1">测试</Radio>
-              <Radio label="2">全部</Radio>
+          <RadioGroup v-model="source" type="button" @on-change="changeSource">
+            <Radio label="0">正式</Radio>
+            <Radio label="1">测试</Radio>
+            <Radio label="2">全部</Radio>
           </RadioGroup>
-         <Button type="ghost" @click="exportdata('table_0')">导出数据</Button>
+          <Button type="ghost" @click="exportdata('table_0')">导出数据</Button>
         </p>
         <div class="right">
-          <DatePicker type="datetimerange" :options="options" :editable='false' v-model="defaultTime" placeholder="选择日期时间范围(默认最近一周)" style="width: 300px" @on-ok="confirm"></DatePicker>
+          <DatePicker
+            type="datetimerange"
+            :options="options"
+            :editable="false"
+            v-model="defaultTime"
+            placeholder="选择日期时间范围(默认最近一周)"
+            style="width: 300px"
+            @on-ok="confirm"
+          ></DatePicker>
           <Button type="primary" @click="search">搜索</Button>
           <Button type="ghost" @click="reset">重置</Button>
         </div>
       </div>
-      <Table :columns="columns1" :data="user" size="small" ref='table_0'></Table>
+      <Table :columns="columns1" :data="user" size="small" ref="table_0"></Table>
     </div>
     <div class="childList">
       <p class="title">
         直属下级列表
         <Button type="ghost" @click="exportdata('table_1')">导出数据</Button>
       </p>
-      <Table :columns="columns1" :data="child" size="small" ref='table_1'></Table>
+      <Table :columns="columns1" :data="child" size="small" ref="table_1"></Table>
     </div>
     <div class="childList" v-for="(item,index) in reportChild" :key="index">
       <p class="title">
@@ -35,13 +43,13 @@
     </div>
     <div class="playerList" id="playerList">
       <p class="title">
-        <span v-show="showName"> ({{ userName }})</span>所属玩家列表
+        <span v-show="showName">({{ userName }})</span>所属玩家列表
         <Button type="ghost" @click="exportdata('table_2')">导出数据</Button>
       </p>
-      <Table :columns="columns2" :data="playerList" size="small" ref='table_2'></Table>
+      <Table :columns="columns2" :data="playerList" size="small" ref="table_2"></Table>
     </div>
     <Spin size="large" fix v-if="spinShow">
-      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+      <Icon type="load-c" size="18" class="demo-spin-icon-load"></Icon>
       <div>加载中...</div>
     </Spin>
   </div>
@@ -51,38 +59,39 @@ import _ from "lodash";
 import dayjs from "dayjs";
 import { getDefaultTime } from "@/config/getDefaultTime";
 import { thousandFormatter } from "@/config/format";
+import util from "@/libs/util.js";
 export default {
-  data() {
+  data () {
     return {
       options: {
         shortcuts: [
           {
             text: "本周",
-            value() {
+            value () {
               return [new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().endOf('second').valueOf())]
             }
           },
           {
             text: "本月",
-            value() {
+            value () {
               return [new Date(dayjs().startOf('month').valueOf()), new Date(dayjs().endOf('second').valueOf())]
             }
           },
           {
             text: "上周",
-            value() {
+            value () {
               return [new Date(dayjs().add(-1, 'week').startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000 - 1)]
             }
           },
           {
             text: "上月",
-            value() {
+            value () {
               //-1 上月
               return [new Date(dayjs().add(-1, 'month').startOf('month').valueOf()), new Date(dayjs().startOf('month').valueOf() - 1)]
             }
           }
         ]
-      }, 
+      },
       defaultTime: getDefaultTime(),
       spinShow: false, //加载spin
       showName: false, //上级商家
@@ -158,13 +167,13 @@ export default {
                       document.documentElement.scrollTop = anchor.offsetTop;
                     } else if (params.row.role == "10") {
                       //线路商
-                      this.playerList=[]
+                      this.playerList = []
                       let id = localStorage.loginId;
                       if ((params.row.userId = id)) {
                         this.$store
                           .dispatch("getUserChild", {
                             parent: id,
-                            isTest:+this.source,
+                            isTest: +this.source,
                             gameType: this.gameType,
                             query: {
                               createdAt: this.changedTime
@@ -195,7 +204,7 @@ export default {
                           this.reportChild,
                           userId
                         );
-                        showList = _.filter(showList, function(o) {
+                        showList = _.filter(showList, function (o) {
                           return o.length;
                         });
                         this.reportChild = showList;
@@ -235,7 +244,7 @@ export default {
               {
                 style: {
                   color: "#20a0ff",
-                  cursor:'pointer'
+                  cursor: 'pointer'
                 },
                 on: {
                   click: () => {
@@ -243,7 +252,7 @@ export default {
                     this.$router.push({
                       name: "playDetail",
                       query: {
-                        name:name
+                        name: name
                       }
                     });
                   }
@@ -272,7 +281,7 @@ export default {
     };
   },
   computed: {
-    changedTime() {
+    changedTime () {
       let time = this.defaultTime;
       time = time.map((item, index) => {
         if (index == 1 && item.getTime() > Date.now() - 180000) {
@@ -285,22 +294,22 @@ export default {
     },
   },
   methods: {
-    confirm() {
+    confirm () {
       this.reportChild = [];
       this.init();
     },
-    exportdata(table) {
-      if(table=='table_0'){
-        this.$refs.table_0.exportCsv({filename:'current'});
-      }else if(table=='table_1'){
-        this.$refs.table_1.exportCsv({filename:'next'});
-      }else if(table=='table_2'){
-        this.$refs.table_2.exportCsv({filename:'player'});
-      }else{
-        let ref='table'+table;
-        this.$refs[ref][0].exportCsv({filename:ref})
+    exportdata (table) {
+      if (table == 'table_0') {
+        this.$refs.table_0.exportCsv({ filename: 'current' });
+      } else if (table == 'table_1') {
+        this.$refs.table_1.exportCsv({ filename: 'next' });
+      } else if (table == 'table_2') {
+        this.$refs.table_2.exportCsv({ filename: 'player' });
+      } else {
+        let ref = 'table' + table;
+        this.$refs[ref][0].exportCsv({ filename: ref })
       }
-       this.$Notice.config({
+      this.$Notice.config({
         top: 200,
         duration: 10
       });
@@ -310,19 +319,19 @@ export default {
           "因导出报表含中文字符,导出后请进行转码操作,方法是：1、先用记事本打开；2、点击文件-另存为-设置编码为ASNI-保存覆盖"
       });
     },
-    reset() {
+    reset () {
       this.defaultTime = getDefaultTime();
       this.reportChild = [];
       this.init();
     },
-    changeSource() {
+    changeSource () {
       this.init();
     },
-    search() {
+    search () {
       this.reportChild = [];
       this.init();
     },
-    types(value) {
+    types (value) {
       switch (value) {
         case "0":
           return "超级管理员";
@@ -344,12 +353,12 @@ export default {
           break;
       }
     },
-    async getNextLevel(showList, userId) {
+    async getNextLevel (showList, userId) {
       return new Promise((resolve, reject) => {
         this.$store
           .dispatch("getUserChild", {
             parent: userId,
-            isTest:+this.source,
+            isTest: +this.source,
             gameType: this.gameType,
             query: {
               createdAt: this.changedTime
@@ -363,16 +372,19 @@ export default {
           });
       });
     },
-    async init() {
+    async init () {
       this.spinShow = true;
-      this.playerList=[]
+      this.playerList = []
       let userId = JSON.parse(localStorage.getItem("userInfo")).userId;
       let params1 = {
         userId: userId,
         isTest: +this.source,
         gameType: this.gameType,
         query: {
-          createdAt: this.changedTime
+          createdAt: [
+            util.timeZoneConversion(this.changedTime[0], this.$store.state.timeZone),
+            util.timeZoneConversion(this.changedTime[1], this.$store.state.timeZone)
+          ]
         }
       };
       let params2 = {
@@ -380,7 +392,10 @@ export default {
         isTest: +this.source,
         gameType: this.gameType,
         query: {
-          createdAt: this.changedTime
+          createdAt: [
+            util.timeZoneConversion(this.changedTime[0], this.$store.state.timeZone),
+            util.timeZoneConversion(this.changedTime[1], this.$store.state.timeZone)
+          ]
         }
       };
       let req1 = this.$store.dispatch("getUserList", params1);
@@ -397,7 +412,7 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     // console.log(this.defaultTime);
     this.init();
   },

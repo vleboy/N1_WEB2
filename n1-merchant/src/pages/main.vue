@@ -20,16 +20,7 @@
               </div>
             </div>
             <div style="margin-right:20px">
-              <span>时区：</span>
-              <Dropdown>
-                <a href="javascript:void(0)">
-                  (UTC+08:00)北京
-                  <Icon type="ios-arrow-down"></Icon>
-                </a>
-                <DropdownMenu slot="list">
-                  <DropdownItem>(UTC+08:00)北京</DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
+              <span>时区：(UTC+08:00) 北京</span>
             </div>
             <Dropdown
               transfer
