@@ -13,7 +13,7 @@
         size="small"
       ></DatePicker>
       <Button type="primary" @click="init" size="small" style="margin:0 .3rem 0 1rem">搜索</Button>
-      <Button  @click="reset" size="small">重置</Button>
+      <Button @click="reset" size="small">重置</Button>
     </div>
     <Table :columns="columns1" :data="prizeList" size="small">
       <template slot-scope="{row, index}" slot="userName">
@@ -27,7 +27,7 @@
       </template>
     </Table>
     <Spin size="large" fix v-show="spin" style="z-index:200;">
-      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <Icon type="ios-loading" size="64" class="demo-spin-icon-load"></Icon>
       <div style>加载中...</div>
     </Spin>
   </div>
@@ -41,19 +41,19 @@ export default {
   //   components: {},
   //   filters: {},
   //   props: {},
-  data() {
+  data () {
     return {
       options: {
         shortcuts: [
           {
             text: "本周",
-            value() {
+            value () {
               return [
                 new Date(
                   dayjs()
                     .startOf("week")
                     .valueOf() +
-                    24 * 60 * 60 * 1000
+                  24 * 60 * 60 * 1000
                 ),
                 new Date(
                   dayjs()
@@ -65,7 +65,7 @@ export default {
           },
           {
             text: "本月",
-            value() {
+            value () {
               return [
                 new Date(
                   dayjs()
@@ -82,28 +82,28 @@ export default {
           },
           {
             text: "上周",
-            value() {
+            value () {
               return [
                 new Date(
                   dayjs()
                     .add(-1, "week")
                     .startOf("week")
                     .valueOf() +
-                    24 * 60 * 60 * 1000
+                  24 * 60 * 60 * 1000
                 ),
                 new Date(
                   dayjs()
                     .startOf("week")
                     .valueOf() +
-                    24 * 60 * 60 * 1000 -
-                    1
+                  24 * 60 * 60 * 1000 -
+                  1
                 )
               ];
             }
           },
           {
             text: "上月",
-            value() {
+            value () {
               //-1 上月
               return [
                 new Date(
@@ -186,7 +186,7 @@ export default {
     };
   },
   computed: {
-    changedTime() {
+    changedTime () {
       let time = this.defaultTime;
       time = time.map((item) => {
         return item.getTime();
@@ -196,56 +196,30 @@ export default {
     }
   },
   //   watch: {},
-  created() {
+  created () {
     this.init();
   },
   methods: {
     //玩家账号
-    userNameConfig(row) {
+    userNameConfig (row) {
       localStorage.setItem("playerName", row.userName);
       this.$router.push({
         name: "playDetail",
         query: {
           name
         }
-      });    
+      });
     },
     //日期
-    betTimeConfig(row) {
+    betTimeConfig (row) {
       return dayjs(row.betTime).format("YYYY-MM-DD HH:mm:ss")
     },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    reset() {
+    reset () {
       this.sn = "";
       this.defaultTime = getDefaultTime(true);
       this.init();
     },
-    init() {
+    init () {
       this.spin = true;
       let params = {
         winType: "SecretBonus",
@@ -276,6 +250,6 @@ export default {
   }
 }
 .demo-spin-icon-load {
-    animation: ani-demo-spin 1s linear infinite;
-  }
+  animation: ani-demo-spin 1s linear infinite;
+}
 </style>

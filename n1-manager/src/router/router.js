@@ -38,6 +38,7 @@ import habaVideo from '@/pages/reports/habaVideo'
 import pngVideo from '@/pages/reports/pngVideo'
 import natruehfive from '@/pages/reports/naTrueHfive'
 import kyChess from '@/pages/reports/kyChess'
+import prizeList from '@/pages/operation/prize/prizeList'
 
 //day
 import dayCompany from '@/pages/day/dayCompany'
@@ -233,6 +234,15 @@ export const appRouter = [
            name: 'play',
            component: main,
            children: [{ path: 'list', title: 'sideBar.player', name: 'playList', component: playerlist }]
+         },
+         {
+           path: '/prizeList',
+           title: '神秘奖记录',
+           name: 'prizeList',
+           component: main,
+           children: [
+             { path: 'index', title: 'sideBar.prizeList', name: 'prizeList', component: prizeList }
+           ]
          }
        ]
 // 所有上面定义的路由都要写在下面的routers里

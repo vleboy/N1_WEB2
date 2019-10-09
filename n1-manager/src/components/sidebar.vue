@@ -114,6 +114,10 @@
                         <Icon type="md-game-controller-b"></Icon>
                         <span v-if="unFlodMenu">{{$t('sideBar.player')}}</span>
                     </MenuItem>
+                    <MenuItem name="prizeList" :class="flodMenu ? 'flodMuenS' : 'class-b' ">
+                    <Icon type="md-trophy" />
+                    <span v-if="unFlodMenu" class="ml">{{$t('sideBar.prizeList')}}</span>
+                  </MenuItem>
                 </Menu>
             </transition>
         </Sider>
