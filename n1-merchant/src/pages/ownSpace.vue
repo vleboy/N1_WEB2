@@ -86,6 +86,7 @@ import dayjs from "dayjs";
 import { httpRequest, oneMerchants } from "@/service/index";
 import { thousandFormatter } from "@/config/format";
 import { validatePwd } from "@/config/regexp";
+import _ from "lodash";
 export default {
   data() {
     return {
@@ -97,7 +98,7 @@ export default {
       showKey:false,
       repassword: "",
       dayjs: dayjs,
-      pageSize: 50, 
+      pageSize: 20, 
       admin: {},
       waterfall: [],
       showData: [],
@@ -386,13 +387,13 @@ export default {
         this.showData = this.waterfall.slice(0, this.pageSize);
       }
     },
-    changepage(index) {
-      let size = this.pageSize;
-      let _start = (index - 1) * size;
-      let _end = index * size;
-      this.showData = this.waterfall.slice(_start, _end);
-      // console.log(this.showData);
-    },
+    // changepage(index) {
+    //   let size = this.pageSize;
+    //   let _start = (index - 1) * size;
+    //   let _end = index * size;
+    //   this.showData = this.waterfall.slice(_start, _end);
+    //   // console.log(this.showData);
+    // },
     newPassword() {
       this.modal = true;
     },
@@ -482,10 +483,10 @@ export default {
     },
     //切页
     changepage(index) {
+      console.log(this.showData)
       if (this.showData.length >= 100) {
           if (index % 5 == 0 && this.showData.length <= index * 20) {
           //(this.showData.length);
-          
           this.showNext = true;
           this.getWaterfallList();
         }
@@ -528,7 +529,6 @@ export default {
         this.totalPage = this.showData.length;
         this.startKey = waterfall.startKey;
         this.showWaterList = _.chunk(this.showData, 20)[0];
-        //console.log(this.showWaterList);
       }
       
     },
@@ -544,7 +544,7 @@ export default {
       }this.showData2 = []
       this.showData2.push(this.admin)
       
-      this.handlePage();
+      // this.handlePage();
     }
   },
   filters: {

@@ -350,7 +350,7 @@ export default {
     },
     //创建时间
     createdAtConfig(row) {
-      return dayjs(row.createdAt).format('YYYY-MM-DD')
+      return dayjs(row.createdAt).format("YYYY-MM-DD HH:mm:ss")
     },
     /* 财务信息 */
     //交易前余额
@@ -584,12 +584,13 @@ export default {
       let userId = localStorage.loginId ? localStorage.getItem("loginId") : "";
       let req2 = oneManagers(userId);
       let [admin] = await this.axios.all([req2]);
+      await this.getWaterfallList()
       this.$store.commit("updateLoading", { params: false });
       if (admin && admin.code == 0) {
         this.admin = admin.payload;
         this.dataList.push(this.admin)
       }
-      this.handlePage();
+      // this.handlePage();
     }
   },
   filters: {

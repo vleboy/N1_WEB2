@@ -240,6 +240,7 @@ export default {
 
     handlePage() {
       // 初始化显示，小于每页显示条数，全显，大于每页显示条数，取前每页条数显示
+      console.log(this.waterfall)
       if (this.total < this.pageSize) {
         this.showData = this.waterfall;
       } else {
@@ -378,12 +379,13 @@ export default {
       this.$store.commit("updateLoading", { params: true });
       let req2 = adminCenter();
       let [admin] = await this.axios.all([req2]);
+      await this.getWaterfallList()
       this.$store.commit("updateLoading", { params: false });
       if (admin && admin.code == 0) {
         this.admin = admin.payload;
         this.dataList.push(admin.payload);
       }
-      this.handlePage();
+      // this.handlePage();
     }
   },
 
