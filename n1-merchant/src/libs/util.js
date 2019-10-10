@@ -112,9 +112,9 @@ util.toDefaultPage = function (routers, name, route, next) {
 };
 //转换时区
 util.timeZoneConversion = function (date, timezone) {
-    let offset_GMT = new Date().getTimezoneOffset(),
-        nowDate = new Date(date).getTime(),
-        targetDate = new Date(nowDate + offset_GMT * 60 * 1000 + timezone * 60 * 60 * 1000);
-    return targetDate.getTime()
+    let format1 = dayjs(new Date(date)).format('YYYY-MM-DD'),
+        format2 = dayjs(new Date(date)).format('HH:mm:ss'),
+        time = new Date(`${format1}T${format2}+0${timezone}:00`).getTime()
+    return time
 }
 export default util;
