@@ -180,6 +180,16 @@ export default {
           align: 'center'
         },
         {
+          title: "商户数量",
+          key: "merchantCount",
+          align: 'center'
+        },
+        {
+          title: "玩家数量",
+          key: "playerCount",
+          align: 'center'
+        },
+        {
           title: "投注次数",
           key: "betCount",
           align: 'center'
