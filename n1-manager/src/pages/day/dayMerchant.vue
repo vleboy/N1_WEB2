@@ -334,7 +334,7 @@ export default {
           }
         ]
       } else {
-        data = ["Bet Count", "Bet Amount", "Return Amount", "Refund Amount", "Win/Lose Amount"]
+        data = ["Player Count","Bet Count", "Bet Amount", "Return Amount", "Refund Amount", "Win/Lose Amount"]
         series = [
           {
             name: "Player Count",
