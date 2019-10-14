@@ -278,6 +278,9 @@ export default {
       let xArr = _this.dayStatList.map(item => {
         return item.createdDate;
       });
+      let playerCountArr = _this.dayStatList.map(item => {
+        return item.playerCount;
+      });
 
       // 绘制图表
       myChart.setOption({
@@ -292,10 +295,15 @@ export default {
           type: "value"
         },
         legend: {
-          data: ["投注次数", "投注金额", "返还金额", "退款金额", "输赢金额"],
+          data: ["玩家数量","投注次数", "投注金额", "返还金额", "退款金额", "输赢金额"],
           selectedMode: "single"
         },
         series: [
+          {
+            name: "玩家数量",
+            data: playerCountArr,
+            type: "line"
+          },
           {
             name: "投注次数",
             data: betCountArr,

@@ -2,29 +2,57 @@
   <div class="dayReport">
     <div class="nowList">
       <div class="top">
-          <p>{{$t('dailyReport.sn')}}</p>
-          <p style="margin:0 1rem">
+        <p>{{$t('dailyReport.sn')}}</p>
+        <p style="margin:0 1rem">
           <Input v-model="buSN" size="small"></Input>
-          </p>
-          <p>{{$t('dailyReport.id')}}</p>
-          <p style="margin:0 1rem">
+        </p>
+        <p>{{$t('dailyReport.id')}}</p>
+        <p style="margin:0 1rem">
           <Input v-model="buID" size="small"></Input>
-          </p>
-          <p>
-            <Select style="width:200px;" placeholder="选择游戏类别" ref="resetSelect" clearable v-model="model1" size="small">
-              <Option v-for="(item, index) in getGameList" :value="item.name" :key="item.name" @click.native="selGame(item.code)">{{item.name}}</Option>
-            </Select>   
-          </p>
-        <DatePicker size="small" type="daterange" :options="options" :editable='false' :value="defaultTime" placeholder="选择日期时间范围(默认最近一个月)" style="width: 300px;margin:0 1rem" confirm @on-ok="confirms" @on-change="handle"></DatePicker>
+        </p>
+        <p>
+          <Select
+            style="width:200px;"
+            placeholder="选择游戏类别"
+            ref="resetSelect"
+            clearable
+            v-model="model1"
+            size="small"
+          >
+            <Option
+              v-for="(item, index) in getGameList"
+              :value="item.name"
+              :key="item.name"
+              @click.native="selGame(item.code)"
+            >{{item.name}}</Option>
+          </Select>
+        </p>
+        <DatePicker
+          size="small"
+          type="daterange"
+          :options="options"
+          :editable="false"
+          :value="defaultTime"
+          placeholder="选择日期时间范围(默认最近一个月)"
+          style="width: 300px;margin:0 1rem"
+          confirm
+          @on-ok="confirms"
+          @on-change="handle"
+        ></DatePicker>
         <div class="right">
-          <Button type="primary" @click="search" size="small" style="margin-right:.3rem">{{$t('dailyReport.search')}}</Button>
+          <Button
+            type="primary"
+            @click="search"
+            size="small"
+            style="margin-right:.3rem"
+          >{{$t('dailyReport.search')}}</Button>
           <Button @click="reset" size="small">{{$t('dailyReport.reset')}}</Button>
         </div>
       </div>
     </div>
     <div v-if="showChat">
       <div id="myChart"></div>
-     </div>
+    </div>
     <div class="playerList" id="playerList">
       <Table :columns="columns1" :data="dayStatList" size="small" ref="table_2"></Table>
     </div>
@@ -41,7 +69,7 @@ import dayjs from 'dayjs'
 import { thousandFormatter } from "@/config/format";
 import { getCNGameType, getENGameType } from "@/config/getGameType"
 export default {
-  beforeRouteEnter(to, from, next) {
+  beforeRouteEnter (to, from, next) {
     /* console.log(this, 'beforeRouteEnter'); // undefined
     console.log(to, '组件独享守卫beforeRouteEnter第一个参数');
     console.log(from, '组件独享守卫beforeRouteEnter第二个参数');
@@ -57,18 +85,18 @@ export default {
 
     });
   },
-  data() {
+  data () {
     return {
-      
+
       defaultTime: [],//getDefaultTime(),
-      cacheTime:[],
+      cacheTime: [],
       model1: "全部游戏",
       spinShow: false, //加载spin
       buID: "",
       buSN: "",
       dayStatList: [],
       showChat: false,
-     columns1: [
+      columns1: [
         {
           title: "日期",
           align: 'center',
@@ -77,6 +105,17 @@ export default {
             return h(
               'span',
               this.$store.state.language == 'zh' ? '日期' : 'Date'
+            )
+          }
+        },
+        {
+          title: "玩家数量",
+          align: 'center',
+          key: "playerCount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '玩家数量' : 'Player Count'
             )
           }
         },
@@ -128,21 +167,21 @@ export default {
           title: "输赢金额",
           align: 'center',
           key: "winloseAmount",
-          render: (h,params) => {
-           let count = params.row.winloseAmount
-           let color = ''
-           if (count < 0) {
-             color = "#f30"
-           } else {
-             color = "#0c0"
-           }
-            
-           return h("span",{style: {color:color} }, count)
+          render: (h, params) => {
+            let count = params.row.winloseAmount
+            let color = ''
+            if (count < 0) {
+              color = "#f30"
+            } else {
+              color = "#0c0"
+            }
+
+            return h("span", { style: { color: color } }, count)
           }
         }
       ],
       gameType: [],
-      gameCode:"",
+      gameCode: "",
       /* betAmount: -2.25  投加注金额
       betCount: 14 投注次数
       createdDate: "20190102" 日期
@@ -152,36 +191,36 @@ export default {
       winloseAmount: 2.45 输赢金额 */
     };
   },
-  created() {
+  created () {
     this.getDate()
   },
 
 
   computed: {
-    options() {
+    options () {
       return {
         shortcuts: [
           {
             text: this.$store.state.language == 'zh' ? '本周' : 'week',
-            value() {
+            value () {
               return [new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().endOf('second').valueOf())]
             }
           },
           {
             text: this.$store.state.language == 'zh' ? '本月' : 'month',
-            value() {
+            value () {
               return [new Date(dayjs().startOf('month').valueOf()), new Date(dayjs().endOf('second').valueOf())]
             }
           },
           {
             text: this.$store.state.language == 'zh' ? '上周' : 'last week',
-            value() {
+            value () {
               return [new Date(dayjs().add(-1, 'week').startOf('week').valueOf() + 24 * 60 * 60 * 1000), new Date(dayjs().startOf('week').valueOf() + 24 * 60 * 60 * 1000 - 1)]
             }
           },
           {
             text: this.$store.state.language == 'zh' ? '上月' : 'last month',
-            value() {
+            value () {
               //-1 上月
               return [new Date(dayjs().add(-1, 'month').startOf('month').valueOf()), new Date(dayjs().startOf('month').valueOf() - 1)]
             }
@@ -189,9 +228,9 @@ export default {
         ]
       }
     },
-    getGameList() {
+    getGameList () {
       let gameType = []
-      let val = JSON.parse(localStorage.getItem('userInfo')).gameList 
+      let val = JSON.parse(localStorage.getItem('userInfo')).gameList
       if (this.$store.state.language == 'zh') {
         for (let i = 0; i < val.length; i++) {
           for (let j = 0; j < getCNGameType().length; j++) {
@@ -213,10 +252,10 @@ export default {
         this.model1 = 'All'
         gameType.unshift({ company: "All", code: "", name: "All" })
       }
-      
+
       return gameType
     },
-    permission() {
+    permission () {
       return JSON.parse(localStorage.getItem("userInfo")).subRolePermission;
     }
   },
@@ -231,35 +270,43 @@ export default {
     }
   }, */
   methods: {
-    handle(daterange) {
+    handle (daterange) {
       this.cacheTime = daterange
-    
-      
+
+
     },
-    selGame(index){
+    selGame (index) {
       this.showChat = true
       this.gameCode = index
-     this.init();
-      
+      this.init();
+
     },
-    drawLine() {
+    drawLine () {
       // 基于准备好的dom，初始化echarts实例
       let myChart = echarts.init(document.getElementById("myChart"));
       let _this = this;
-     
 
-      let betCountArr = _this.dayStatList.map((item) => {return item.betCount})
-      let betAmountArr = _this.dayStatList.map((item) => {return item.betAmount})
-      let retAmountArr = _this.dayStatList.map((item) => {return item.retAmount})
-      let refundAmountArr = _this.dayStatList.map((item) => {return item.refundAmount})
-      let winloseAmountArr = _this.dayStatList.map((item) => {return item.winloseAmount})
-      let xArr = _this.dayStatList.map((item) => {return item.createdDate})
+
+      let betCountArr = _this.dayStatList.map((item) => { return item.betCount })
+      let betAmountArr = _this.dayStatList.map((item) => { return item.betAmount })
+      let retAmountArr = _this.dayStatList.map((item) => { return item.retAmount })
+      let refundAmountArr = _this.dayStatList.map((item) => { return item.refundAmount })
+      let winloseAmountArr = _this.dayStatList.map((item) => { return item.winloseAmount })
+      let xArr = _this.dayStatList.map((item) => { return item.createdDate })
+      let playerCountArr = _this.dayStatList.map(item => {
+        return item.playerCount;
+      });
       let data = []
       let series = []
 
       if (this.$store.state.language == 'zh') {
-        data = ["投注次数", "投注金额", "返还金额", "退款金额", "输赢金额"]
+        data = ["玩家数量","投注次数", "投注金额", "返还金额", "退款金额", "输赢金额"]
         series = [
+          {
+            name: "玩家数量",
+            data: playerCountArr,
+            type: "line"
+          },
           {
             name: "投注次数",
             data: betCountArr,
@@ -290,6 +337,11 @@ export default {
         data = ["Bet Count", "Bet Amount", "Return Amount", "Refund Amount", "Win/Lose Amount"]
         series = [
           {
+            name: "Player Count",
+            data: playerCountArr,
+            type: "line"
+          },
+          {
             name: "Bet Count",
             data: betCountArr,
             type: "line"
@@ -316,7 +368,7 @@ export default {
           }
         ]
       }
-     
+
       // 绘制图表
       myChart.setOption({
         xAxis: {
@@ -324,7 +376,7 @@ export default {
           data: xArr
         },
         tooltip: {
-        trigger: 'axis'
+          trigger: 'axis'
         },
         yAxis: {
           type: "value"
@@ -336,30 +388,30 @@ export default {
         series: series
       });
     },
-    confirms() {
+    confirms () {
       this.showChat = true
-      let cacheTime = this.cacheTime.map(ite => {return ite.replace(/-/g,"")})
+      let cacheTime = this.cacheTime.map(ite => { return ite.replace(/-/g, "") })
       this.getDate(cacheTime)
       this.init();
     },
-    changeSource(value) {
+    changeSource (value) {
       this.init();
     },
-    reset() {
+    reset () {
       this.getDate()
       this.buID = "",
-      this.buSN = "",
-      this.dayStatList = []
+        this.buSN = "",
+        this.dayStatList = []
       this.showChat = false
     },
-    search() {
+    search () {
       // if (this.dayStatList != "") {
-        
+
       // }
 
       if (this.buID == '' && this.buSN == '') {
         this.$Message.info('请输入商户标识或商户ID');
-      } else { 
+      } else {
         this.showChat = true
         this.init();
       }
@@ -368,10 +420,10 @@ export default {
     // permission() {
     //   return JSON.parse(localStorage.getItem("userInfo")).subRolePermission;
     // },
-    async init() {
+    async init () {
       this.spinShow = true;
       if (this.$route.name == 'dayMerchant' && localStorage.dayMerchant == 'dayMerchant') {
-      
+
         let st = dayjs(this.$route.query.time[0]).format('YYYYMMDD')
         let et = dayjs(this.$route.query.time[1]).format('YYYYMMDD')
 
@@ -380,23 +432,23 @@ export default {
           return result.payload
         }) */
         for (let index = 0; index < getGameType().length; index++) {
-          if(this.$route.query.type == getGameType()[index].code) {
+          if (this.$route.query.type == getGameType()[index].code) {
             this.model1 = getGameType()[index].name
             break;
           } else {
             this.model1 = '全部'
           }
         }
-        
+
         this.defaultTime = []
-        this.defaultTime.push(st,et)
+        this.defaultTime.push(st, et)
         this.buSN = this.$route.query.name
         this.showChat = true
         this.managerName = this.$route.query.name
-         this.gameCode = this.$route.query.type
+        this.gameCode = this.$route.query.type
         localStorage.removeItem('dayMerchant')
       }
-      
+
       let params = {
         displayId: parseInt(this.buID),//625615 数字
         sn: this.buSN,
@@ -405,43 +457,43 @@ export default {
         gameType: parseInt(this.gameCode)
       };
       let req2 = this.$store.dispatch("getUserDayStat", params);
-     
+
       //当这两个请求都完成的时候会触发这个函数，两个参数分别代表返回的结果
       let [perms] = await this.axios.all([req2]);
-     
+
 
       this.dayStatList = perms.payload;
 
       if (this.dayStatList == "") {
         this.showChat = false
       }
-      
+
       if (this.showChat) {
         this.drawLine();
       }
       this.spinShow = false;
 
     },
-    
-    getDate(opt) {
-      
-      if(opt !== undefined) {
+
+    getDate (opt) {
+
+      if (opt !== undefined) {
         this.defaultTime = opt
-      } else if(dayjs().format('DD') == "01") {
+      } else if (dayjs().format('DD') == "01") {
         this.defaultTime = [dayjs().startOf('month').format('YYYYMMDD'), dayjs().startOf('month').format('YYYYMMDD')]
       } else {
-        this.defaultTime = [dayjs().startOf('month').format('YYYYMMDD'), dayjs(dayjs().valueOf()-24 * 60 * 60 * 1000).format('YYYYMMDD')]
+        this.defaultTime = [dayjs().startOf('month').format('YYYYMMDD'), dayjs(dayjs().valueOf() - 24 * 60 * 60 * 1000).format('YYYYMMDD')]
       }
-      
+
     },
   },
   watch: {
-      '$store.state.language': function() {
-        if(this.$route.name == 'dayMerchant') {
-          this.reset()
-        }
+    '$store.state.language': function () {
+      if (this.$route.name == 'dayMerchant') {
+        this.reset()
       }
-    },
+    }
+  },
   props: ['identity']
 };
 </script>

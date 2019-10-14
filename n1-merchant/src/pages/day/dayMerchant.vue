@@ -29,7 +29,12 @@
             @on-change="handle"
             size="small"
           ></DatePicker>
-          <Button type="primary" @click="search" size="small" style="margin-left:1rem;margin-right:.3rem">{{$t('dayMerchant.search')}}</Button>
+          <Button
+            type="primary"
+            @click="search"
+            size="small"
+            style="margin-left:1rem;margin-right:.3rem"
+          >{{$t('dayMerchant.search')}}</Button>
           <Button @click="reset" size="small">{{$t('dayMerchant.reset')}}</Button>
         </div>
       </div>
@@ -45,7 +50,7 @@
       </Table>
     </div>
     <Spin size="large" fix v-if="spinShow">
-      <Icon type="ios-loading" size=64 class="demo-spin-icon-load"></Icon>
+      <Icon type="ios-loading" size="64" class="demo-spin-icon-load"></Icon>
       <div>加载中...</div>
     </Spin>
   </div>
@@ -57,7 +62,7 @@ import dayjs from "dayjs";
 import { thousandFormatter } from "@/config/format";
 import { getCNGameType, getENGameType } from "@/config/getGameType"
 export default {
-  beforeRouteEnter(to, from, next) {
+  beforeRouteEnter (to, from, next) {
     /* console.log(this, 'beforeRouteEnter'); // undefined
     console.log(to, '组件独享守卫beforeRouteEnter第一个参数');
     console.log(from, '组件独享守卫beforeRouteEnter第二个参数');
@@ -72,9 +77,9 @@ export default {
       }
     });
   },
-  data() {
+  data () {
     return {
-      
+
       defaultTime: [], //getDefaultTime(),
       cacheTime: [],
       model1: "全部游戏",
@@ -92,6 +97,17 @@ export default {
             return h(
               'span',
               this.$store.state.language == 'zh' ? '日期' : 'Date'
+            )
+          }
+        },
+        {
+          title: "玩家数量",
+          align: 'center',
+          key: "playerCount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '玩家数量' : 'Player Count'
             )
           }
         },
@@ -155,24 +171,24 @@ export default {
       gameCode: ""
     };
   },
-  mounted() {
+  mounted () {
     this.getDate();
     //this.getGameList();
     this.init();
   },
   computed: {
-    options() {
+    options () {
       return {
         shortcuts: [
           {
             text: this.$store.state.language == 'zh' ? '本周' : 'week',
-            value() {
+            value () {
               return [
                 new Date(
                   dayjs()
                     .startOf("week")
                     .valueOf() +
-                    24 * 60 * 60 * 1000
+                  24 * 60 * 60 * 1000
                 ),
                 new Date(
                   dayjs()
@@ -184,7 +200,7 @@ export default {
           },
           {
             text: this.$store.state.language == 'zh' ? '本月' : 'month',
-            value() {
+            value () {
               return [
                 new Date(
                   dayjs()
@@ -201,28 +217,28 @@ export default {
           },
           {
             text: this.$store.state.language == 'zh' ? '上周' : 'last week',
-            value() {
+            value () {
               return [
                 new Date(
                   dayjs()
                     .add(-1, "week")
                     .startOf("week")
                     .valueOf() +
-                    24 * 60 * 60 * 1000
+                  24 * 60 * 60 * 1000
                 ),
                 new Date(
                   dayjs()
                     .startOf("week")
                     .valueOf() +
-                    24 * 60 * 60 * 1000 -
-                    1
+                  24 * 60 * 60 * 1000 -
+                  1
                 )
               ];
             }
           },
           {
             text: this.$store.state.language == 'zh' ? '上月' : 'last month',
-            value() {
+            value () {
               //-1 上月
               return [
                 new Date(
@@ -242,12 +258,12 @@ export default {
         ]
       }
     },
-    permission() {
+    permission () {
       return JSON.parse(localStorage.getItem("userInfo")).subRolePermission;
     },
-    getGameList() {
+    getGameList () {
       let gameType = []
-      let val = JSON.parse(localStorage.getItem('userInfo')).gameList 
+      let val = JSON.parse(localStorage.getItem('userInfo')).gameList
       if (this.$store.state.language == 'zh') {
         for (let i = 0; i < val.length; i++) {
           for (let j = 0; j < getCNGameType().length; j++) {
@@ -269,28 +285,28 @@ export default {
         this.model1 = 'All'
         gameType.unshift({ company: "All", code: "", name: "All" })
       }
-      
+
       return gameType
     }
   },
   methods: {
     //输赢金额
-    winloseAmountConfig(row) {
+    winloseAmountConfig (row) {
       if (row.winloseAmount < 0) {
         return "#f30"
       } else {
         return "#0c0"
       }
     },
-    handle(daterange) {
+    handle (daterange) {
       this.cacheTime = daterange;
     },
-    selGame(index) {
+    selGame (index) {
       this.showChat = true;
       this.gameCode = index;
       this.init();
     },
-    drawLine() {
+    drawLine () {
       // 基于准备好的dom，初始化echarts实例
       let myChart = echarts.init(document.getElementById("myChart"));
       let _this = this;
@@ -313,12 +329,20 @@ export default {
       let xArr = _this.dayStatList.map(item => {
         return item.createdDate;
       });
+      let playerCountArr = _this.dayStatList.map(item => {
+        return item.playerCount;
+      });
       let data = []
       let series = []
 
       if (this.$store.state.language == 'zh') {
-        data = ["投注次数", "投注金额", "返还金额", "退款金额", "输赢金额"]
+        data = ["玩家数量","投注次数", "投注金额", "返还金额", "退款金额", "输赢金额"]
         series = [
+          {
+            name: "玩家数量",
+            data: playerCountArr,
+            type: "line"
+          },
           {
             name: "投注次数",
             data: betCountArr,
@@ -346,8 +370,13 @@ export default {
           }
         ]
       } else {
-        data = ["Bet Count", "Bet Amount", "Return Amount", "Refund Amount", "Win/Lose Amount"]
+        data = ["Player Count","Bet Count", "Bet Amount", "Return Amount", "Refund Amount", "Win/Lose Amount"]
         series = [
+          {
+            name: "Player Count",
+            data: playerCountArr,
+            type: "line"
+          },
           {
             name: "Bet Count",
             data: betCountArr,
@@ -394,7 +423,7 @@ export default {
         series: series
       });
     },
-    confirms() {
+    confirms () {
       this.showChat = true;
       let cacheTime = this.cacheTime.map(ite => {
         return ite.replace(/-/g, "");
@@ -402,10 +431,10 @@ export default {
       this.getDate(cacheTime);
       this.init();
     },
-    changeSource(value) {
+    changeSource (value) {
       this.init();
     },
-    reset() {
+    reset () {
       //this.$refs.resetSelect.clearSingleSelect();
       this.getDate();
       (this.buID = ""), (this.buSN = ""), (this.dayStatList = []);
@@ -413,11 +442,11 @@ export default {
       //this.getGameList()
       this.init()
     },
-    search() {
+    search () {
       this.showChat = true;
       this.init();
     },
-    async init() {
+    async init () {
       this.spinShow = true;
       //是否是从输赢报表跳转进入日报表
       if (
@@ -462,7 +491,7 @@ export default {
       };
       let req2 = this.$store.dispatch("getUserDayStat", params);
 
-      
+
       let [perms] = await this.axios.all([req2]);
 
       this.dayStatList = perms.payload;
@@ -477,7 +506,7 @@ export default {
       this.spinShow = false;
     },
 
-    getDate(opt) {
+    getDate (opt) {
       if (opt !== undefined) {
         this.defaultTime = opt;
       } else if (dayjs().format("DD") == "01") {
@@ -499,15 +528,15 @@ export default {
       }
     },
 
-    
+
   },
   watch: {
-      '$store.state.language': function() {
-        if(this.$route.name == 'dayMerchant') {
-          this.reset()
-        }
+    '$store.state.language': function () {
+      if (this.$route.name == 'dayMerchant') {
+        this.reset()
       }
     }
+  }
 };
 </script>
 <style lang="less" scoped>
@@ -531,27 +560,27 @@ export default {
   }
 }
 .ivu-btn {
-    background: #fff;
-    color: #000;
-    border-color: #000;
-  }
-  .ivu-btn:hover {
-    background: #000;
-    color: #fff;
-  }
-  /deep/ .ivu-input {
-    border-color: #000;
-    background: #fff;
-  }
-  /deep/.ivu-select-selection {
-    border-color: #000;
-  }
+  background: #fff;
+  color: #000;
+  border-color: #000;
+}
+.ivu-btn:hover {
+  background: #000;
+  color: #fff;
+}
+/deep/ .ivu-input {
+  border-color: #000;
+  background: #fff;
+}
+/deep/.ivu-select-selection {
+  border-color: #000;
+}
 #myChart {
   width: 100%;
   height: 300px;
 }
 /deep/ .ivu-picker-panel-shortcut {
-    padding: 6px 5px;
-  }
+  padding: 6px 5px;
+}
 </style>
 

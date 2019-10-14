@@ -99,6 +99,28 @@ export default {
           }
         },
         {
+          title: "商户数量",
+          align: 'center',
+          key: "merchantCount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '商户数量' : 'Merchant Count'
+            )
+          }
+        },
+        {
+          title: "玩家数量",
+          align: 'center',
+          key: "playerCount",
+          renderHeader: (h, params) => {
+            return h(
+              'span',
+              this.$store.state.language == 'zh' ? '玩家数量' : 'Player Count'
+            )
+          }
+        },
+        {
           title: "投注次数",
           align: 'center',
           key: "betCount",
@@ -280,12 +302,28 @@ export default {
       let refundAmountArr = _this.dayStatList.map((item) => {return item.refundAmount})
       let winloseAmountArr = _this.dayStatList.map((item) => {return item.winloseAmount})
       let xArr = _this.dayStatList.map((item) => {return item.createdDate})
+      let merchantCountArr = _this.dayStatList.map(item => {
+        return item.merchantCount;
+      });      
+      let playerCountArr = _this.dayStatList.map(item => {
+        return item.playerCount;
+      });
       let data = []
       let series = []
 
       if (this.$store.state.language == 'zh') {
-        data = ["投注次数", "投注金额", "返还金额", "退款金额", "输赢金额"]
+        data = ["商户数量","玩家数量","投注次数", "投注金额", "返还金额", "退款金额", "输赢金额"]
         series = [
+          {
+            name: "商户数量",
+            data: merchantCountArr,
+            type: "line"
+          },
+          {
+            name: "玩家数量",
+            data: playerCountArr,
+            type: "line"
+          },
           {
             name: "投注次数",
             data: betCountArr,
@@ -313,8 +351,18 @@ export default {
           }
         ]
       } else {
-        data = ["Bet Count", "Bet Amount", "Return Amount", "Refund Amount", "Win/Lose Amount"]
+        data = ["Merchant Count","Player Count","Bet Count", "Bet Amount", "Return Amount", "Refund Amount", "Win/Lose Amount"]
         series = [
+          {
+            name: "Merchant Count",
+            data: merchantCountArr,
+            type: "line"
+          },
+          {
+            name: "Player Count",
+            data: playerCountArr,
+            type: "line"
+          },
           {
             name: "Bet Count",
             data: betCountArr,
