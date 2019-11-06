@@ -219,6 +219,7 @@ export default {
   beforeCreate () { },
   data () {
     return {
+      onLoading:false,
       playerName: '',
       playerPwd: '',
       action: '1',//上下分操作 1上-1下
@@ -485,6 +486,10 @@ export default {
         userName: this.playerName,
         userPwd: this.playerPwd,
       }
+      if(this.onLoading){
+        return
+      }
+      this.onLoading = true
       createPlayer(params).then(res => {
         if (res.code != -1) {
           let message = this.$store.state.language == 'zh' ? "创建成功" : "Success create"
@@ -496,9 +501,11 @@ export default {
           this.playerName = ''
           this.playerPwd = ''
         }
+        this.onLoading = false
       }).catch(err => {
         this.playerName = ''
         this.playerPwd = ''
+        this.onLoading = false
       })
     },
     add (row) {
@@ -517,12 +524,19 @@ export default {
         action: this.action,
         amount: this.amount
       }
+      if(this.onLoading || !this.amount){
+        return
+      }
+      this.onLoading = true
       playerPointAction(params).then(res => {
-        let message = this.$store.state.language == 'zh' ? "创建成功" : "Success create"
+        let message = this.$store.state.language == 'zh' ? "操作成功" : "Success"
         this.$Message.success(message)
         this.getSearch(true)
-        this.amount = 0
+        this.onLoading = false
+      }).catch(err => {
+        this.onLoading = false
       })
+      this.amount = 0
     },
     selectionChange (val) {
       this.checkedArray = val;
